@@ -25,14 +25,12 @@ def save_params(params):
 		f.write(str_result)
 
 @begin.start
-def main(framework: "Framework to test" = "theano"):
+def main(framework: "Framework to test" = "theano", problem: "problem to solve" = "conv2d_1"):
 	print ("benchmarker")
-	#rundir = sys.argv[0]
-	#print("Running from " + rundir)
 	params=sysinfo.get_sys_info()
 	params["framework"]=framework
 	params["nb_gpus"]=1
-	params["problem"]="conv2d_1"
+	params["problem"]=problem
 	params["batch_size"]=8
 
 	mod = importlib.import_module("kernels.problems."+params["problem"]+".data")
@@ -45,45 +43,24 @@ def main(framework: "Framework to test" = "theano"):
 	except Exception as e:
 		pass
 	
-	#print (params)
-
 	if params["nb_gpus"]>0:
 		params["device"]=get_cute_device_str(params["gpu"])
 	else:
 		params["device"]=get_cute_device_str(params["cpu_brand"])
-	#running experiments----------
-	if params["framework"]=="theano":
-		if params["nb_gpus"]>1:
-			print ("multiple gpus with Theano not supported yet")
-			return
-		if params["nb_gpus"]>0:
-			os.environ['THEANO_FLAGS'] = "device=cuda1"   
-		else:
-			os.environ['THEANO_FLAGS'] = "device=cpu"   
-		from do_keras import run
 
-	if params["framework"]=="tensorflow":
-		os.environ["KERAS_BACKEND"]="tensorflow"
-		if params["nb_gpus"]<1:
-			os.environ['CUDA_VISIBLE_DEVICES'] = ""   
-		if params["nb_gpus"]>1:
-			print ("multiple gpus with TF not supported yet")
-			return
-		from do_keras import run
 
-	if not params["framework"] in ["theano","tensorflow"]:
-		mod = importlib.import_module("kernels.do_"+params["framework"])
-		run = getattr(mod, 'run')
-
-#	if params["framework"]=="mxnet":
-		#from do_mxnet import run
-
-	#if params["framework"]=="chainer":
-		#from do_chainer import run
+	#if params["framework"]=="tensorflow":
+		#os.environ["KERAS_BACKEND"]="tensorflow"
+		#if params["nb_gpus"]<1:
+			#os.environ['CUDA_VISIBLE_DEVICES'] = ""   
+		#if params["nb_gpus"]>1:
+			#print ("multiple gpus with TF not supported yet")
+			#return
+		#from do_keras import run
+#
+	#if not params["framework"] in ["theano","tensorflow"]:
+	mod = importlib.import_module("kernels.do_"+params["framework"])
+	run = getattr(mod, 'run')
 
 	params = run(params, data)
 	save_params(params)
-	
-
-#if __name__=="__main__":
-	#main()
