@@ -10,4 +10,4 @@ def run(params, data):
         print("multiple gpus with TF not supported yet")
         return
     params = run2(params, data)
-    params
+    return params
