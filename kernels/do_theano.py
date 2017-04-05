@@ -1,5 +1,5 @@
-from do_keras import run as run2
 import os
+from do_keras import run as run2
 
 
 def run(params, data):
