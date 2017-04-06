@@ -4,7 +4,7 @@ import os
 import datetime
 import begin
 import sys
-sys.path.append("kernels")
+sys.path.append("modules")
 sys.path.append("data_helpers")
 from sysinfo.cute_device import get_cute_device_str
 from sysinfo import sysinfo
@@ -25,10 +25,12 @@ def gen_name_output_file(params):
         )
     return name
 
+
 def save_params(params):
     str_result=json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
-    path_out = "/work/alex/data/DL_perf/json"
+    path_out = "/tmp"
+    #path_out = "/work/alex/data/DL_perf/json"
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
@@ -40,8 +42,7 @@ def main(framework: "Framework to test" = "theano", problem: "problem to solve" 
     params["framework"] = framework
     params["nb_gpus"] = 1
     params["problem"] = problem
-    params["batch_size"] = 8
-    mod = importlib.import_module("kernels.problems." + params["problem"]+".data")
+    mod = importlib.import_module("modules.problems." + params["problem"]+".data")
     get_data = getattr(mod, 'get_data')
     data = get_data()
 
@@ -56,7 +57,7 @@ def main(framework: "Framework to test" = "theano", problem: "problem to solve" 
     else:
         params["device"] = get_cute_device_str(params["cpu_brand"])
 
-    mod = importlib.import_module("kernels.do_"+params["framework"])
+    mod = importlib.import_module("modules.do_"+params["framework"])
     run = getattr(mod, 'run')
 
     params = run(params, data)
