@@ -18,15 +18,10 @@ class Net(chainer.Chain):
         self.train = train
     def __call__(self, x):
         h = x
-        
         h = self.conv1(h)
         h = F.relu(h)
         #h = F.max_pooling_2d(h,2)
         h = self.conv2(h)
         h = F.relu(h)
-        #h = F.flatten(h)
-#        h = F.relu(self.conv3(h))
- #       h = F.droputog cjainer flatte(F.max_pooling_2d(F.relu(self.conv4(h)), 2),ratio=0.3)
-        #h = F.relu(self.l1(h))
         h = self.l(h)
         return h

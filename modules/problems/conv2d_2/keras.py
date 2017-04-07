@@ -1,6 +1,6 @@
 import keras
-from keras.layers import Input, Dense, Dropout, Activation, Flatten, ZeroPadding2D
-from keras.layers import Conv2D, MaxPooling2D, UpSampling2D
+from keras.layers import Dense, Activation, Flatten
+from keras.layers import Conv2D, MaxPooling2D
 
 def get_model(shape):
     model=keras.models.Sequential()

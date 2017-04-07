@@ -29,8 +29,7 @@ def gen_name_output_file(params):
 def save_params(params):
     str_result=json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
-    path_out = "/tmp"
-    #path_out = "/work/alex/data/DL_perf/json"
+    path_out = "/work/alex/data/DL_perf/json"
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
