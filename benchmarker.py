@@ -4,10 +4,11 @@ import os
 import datetime
 import begin
 import sys
-sys.path.append("modules")
-sys.path.append("data_helpers")
 from sysinfo.cute_device import get_cute_device_str
 from sysinfo import sysinfo
+
+sys.path.append("modules")
+sys.path.append("data_helpers")
 
 
 def get_time_str():
@@ -38,12 +39,13 @@ def save_params(params):
 @begin.start
 def main(framework: "Framework to test" = "theano",
          problem: "problem to solve" = "conv2d_1",
-         path_out: "path to store results" = "/work/alex/data/DL_perf/json"
+         path_out: "path to store results" = "/work/alex/data/DL_perf/json",
+         gpus: "number of gpus to use" = 1
          ):
     params = sysinfo.get_sys_info()
     params["framework"] = framework
     params["path_out"] = path_out
-    params["nb_gpus"] = 1
+    params["nb_gpus"] = int(gpus)
     params["problem"] = problem
     mod = importlib.import_module("modules.problems." + params["problem"]+".data")
     get_data = getattr(mod, 'get_data')

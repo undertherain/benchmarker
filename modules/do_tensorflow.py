@@ -7,7 +7,7 @@ class DoTensorflow(INeuralNet):
     def __init__(self, params):
         super().__init__()
         self.params = params
-        
+
     def run(self, params, data):
         self.parameterize(params)
         os.environ["KERAS_BACKEND"] = "tensorflow"
@@ -23,4 +23,4 @@ class DoTensorflow(INeuralNet):
 
 def run(params, data):
     m = DoTensorflow(params)
-    return m.run(params,data)
+    return m.run(params, data)

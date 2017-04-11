@@ -39,7 +39,7 @@ class DoChainer(INeuralNet):
 
         model = Classifier(Net())
         if params["nb_gpus"] > 0:
-            id_device = 1
+            id_device = 0
             chainer.cuda.get_device(id_device).use()
             model.to_gpu()
 
