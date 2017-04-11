@@ -29,16 +29,20 @@ def gen_name_output_file(params):
 def save_params(params):
     str_result=json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
-    path_out = "/work/alex/data/DL_perf/json"
+    path_out = params["path_out"]
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
 
 
 @begin.start
-def main(framework: "Framework to test" = "theano", problem: "problem to solve" = "conv2d_1"):
+def main(framework: "Framework to test" = "theano",
+         problem: "problem to solve" = "conv2d_1",
+         path_out: "path to store results" = "/work/alex/data/DL_perf/json"
+         ):
     params = sysinfo.get_sys_info()
     params["framework"] = framework
+    params["path_out"] = path_out
     params["nb_gpus"] = 1
     params["problem"] = problem
     mod = importlib.import_module("modules.problems." + params["problem"]+".data")
