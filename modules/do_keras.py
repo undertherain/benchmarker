@@ -9,6 +9,7 @@ def run(params, data):
     mod = importlib.import_module("problems." + params["problem"]+".keras")
     get_model = getattr(mod, 'get_model')
 
+    
     model = get_model(X_train[0].shape)
     optimizer = keras.optimizers.Adam()
     model.compile(loss = 'binary_crossentropy', optimizer = optimizer, metrics=["accuracy"])

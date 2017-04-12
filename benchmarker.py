@@ -47,15 +47,6 @@ def main(framework: "Framework to test" = "theano",
     params["path_out"] = path_out
     params["nb_gpus"] = int(gpus)
     params["problem"] = problem
-    mod = importlib.import_module("modules.problems." + params["problem"]+".data")
-    get_data = getattr(mod, 'get_data')
-    data = get_data()
-
-    try:
-        params["bytes_x_train"] = data[0].nbytes    #todo move this to DL frameworks module
-        params["shape_x_train"] = data[0].shape
-    except Exception:
-        pass
 
     if params["nb_gpus"] > 0:
         params["device"] = get_cute_device_str(params["gpu"])
@@ -65,5 +56,5 @@ def main(framework: "Framework to test" = "theano",
     mod = importlib.import_module("modules.do_"+params["framework"])
     run = getattr(mod, 'run')
 
-    params = run(params, data)
+    params = run(params)
     save_params(params)

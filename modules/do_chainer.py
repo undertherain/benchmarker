@@ -24,13 +24,9 @@ class Classifier(chainer.Chain):
 
 class DoChainer(INeuralNet):
 
-    def __init__(self, params):
-        super().__init__()
-        self.params = params
-
-    def run(self, params, data):
-        self.parameterize(params)
-        X_train, Y_train = data
+    def run(self):
+        X_train, Y_train = self.load_data()
+        params = self.params
         print(Y_train.shape)
         nb_epoch = 10
 
@@ -69,6 +65,6 @@ class DoChainer(INeuralNet):
         params["framework_full"] = "Chainer-" + chainer.__version__ 
         return params
 
-def run(params, data):
+def run(params):
     m = DoChainer(params)
-    return m.run(params, data)
+    return m.run()

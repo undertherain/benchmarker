@@ -6,28 +6,23 @@ from i_neural_net import INeuralNet
 
 class DoMxnet(INeuralNet):
 
-    def __init__(self, params):
-        super().__init__()
-        self.params = params
-
-    def run(self, params, data):
-        self.parameterize(params)
-        X_train, Y_train = data
+    def run(self):
+        X_train, Y_train = self.load_data()
     
-        mod = importlib.import_module("problems."+params["problem"]+".mxnet")
+        mod = importlib.import_module("problems." + self.params["problem"] + ".mxnet")
         get_model = getattr(mod, 'get_model')
 
         net = get_model(X_train[0].shape)
-        if params["nb_gpus"] > 0:
-            devices=[mx.gpu(i) for i in range(params["nb_gpus"])]
+        if self.params["nb_gpus"] > 0:
+            devices=[mx.gpu(i) for i in range(self.params["nb_gpus"])]
         else:
             devices = mx.cpu()
-        if params["nb_gpus"] == 1:
+        if self.params["nb_gpus"] == 1:
             devices = mx.gpu(0)
 
         print(devices)
-        nb_epoch = 2
-        train_iter = mx.io.NDArrayIter(X_train, Y_train, batch_size=params["batch_size"])
+        nb_epoch = 3
+        train_iter = mx.io.NDArrayIter(X_train, Y_train, batch_size=self.params["batch_size"])
         mod = mx.mod.Module(symbol=net,
             #context=mx.cpu(),
             context = devices,
@@ -49,11 +44,11 @@ class DoMxnet(INeuralNet):
             eval_metric = 'acc',
             num_epoch = nb_epoch)
         end = timer()
-        params["time"] = (end-start) / nb_epoch
-        params["framework_full"] = "MXNet-" + mx.__version__ 
-        return params
+        self.params["time"] = (end-start) / nb_epoch
+        self.params["framework_full"] = "MXNet-" + mx.__version__ 
+        return self.params
 
 
-def run(params, data):
+def run(params):
     m = DoMxnet(params)
-    return m.run(params, data)
+    return m.run()
