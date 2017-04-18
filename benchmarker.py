@@ -49,9 +49,9 @@ def main(framework: "Framework to test" = "theano",
     params["problem"] = problem
 
     if params["nb_gpus"] > 0:
-        params["device"] = get_cute_device_str(params["gpu"])
+        params["device"] = params["gpu"]
     else:
-        params["device"] = get_cute_device_str(params["cpu_brand"])
+        params["device"] = params["cpu_brand"]
 
     mod = importlib.import_module("modules.do_"+params["framework"])
     run = getattr(mod, 'run')
