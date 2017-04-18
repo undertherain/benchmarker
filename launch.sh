@@ -1,4 +1,5 @@
 #!/bin/sh
+#/work/alex/data/DL_perf/json
 
 problem=--problem=conv2d_1 
 gpus=--gpus=1
