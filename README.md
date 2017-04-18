@@ -12,7 +12,9 @@ various devices, frameworks und underlying software stacks, network architecture
 
 ## Installation
 
-Clone, install required packages... ah, should create deps file with them
+Clone, install required packages
+for example by running
+pip3 install [--user] -r requirements.txt
 
 ## API Reference
 
