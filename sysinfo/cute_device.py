@@ -3,6 +3,7 @@
 def get_cute_device_str(s):
 	shorts= ["GTX 980 Ti",
 		"P100-PCIE",
+		"P100-SXM2",
 		"K20Xm",
 		"K40c",		
 		"E5-2650",

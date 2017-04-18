@@ -10,7 +10,7 @@ class DoTheano(INeuralNet):
             print("multiple gpus with Theano not supported yet")
             return
         if self.params["nb_gpus"] > 0:
-            os.environ['THEANO_FLAGS'] = "device=cuda1"
+            os.environ['THEANO_FLAGS'] = "device=cuda0"
         else:
             os.environ['THEANO_FLAGS'] = "device=cpu"
         os.environ["KERAS_BACKEND"] = "theano"
