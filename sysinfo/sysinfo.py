@@ -16,12 +16,13 @@ def get_sys_info():
         proc = subprocess.Popen(script_path, stdout=tempf)
         proc.wait()
         tempf.seek(0)
-        b_info= (tempf.read())
-    json_info=b_info.decode()
+        b_info = (tempf.read())
+    json_info = b_info.decode()
     dic_info = json.loads(json_info)
     return dic_info
+
 
 @begin.start
 def main():
     info = get_sys_info()
-    print (json.dumps(info, sort_keys=True,  indent=4, separators=(',', ': ')))
+    print(json.dumps(info, sort_keys=True,  indent=4, separators=(',', ': ')))

@@ -19,7 +19,7 @@ def get_sys_info():
         import pycuda.driver as cuda
         import pycuda.autoinit
         result["gpu"] = cuda.Device(0).name()
-#       gpu memory etc
+#       todo: gett all gpus, count, memory etc
     except:
         result["gpu"] = "not detected"
 

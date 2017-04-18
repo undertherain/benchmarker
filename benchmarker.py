@@ -4,7 +4,6 @@ import os
 import datetime
 import begin
 import sys
-from sysinfo.cute_device import get_cute_device_str
 from sysinfo import sysinfo
 
 sys.path.append("modules")
