@@ -4,7 +4,7 @@ Benchmarker is a modular framework to automate a set of performance benchmarks, 
 
 ## Run
 
-python3 ./benchmarker --framework=theano --problem=conv2d_1 --path_out=./
+python3 ./benchmarker --framework=theano --problem=conv2d_1 --path-out=./
 
 ## Motivation
 
