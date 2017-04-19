@@ -25,17 +25,18 @@ class Classifier(chainer.Chain):
 class DoChainer(INeuralNet):
 
     def run(self):
-        X_train, Y_train = self.load_data()
         params = self.params
+        if params["nb_gpus"] > 1:
+            raise Exception("Multiple GPUs with chainer not supported yet")
+        X_train, Y_train = self.load_data()
         print(Y_train.shape)
         nb_epoch = 10
 
         mod = importlib.import_module("problems."+params["problem"]+".chainer")
         Net = getattr(mod, 'Net')
-
         model = Classifier(Net())
         if params["nb_gpus"] > 0:
-            id_device = 0
+            id_device = params["gpus"][0]
             chainer.cuda.get_device(id_device).use()
             model.to_gpu()
 
