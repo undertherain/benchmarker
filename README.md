@@ -18,7 +18,7 @@ pip3 install [--user] -r requirements.txt
 
 ## API Reference
 
-unde development 
+under development 
 
 
 ## Contributors
