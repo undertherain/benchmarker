@@ -3,7 +3,7 @@ import begin
 sys.path.append("../../../data_helpers")
 from cubes import get_cubes
 
-def get_data():
+def get_data(params):
 	return get_cubes(dims=2, edge=128, channels=1, cnt=2048)
 
 @begin.start

@@ -10,7 +10,7 @@ class INeuralNet():
         params = self.params
         mod = importlib.import_module("modules.problems." + params["problem"] + ".data")
         get_data = getattr(mod, 'get_data')
-        data = get_data()
+        data = get_data(params)
 
         params["bytes_x_train"] = data[0].nbytes
         params["shape_x_train"] = data[0].shape
