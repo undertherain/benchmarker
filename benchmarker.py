@@ -44,7 +44,7 @@ def main(framework: "Framework to test" = "theano",
     params = sysinfo.get_sys_info()
     params["framework"] = framework
     params["path_out"] = path_out
-    params["gpus"] = map(int, gpus.split(','))
+    params["gpus"] = list(map(int, gpus.split(',')))
     params["nb_gpus"] = len(gpus)
     params["problem"] = problem
 

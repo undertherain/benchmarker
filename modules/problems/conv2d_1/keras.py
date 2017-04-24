@@ -13,4 +13,6 @@ def get_model(shape):
     model.add(Flatten())
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
+    optimizer = keras.optimizers.Adam()
+    model.compile(loss = 'binary_crossentropy', optimizer = optimizer, metrics=["accuracy"])
     return model

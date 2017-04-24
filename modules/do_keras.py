@@ -11,8 +11,6 @@ def run(params, data):
 
     
     model = get_model(X_train[0].shape)
-    optimizer = keras.optimizers.Adam()
-    model.compile(loss = 'binary_crossentropy', optimizer = optimizer, metrics=["accuracy"])
     print("preheat")
     model.fit(X_train, Y_train, batch_size=params["batch_size"], epochs = 1)
     nb_epoch = 3
