@@ -1,9 +1,11 @@
+import sys
 import numpy as np
-from keras.utils.data_utils import get_file
+sys.path.append("../../../data_helpers/")
+from download import get_file
 
 
 def get_data(params):
-    params["batch_size"]=512
+    params["batch_size"] = 512
     path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
     text = open(path).read().lower()
     print('corpus length:', len(text))
@@ -21,9 +23,7 @@ def get_data(params):
     for i in range(0, len(text) - maxlen, step):
         sentences.append(text[i: i + maxlen])
         next_chars.append(text[i + maxlen])
-#    print('nb sequences:', len(sentences))
 
-    #print('Vectorization...')
     X = np.zeros((len(sentences), maxlen, len(chars)), dtype=np.bool)
     y = np.zeros((len(sentences), len(chars)), dtype=np.bool)
     for i, sentence in enumerate(sentences):
