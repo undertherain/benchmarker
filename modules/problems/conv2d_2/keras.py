@@ -21,4 +21,3 @@ def get_model(params):
     optimizer = keras.optimizers.Adam()
     model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=["accuracy"])
     return model
-    return model
