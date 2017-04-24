@@ -6,7 +6,7 @@ class DoTensorflow(INeuralNet):
     """docstring for ClassName"""
 
     def run(self):
-        #todo set image format
+        # todo set image format
         data = self.load_data()
 
         os.environ["KERAS_BACKEND"] = "tensorflow"
