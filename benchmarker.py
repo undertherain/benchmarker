@@ -38,7 +38,7 @@ def save_params(params):
 @begin.start
 def main(framework: "Framework to test" = "theano",
          problem: "problem to solve" = "conv2d_1",
-         path_out: "path to store results" = "./",
+         path_out: "path to store results" = "./logs",
          gpus: "list of gpus to use" = ""
          ):
     params = sysinfo.get_sys_info()
