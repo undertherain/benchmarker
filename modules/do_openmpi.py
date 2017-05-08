@@ -1,17 +1,25 @@
 from timeit import default_timer as timer
 from mpi_base import MPI
+import begin
 import importlib
-
 
 class OpenMPI(MPI):
     def __init__(self):
         super(OpenMPI, self).__init__()
-        self.default_args = " --bind-to core "
+        #self.default_args += " --bind-to core "
 
     def get_args(self):
-        return " -np " + self.nprocs  + " -f " + self.hostfile + self.default_args 
+        hosts = ""
+        if self.hostfile == None:
+            hosts = " -host localhost,localhost"
+        else:
+            hosts = " -f " + self.hostfile
+        return " -np " + self.nprocs  + hosts + self.default_args 
 
-def run(params):
+@begin.start
+def run(params={}):
+    params["problem"] = "alltoall"
+
     # Setup problem
     mpi = OpenMPI()
 
@@ -20,10 +28,10 @@ def run(params):
     app       = get_model(params)
 
     # setup runner: command/script, hostfile
-    output = app.execute(mpi.mpirun, mpi.args)
+    output = app.execute(mpi.mpirun, mpi.get_args())
 
-    params["time"]        = output.timing
-    params["app_config"]  = output.config
+    params["time"]        = output["timing"]
+    params["app_config"]  = output["config"]
 
     # Run ompi_info to get the version
     ompi_version = ""
