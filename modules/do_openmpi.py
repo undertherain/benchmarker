@@ -1,6 +1,4 @@
-from timeit import default_timer as timer
 from mpi_base import MPI
-import begin
 import importlib
 
 class OpenMPI(MPI):
@@ -16,7 +14,6 @@ class OpenMPI(MPI):
             hosts = " -f " + self.hostfile
         return " -np " + self.nprocs  + hosts + self.default_args 
 
-@begin.start
 def run(params={}):
     params["problem"] = "alltoall"
 

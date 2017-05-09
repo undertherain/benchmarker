@@ -1,6 +1,5 @@
 import os
 import sys
-import begin
 import subprocess
 
 ''' IDEA: we can create an Alltoall superclass for other alltoall 
@@ -40,7 +39,6 @@ class OSU_Alltoall():
             print(stderr)
             exit(1)
 
-        print (val)
         return val
 
     def __compile(self, params=None):
@@ -67,7 +65,6 @@ def get_app(params=None):
 
     return app
 
-@begin.start
 def main():
     app = get_app(None)
     print (app.run_command(None))
