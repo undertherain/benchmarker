@@ -3,7 +3,10 @@ import json
 import os
 import sys
 
-sys.path.append("/myhome/home/kevin/workspace/github/benchmarker/util")
+util_parent = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+util_path = os.path.join(util_parent, 'util')
+sys.path.append(util_path)
+
 import abstractprocess
 
 def get_script_dir():
