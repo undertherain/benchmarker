@@ -3,11 +3,7 @@ import json
 import os
 import sys
 
-util_parent = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-util_path = os.path.join(util_parent, 'util')
-sys.path.append(util_path)
-
-import abstractprocess
+from util import abstractprocess
 
 def get_script_dir():
     path = os.path.dirname(os.path.realpath(__file__))
