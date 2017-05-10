@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-
+from util import abstractprocess
 ''' IDEA: we can create an Alltoall superclass for other alltoall 
 	implementations (Intel Micro Benchmark (IMB) etc.)
 '''
@@ -29,18 +29,16 @@ class OSU_Alltoall():
 
     def execute(self, mpi):
         cmd  = mpi + self.run_command()
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = proc.communicate()
-
-        if len(stderr) == 0:
-            val = {} 
-            val["timing"] = self.__parse_output(stdout.splitlines()[3:])
-            val["config"] = cmd
-        else:
-            print(cmd)
-            print("ERROR:")
-            print(stderr)
+        proc = abstractprocess.Process("local", command= cmd)
+        output = proc.get_output()
+        if output["returncode"] != 0:
+            print("Cannot get benchmark. Exiting.") 
+            print(output)
             exit(1)
+        
+        val = {}
+        val["config"] = " ".join(cmd)
+        val["timing"] = self.__parse_output(output["out"])
 
         return val
 
@@ -48,6 +46,7 @@ class OSU_Alltoall():
         pass
 
     def __parse_output(self, output):
+        output = output.splitlines()[3:]
         results = {}
         for line in output:
             size, t_avg, t_min, t_max, iterations = line.split()

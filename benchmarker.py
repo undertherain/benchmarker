@@ -6,6 +6,7 @@ import begin
 import sys
 from sysinfo import sysinfo
 
+sys.path.append("util")
 sys.path.append("modules")
 sys.path.append("data_helpers")
 
