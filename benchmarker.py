@@ -35,6 +35,7 @@ def save_params(params):
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
 
+
 def get_modules():
     path_modules="modules"
     return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules]) if not is_pkg and name.startswith('do_')]
@@ -47,7 +48,7 @@ def main(framework: "Framework to test" = "numpy",
          gpus: "list of gpus to use" = ""
          ):
     if len(sys.argv) < 2:
-        print("available frameworks:")
+        print("available frameworks :")
         for plugin in get_modules():
             print("\t", plugin[3:])
         return
