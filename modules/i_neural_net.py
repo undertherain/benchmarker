@@ -4,7 +4,7 @@ import importlib
 class INeuralNet():
     def  __init__(self, params):
         self.params = params
-        self.params["batch_size"] = 8
+        self.params["batch_size"] = 32
 
     def load_data(self):
         params = self.params
