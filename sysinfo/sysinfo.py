@@ -1,9 +1,13 @@
 import begin
 import json
 import os
-import tempfile
-import subprocess
+import sys
 
+util_parent = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+util_path = os.path.join(util_parent, 'util')
+sys.path.append(util_path)
+
+import abstractprocess
 
 def get_script_dir():
     path = os.path.dirname(os.path.realpath(__file__))
@@ -12,12 +16,14 @@ def get_script_dir():
 
 def get_sys_info():
     script_path = os.path.join(get_script_dir(), '_sysinfo.py')
-    with tempfile.TemporaryFile() as tempf:
-        proc = subprocess.Popen(script_path, stdout=tempf)
-        proc.wait()
-        tempf.seek(0)
-        b_info = (tempf.read())
-    json_info = b_info.decode()
+    script_cmd  = [script_path]
+    proc = abstractprocess.Process("local", command = script_cmd)
+    result = proc.get_output()
+    if result["returncode"] != 0:
+        print("Cannot get system info. Exiting.")
+        print(result)
+        exit(1)
+    json_info = result["out"]
     dic_info = json.loads(json_info)
     return dic_info
 
