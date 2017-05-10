@@ -6,13 +6,15 @@ class OpenMPI(MPI):
         super(OpenMPI, self).__init__()
         #self.default_args += " --bind-to core "
 
-    def get_args(self):
-        hosts = ""
+    def get_mpi(self):
+        command = [self.mpirun, "-np", self.nprocs]
         if self.hostfile == None:
-            hosts = " -host localhost,localhost"
+            command.extend(["-host", "localhost,localhost"])
         else:
-            hosts = " -f " + self.hostfile
-        return " -np " + self.nprocs  + hosts + self.default_args 
+            command.extend(["-f", self.hostfile])
+        
+        command.extend(self.default_args)
+        return command
 
 def run(params={}):
     params["problem"] = "alltoall"
@@ -25,7 +27,7 @@ def run(params={}):
     app       = get_model(params)
 
     # setup runner: command/script, hostfile
-    output = app.execute(mpi.mpirun, mpi.get_args())
+    output = app.execute(mpi.get_mpi())
 
     params["time"]        = output["timing"]
     params["app_config"]  = output["config"]

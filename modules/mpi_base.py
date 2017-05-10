@@ -7,4 +7,4 @@ class MPI(object):
         self.mpirun   = mpirun
         self.hostfile = hostfile
         self.nprocs   = nprocs
-        self.default_args = ""
+        self.default_args = []

@@ -11,22 +11,25 @@ class OSU_Alltoall():
         self.path        = os.path.dirname(os.path.realpath(__file__))
         self.source_code = "osu_alltoall.c"
         self.binary      = "osu_alltoall"
-        self.run_args    = "-f"
+        self.run_args    = ["-f"]
 
         self.__compile(params)
 
     def add_run_args(self, params):
-	    if "message_sizes" in params:
-	        self.run_args =  self.run_args + " -m " + params["message_sizes"]
-	    if "iterations" in params:
-	        self.run_args =  self.run_args + " -x " + params["iterations"]
+        if "message_sizes" in params:
+            self.run_args.append("-m")
+            self.run_args.append(params["message_sizes"])
+        if "iterations" in params:
+            self.run_args.append("-x")
+            self.run_args.append(params["iterations"])
 
     def run_command(self, params=None):
-    	return self.path + "/" + self.binary + " " + self.run_args
+        app = os.path.join(self.path, self.binary)
+        return [app] + self.run_args
 
-    def execute(self, mpirun, mpi_args):
-        cmd  = " ".join([mpirun, mpi_args, self.run_command()])
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    def execute(self, mpi):
+        cmd  = mpi + self.run_command()
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()
 
         if len(stderr) == 0:
