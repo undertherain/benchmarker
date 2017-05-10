@@ -15,7 +15,7 @@ class DoTensorflow(INeuralNet):
         if self.params["nb_gpus"] > 1:
             print("multiple gpus with TF not supported yet")
             return
-        from do_keras import run as run2
+        from _keras import run as run2
         params = run2(self.params, data)
         return params
 

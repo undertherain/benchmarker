@@ -2,9 +2,6 @@ import numpy as np
 from timeit import default_timer as timer
 
 
-def register_option():
-    
-
 
 def run(params):
     if params["problem"] != "2048": # todo change to actual parameter

@@ -14,7 +14,7 @@ class DoTheano(INeuralNet):
         else:
             os.environ['THEANO_FLAGS'] = "device=cpu"
         os.environ["KERAS_BACKEND"] = "theano"
-        from do_keras import run as run2
+        from _keras import run as run2
         params = run2(self.params, data)
         return params
 

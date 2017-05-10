@@ -4,6 +4,7 @@ import os
 import datetime
 import begin
 import sys
+import pkgutil
 from sysinfo import sysinfo
 
 sys.path.append("modules")
@@ -34,13 +35,23 @@ def save_params(params):
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
 
+def get_modules():
+    path_modules="modules"
+    return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules]) if not is_pkg and name.startswith('do_')]
+
 
 @begin.start
-def main(framework: "Framework to test" = "theano",
-         problem: "problem to solve" = "conv2d_1",
+def main(framework: "Framework to test" = "numpy",
+         problem: "problem to solve" = "2048",
          path_out: "path to store results" = "./logs",
          gpus: "list of gpus to use" = ""
          ):
+    if len(sys.argv) < 2:
+        print("available frameworks:")
+        for plugin in get_modules():
+            print("\t", plugin[3:])
+        return
+
     params = sysinfo.get_sys_info()
     params["framework"] = framework
     params["path_out"] = path_out
