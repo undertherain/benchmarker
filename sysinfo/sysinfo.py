@@ -9,6 +9,7 @@ sys.path.append(util_path)
 
 import abstractprocess
 
+
 def get_script_dir():
     path = os.path.dirname(os.path.realpath(__file__))
     return path
@@ -16,8 +17,8 @@ def get_script_dir():
 
 def get_sys_info():
     script_path = os.path.join(get_script_dir(), '_sysinfo.py')
-    script_cmd  = [sys.executable, script_path]
-    proc = abstractprocess.Process("local", command = script_cmd)
+    script_cmd = [sys.executable, script_path]
+    proc = abstractprocess.Process("local", command=script_cmd)
     result = proc.get_output()
     if result["returncode"] != 0:
         print("Cannot get system info. Exiting.")
