@@ -1,7 +1,4 @@
-import sys
 import begin
-
-sys.path.append("../../../data_helpers/")
 from cubes import get_cubes
 
 
