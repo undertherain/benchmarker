@@ -1,5 +1,4 @@
 import chainer
-import chainer
 import chainer.functions as F
 import chainer.links as L
 
@@ -17,7 +16,7 @@ class Net(chainer.Chain):
         #h = F.max_pooling_2d(h,2)
         h = F.relu(self.conv2(h))
 #        h = F.relu(self.conv3(h))
- #       h = F.dropout(F.max_pooling_2d(F.relu(self.conv4(h)), 2),ratio=0.3)
+#        h = F.dropout(F.max_pooling_2d(F.relu(self.conv4(h)), 2),ratio=0.3)
         #h = F.relu(self.l1(h))
         h = self.l(h)
         return h

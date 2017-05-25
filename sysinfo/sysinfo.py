@@ -16,7 +16,7 @@ def get_script_dir():
 
 def get_sys_info():
     script_path = os.path.join(get_script_dir(), '_sysinfo.py')
-    script_cmd  = [script_path]
+    script_cmd  = [sys.executable, script_path]
     proc = abstractprocess.Process("local", command = script_cmd)
     result = proc.get_output()
     if result["returncode"] != 0:

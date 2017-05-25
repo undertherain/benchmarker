@@ -1,6 +1,3 @@
 begins
 py-cpuinfo
 pydataset
-
-
-

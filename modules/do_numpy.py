@@ -9,12 +9,12 @@ def run(params):
     if "nb_gpus" in params:
         if params["nb_gpus"]>0:
             raise Exception("Numpy framework does not work with GPU back-end")
-    
+
     size = 2048
 
     a = np.random.random((size, size))
     b = np.random.random((size, size))
-    
+
     nb_epoch = 1
 
     start = timer()

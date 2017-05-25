@@ -1,6 +1,5 @@
 import numpy as np
 import chainer
-import chainer
 import chainer.functions as F
 import chainer.links as L
 from chainer import training
@@ -16,10 +15,10 @@ class Classifier(chainer.Chain):
 
     def __call__(self, x, t):
         y = self.predictor(x)
-        loss = F.sigmoid_cross_entropy(y, t)        
+        loss = F.sigmoid_cross_entropy(y, t)
         accuracy = F.binary_accuracy(y, t)
         chainer.report({'loss': loss, 'accuracy': accuracy}, self)
-        return loss 
+        return loss
 
 
 class DoChainer(INeuralNet):
@@ -63,7 +62,7 @@ class DoChainer(INeuralNet):
         end = timer()
 
         params["time"]=(end-start)/nb_epoch
-        params["framework_full"] = "Chainer-" + chainer.__version__ 
+        params["framework_full"] = "Chainer-" + chainer.__version__
         return params
 
 def run(params):

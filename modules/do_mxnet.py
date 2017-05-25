@@ -8,7 +8,7 @@ class DoMxnet(INeuralNet):
 
     def run(self):
         X_train, Y_train = self.load_data()
-    
+
         mod = importlib.import_module("problems." + self.params["problem"] + ".mxnet")
         get_model = getattr(mod, 'get_model')
 
@@ -45,7 +45,7 @@ class DoMxnet(INeuralNet):
             num_epoch = nb_epoch)
         end = timer()
         self.params["time"] = (end-start) / nb_epoch
-        self.params["framework_full"] = "MXNet-" + mx.__version__ 
+        self.params["framework_full"] = "MXNet-" + mx.__version__
         return self.params
 
 
