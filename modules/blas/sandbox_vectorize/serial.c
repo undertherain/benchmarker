@@ -5,6 +5,7 @@
 typedef float t_float;
 #define ALIGNMENT 1024*4
 
+//void gemm(t_float * __restrict  __attribute__ ((aligned (8))) A, t_float * __restrict __attribute__ ((aligned (8))) B , t_float *  __restrict __attribute__ ((aligned (8)))C, size_t n) 
 void gemm(t_float * restrict _A, t_float * restrict _B , t_float * restrict _C, size_t n) 
 {     
 //	A = __builtin_assume_aligned (A, ALIGNMENT);
