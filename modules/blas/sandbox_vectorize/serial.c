@@ -4,9 +4,10 @@
 
 typedef float t_float;
 #define ALIGNMENT 1024*4
+#define n 1024
 
 //void gemm(t_float * __restrict  __attribute__ ((aligned (8))) A, t_float * __restrict __attribute__ ((aligned (8))) B , t_float *  __restrict __attribute__ ((aligned (8)))C, size_t n) 
-void gemm(t_float * restrict _A, t_float * restrict _B , t_float * restrict _C, size_t n) 
+void gemm(t_float * restrict _A, t_float * restrict _B , t_float * restrict _C) 
 {     
 //	A = __builtin_assume_aligned (A, ALIGNMENT);
   	//B = __builtin_assume_aligned (B, ALIGNMENT);
@@ -33,7 +34,7 @@ void gemm(t_float * restrict _A, t_float * restrict _B , t_float * restrict _C, 
 int main(int argc, char * argv[])
 {
 	double dtime;
-	size_t n = 1024;
+//	size_t n = 1024;
 
 	t_float * A = (t_float *) malloc (n * n * sizeof(t_float));
 	t_float * B = (t_float *) malloc (n * n * sizeof(t_float));
@@ -58,7 +59,7 @@ int main(int argc, char * argv[])
     printf("in main     \t%f\n", dtime);
 
 	dtime = omp_get_wtime();
-	gemm(A,B,C,n);
+	gemm(A,B,C);
     dtime = omp_get_wtime() - dtime;
     printf("in function\t%f\n", dtime);
 
