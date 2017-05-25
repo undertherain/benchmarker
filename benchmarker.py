@@ -5,10 +5,16 @@ import datetime
 import begin
 import sys
 import pkgutil
-from sysinfo import sysinfo
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 sys.path.append("modules")
 sys.path.append("util/data")
+sys.path.append("util/system-query")
+
+#from sysinfo import sysinfo
+from system_query import query_all
 
 
 def get_time_str():
@@ -53,21 +59,23 @@ def main(framework: "Framework to test" = "numpy",
             print("\t", plugin[3:])
         return
 
-    params = sysinfo.get_sys_info()
+    #params = sysinfo.get_sys_info()
+    params = {}
+    params["platform"] = query_all()
     params["framework"] = framework
     params["path_out"] = path_out
+    params["problem"] = problem
     if len(gpus)>0:
         params["gpus"] = list(map(int, gpus.split(',')))
     else:
         params["gpus"] = []
 
     params["nb_gpus"] = len(gpus)
-    params["problem"] = problem
 
     if params["nb_gpus"] > 0:
-        params["device"] = params["gpu"]
+        params["device"] = params["platform"]["gpus"][0]["brand"]
     else:
-        params["device"] = params["cpu_brand"]
+        params["device"] = params["platform"]["cpu"]["brand"]
 
     mod = importlib.import_module("modules.do_"+params["framework"])
     run = getattr(mod, 'run')
