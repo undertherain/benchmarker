@@ -70,7 +70,7 @@ def main(framework: "Framework to test" = "numpy",
     else:
         params["gpus"] = []
 
-    params["nb_gpus"] = len(gpus)
+    params["nb_gpus"] = len(params["gpus"])
 
     if params["nb_gpus"] > 0:
         params["device"] = params["platform"]["gpus"][0]["brand"]
