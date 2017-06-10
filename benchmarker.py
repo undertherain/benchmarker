@@ -7,7 +7,7 @@ import sys
 import pkgutil
 import logging
 
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
 
 sys.path.append("modules")
 sys.path.append("util/data")
