@@ -7,7 +7,7 @@ import sys
 import pkgutil
 import logging
 
-#logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 sys.path.append("modules")
 sys.path.append("util/data")
@@ -34,7 +34,7 @@ def gen_name_output_file(params):
 
 
 def save_params(params):
-    str_result=json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
+    str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
     path_out = params["path_out"]
     name_file = gen_name_output_file(params)
@@ -43,7 +43,7 @@ def save_params(params):
 
 
 def get_modules():
-    path_modules="modules"
+    path_modules = "modules"
     return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules]) if not is_pkg and name.startswith('do_')]
 
 
@@ -59,13 +59,13 @@ def main(framework: "Framework to test" = "numpy",
             print("\t", plugin[3:])
         return
 
-    #params = sysinfo.get_sys_info()
+    # params = sysinfo.get_sys_info()
     params = {}
     params["platform"] = query_all()
     params["framework"] = framework
     params["path_out"] = path_out
     params["problem"] = problem
-    if len(gpus)>0:
+    if len(gpus) > 0:
         params["gpus"] = list(map(int, gpus.split(',')))
     else:
         params["gpus"] = []

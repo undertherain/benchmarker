@@ -1,7 +1,6 @@
 import numpy as np
 import chainer
 import chainer.functions as F
-import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 from timeit import default_timer as timer
@@ -28,7 +27,7 @@ class DoChainer(INeuralNet):
 #        if params["nb_gpus"] > 1:
 #            raise Exception("Multiple GPUs with chainer not supported yet")
         X_train, Y_train = self.load_data()
-        print(Y_train.shape)
+        # print(Y_train.shape)
         nb_epoch = 10
 
         mod = importlib.import_module("problems."+params["problem"]+".chainer")
@@ -41,35 +40,35 @@ class DoChainer(INeuralNet):
 
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)
-        train = chainer.datasets.tuple_dataset.TupleDataset(X_train,Y_train[:,np.newaxis])
-        #test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
-        train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"],repeat=True, shuffle=False)
-        #test_iter  = chainer.iterators.SerialIterator(test, batch_size=32, repeat=False, shuffle=False)
+        train = chainer.datasets.tuple_dataset.TupleDataset(X_train, Y_train[:, np.newaxis])
+        # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
+        train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
+        # test_iter  = chainer.iterators.SerialIterator(test, batch_size=32, repeat=False, shuffle=False)
 
-        if params["nb_gpus"]==0:
+        if params["nb_gpus"] == 0:
             updater = training.StandardUpdater(train_iter, optimizer)
         else:
-            if params["nb_gpus"]==1:
+            if params["nb_gpus"] == 1:
                 updater = training.StandardUpdater(train_iter, optimizer, device=id_device)
-            else: 
-                dic_devices = {str(i):i for i in params["gpus"][1:]}
+            else:
+                dic_devices = {str(i): i for i in params["gpus"][1:]}
                 dic_devices["main"] = params["gpus"][0]
                 updater = training.ParallelUpdater(train_iter, optimizer, devices=dic_devices)
-#   
 
-        trainer = training.Trainer(updater, (nb_epoch, 'epoch'), out='result')
-        #trainer.extend(extensions.Evaluator(test_iter, model, device=id_device))
-        #trainer.extend(extensions.Evaluator(test_iter, model))
+        trainer = training.Trainer(updater, (nb_epoch, 'epoch'), out='/tmp/result')
+        # trainer.extend(extensions.Evaluator(test_iter, model, device=id_device))
+        # trainer.extend(extensions.Evaluator(test_iter, model))
         trainer.extend(extensions.LogReport())
         trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy']))
-        #trainer.extend(extensions.ProgressBar())
+        # trainer.extend(extensions.ProgressBar())
         start = timer()
         trainer.run()
         end = timer()
 
-        params["time"]=(end-start)/nb_epoch
+        params["time"] = (end-start) / nb_epoch
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params
+
 
 def run(params):
     m = DoChainer(params)
