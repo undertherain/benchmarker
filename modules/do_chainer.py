@@ -1,6 +1,7 @@
 import numpy as np
 import chainer
 import chainer.functions as F
+import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 from timeit import default_timer as timer
@@ -21,26 +22,34 @@ class Classifier(chainer.Chain):
 
 
 class DoChainer(INeuralNet):
+    def __init__(self, params):
+        super().__init__(params)
+        self.params["channels_first"] = True
 
     def run(self):
         params = self.params
-#        if params["nb_gpus"] > 1:
-#            raise Exception("Multiple GPUs with chainer not supported yet")
         X_train, Y_train = self.load_data()
-        # print(Y_train.shape)
         nb_epoch = 10
 
-        mod = importlib.import_module("problems."+params["problem"]+".chainer")
+
+        mod = importlib.import_module("problems." + params["problem"] + ".chainer")
         Net = getattr(mod, 'Net')
-        model = Classifier(Net())
+        if len(Y_train.shape) == 1:
+            Y_train = Y_train[:, np.newaxis]
+            model = Classifier(Net())
+        else:
+            model = L.Classifier(Net())
         if params["nb_gpus"] == 1:
             id_device = params["gpus"][0]
             chainer.cuda.get_device(id_device).use()
             model.to_gpu()
 
+        print("X_train:", type(X_train), X_train.shape)
+        print("Y_train:", type(Y_train), Y_train.shape)
+
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)
-        train = chainer.datasets.tuple_dataset.TupleDataset(X_train, Y_train[:, np.newaxis])
+        train = chainer.datasets.tuple_dataset.TupleDataset(X_train, Y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
         train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
         # test_iter  = chainer.iterators.SerialIterator(test, batch_size=32, repeat=False, shuffle=False)

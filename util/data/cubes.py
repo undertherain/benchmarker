@@ -1,7 +1,8 @@
 import numpy as np
 
-def get_cubes(dims=3, edge=8, channels=1, cnt=16, cnt_classes=2, data_format="channels_first", onehot=False):
-    if data_format == "channels_first":
+
+def get_cubes(dims=3, edge=8, channels=1, cnt=16, cnt_classes=2, channels_first=True, onehot=False):
+    if channels_first:
         shape = tuple([cnt, channels] + [edge] * dims)
     else:
         shape = tuple([cnt] + [edge] * dims + [channels])

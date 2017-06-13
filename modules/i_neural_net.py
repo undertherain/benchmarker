@@ -2,9 +2,10 @@ import importlib
 
 
 class INeuralNet():
-    def  __init__(self, params):
+    def __init__(self, params):
         self.params = params
         self.params["batch_size"] = 32
+        self.params["channels_first"] = True
 
     def load_data(self):
         params = self.params

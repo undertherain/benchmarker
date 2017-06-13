@@ -4,6 +4,10 @@ from i_neural_net import INeuralNet
 
 class DoTheano(INeuralNet):
 
+    def __init__(self, params):
+        super().__init__(params)
+        self.params["channels_first"] = True
+
     def run(self):
         data = self.load_data()
         if self.params["nb_gpus"] > 1:
