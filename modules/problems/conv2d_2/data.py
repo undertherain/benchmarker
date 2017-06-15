@@ -3,7 +3,7 @@ from cubes import get_cubes
 
 
 def get_data(params):
-    return get_cubes(dims=2, edge=128, channels=1, cnt=2048, channels_first=params["channels_first"])
+    return get_cubes(dims=2, edge=128, channels=1, cnt=10*1024, channels_first=params["channels_first"])
 
 
 @begin.start

@@ -46,6 +46,9 @@ class DoChainer(INeuralNet):
 
         print("X_train:", type(X_train), X_train.shape)
         print("Y_train:", type(Y_train), Y_train.shape)
+        result = model.predictor(X_train)
+        print (result.shape)
+        return 
 
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)
