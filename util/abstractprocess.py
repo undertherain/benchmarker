@@ -26,7 +26,7 @@ class Process(object):
         self.proc = subprocess.Popen(self.command, stdout=self.out_file, stderr=self.err_file)
 
     def get_output(self):
-        if self.proc == None:
+        if self.proc is None:
             return None
 
         self.proc.wait()

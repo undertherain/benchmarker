@@ -1,0 +1,4 @@
+[submodule "system-query"]
+	path = util/system-query
+	url = https://github.com/mbdevpl/system-query
+	branch = master

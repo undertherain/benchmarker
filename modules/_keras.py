@@ -5,7 +5,14 @@ import importlib
 
 
 def run(params, data):
+    if params["channels_first"]:
+        keras.backend.set_image_data_format("channels_first")
+    else:
+        keras.backend.set_image_data_format("channels_last")
+
     X_train, Y_train = data
+    # print(Y_train)
+
     mod = importlib.import_module("problems." + params["problem"]+".keras")
     get_model = getattr(mod, 'get_model')
 

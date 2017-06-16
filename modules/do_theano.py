@@ -4,6 +4,10 @@ from i_neural_net import INeuralNet
 
 class DoTheano(INeuralNet):
 
+    def __init__(self, params):
+        super().__init__(params)
+        self.params["channels_first"] = True
+
     def run(self):
         data = self.load_data()
         if self.params["nb_gpus"] > 1:
@@ -14,7 +18,7 @@ class DoTheano(INeuralNet):
         else:
             os.environ['THEANO_FLAGS'] = "device=cpu"
         os.environ["KERAS_BACKEND"] = "theano"
-        from do_keras import run as run2
+        from _keras import run as run2
         params = run2(self.params, data)
         return params
 
