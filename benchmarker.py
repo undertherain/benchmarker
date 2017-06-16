@@ -11,7 +11,7 @@ import logging
 
 sys.path.append("modules")
 sys.path.append("util/data")
-sys.path.append("util/system-query")
+sys.path.append("util/system_query")
 
 #from sysinfo import sysinfo
 from system_query import query_all
