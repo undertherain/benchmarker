@@ -2,25 +2,41 @@ from mpi_base import MPI
 import importlib
 
 class OpenMPI(MPI):
-    def __init__(self):
-        super(OpenMPI, self).__init__()
+    def __init__(self, flags):
+        super(OpenMPI, self).__init__(flags)
         #self.default_args += " --bind-to core "
 
+    @staticmethod
+    def show_help():
+        MPI.show_help()
+        print("Printing OpenMPI help....\n")
+
     def get_mpi(self):
-        command = [self.mpirun, "-np", self.nprocs]
+        command = [self.mpirun, "-np", str(self.nprocs)]
         if self.hostfile == None:
             command.extend(["-host", "localhost,localhost"])
         else:
-            command.extend(["-f", self.hostfile])
+            command.extend(["-hostfile", self.hostfile])
         
         command.extend(self.default_args)
         return command
 
 def run(params={}):
-    params["problem"] = "alltoall"
+    # TODO: move flag-parsing to the the MPI base module
+
+    if params["misc"] == "help":
+        OpenMPI.show_help()
+        exit(0)
+
+    if params["misc"] == None:
+        print("Running with default MPI flags.")
+        flags = {"hostfile":None, "np":2}
+    else:
+        flags = params["misc"].split(",")
+        flags = dict(flag.split(':') for flag in flags)        
 
     # Setup problem
-    mpi = OpenMPI()
+    mpi = OpenMPI(flags)
 
     mod       = importlib.import_module("problems." + params["problem"]+".openmpi")
     get_model = getattr(mod, 'get_model')

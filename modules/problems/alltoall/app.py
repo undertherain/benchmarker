@@ -4,6 +4,10 @@ import subprocess
 from util import abstractprocess
 ''' IDEA: we can create an Alltoall superclass for other alltoall 
 	implementations (Intel Micro Benchmark (IMB) etc.)
+
+    This requires an alltoall microbenchmark.
+        OSU Micro-Benchmark
+         - http://mvapich.cse.ohio-state.edu/benchmarks/
 '''
 
 class OSU_Alltoall():

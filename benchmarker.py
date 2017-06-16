@@ -55,7 +55,8 @@ def get_modules():
 def main(framework: "Framework to test" = "numpy",
          problem: "problem to solve" = "2048",
          path_out: "path to store results" = "./logs",
-         gpus: "list of gpus to use" = ""
+         gpus: "list of gpus to use" = "",
+         misc: "comma separated list of key:value pairs" = None
          ):
     if len(sys.argv) < 2:
         print("available frameworks :")
@@ -69,6 +70,7 @@ def main(framework: "Framework to test" = "numpy",
     params["framework"] = framework
     params["path_out"] = path_out
     params["problem"] = problem
+    params["misc"] = misc
     if len(gpus) > 0:
         params["gpus"] = list(map(int, gpus.split(',')))
     else:
