@@ -11,11 +11,12 @@ import logging
 
 sys.path.append("util")
 sys.path.append("modules")
+sys.path.append("util")
 sys.path.append("util/data")
-sys.path.append("util/system-query")
+#sys.path.append("util/system_query")
 
-#from sysinfo import sysinfo
-from system_query import query_all
+import sysinfo
+#from system_query import query_all
 
 
 def get_time_str():
@@ -38,6 +39,8 @@ def save_params(params):
     str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
     path_out = params["path_out"]
+    if not os.path.isdir(path_out):
+        os.makedirs(path_out)
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
@@ -62,7 +65,7 @@ def main(framework: "Framework to test" = "numpy",
 
     # params = sysinfo.get_sys_info()
     params = {}
-    params["platform"] = query_all()
+    params["platform"] = sysinfo.get_sys_info()
     params["framework"] = framework
     params["path_out"] = path_out
     params["problem"] = problem
