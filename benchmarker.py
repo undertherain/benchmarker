@@ -38,6 +38,8 @@ def save_params(params):
     str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
     path_out = params["path_out"]
+    if not os.path.isdir(path_out):
+        os.makedirs(path_out)
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as f:
         f.write(str_result)
