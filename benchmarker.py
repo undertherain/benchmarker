@@ -10,11 +10,12 @@ import logging
 # logging.basicConfig(level=logging.INFO)
 
 sys.path.append("modules")
+sys.path.append("util")
 sys.path.append("util/data")
-sys.path.append("util/system_query")
+#sys.path.append("util/system_query")
 
-#from sysinfo import sysinfo
-from system_query import query_all
+import sysinfo
+#from system_query import query_all
 
 
 def get_time_str():
@@ -61,7 +62,7 @@ def main(framework: "Framework to test" = "numpy",
 
     # params = sysinfo.get_sys_info()
     params = {}
-    params["platform"] = query_all()
+    params["platform"] = sysinfo.get_sys_info()
     params["framework"] = framework
     params["path_out"] = path_out
     params["problem"] = problem
