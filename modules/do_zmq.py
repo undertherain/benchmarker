@@ -46,6 +46,8 @@ class ZMQ(object):
     @staticmethod
     def show_help():
         print("Printing ZMQ help....\n")
+        print("Example:")
+        print("     # python3.6 ./benchmarker.py --framework=zmq --problem=bandwidth --misc=svr_ip:10.1.28.83,clt_ip:10.1.28.82,interface:ib0")
 
 def run(params):
     params["problem"] = "bandwidth"

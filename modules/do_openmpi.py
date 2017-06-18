@@ -10,7 +10,10 @@ class OpenMPI(MPI):
     def show_help():
         MPI.show_help()
         print("Printing OpenMPI help....\n")
+        print("Open MPI Example:")
+        print("     # python3.6 ./benchmarker.py --framework=openmpi --problem=alltoall --misc=np:2,hostfile:/home/kevin/hostfile")
 
+        
     def get_mpi(self):
         command = [self.mpirun, "-np", str(self.nprocs)]
         if self.hostfile == None:
