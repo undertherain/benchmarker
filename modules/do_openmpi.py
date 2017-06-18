@@ -22,8 +22,8 @@ class OpenMPI(MPI):
         return command
 
 def run(params={}):
-    # TODO: move flag-parsing to the the MPI base module
 
+    # Prepare paramters
     if params["misc"] == "help":
         OpenMPI.show_help()
         exit(0)
