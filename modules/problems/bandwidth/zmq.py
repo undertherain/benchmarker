@@ -1,14 +1,15 @@
 from util import abstractprocess
 import os
-import sys
+import shlex
 
 """ This throughput test is based on these directions:
         http://zeromq.org/results:perf-howto
 """
 
+
 class ZMQ_Throughput():
     def __init__(self, params):
-        self.path          = os.path.dirname(os.path.realpath(__file__))
+        self.path          = shlex.quote(os.path.dirname(os.path.realpath(__file__)))
         self.client_binary = "remote_thr"
         self.server_binary = "local_thr"
 

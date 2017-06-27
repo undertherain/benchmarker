@@ -1,13 +1,13 @@
 import subprocess
 import tempfile
 
+
 class Process(object):
-    def __init__(self, ptype = "local", host = "localhost", command = ["hostname"]):
+    def __init__(self, ptype="local", host="localhost", command=["hostname"]):
         self.proc = None
         self.type = ptype
         self.host = host
         self.command = command
-        
         self.__start()
 
     def __start(self):
