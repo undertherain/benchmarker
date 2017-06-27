@@ -54,9 +54,12 @@ class DoChainer(INeuralNet):
         optimizer.setup(model)
         train = chainer.datasets.tuple_dataset.TupleDataset(X_train, Y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
-        train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
-        # test_iter  = chainer.iterators.SerialIterator(test, batch_size=32, repeat=False, shuffle=False)
-
+        if params["nb_gpus"] == 0:
+            train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
+        else:
+            train_iter = chainer.iterators.MultiprocessIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=True, n_processes=4)
+            #train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
+        # test_iter = chainer.iterators.SerialIterator(test, batch_size=batch_size=params["batch_size"], repeat=False, shuffle=False)
         if params["nb_gpus"] == 0:
             updater = training.StandardUpdater(train_iter, optimizer)
         else:
