@@ -1,31 +1,49 @@
-## Synopsis
+.. role:: bash(code)
+   :language: bash
+
+.. role:: python(code)
+   :language: python
+
+
+========
+Synopsis
+========
 
 Benchmarker is a modular framework to automate a set of performance benchmarks, mostly for deep learning. 
 
-## Run
+===
+Run
+===
 
 python3 ./benchmarker.py --framework=theano --problem=conv2d_1 --path-out=./
 
-## Motivation
+==========
+Motivation
+==========
 
 various devices, frameworks und underlying software stacks, network architectures etc.
 
-## Installation
+============
+Installation
+============
 
 Clone, install required packages
 for example by running
 
-```bash
-$ git clone --recursive https://github.com/undertherain/benchmarker.git
-$ pip3 install [--user] -r requirements.txt
-```
+``git clone --recursive https://github.com/undertherain/benchmarker.git``
+``pip3 install [--user] -r requirements.txt``
 
-## API Reference
+
+=============
+API Reference
+=============
 
 under development 
 
 
-## Contributors
+============
+Contributors
+============
 
 Aleksandr Drozd
 
@@ -35,7 +53,9 @@ Artur Podobas
 
 Mateusz Bysiek
 
-## License
+=======
+License
+=======
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,4 +68,5 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
 
