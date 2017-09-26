@@ -13,10 +13,8 @@ sys.path.append("util")
 sys.path.append("modules")
 sys.path.append("util")
 sys.path.append("util/data")
-#sys.path.append("util/system_query")
 
 import sysinfo
-#from system_query import query_all
 
 
 def get_time_str():
@@ -64,7 +62,6 @@ def main(framework: "Framework to test" = "numpy",
             print("\t", plugin[3:])
         return
 
-    # params = sysinfo.get_sys_info()
     params = {}
     params["platform"] = sysinfo.get_sys_info()
     params["framework"] = framework
