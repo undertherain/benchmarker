@@ -4,6 +4,9 @@
 .. role:: python(code)
    :language: python
 
+.. image:: https://api.travis-ci.org/undertherain/benchmarker.svg?branch=master
+    :target: https://travis-ci.org/undertherain/benchmarker
+    :alt: build status from Travis CI
 
 ========
 Synopsis
