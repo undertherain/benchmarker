@@ -1,3 +1,4 @@
 begins
 py-cpuinfo
 pydataset
+system_query
