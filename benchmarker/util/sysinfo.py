@@ -3,7 +3,7 @@ import json
 import os
 import sys
 
-from util import abstractprocess
+from benchmarker.util import abstractprocess
 
 
 def get_script_dir():

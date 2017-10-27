@@ -7,14 +7,7 @@ import sys
 import pkgutil
 import logging
 
-# logging.basicConfig(level=logging.INFO)
-
-sys.path.append("util")
-sys.path.append("modules")
-sys.path.append("util")
-sys.path.append("util/data")
-
-import sysinfo
+from .util import sysinfo
 
 
 def get_time_str():
@@ -35,7 +28,6 @@ def gen_name_output_file(params):
 
 def save_params(params):
     str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
-    print(str_result)
     path_out = params["path_out"]
     if not os.path.isdir(path_out):
         os.makedirs(path_out)
@@ -45,12 +37,11 @@ def save_params(params):
 
 
 def get_modules():
-    path_modules = "modules"
+    path_modules = "benchmarker/modules"
     return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules]) if not is_pkg and name.startswith('do_')]
 
 
-@begin.start
-def main(framework: "Framework to test" = "numpy",
+def run(framework: "Framework to test" = "numpy",
          problem: "problem to solve" = "2048",
          path_out: "path to store results" = "./logs",
          gpus: "list of gpus to use" = "",
@@ -80,7 +71,7 @@ def main(framework: "Framework to test" = "numpy",
     else:
         params["device"] = params["platform"]["cpu"]["brand"]
 
-    mod = importlib.import_module("modules.do_"+params["framework"])
+    mod = importlib.import_module("benchmarker.modules.do_"+params["framework"])
     run = getattr(mod, 'run')
 
     params = run(params)
