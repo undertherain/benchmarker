@@ -1,4 +1,0 @@
-[submodule "system-query"]
-	path = benchmarker/util/system_query
-	url = https://github.com/mbdevpl/system-query
-	branch = master
