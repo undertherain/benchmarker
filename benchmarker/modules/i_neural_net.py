@@ -12,7 +12,7 @@ class INeuralNet():
 
     def load_data(self):
         params = self.params
-        mod = importlib.import_module("modules.problems." + params["problem"] + ".data")
+        mod = importlib.import_module("benchmarker.modules.problems." + params["problem"] + ".data")
         get_data = getattr(mod, 'get_data')
         data = get_data(params)
 

@@ -6,7 +6,7 @@ from chainer import training
 from chainer.training import extensions
 from timeit import default_timer as timer
 import importlib
-from i_neural_net import INeuralNet
+from .i_neural_net import INeuralNet
 
 
 class Classifier(chainer.Chain):
@@ -32,7 +32,7 @@ class DoChainer(INeuralNet):
         nb_epoch = 10
 
 
-        mod = importlib.import_module("problems." + params["problem"] + ".chainer")
+        mod = importlib.import_module("benchmarker.modules.problems." + params["problem"] + ".chainer")
         Net = getattr(mod, 'Net')
         if len(Y_train.shape) == 1:
             Y_train = Y_train[:, np.newaxis]

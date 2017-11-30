@@ -75,4 +75,5 @@ def run(framework: "Framework to test" = "numpy",
     run = getattr(mod, 'run')
 
     params = run(params)
+    print(params)
     save_params(params)

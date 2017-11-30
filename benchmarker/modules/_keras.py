@@ -13,7 +13,7 @@ def run(params, data):
     X_train, Y_train = data
     # print(Y_train)
 
-    mod = importlib.import_module("problems." + params["problem"]+".keras")
+    mod = importlib.import_module(".problems." + params["problem"]+".keras")
     get_model = getattr(mod, 'get_model')
 
     if len(Y_train.shape) > 1:
