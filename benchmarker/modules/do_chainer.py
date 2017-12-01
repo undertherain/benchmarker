@@ -74,7 +74,7 @@ class DoChainer(INeuralNet):
         # trainer.extend(extensions.Evaluator(test_iter, model, device=id_device))
         # trainer.extend(extensions.Evaluator(test_iter, model))
         trainer.extend(extensions.LogReport())
-        trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy']))
+        trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy', "elapsed_time"]))
         # trainer.extend(extensions.ProgressBar())
         start = timer()
         trainer.run()

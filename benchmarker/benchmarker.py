@@ -28,6 +28,7 @@ def gen_name_output_file(params):
 
 def save_params(params):
     str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
+    print(str_result)
     path_out = params["path_out"]
     if not os.path.isdir(path_out):
         os.makedirs(path_out)
@@ -75,5 +76,4 @@ def run(framework: "Framework to test" = "numpy",
     run = getattr(mod, 'run')
 
     params = run(params)
-    print(params)
     save_params(params)
