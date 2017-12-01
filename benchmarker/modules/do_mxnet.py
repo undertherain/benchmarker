@@ -1,7 +1,7 @@
 import mxnet as mx
 import importlib
 from timeit import default_timer as timer
-from i_neural_net import INeuralNet
+from .i_neural_net import INeuralNet
 
 
 class DoMxnet(INeuralNet):
@@ -9,7 +9,7 @@ class DoMxnet(INeuralNet):
     def run(self):
         X_train, Y_train = self.load_data()
 
-        mod = importlib.import_module("problems." + self.params["problem"] + ".mxnet")
+        mod = importlib.import_module("benchmarker.modules.problems." + self.params["problem"] + ".mxnet")
         get_model = getattr(mod, 'get_model')
 
         net = get_model(X_train[0].shape)
