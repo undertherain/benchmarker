@@ -18,4 +18,5 @@ class INeuralNet():
 
         params["bytes_x_train"] = data[0].nbytes
         params["shape_x_train"] = data[0].shape
+        params["cnt_batches_per_epoch"] = data[0].shape[0] / self.params["batch_size"]
         return data
