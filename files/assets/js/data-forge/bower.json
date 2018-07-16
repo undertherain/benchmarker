@@ -1,0 +1,28 @@
+{
+  "name": "data-forge",
+  "version": "1.0.9",
+  "homepage": "https://github.com/data-forge/data-forge-js-bower",
+  "authors": [
+    "Ashley Davis <ashley@codecapers.com.au>"
+  ],
+  "description": "JavaScript data transformation and analysis toolkit inspired by Pandas and LINQ.",
+  "main": "data-forge.js",
+  "moduleType": [],
+  "keywords": [
+    "Data",
+    "Analysis",
+    "Manipulation",
+    "Pandas",
+    "LINQ",
+    "Visualization",
+    "Transformation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
