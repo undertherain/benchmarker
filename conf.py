@@ -17,7 +17,7 @@ import time
 
 # Data about this site
 BLOG_AUTHOR = "Aleksandr Drozd"  # (translatable)
-BLOG_TITLE = "Aleksandr Drozd"  # (translatable)
+BLOG_TITLE = "Performance data"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
 SITE_URL = "http://blackbird.pw/"
@@ -77,8 +77,7 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 NAVIGATION_LINKS = {
     DEFAULT_LANG:
     (
-        ("/publications/", "Publications"),
-        ("/assets/Aleksandr_Drozd_CV.pdf", "Curriculum Vitae"),
+        ("https://github.com/undertherain/benchmarker/", "source code"),
     )
 }
 
@@ -582,7 +581,7 @@ REDIRECTIONS = []
 # For more details, read the manual:
 # https://getnikola.com/handbook.html#deploying-to-github
 # You will need to configure the deployment branch on GitHub.
-GITHUB_SOURCE_BRANCH = 'src'
+GITHUB_SOURCE_BRANCH = 'site_src'
 GITHUB_DEPLOY_BRANCH = 'gh-pages'
 
 # The name of the remote where you wish to push to, using github_deploy.
