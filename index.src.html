@@ -1,0 +1,111 @@
+    <!--
+.. title: Stats
+.. date: 2018-06-02 09:39:34 UTC
+.. tags:
+.. category:
+.. link:
+.. type: text
+.. hidetitle: True
+.. author: 
+.. template: charts.tmpl
+.. has_math: yes
+-->
+
+<section class="container">
+  <h1>Performance measurement results</h1>
+
+  <p> descibe current kernel</p>
+
+ <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Device</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" href="#">Primary Key</a>
+      <a class="dropdown-item" href="#">Secondary Key</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Device 1</a>
+      <a class="dropdown-item" href="#">Device 2</a>
+    </div>
+  </div><!-- /btn-group -->
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Framework</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" href="#">Primary Key</a>
+      <a class="dropdown-item" href="#">Secondary Key</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Framework 1</a>
+      <a class="dropdown-item" href="#">Framework 2</a>
+    </div>
+  </div><!-- /btn-group -->
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="cb0">
+    <label class="custom-control-label" for="cb0">Device 1</label>
+</div>
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1">
+    <label class="custom-control-label" for="defaultUnchecked1">Framework 1</label>
+</div>
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="defaultUnchecked2">
+    <label class="custom-control-label" for="defaultUnchecked2">Framework 2</label>
+</div>
+
+<canvas id="myChart" width="800" height="450"></canvas>
+
+<script>
+//the data will be injected by a plugin from SSG side
+var data = {
+    labels: ["Device 1", "Device 2", "Device 3"],
+    datasets: [
+        {
+            label: "Framework 1",
+            backgroundColor: "TEAL",
+            data: [3, null, 4]
+        },
+        {
+            label: "Framework 2",
+            backgroundColor: "OLIVE",
+            data: [4, 3, 4.5]
+        },
+        {
+            label: "Framework 3",
+            backgroundColor: "ORANGE",
+            data: [7.1, 2, 6]
+        }
+    ]
+};
+</script>
+
+<script>
+var ctx = document.getElementById("myChart").getContext("2d");
+var color = Chart.helpers.color;
+
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        barValueSpacing: 20,
+        scales: {
+            yAxes: 
+            [
+            {
+                ticks: 
+                {
+                    min: 0,
+                },
+                scaleLabel: 
+                {
+                    display: true,
+                    labelString: 'Epoch time'
+                }            
+            }
+            ]
+        }
+    }
+});
+</script>
+
+
+</section>
+

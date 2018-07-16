@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stats | Performance data</title>
+<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="canonical" href="http://blackbird.pw/">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark static-top mb-4"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="http://blackbird.pw/">
+
+            <span id="blog-title">Performance data</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto"><li class="nav-item">
+<a href="https://github.com/undertherain/benchmarker/" class="nav-link">source code</a>
+
+                
+            </li></ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>Performance measurement results</h1>
+
+  <p> descibe current kernel</p>
+
+ <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Device</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" href=".">Primary Key</a>
+      <a class="dropdown-item" href=".">Secondary Key</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href=".">Device 1</a>
+      <a class="dropdown-item" href=".">Device 2</a>
+    </div>
+  </div>
+<!-- /btn-group -->
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Framework</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" href=".">Primary Key</a>
+      <a class="dropdown-item" href=".">Secondary Key</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href=".">Framework 1</a>
+      <a class="dropdown-item" href=".">Framework 2</a>
+    </div>
+  </div>
+<!-- /btn-group -->
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="cb0"><label class="custom-control-label" for="cb0">Device 1</label>
+</div>
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1"><label class="custom-control-label" for="defaultUnchecked1">Framework 1</label>
+</div>
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="defaultUnchecked2"><label class="custom-control-label" for="defaultUnchecked2">Framework 2</label>
+</div>
+
+<canvas id="myChart" width="800" height="450"></canvas><script>
+//the data will be injected by a plugin from SSG side
+var data = {
+    labels: ["Device 1", "Device 2", "Device 3"],
+    datasets: [
+        {
+            label: "Framework 1",
+            backgroundColor: "TEAL",
+            data: [3, null, 4]
+        },
+        {
+            label: "Framework 2",
+            backgroundColor: "OLIVE",
+            data: [4, 3, 4.5]
+        },
+        {
+            label: "Framework 3",
+            backgroundColor: "ORANGE",
+            data: [7.1, 2, 6]
+        }
+    ]
+};
+</script><script>
+var ctx = document.getElementById("myChart").getContext("2d");
+var color = Chart.helpers.color;
+
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        barValueSpacing: 20,
+        scales: {
+            yAxes: 
+            [
+            {
+                ticks: 
+                {
+                    min: 0,
+                },
+                scaleLabel: 
+                {
+                    display: true,
+                    labelString: 'Epoch time'
+                }            
+            }
+            ]
+        }
+    }
+});
+</script></section><!--div class="e-content entry-content" itemprop="articleBody text">
+    </div--><!--End of body content--><div class="container" id="content" role="main">
+    <div class="body-content">
+
+        <footer id="footer">
+            Maintained by  <a href="mailto:alex@blackbird.pw">Aleksandr Drozd</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+</body>
+</html>
