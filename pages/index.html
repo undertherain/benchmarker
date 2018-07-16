@@ -53,15 +53,26 @@
 
 <canvas id="myChart" width="800" height="450"></canvas>
 
+<script type="text/javascript">
+var df = new dataForge.DataFrame({
+    columnNames: ["kernel", "device", "framework", "perf"],
+    rows: [
+      ["conv2", 'p100', 'Chainer', 6],
+      ["conv2", 'p100', 'TensorFlow', 7],
+      ["conv2", 'v100', 'TensorFlow', 9]
+    ]
+  });
+</script>
+
 <script>
 //the data will be injected by a plugin from SSG side
-var data = {
+var chart_data = {
     labels: ["Device 1", "Device 2", "Device 3"],
     datasets: [
         {
             label: "Framework 1",
             backgroundColor: "TEAL",
-            data: [3, null, 4]
+            data: [3.3, null, 4]
         },
         {
             label: "Framework 2",
@@ -83,7 +94,7 @@ var color = Chart.helpers.color;
 
 var myBarChart = new Chart(ctx, {
     type: 'bar',
-    data: data,
+    data: chart_data,
     options: {
         barValueSpacing: 20,
         scales: {
@@ -97,7 +108,8 @@ var myBarChart = new Chart(ctx, {
                 scaleLabel: 
                 {
                     display: true,
-                    labelString: 'Epoch time'
+                    //labelString: 'Epoch time'
+                    labelString: df.first().perf
                 }            
             }
             ]
