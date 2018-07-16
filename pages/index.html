@@ -17,6 +17,16 @@
   <p> descibe current kernel</p>
 
  <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kernel</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" href="#">Primary Key</a>
+      <a class="dropdown-item" href="#">Secondary Key</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">conv2</a>
+      <a class="dropdown-item" href="#">conv3</a>
+    </div>
+  </div><!-- /btn-group -->
+ <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Device</button>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
       <a class="dropdown-item" href="#">Primary Key</a>
@@ -32,28 +42,15 @@
       <a class="dropdown-item" href="#">Primary Key</a>
       <a class="dropdown-item" href="#">Secondary Key</a>
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">Framework 1</a>
+      <a class="dropdown-item" href="#">Chainer</a>
       <a class="dropdown-item" href="#">Framework 2</a>
     </div>
   </div><!-- /btn-group -->
 
-<div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" id="cb0">
-    <label class="custom-control-label" for="cb0">Device 1</label>
-</div>
-
-<div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" id="defaultUnchecked1">
-    <label class="custom-control-label" for="defaultUnchecked1">Framework 1</label>
-</div>
-<div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" id="defaultUnchecked2">
-    <label class="custom-control-label" for="defaultUnchecked2">Framework 2</label>
-</div>
-
 <canvas id="myChart" width="800" height="450"></canvas>
 
 <script type="text/javascript">
+  //flat table w source data ingected by the plugin
 var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
     rows: [
@@ -61,19 +58,41 @@ var df = new dataForge.DataFrame({
       ["conv2", 'p100', 'TensorFlow', 7],
       ["conv2", 'v100', 'Chainer', 5.5],
       ["conv2", 'v100', 'TensorFlow', 9],
-      ["conv2", 'v100', 'theano', 4.4]
+      ["conv2", 'v100', 'theano', 4.4],
+      ["conv3", 'p100', 'theano', 1.1]
     ]
   });
 </script>
 
 <script>
 //the data will be injected by a plugin from SSG side
-var prim_key="framework"
-var sec_key="device"
+var prim_key="device"
+var sec_key="framework"
+
 var prim_values = df.getColumns().where(column => column.name == prim_key).first().series.distinct().toArray();
 var sec_values = df.getColumns().where(column => column.name == sec_key).first().series.distinct().toArray();
 
+filters = {
+  "kernel": "conv2"
+}
+
+function apply_filters(df, filters)
+{
+  res = df
+  for (var key in filters) 
+  {
+    // check if the property/key is defined in the object itself, not in parent
+    if (filters.hasOwnProperty(key)) 
+    {           
+      //console.log(key, dictionary[key]);
+      res = res.where(row => row[key] == filters[key])
+    }
+  }
+  return res
+}
+
 //function get_value()
+df = apply_filters(df, filters)
 
 function get_value(df, key, val)
 {
