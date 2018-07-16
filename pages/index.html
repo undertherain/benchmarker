@@ -22,7 +22,14 @@
       <a class="dropdown-item" href="#">Primary Key</a>
       <a class="dropdown-item" href="#">Secondary Key</a>
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">conv2</a>
+      <script type="text/javascript">
+        function set_filter_kernel_conv2()
+        {
+          filters["kernel"] = "conv2";
+          plot_chart();
+        }
+      </script>
+      <a class="dropdown-item" onclick="set_filter_kernel_conv2()">conv2</a>
       <a class="dropdown-item" href="#">conv3</a>
     </div>
   </div><!-- /btn-group -->
@@ -73,7 +80,7 @@ var prim_values = df.getColumns().where(column => column.name == prim_key).first
 var sec_values = df.getColumns().where(column => column.name == sec_key).first().series.distinct().toArray();
 
 filters = {
-  "kernel": "conv2"
+  //"kernel": "conv2"
 }
 
 function apply_filters(df, filters)
@@ -90,9 +97,6 @@ function apply_filters(df, filters)
   }
   return res
 }
-
-//function get_value()
-df = apply_filters(df, filters)
 
 function get_value(df, key, val)
 {
@@ -120,20 +124,26 @@ function get_rec_per_sec_key(df, sec_key, sec_val, prim_key, prim_values, id_col
   return result
 }
 
-
-var chart_data = {
+function get_chart_data()
+{
+  df_filtered = apply_filters(df, filters)
+  var chart_data = {
     labels: prim_values,
-    datasets: sec_values.map((k,i) => get_rec_per_sec_key(df, sec_key, k, prim_key, prim_values, i))
-};
+    datasets: sec_values.map((k,i) => get_rec_per_sec_key(df_filtered, sec_key, k, prim_key, prim_values, i))
+  };
+  return chart_data
+}
 </script>
 
 <script>
+function plot_chart()
+{
 var ctx = document.getElementById("myChart").getContext("2d");
 var color = Chart.helpers.color;
 
 var myBarChart = new Chart(ctx, {
     type: 'bar',
-    data: chart_data,
+    data: get_chart_data(),
     options: {
         barValueSpacing: 20,
         scales: {
@@ -154,6 +164,9 @@ var myBarChart = new Chart(ctx, {
         }
     }
 });
+
+}
+plot_chart();
 </script>
 
 
