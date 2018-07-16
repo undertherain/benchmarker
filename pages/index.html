@@ -59,32 +59,52 @@ var df = new dataForge.DataFrame({
     rows: [
       ["conv2", 'p100', 'Chainer', 6],
       ["conv2", 'p100', 'TensorFlow', 7],
-      ["conv2", 'v100', 'TensorFlow', 9]
+      ["conv2", 'v100', 'Chainer', 5.5],
+      ["conv2", 'v100', 'TensorFlow', 9],
+      ["conv2", 'v100', 'theano', 4.4]
     ]
   });
 </script>
 
 <script>
 //the data will be injected by a plugin from SSG side
+var prim_key="framework"
+var sec_key="device"
+var prim_values = df.getColumns().where(column => column.name == prim_key).first().series.distinct().toArray();
+var sec_values = df.getColumns().where(column => column.name == sec_key).first().series.distinct().toArray();
+
+//function get_value()
+
+function get_value(df, key, val)
+{
+  var filtered = df.where(row => row[key] == val)
+  var cols = filtered.getColumns().where(column => column.name == "perf").first().series
+  return cols.sum()
+}
+
+function get_data(df, sec_key, sec_val, prim_key, prim_values) {
+  var filtered_df = df.where(row => row[sec_key] == sec_val);
+  //var per_sec_key = filtered_df.groupBy(row => row[prim_key]);
+  //var result = prim_values.map(i => i * 2);
+  //x`result =  [for (i of numbers) if (i % 2 === 0) i * 2];
+  var result = prim_values.map(k => get_value(filtered_df, prim_key, k))
+  return result
+}
+
+function get_rec_per_sec_key(df, sec_key, sec_val, prim_key, prim_values, id_color)
+{
+  var result = {}
+  result["label"] = sec_val
+  colors = ["TEAL", "OLIVE", "ORANGE"]
+  result["backgroundColor"] = colors[id_color]
+  result["data"] = get_data(df, sec_key, sec_val, prim_key, prim_values)
+  return result
+}
+
+
 var chart_data = {
-    labels: ["Device 1", "Device 2", "Device 3"],
-    datasets: [
-        {
-            label: "Framework 1",
-            backgroundColor: "TEAL",
-            data: [3.3, null, 4]
-        },
-        {
-            label: "Framework 2",
-            backgroundColor: "OLIVE",
-            data: [4, 3, 4.5]
-        },
-        {
-            label: "Framework 3",
-            backgroundColor: "ORANGE",
-            data: [7.1, 2, 6]
-        }
-    ]
+    labels: prim_values,
+    datasets: sec_values.map((k,i) => get_rec_per_sec_key(df, sec_key, k, prim_key, prim_values, i))
 };
 </script>
 
@@ -108,8 +128,7 @@ var myBarChart = new Chart(ctx, {
                 scaleLabel: 
                 {
                     display: true,
-                    //labelString: 'Epoch time'
-                    labelString: df.first().perf
+                    labelString: 'Epoch time'
                 }            
             }
             ]
