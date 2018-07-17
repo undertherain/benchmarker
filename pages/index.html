@@ -14,27 +14,23 @@
 <section class="container">
   <h1>Performance measurement results</h1>
 
-  <p> descibe current kernel</p>
+      <script type="text/javascript">
+        function set_filter(key, val) {
+          filters[key] = val;
+          plot_chart(); };
+        function set_prim_key(key) {
+          prim_key = key;
+          if (filters.hasOwnProperty(key))  {           
+              delete filters[key] }
+          plot_chart();  };
+      </script>
 
- <div class="btn-group">
+  <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kernel</button>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
       <a class="dropdown-item" onclick="set_prim_key('kernel')">Primary Key</a>
       <a class="dropdown-item" href="#">Secondary Key</a>
       <div class="dropdown-divider"></div>
-      <script type="text/javascript">
-        function set_filter(key, val)
-        {
-          filters[key] = val;
-          plot_chart();
-        };
-        function set_prim_key(key)
-        {
-          prim_key = key;
-//          delete filters[key]
-          plot_chart();
-        };
-      </script>
       <a class="dropdown-item" onclick="set_filter('kernel','conv2')">conv2</a>
       <a class="dropdown-item" onclick="set_filter('kernel','conv3')">conv3</a>
     </div>
