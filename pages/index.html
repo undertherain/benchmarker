@@ -23,14 +23,19 @@
       <a class="dropdown-item" href="#">Secondary Key</a>
       <div class="dropdown-divider"></div>
       <script type="text/javascript">
-        function set_filter_kernel_conv2()
+        function set_filter(key, val)
         {
-          filters["kernel"] = "conv2";
+          filters[key] = val;
+          plot_chart();
+        }
+        function set_prim_key(key)
+        {
+          prim_key = key;
           plot_chart();
         }
       </script>
-      <a class="dropdown-item" onclick="set_filter_kernel_conv2()">conv2</a>
-      <a class="dropdown-item" href="#">conv3</a>
+      <a class="dropdown-item" onclick="set_filter('kernel','conv2')">conv2</a>
+      <a class="dropdown-item" onclick="set_filter('kernel','conv3')">conv3</a>
     </div>
   </div><!-- /btn-group -->
  <div class="btn-group">
