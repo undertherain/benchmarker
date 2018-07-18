@@ -12,6 +12,9 @@
 -->
 
 <section class="container">
+
+{{% generate_controls %}}
+
   <h1>Performance measurement results</h1>
 
       <script type="text/javascript">
@@ -29,6 +32,8 @@
               delete filters[key] }
           plot_chart();  };
       </script>
+
+      {{% generate_controls %}}oi
 
   <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kernel</button>
@@ -174,4 +179,3 @@ plot_chart();
 
 
 </section>
-
