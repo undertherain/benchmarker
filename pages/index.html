@@ -13,10 +13,11 @@
 
 <section class="container">
 
-{{% generate_controls %}}
+
 
   <h1>Performance measurement results</h1>
-
+{{% generate_controls %}}
+<br />
       <script type="text/javascript">
         function set_filter(key, val) {
           filters[key] = val;
@@ -31,14 +32,20 @@
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
           plot_chart();  };
+        function display_filters() {
+          div =  document.getElementById("filters");
+          str_filters = "prim key: " + prim_key
+          div.innerHTML = str_filters ;
+          // unset all other prim highlights
+          document.getElementById("dropdown_elem_" + prim_key + "_prim").className="dropdown-item active"
+        }
       </script>
 
-      {{% generate_controls %}}oi
-
+  <div id="filters"></div>
   <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kernel</button>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
-      <a class="dropdown-item" onclick="set_prim_key('kernel')">Primary Key</a>
+      <a class="dropdown-item" id="dropdown_elem_kernel_prim" onclick="set_prim_key('kernel')">Primary Key</a>
       <a class="dropdown-item" onclick="set_sec_key('kernel')">Secondary Key</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" onclick="set_filter('kernel','conv2')">conv2</a>
@@ -48,7 +55,7 @@
  <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Device</button>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
-      <a class="dropdown-item" onclick="set_prim_key('device')">Primary Key</a>
+      <a class="dropdown-item active" id="dropdown_elem_device_prim" onclick="set_prim_key('device')">Primary Key</a>
       <a class="dropdown-item" href="#">Secondary Key</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="#">Device 1</a>
@@ -146,6 +153,7 @@ function get_chart_data()
 <script>
 function plot_chart()
 {
+display_filters();
 var ctx = document.getElementById("myChart").getContext("2d");
 var color = Chart.helpers.color;
 

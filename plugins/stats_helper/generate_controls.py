@@ -6,6 +6,6 @@ class Plugin(ShortcodePlugin):
 
     def handler(self, filename=None, site=None, data=None, lang=None, post=None):
         """Create HTML for emoji."""
-        output = "Hi I'm plugin"
+        output = "Hi I'm plugin that will generate comtrols for charts"
 
         return output, []
