@@ -38,16 +38,21 @@
           div =  document.getElementById("filters");
           str_filters = "prim key: " + prim_key + "\n"
           str_filters += "sec key: " + sec_key + "\n"
+          var key;
+          for (key in filters) {
+              str_filters += key +": "+filters[key];
+          }  
+
           div.innerHTML = str_filters;
           //'[id^="dropdown_elem_"]')
           // unset all other prim highlights
           // document.getElementById("dropdown_elem_kernel_prim").className="dropdown-item active"
             document.getElementById("dropdown_elem_" + prim_key + "_prim").className="dropdown-item active"
+            document.getElementById("dropdown_elem_" + sec_key + "_sec").className="dropdown-item active"
         }
       </script>
 
 <canvas id="myChart" width="800" height="450"></canvas>
-
 <script type="text/javascript">
   //flat table w source data ingected by the plugin
 var df = new dataForge.DataFrame({
