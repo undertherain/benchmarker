@@ -36,8 +36,9 @@
           plot_chart();  };
         function display_filters() {
           div =  document.getElementById("filters");
-          str_filters = "prim key: " + prim_key
-          div.innerHTML = str_filters ;
+          str_filters = "prim key: " + prim_key + "\n"
+          str_filters += "sec key: " + sec_key + "\n"
+          div.innerHTML = str_filters;
           //'[id^="dropdown_elem_"]')
           // unset all other prim highlights
           // document.getElementById("dropdown_elem_kernel_prim").className="dropdown-item active"
