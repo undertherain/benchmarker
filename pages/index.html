@@ -14,7 +14,6 @@
 <section class="container">
 
 
-
   <h1>Performance measurement results</h1>
 {{% generate_controls %}}
 <br />
@@ -36,7 +35,9 @@
           div =  document.getElementById("filters");
           str_filters = "prim key: " + prim_key
           div.innerHTML = str_filters ;
+          //'[id^="dropdown_elem_"]')
           // unset all other prim highlights
+          // document.getElementById("dropdown_elem_kernel_prim").className="dropdown-item active"
           document.getElementById("dropdown_elem_" + prim_key + "_prim").className="dropdown-item active"
         }
       </script>
