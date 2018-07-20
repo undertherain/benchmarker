@@ -22,6 +22,7 @@
 
       <script type="text/javascript">
         function set_filter(key, val) {
+          if ( (key != prim_key) && (key != sec_key))
           filters[key] = val;
           plot_chart(); };
         function set_prim_key(key) {
