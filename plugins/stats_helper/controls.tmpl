@@ -1,1 +1,16 @@
-I'm template for the control
+<%def name="make_item(val)">
+      <a class="dropdown-item" onclick="set_filter('${key}','${val}')">${val}</a>
+</%def>
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" id="dropdown_elem_${key}_prim" onclick="set_prim_key('${key}')">Primary Key</a>
+      <a class="dropdown-item" id="dropdown_elem_${key}_prim" onclick="set_sec_key('${key}')">Secondary Key</a>
+      <div class="dropdown-divider"></div>
+% for val in vals:
+	${make_item(val)}
+% endfor
+    </div>
+  </div><!-- /btn-group -->
+ 
