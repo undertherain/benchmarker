@@ -17,7 +17,7 @@ class Plugin(ShortcodePlugin):
         keyvals = {
             "kernel": ["conv2", "conv3"],
             "device": ["p100", "v100"],
-            "framework": ["Chainer", "TensorFlow", "Theano"]
+            "framework": ["Chainer", "TensorFlow", "MxNET"]
             }
         output = mytemplate.render(keyvals=keyvals)
         #output += mytemplate.render(key="device", vals=["p100", "v100"])
