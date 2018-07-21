@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://blackbird.pw/</loc>
-  <lastmod>2018-07-16T01:23:00Z</lastmod>
+  <lastmod>2018-07-18T12:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://blackbird.pw/archive.html</loc>
@@ -20,5 +20,13 @@
  <url>
   <loc>http://blackbird.pw/categories/</loc>
   <lastmod>2018-07-16T01:23:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://blackbird.pw/publications/</loc>
+  <lastmod>2018-07-18T12:31:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://blackbird.pw/test/</loc>
+  <lastmod>2018-07-18T12:32:00Z</lastmod>
  </url>
 </urlset>
