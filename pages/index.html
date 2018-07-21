@@ -85,9 +85,7 @@ function apply_filters(df, filters)
   for (var key in filters) 
   {
     if (filters.hasOwnProperty(key)) 
-    {           
-      res = res.where(row => row[key] == filters[key])
-    }
+      res = res.where(row => row[key] == filters[key]);
   }
   return res
 }
@@ -99,18 +97,13 @@ function get_value(df, key, val)
   return cols.average()
 }
 
-function get_data(df, sec_key, sec_val, prim_key, prim_values) {
-  var filtered_df = df.where(row => row[sec_key] == sec_val);
-  var result = prim_values.map(k => get_value(filtered_df, prim_key, k))
-  return result
-}
-
 function get_rec_per_sec_key(df, sec_key, sec_val, prim_key, prim_values, id_color)
 {
   var result = {}
   result["label"] = sec_val
   result["backgroundColor"] = colors[id_color]
-  result["data"] = get_data(df, sec_key, sec_val, prim_key, prim_values)
+  var filtered_df = df.where(row => row[sec_key] == sec_val);
+  result["data"] = prim_values.map(k => get_value(filtered_df, prim_key, k))
   return result
 }
 
