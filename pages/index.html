@@ -16,6 +16,8 @@
 <h3>[not yet real data, just dubugging the charts]</h3>
 
 {{% generate_controls %}}
+
+
 <br />
 <div id="filters"></div>
 
@@ -46,8 +48,15 @@
           for (key in keyvals) {
               //str_filters += key +": "+filters[key];
               if ((key != prim_key) && (key != sec_key))
+              {
                 $("#div_radio_" + key).show('fast')
+                if (! filters.hasOwnProperty(key))
+                  filters[key] = keyvals[key][0]
+              }
           }  
+          for (key in filters) {
+            document.getElementById("radio_" + key + "_" + filters[key]).className="custom-control-input active"
+          }
         }
       </script>
 

@@ -43,7 +43,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 <%def name="make_radio_button(key, val)">
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_${key}_${val}" name="radio_for_${key}">
+  <input type="radio" class="custom-control-input" id="radio_${key}_${val}" name="radio_for_${key}" onclick="set_filter('${key}','${val}')">
   <label class="custom-control-label" for="radio_${key}_${val}">${val}</label>
 </div>
 </%def>
