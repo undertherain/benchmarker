@@ -67,11 +67,12 @@ var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
     rows: [
       ["conv2", 'p100', 'Chainer', 6],
+      ["conv2", 'p100', 'Chainer', 6.4],
       ["conv2", 'p100', 'TensorFlow', 7],
       ["conv2", 'v100', 'Chainer', 5.5],
       ["conv2", 'v100', 'TensorFlow', 9],
-      ["conv2", 'v100', 'theano', 4.4],
-      ["conv3", 'p100', 'theano', 1.1]
+      ["conv2", 'v100', 'Theano', 4.4],
+      ["conv3", 'p100', 'Theano', 1.1]
     ]
   });
 </script>
@@ -95,7 +96,7 @@ function get_value(df, key, val)
 {
   var filtered = df.where(row => row[key] == val)
   var cols = filtered.getColumns().where(column => column.name == "perf").first().series
-  return cols.sum()
+  return cols.average()
 }
 
 function get_data(df, sec_key, sec_val, prim_key, prim_values) {
