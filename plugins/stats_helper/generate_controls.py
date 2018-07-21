@@ -14,8 +14,13 @@ class Plugin(ShortcodePlugin):
         """Create HTML for emoji."""
         # output = "Hi I'm plugin that will generate comtrols for charts"
         mytemplate = Template(filename=os.path.join(plugin_path, 'controls.tmpl'))
-        output = mytemplate.render(key="kernel", vals=["conv2", "conv3"])
-        output += mytemplate.render(key="device", vals=["p100", "v100"])
-        output += mytemplate.render(key="framework", vals=["Chainer", "TensorFlow"])
+        keyvals = {
+            "kernel": ["conv2", "conv3"],
+            "device": ["p100", "v100"],
+            "framework": ["Chainer", "TensorFlow"]
+            }
+        output = mytemplate.render(keyvals=keyvals)
+        #output += mytemplate.render(key="device", vals=["p100", "v100"])
+        #output += mytemplate.render(key="framework", vals=["Chainer", "TensorFlow"])
 
         return output, []

@@ -1,3 +1,82 @@
+<script>
+var prim_key="${list(keyvals.keys())[0]}"
+var sec_key="${list(keyvals.keys())[1]}"
+
+var filters = {
+  //"kernel": "conv2"
+}
+
+var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
+//todo generate colors from brewer2mpl
+</script>
+
+<div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">prim. key:</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      % for key in keyvals:
+      ${make_prim_key_line(key)}
+      % endfor
+    </div>
+  </div>
+  <div class="btn-group" id="div_prim_key">primary key</div>
+
+<%def name="make_prim_key_line(val)">
+      <a class="dropdown-item" onclick="set_prim_key('${val}')">${val}</a>
+</%def>
+
+<div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">sec. key:</button>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
+      % for key in keyvals:
+      ${make_sec_key_line(key)}
+      % endfor
+    </div>
+  </div>
+  <div class="btn-group" id="div_sec_key">sec key</div>
+
+<%def name="make_sec_key_line(val)">
+      <a class="dropdown-item" onclick="set_sec_key('${val}')">${val}</a>
+</%def>
+
+<br />
+
+
+<%def name="make_radio_button(key, val)">
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_${key}_${val}" name="radio_for_${key}">
+  <label class="custom-control-label" for="radio_${key}_${val}">${val}</label>
+</div>
+</%def>
+
+
+<%def name="make_radio_line(key, vals)">
+<div id="div_radio_${key}">
+${key}:
+
+% for val in vals:
+  ${make_radio_button(key, val)}
+% endfor
+
+</div>
+
+</%def>
+
+% for key in keyvals:
+  ${make_radio_line(key, keyvals[key])}
+% endfor
+
+
+
+
+<%doc>
+      <!--a class="dropdown-item" id="dropdown_elem_${key}_prim" onclick="set_prim_key('${key}')">Primary Key</a-->
+      <!--a class="dropdown-item" id="dropdown_elem_${key}_sec" onclick="set_sec_key('${key}')">Secondary Key</a-->
+
+% for key in keyvals:
+  ${make_key_line(key)}
+% endfor
+
+
 <%def name="make_item(val)">
       <a class="dropdown-item" onclick="set_filter('${key}','${val}')">${val}</a>
 </%def>
@@ -9,8 +88,8 @@
       <a class="dropdown-item" id="dropdown_elem_${key}_sec" onclick="set_sec_key('${key}')">Secondary Key</a>
       <div class="dropdown-divider"></div>
 % for val in vals:
-	${make_item(val)}
+  ${make_item(val)}
 % endfor
     </div>
   </div><!-- /btn-group -->
- 
+ </%doc>

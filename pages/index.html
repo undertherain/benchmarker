@@ -1,4 +1,4 @@
-    <!--
+<!--
 .. title: Stats
 .. date: 2018-06-02 09:39:34 UTC
 .. tags:
@@ -14,7 +14,7 @@
 <section class="container">
 
 <h1>Performance measurement results</h1>
-
+<h3>[not yet real data, just dubugging the charts]</h3>
 
 {{% generate_controls %}}
 <br />
@@ -26,30 +26,38 @@
           filters[key] = val;
           plot_chart(); };
         function set_prim_key(key) {
+          if (sec_key == key)
+            sec_key = prim_key;
           prim_key = key;
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
           plot_chart();  };
         function set_sec_key(key) {
+          if (prim_key == key)
+            prim_key = sec_key; 
           sec_key = key;
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
           plot_chart();  };
         function display_filters() {
+          document.getElementById("div_prim_key").innerHTML = prim_key;
+          document.getElementById("div_sec_key").innerHTML = sec_key;
+          id = "div_radio_"+prim_key
+          //$('#' + id).hide('fast')
+          //document.getElementById(id).hide('fast');
+
           div =  document.getElementById("filters");
-          str_filters = "prim key: " + prim_key + "\n"
-          str_filters += "sec key: " + sec_key + "\n"
+          str_filters = ""
           var key;
           for (key in filters) {
               str_filters += key +": "+filters[key];
           }  
 
           div.innerHTML = str_filters;
-          //'[id^="dropdown_elem_"]')
           // unset all other prim highlights
           // document.getElementById("dropdown_elem_kernel_prim").className="dropdown-item active"
-            document.getElementById("dropdown_elem_" + prim_key + "_prim").className="dropdown-item active"
-            document.getElementById("dropdown_elem_" + sec_key + "_sec").className="dropdown-item active"
+          //  document.getElementById("dropdown_elem_" + prim_key + "_prim").clasName="dropdown-item active"
+          //  document.getElementById("dropdown_elem_" + sec_key + "_sec").className="dropdown-item active"
         }
       </script>
 
@@ -70,21 +78,12 @@ var df = new dataForge.DataFrame({
 </script>
 
 <script>
-//the data will be injected by a plugin from SSG side
-var prim_key="device"
-var sec_key="framework"
-
-
-filters = {
-  //"kernel": "conv2"
-}
 
 function apply_filters(df, filters)
 {
   res = df
   for (var key in filters) 
   {
-    // check if the property/key is defined in the object itself, not in parent
     if (filters.hasOwnProperty(key)) 
     {           
       res = res.where(row => row[key] == filters[key])
@@ -110,7 +109,6 @@ function get_rec_per_sec_key(df, sec_key, sec_val, prim_key, prim_values, id_col
 {
   var result = {}
   result["label"] = sec_val
-  colors = ["TEAL", "OLIVE", "ORANGE"]
   result["backgroundColor"] = colors[id_color]
   result["data"] = get_data(df, sec_key, sec_val, prim_key, prim_values)
   return result
