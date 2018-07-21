@@ -42,8 +42,10 @@
 <h3>[not yet real data, just dubugging the charts]</h3>
 
 <script>
-var prim_key="kernel"
-var sec_key="device"
+//var prim_key="kernel"
+//var sec_key="device"
+var prim_key="device"
+var sec_key="framework"
 var keyvals={'kernel': ['conv2', 'conv3'], 'device': ['p100', 'v100'], 'framework': ['Chainer', 'TensorFlow', 'Theano']}
 var filters = {
   //"kernel": "conv2"
@@ -87,8 +89,8 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 
 
-<br><div id="div_radio_kernel">
-kernel:
+<br><div id="div_radio_kernel" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
+kernel: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
@@ -100,13 +102,12 @@ kernel:
   <input type="radio" class="custom-control-input" id="radio_kernel_conv3" name="radio_for_kernel" onclick="set_filter('kernel','conv3')"><label class="custom-control-label" for="radio_kernel_conv3">conv3</label>
 </div>
 
-
 </div>
 
 
   
-<div id="div_radio_device">
-device:
+<div id="div_radio_device" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
+device: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
@@ -118,13 +119,12 @@ device:
   <input type="radio" class="custom-control-input" id="radio_device_v100" name="radio_for_device" onclick="set_filter('device','v100')"><label class="custom-control-label" for="radio_device_v100">v100</label>
 </div>
 
-
 </div>
 
 
   
-<div id="div_radio_framework">
-framework:
+<div id="div_radio_framework" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
+framework: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
@@ -141,10 +141,7 @@ framework:
   <input type="radio" class="custom-control-input" id="radio_framework_Theano" name="radio_for_framework" onclick="set_filter('framework','Theano')"><label class="custom-control-label" for="radio_framework_Theano">Theano</label>
 </div>
 
-
 </div>
-
-
 
 
 
@@ -201,8 +198,8 @@ var df = new dataForge.DataFrame({
       ["conv2", 'p100', 'TensorFlow', 7],
       ["conv2", 'v100', 'Chainer', 5.5],
       ["conv2", 'v100', 'TensorFlow', 9],
-      ["conv2", 'v100', 'Theano', 4.4],
-      ["conv3", 'p100', 'Theano', 1.1]
+      ["conv2", 'v100', 'MxNET', 4.4],
+      ["conv3", 'p100', 'MxNET', 1.1]
     ]
   });
 </script><script>
