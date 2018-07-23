@@ -1,13 +1,6 @@
 import argparse
 from .benchmarker import run
 
-#def run(framework: "Framework to test" = "numpy",
-#         problem: "problem to solve" = "2048",
-#         path_out: "path to store results" = "./logs",
-#         gpus: "list of gpus to use" = "",
-#         misc: "comma separated list of key:value pairs" = None
-#         ):
-
 
 def main():
     parser = argparse.ArgumentParser(description='Benchmark me up, Scotty!')
