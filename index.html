@@ -39,14 +39,14 @@
     </div>
 <!-- /.container -->
 </nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>Performance measurement results</h1>
-<h3>[not yet real data, just dubugging the charts]</h3>
+<h3>[not yet real data, just debugging the charts]</h3>
 
 <script>
 //var prim_key="kernel"
 //var sec_key="device"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'kernel': ['conv2', 'conv3'], 'device': ['p100', 'v100'], 'framework': ['Chainer', 'TensorFlow', 'Theano']}
+var keyvals={'kernel': ['conv2', 'conv3'], 'device': ['p100', 'v100'], 'framework': ['Chainer', 'TensorFlow', 'MXNet']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -138,10 +138,11 @@ framework: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_Theano" name="radio_for_framework" onclick="set_filter('framework','Theano')"><label class="custom-control-label" for="radio_framework_Theano">Theano</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_MXNet" name="radio_for_framework" onclick="set_filter('framework','MXNet')"><label class="custom-control-label" for="radio_framework_MXNet">MXNet</label>
 </div>
 
 </div>
+
 
 
 
@@ -198,8 +199,8 @@ var df = new dataForge.DataFrame({
       ["conv2", 'p100', 'TensorFlow', 7],
       ["conv2", 'v100', 'Chainer', 5.5],
       ["conv2", 'v100', 'TensorFlow', 9],
-      ["conv2", 'v100', 'MxNET', 4.4],
-      ["conv3", 'p100', 'MxNET', 1.1]
+      ["conv2", 'v100', 'MXNet', 4.4],
+      ["conv3", 'p100', 'MXNet', 1.1]
     ]
   });
 </script><script>
