@@ -11,19 +11,18 @@ plugin_path = os.path.dirname(os.path.realpath(__file__))
 def read_file(filename):
     with open(filename) as f:
         data = json.load(f)
-    return data
+    keys_to_drop = ["platform", "batch_size_per_device"]
+    for key in keys_to_drop:
+        data.pop(key, None)
+    meta = [["problem", "name"], ["device"]]
+    df = pandas.io.json.json_normalize(data, meta=meta)
+    return df
 
 
 def read_df_from_dir(path):
     data = [read_file(os.path.join(path, f)) for f in os.listdir(path) if not f.startswith("arch") and os.path.isfile(os.path.join(path, f))]
-    df = pandas.DataFrame(data)
-    # df["device"] = df["device"].apply(get_cute_device_str)
+    df = pandas.concat(data)
     return df
-
-
-def read_jsons():
-    df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
-    print(df)
 
 
 class Plugin(ShortcodePlugin):
@@ -34,12 +33,16 @@ class Plugin(ShortcodePlugin):
         """Create HTML for emoji."""
         # output = "Hi I'm plugin that will generate comtrols for charts"
         mytemplate = Template(filename=os.path.join(plugin_path, 'controls.tmpl'))
+        df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
         keyvals = {
-            "kernel": ["conv2", "conv3"],
-            "device": ["p100", "v100"],
-            "framework": ["Chainer", "TensorFlow", "MXNet"]
+            "kernel": list(df["problem.name"].unique()),
+            "device": list(df["device"].unique()),
+            "framework": list(df["framework"].unique())
             }
         output = mytemplate.render(keyvals=keyvals)
+        mytemplate = Template(filename=os.path.join(plugin_path, 'data.tmpl'))
+        rows = [[i[1]['problem.name'], i[1]['device'], i[1]['framework'], i[1]['time']] for i in df.iterrows()]
+        output += mytemplate.render(rows=rows)
 
         return output, []
 
