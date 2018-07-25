@@ -44,11 +44,11 @@ class DoChainer(INeuralNet):
             chainer.cuda.get_device(id_device).use()
             model.to_gpu()
 
-        print("X_train:", type(X_train), X_train.shape)
-        print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])
-        #result = model.predictor(X_train)
-        #print (result.shape)
-        #return 
+        # print("X_train:", type(X_train), X_train.shape)
+        # print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])
+        # result = model.predictor(X_train)
+        # print (result.shape)
+        # return
 
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)

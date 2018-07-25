@@ -10,7 +10,7 @@ def get_model(params):
     else:
         data_format = "channels_last"
 
-    model.add(Conv2D(filters=64, kernel_size=(2, 2),  padding='same', data_format=data_format, kernel_initializer="glorot_uniform", input_shape=params["shape_x_train"][1:]))
+    model.add(Conv2D(filters=64, kernel_size=(2, 2),  padding='same', data_format=data_format, kernel_initializer="glorot_uniform", input_shape=params["problem"]["shape_x_train"][1:]))
     model.add(Activation('relu'))
     model.add(Conv2D(filters=64, kernel_size=(2, 2),  padding='same', data_format=data_format, kernel_initializer="glorot_uniform"))
     model.add(Activation('relu'))
