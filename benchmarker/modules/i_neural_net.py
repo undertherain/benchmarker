@@ -12,11 +12,11 @@ class INeuralNet():
 
     def load_data(self):
         params = self.params
-        mod = importlib.import_module("benchmarker.modules.problems." + params["problem"] + ".data")
+        mod = importlib.import_module("benchmarker.modules.problems." + params["problem"]["name"] + ".data")
         get_data = getattr(mod, 'get_data')
         data = get_data(params)
 
-        params["bytes_x_train"] = data[0].nbytes
-        params["shape_x_train"] = data[0].shape
-        params["cnt_batches_per_epoch"] = data[0].shape[0] / self.params["batch_size"]
+        params["problem"]["bytes_x_train"] = data[0].nbytes
+        params["problem"]["shape_x_train"] = data[0].shape
+        params["problem"]["cnt_batches_per_epoch"] = data[0].shape[0] / self.params["batch_size"]
         return data

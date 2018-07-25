@@ -17,7 +17,7 @@ def get_time_str():
 
 def gen_name_output_file(params):
     name = "{}_{}_{}_{}.json".format(
-        params["problem"],
+        params["problem"]["name"],
         params["framework"],
         params["device"],
         get_time_str()
@@ -48,6 +48,10 @@ def run(framework: "Framework to test" = None,
          misc: "comma separated list of key:value pairs" = None
          ):
 
+    params = {}
+    params["platform"] = sysinfo.get_sys_info()
+    params["path_out"] = path_out
+
     if framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
@@ -55,17 +59,18 @@ def run(framework: "Framework to test" = None,
             print("\t", plugin[3:])
         return
 
+    #todo: load frameowrk's metadata from backend
+    params["framework"] = framework
+
     if problem is None:
         print("choose a problem to run")
         print(f"problems supported by {framework}:")
         return
-    # get list of support problems for a given framework
+    #todo: get a list of support problems for a given framework
 
-    params = {}
-    params["platform"] = sysinfo.get_sys_info()
-    params["framework"] = framework
-    params["path_out"] = path_out
-    params["problem"] = problem
+    #todo: load problem's metadata from the problem itself
+    params["problem"] = {}
+    params["problem"]["name"] = problem
     params["misc"] = misc
     if len(gpus) > 0:
         params["gpus"] = list(map(int, gpus.split(',')))
@@ -79,7 +84,7 @@ def run(framework: "Framework to test" = None,
     else:
         params["device"] = params["platform"]["cpu"]["brand"]
 
-    mod = importlib.import_module("benchmarker.modules.do_"+params["framework"])
+    mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     run = getattr(mod, 'run')
 
     params = run(params)

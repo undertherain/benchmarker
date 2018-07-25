@@ -11,9 +11,11 @@ def run(params, data):
         keras.backend.set_image_data_format("channels_last")
 
     X_train, Y_train = data
+
+    Y_train = keras.utils.to_categorical(Y_train, num_classes=1000)
     # print(Y_train)
 
-    mod = importlib.import_module(".problems." + params["problem"]+".keras")
+    mod = importlib.import_module("benchmarker.modules.problems." + params["problem"]["name"] + ".keras")
     get_model = getattr(mod, 'get_model')
 
     if len(Y_train.shape) > 1:

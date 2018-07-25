@@ -11,8 +11,7 @@ class Net(chainer.Chain):
         super(Net, self).__init__(
             conv1=L.Convolution2D(1, 32, 2), #Convolution2D(in_channels, out_channels, ksize, stride=1, pad=0, wscale=1, bias=0, nobias=False, use_cudnn=True, initialW=None, initial_bias=None, deterministic=False)
             conv2=L.Convolution2D(None, 32, 2),
-            #l1=L.Linear(None, 128),   #this is ugly
-            l=L.Linear(None, 1),   #this is ugly
+            l=L.Linear(None, 2),
         )
         self.train = train
     def __call__(self, x):
