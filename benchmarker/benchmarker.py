@@ -25,7 +25,7 @@ def gen_name_output_file(params):
     return name
 
 
-def save_params(params):
+def save_json(params):
     str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
     print(str_result)
     path_out = params["path_out"]
@@ -41,17 +41,25 @@ def get_modules():
     return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules]) if not is_pkg and name.startswith('do_')]
 
 
-def run(framework: "Framework to test" = "numpy",
-         problem: "problem to solve" = "2048",
+def run(framework: "Framework to test" = None,
+         problem: "problem to solve" = None,
          path_out: "path to store results" = "./logs",
          gpus: "list of gpus to use" = "",
          misc: "comma separated list of key:value pairs" = None
          ):
-    if len(sys.argv) < 2:
-        print("available frameworks :")
+
+    if framework is None:
+        print("please choose one of the frameworks to evaluate")
+        print("available frameworks:")
         for plugin in get_modules():
             print("\t", plugin[3:])
         return
+
+    if problem is None:
+        print("choose a problem to run")
+        print(f"problems supported by {framework}:")
+        return
+    # get list of support problems for a given framework
 
     params = {}
     params["platform"] = sysinfo.get_sys_info()
@@ -75,4 +83,4 @@ def run(framework: "Framework to test" = "numpy",
     run = getattr(mod, 'run')
 
     params = run(params)
-    save_params(params)
+    save_json(params)
