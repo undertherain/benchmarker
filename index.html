@@ -39,14 +39,14 @@
     </div>
 <!-- /.container -->
 </nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>Performance measurement results</h1>
-<h3>[not yet real data, just debugging the charts]</h3>
+<h3>[still debugging, expect more data to come soon]</h3>
 
 <script>
 //var prim_key="kernel"
 //var sec_key="device"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'kernel': ['conv2', 'conv3'], 'device': ['p100', 'v100'], 'framework': ['Chainer', 'TensorFlow', 'MXNet']}
+var keyvals={'kernel': ['vgg16'], 'device': ['Tesla K40c', 'GeForce GTX 980 Ti', 'Tesla P100-SXM2-16GB', 'GeForce GTX 1080 Ti'], 'framework': ['chainer', 'tensorflow']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -94,12 +94,7 @@ kernel: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_kernel_conv2" name="radio_for_kernel" onclick="set_filter('kernel','conv2')"><label class="custom-control-label" for="radio_kernel_conv2">conv2</label>
-</div>
-
-  
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_kernel_conv3" name="radio_for_kernel" onclick="set_filter('kernel','conv3')"><label class="custom-control-label" for="radio_kernel_conv3">conv3</label>
+  <input type="radio" class="custom-control-input" id="radio_kernel_vgg16" name="radio_for_kernel" onclick="set_filter('kernel','vgg16')"><label class="custom-control-label" for="radio_kernel_vgg16">vgg16</label>
 </div>
 
 </div>
@@ -111,12 +106,22 @@ device: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_p100" name="radio_for_device" onclick="set_filter('device','p100')"><label class="custom-control-label" for="radio_device_p100">p100</label>
+  <input type="radio" class="custom-control-input" id="radio_device_Tesla K40c" name="radio_for_device" onclick="set_filter('device','Tesla K40c')"><label class="custom-control-label" for="radio_device_Tesla K40c">Tesla K40c</label>
 </div>
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_v100" name="radio_for_device" onclick="set_filter('device','v100')"><label class="custom-control-label" for="radio_device_v100">v100</label>
+  <input type="radio" class="custom-control-input" id="radio_device_GeForce GTX 980 Ti" name="radio_for_device" onclick="set_filter('device','GeForce GTX 980 Ti')"><label class="custom-control-label" for="radio_device_GeForce GTX 980 Ti">GeForce GTX 980 Ti</label>
+</div>
+
+  
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Tesla P100-SXM2-16GB" name="radio_for_device" onclick="set_filter('device','Tesla P100-SXM2-16GB')"><label class="custom-control-label" for="radio_device_Tesla P100-SXM2-16GB">Tesla P100-SXM2-16GB</label>
+</div>
+
+  
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_GeForce GTX 1080 Ti" name="radio_for_device" onclick="set_filter('device','GeForce GTX 1080 Ti')"><label class="custom-control-label" for="radio_device_GeForce GTX 1080 Ti">GeForce GTX 1080 Ti</label>
 </div>
 
 </div>
@@ -128,17 +133,12 @@ framework: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_Chainer" name="radio_for_framework" onclick="set_filter('framework','Chainer')"><label class="custom-control-label" for="radio_framework_Chainer">Chainer</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_chainer" name="radio_for_framework" onclick="set_filter('framework','chainer')"><label class="custom-control-label" for="radio_framework_chainer">chainer</label>
 </div>
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_TensorFlow" name="radio_for_framework" onclick="set_filter('framework','TensorFlow')"><label class="custom-control-label" for="radio_framework_TensorFlow">TensorFlow</label>
-</div>
-
-  
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_MXNet" name="radio_for_framework" onclick="set_filter('framework','MXNet')"><label class="custom-control-label" for="radio_framework_MXNet">MXNet</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_tensorflow" name="radio_for_framework" onclick="set_filter('framework','tensorflow')"><label class="custom-control-label" for="radio_framework_tensorflow">tensorflow</label>
 </div>
 
 </div>
@@ -148,9 +148,12 @@ framework: 
 
 
 
-
-
-<br><div id="filters"></div>
+<script type="text/javascript">
+var df = new dataForge.DataFrame({
+    columnNames: ["kernel", "device", "framework", "perf"],
+    rows: [['vgg16', 'Tesla K40c', 'chainer', 64.92611408047378], ['vgg16', 'GeForce GTX 980 Ti', 'chainer', 19.79562048902735], ['vgg16', 'Tesla P100-SXM2-16GB', 'tensorflow', 9.196029103671512], ['vgg16', 'Tesla K40c', 'tensorflow', 30.62504617248972], ['vgg16', 'Tesla P100-SXM2-16GB', 'chainer', 12.036421794630588], ['vgg16', 'GeForce GTX 1080 Ti', 'tensorflow', 10.405107443531355], ['vgg16', 'GeForce GTX 1080 Ti', 'chainer', 12.18715507676825]]
+  });
+</script><br><div id="filters"></div>
 
       <script type="text/javascript">
         function set_filter(key, val) {
@@ -189,22 +192,7 @@ framework: 
             document.getElementById("radio_" + key + "_" + filters[key]).checked=true;
           }
         }
-      </script><canvas id="myChart" width="800" height="450"></canvas><script type="text/javascript">
-  //flat table w source data ingected by the plugin
-var df = new dataForge.DataFrame({
-    columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [
-      ["conv2", 'p100', 'Chainer', 6],
-      ["conv2", 'p100', 'Chainer', 6.4],
-      ["conv2", 'p100', 'TensorFlow', 7],
-      ["conv2", 'v100', 'Chainer', 5.5],
-      ["conv2", 'v100', 'TensorFlow', 9],
-      ["conv2", 'v100', 'MXNet', 4.4],
-      ["conv3", 'p100', 'MXNet', 1.1]
-    ]
-  });
-</script><script>
-
+      </script><canvas id="myChart" width="800" height="450"></canvas><script>
 function apply_filters(df, filters)
 {
   res = df
