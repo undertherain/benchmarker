@@ -19,8 +19,14 @@ def read_file(filename):
     return df
 
 
+def get_entries(path):
+    for dirName, subdirList, fileList in os.walk(path, topdown=False):
+        for fname in fileList:
+            yield(os.path.join(dirName, fname))
+
+
 def read_df_from_dir(path):
-    data = [read_file(os.path.join(path, f)) for f in os.listdir(path) if not f.startswith("arch") and os.path.isfile(os.path.join(path, f))]
+    data = [read_file(os.path.join(path, f)) for f in get_entries(path) if not f.startswith("arch") and os.path.isfile(os.path.join(path, f))]
     df = pandas.concat(data)
     return df
 
