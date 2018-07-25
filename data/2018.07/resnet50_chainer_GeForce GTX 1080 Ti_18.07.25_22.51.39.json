@@ -1,0 +1,55 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce GTX 1080 Ti",
+    "framework": "chainer",
+    "framework_full": "Chainer-4.3.0",
+    "gpus": [
+        0
+    ],
+    "misc": null,
+    "nb_gpus": 1,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "clock": 1360.4166666666667,
+            "clock_max": 2200.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 24
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11715084288,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            }
+        ],
+        "host": "kiev0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-693.11.6.el7.x86_64-x86_64-with-centos-7.4.1708-Core",
+        "ram": {
+            "banks": [],
+            "total": 270182359040
+        },
+        "swap": 4294963200
+    },
+    "problem": {
+        "bytes_x_train": 616562688,
+        "cnt_batches_per_epoch": 32.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            1024,
+            3,
+            224,
+            224
+        ]
+    },
+    "time": 5.906664744857698
+}
