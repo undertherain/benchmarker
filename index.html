@@ -46,7 +46,7 @@
 //var sec_key="device"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'kernel': ['resnet50', 'vgg16'], 'device': ['Tesla P100-SXM2-16GB', 'GeForce GTX 980 Ti', 'Tesla K40c', 'GeForce GTX 1080 Ti'], 'framework': ['chainer', 'tensorflow']}
+var keyvals={'kernel': ['vgg16', 'resnet50'], 'device': ['Tesla K40c', 'GeForce GTX 980 Ti', 'Tesla P100-SXM2-16GB', 'Tesla V100-SXM2-16GB', 'GeForce GTX 1080 Ti'], 'framework': ['chainer', 'tensorflow']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -94,12 +94,12 @@ kernel: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_kernel_resnet50" name="radio_for_kernel" onclick="set_filter('kernel','resnet50')"><label class="custom-control-label" for="radio_kernel_resnet50">resnet50</label>
+  <input type="radio" class="custom-control-input" id="radio_kernel_vgg16" name="radio_for_kernel" onclick="set_filter('kernel','vgg16')"><label class="custom-control-label" for="radio_kernel_vgg16">vgg16</label>
 </div>
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_kernel_vgg16" name="radio_for_kernel" onclick="set_filter('kernel','vgg16')"><label class="custom-control-label" for="radio_kernel_vgg16">vgg16</label>
+  <input type="radio" class="custom-control-input" id="radio_kernel_resnet50" name="radio_for_kernel" onclick="set_filter('kernel','resnet50')"><label class="custom-control-label" for="radio_kernel_resnet50">resnet50</label>
 </div>
 
 </div>
@@ -111,7 +111,7 @@ device: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Tesla P100-SXM2-16GB" name="radio_for_device" onclick="set_filter('device','Tesla P100-SXM2-16GB')"><label class="custom-control-label" for="radio_device_Tesla P100-SXM2-16GB">Tesla P100-SXM2-16GB</label>
+  <input type="radio" class="custom-control-input" id="radio_device_Tesla K40c" name="radio_for_device" onclick="set_filter('device','Tesla K40c')"><label class="custom-control-label" for="radio_device_Tesla K40c">Tesla K40c</label>
 </div>
 
   
@@ -121,7 +121,12 @@ device: 
 
   
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Tesla K40c" name="radio_for_device" onclick="set_filter('device','Tesla K40c')"><label class="custom-control-label" for="radio_device_Tesla K40c">Tesla K40c</label>
+  <input type="radio" class="custom-control-input" id="radio_device_Tesla P100-SXM2-16GB" name="radio_for_device" onclick="set_filter('device','Tesla P100-SXM2-16GB')"><label class="custom-control-label" for="radio_device_Tesla P100-SXM2-16GB">Tesla P100-SXM2-16GB</label>
+</div>
+
+  
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Tesla V100-SXM2-16GB" name="radio_for_device" onclick="set_filter('device','Tesla V100-SXM2-16GB')"><label class="custom-control-label" for="radio_device_Tesla V100-SXM2-16GB">Tesla V100-SXM2-16GB</label>
 </div>
 
   
@@ -156,7 +161,7 @@ framework: 
 <script type="text/javascript">
 var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [['resnet50', 'Tesla P100-SXM2-16GB', 'chainer', 5.231589577905834], ['vgg16', 'Tesla P100-SXM2-16GB', 'tensorflow', 9.196029103671512], ['resnet50', 'GeForce GTX 980 Ti', 'chainer', 9.374340819800272], ['resnet50', 'GeForce GTX 980 Ti', 'tensorflow', 12.00195481814444], ['vgg16', 'Tesla K40c', 'chainer', 64.92611408047378], ['resnet50', 'Tesla K40c', 'chainer', 24.31149594327435], ['vgg16', 'GeForce GTX 1080 Ti', 'chainer', 12.18715507676825], ['resnet50', 'Tesla P100-SXM2-16GB', 'tensorflow', 7.681111094852288], ['resnet50', 'GeForce GTX 1080 Ti', 'tensorflow', 7.798240661931534], ['vgg16', 'Tesla K40c', 'tensorflow', 30.62504617248972], ['vgg16', 'Tesla P100-SXM2-16GB', 'chainer', 12.036421794630588], ['vgg16', 'GeForce GTX 980 Ti', 'chainer', 19.79562048902735], ['vgg16', 'GeForce GTX 1080 Ti', 'tensorflow', 10.405107443531355], ['resnet50', 'Tesla K40c', 'tensorflow', 29.00006337960561], ['resnet50', 'GeForce GTX 1080 Ti', 'chainer', 5.906664744857698]]
+    rows: [['vgg16', 'Tesla K40c', 'chainer', 64.92611408047378], ['resnet50', 'GeForce GTX 980 Ti', 'tensorflow', 12.00195481814444], ['resnet50', 'GeForce GTX 980 Ti', 'chainer', 9.374340819800272], ['resnet50', 'Tesla P100-SXM2-16GB', 'tensorflow', 7.681111094852288], ['resnet50', 'Tesla V100-SXM2-16GB', 'chainer', 3.7750129361171276], ['resnet50', 'Tesla K40c', 'tensorflow', 29.00006337960561], ['vgg16', 'GeForce GTX 980 Ti', 'chainer', 19.79562048902735], ['vgg16', 'Tesla V100-SXM2-16GB', 'tensorflow', 5.8794800123820705], ['resnet50', 'Tesla P100-SXM2-16GB', 'chainer', 5.231589577905834], ['vgg16', 'Tesla P100-SXM2-16GB', 'tensorflow', 9.196029103671512], ['vgg16', 'Tesla K40c', 'tensorflow', 30.62504617248972], ['vgg16', 'Tesla V100-SXM2-16GB', 'chainer', 8.88998506399803], ['resnet50', 'GeForce GTX 1080 Ti', 'chainer', 5.906664744857698], ['vgg16', 'Tesla P100-SXM2-16GB', 'chainer', 12.036421794630588], ['resnet50', 'Tesla V100-SXM2-16GB', 'tensorflow', 5.189415666585167], ['resnet50', 'Tesla K40c', 'chainer', 24.31149594327435], ['resnet50', 'GeForce GTX 1080 Ti', 'tensorflow', 7.798240661931534], ['vgg16', 'GeForce GTX 1080 Ti', 'tensorflow', 10.405107443531355], ['vgg16', 'GeForce GTX 1080 Ti', 'chainer', 12.18715507676825]]
   });
 </script><br><div id="filters"></div>
 
