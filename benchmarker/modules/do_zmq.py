@@ -1,14 +1,13 @@
-import os
-import sys
 import importlib
+
 
 class ZMQ(object):
     def __init__(self, flags):
-        self.run_args      = ""
-        self.message_size  = "1"
-        self.iterations    = "1000"
-        self.interface     = "ib0"
-        self.server_port   = "5555"
+        self.run_args = ""
+        self.message_size = "1"
+        self.iterations = "1000"
+        self.interface = "ib0"
+        self.server_port = "5555"
 
         self.__add_run_args(flags)
 
@@ -49,6 +48,7 @@ class ZMQ(object):
         print("Example:")
         print("     # python3.6 ./benchmarker.py --framework=zmq --problem=bandwidth --misc=svr_ip:10.1.28.83,clt_ip:10.1.28.82,interface:ib0")
 
+
 def run(params):
     params["problem"] = "bandwidth"
 
@@ -63,19 +63,19 @@ def run(params):
         exit(1)
 
     flags = params["misc"].split(",")
-    flags = dict(flag.split(':') for flag in flags)        
+    flags = dict(flag.split(':') for flag in flags)
 
     # Setup benchmark
     zmq = ZMQ(flags)
 
-    mod       = importlib.import_module("problems." + params["problem"]+".zmq")
+    mod = importlib.import_module("problems." + params["problem"]+".zmq")
     get_model = getattr(mod, 'get_model')
-    app       = get_model(params)
+    app = get_model(params)
 
     # run actual benchmark and measure performance
     output = app.execute(zmq.server, zmq.get_server_args(), zmq.client, zmq.get_client_args())
-    params["perf"]        = output["perf"]
-    params["app_config"]  = output["config"]
+    params["perf"] = output["perf"]
+    params["app_config"] = output["config"]
 
     # Find the version of ZMQ
     zmq_version = ""

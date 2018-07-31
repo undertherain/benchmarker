@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+"""Keras support.
+
+Used for Tensofrlow and Theano
+"""
+
 from timeit import default_timer as timer
+import importlib
 import keras
 import keras.models
-import importlib
 
 
 def run(params, data):
@@ -10,26 +16,26 @@ def run(params, data):
     else:
         keras.backend.set_image_data_format("channels_last")
 
-    X_train, Y_train = data
+    x_train, y_train = data
 
-    Y_train = keras.utils.to_categorical(Y_train, num_classes=1000)
-    # print(Y_train)
+    y_train = keras.utils.to_categorical(y_train, num_classes=1000)
 
-    mod = importlib.import_module("benchmarker.modules.problems." + params["problem"]["name"] + ".keras")
+    mod = importlib.import_module("benchmarker.modules.problems." +
+                                  params["problem"]["name"] + ".keras")
     get_model = getattr(mod, 'get_model')
 
-    if len(Y_train.shape) > 1:
-        cnt_classes = Y_train.shape[1]
+    if len(y_train.shape) > 1:
+        cnt_classes = y_train.shape[1]
     else:
         cnt_classes = 1
     params["cnt_classes"] = cnt_classes
     model = get_model(params)
     print("preheat")
-    model.fit(X_train, Y_train, batch_size=params["batch_size"], epochs=1)
+    model.fit(x_train, y_train, batch_size=params["batch_size"], epochs=1)
     nb_epoch = 3
     print("train")
     start = timer()
-    model.fit(X_train, Y_train, batch_size=params["batch_size"], epochs=nb_epoch, verbose=1)
+    model.fit(x_train, y_train, batch_size=params["batch_size"], epochs=nb_epoch, verbose=1)
     end = timer()
     params["time"] = (end-start)/nb_epoch
     if params["framework"] == "theano":

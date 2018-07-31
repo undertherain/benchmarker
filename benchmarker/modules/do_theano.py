@@ -24,5 +24,5 @@ class DoTheano(INeuralNet):
 
 
 def run(params):
-    m = DoTheano(params)
-    return m.run()
+    backend_theano = DoTheano(params)
+    return backend_theano.run()

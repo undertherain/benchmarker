@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""TensorFlow support.
+"""
+
 import os
 from .i_neural_net import INeuralNet
 
@@ -5,10 +9,9 @@ from .i_neural_net import INeuralNet
 class DoTensorflow(INeuralNet):
     """docstring for ClassName"""
 
-    def __init__(self,params):
+    def __init__(self, params):
         super().__init__(params)
         self.params["channels_first"] = False
-
 
     def run(self):
         # todo set image format
@@ -26,5 +29,5 @@ class DoTensorflow(INeuralNet):
 
 
 def run(params):
-    m = DoTensorflow(params)
-    return m.run()
+    backend_tf = DoTensorflow(params)
+    return backend_tf.run()

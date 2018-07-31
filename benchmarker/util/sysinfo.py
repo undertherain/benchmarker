@@ -1,7 +1,7 @@
-import begin
 import json
 import os
 import sys
+import begin
 
 from benchmarker.util import abstractprocess
 
@@ -28,4 +28,4 @@ def get_sys_info():
 @begin.start
 def main():
     info = get_sys_info()
-    print(json.dumps(info, sort_keys=True,  indent=4, separators=(',', ': ')))
+    print(json.dumps(info, sort_keys=True, indent=4, separators=(',', ': ')))

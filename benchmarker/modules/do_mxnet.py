@@ -1,18 +1,25 @@
-import mxnet as mx
+# -*- coding: utf-8 -*-
+"""MxNet support.
+
+This module integrates MxNet framework into the benchmarker
+"""
+
 import importlib
 from timeit import default_timer as timer
+import mxnet as mx
 from .i_neural_net import INeuralNet
 
 
 class DoMxnet(INeuralNet):
 
     def run(self):
-        X_train, Y_train = self.load_data()
+        x_train, y_train = self.load_data()
 
-        mod = importlib.import_module("benchmarker.modules.problems." + self.params["problem"] + ".mxnet")
+        mod = importlib.import_module("benchmarker.modules.problems." +
+                                      self.params["problem"] + ".mxnet")
         get_model = getattr(mod, 'get_model')
 
-        net = get_model(X_train[0].shape)
+        net = get_model(x_train[0].shape)
         if self.params["nb_gpus"] > 0:
             devices = [mx.gpu(i) for i in self.params["gpus"]]
         else:
@@ -22,7 +29,7 @@ class DoMxnet(INeuralNet):
 
         print(devices)
         nb_epoch = 3
-        train_iter = mx.io.NDArrayIter(X_train, Y_train, batch_size=self.params["batch_size"])
+        train_iter = mx.io.NDArrayIter(x_train, y_train, batch_size=self.params["batch_size"])
         mod = mx.mod.Module(symbol=net,
                             # context=mx.cpu(),
                             context=devices,
@@ -50,5 +57,5 @@ class DoMxnet(INeuralNet):
 
 
 def run(params):
-    m = DoMxnet(params)
-    return m.run()
+    mxnet_backend = DoMxnet(params)
+    return mxnet_backend.run()

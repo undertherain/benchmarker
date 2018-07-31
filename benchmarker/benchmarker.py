@@ -1,18 +1,24 @@
+# -*- coding: utf-8 -*-
+"""Benchmarker main module
+
+This is where all magic is happening
+"""
+
 import importlib
 import json
 import os
 import datetime
 import sys
 import pkgutil
-import logging
+# import logging
 
 from .util import sysinfo
 
 
 def get_time_str():
-    d = datetime.datetime.now()
-    s = d.strftime("%y.%m.%d_%H.%M.%S")
-    return s
+    time_now = datetime.datetime.now()
+    str_time = time_now.strftime("%y.%m.%d_%H.%M.%S")
+    return str_time
 
 
 def gen_name_output_file(params):
@@ -26,27 +32,28 @@ def gen_name_output_file(params):
 
 
 def save_json(params):
-    str_result = json.dumps(params, sort_keys=True,  indent=4, separators=(',', ': '))
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(',', ': '))
     print(str_result)
     path_out = params["path_out"]
     if not os.path.isdir(path_out):
         os.makedirs(path_out)
     name_file = gen_name_output_file(params)
-    with open(os.path.join(path_out, name_file), "w") as f:
-        f.write(str_result)
+    with open(os.path.join(path_out, name_file), "w") as file_out:
+        file_out.write(str_result)
 
 
 def get_modules():
     path_modules = "benchmarker/modules"
-    return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules]) if not is_pkg and name.startswith('do_')]
+    return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules])
+            if not is_pkg and name.startswith('do_')]
 
 
 def run(framework: "Framework to test" = None,
-         problem: "problem to solve" = None,
-         path_out: "path to store results" = "./logs",
-         gpus: "list of gpus to use" = "",
-         misc: "comma separated list of key:value pairs" = None
-         ):
+        problem: "problem to solve" = None,
+        path_out: "path to store results" = "./logs",
+        gpus: "list of gpus to use" = "",
+        misc: "comma separated list of key:value pairs" = None
+       ):
 
     params = {}
     params["platform"] = sysinfo.get_sys_info()
@@ -72,7 +79,7 @@ def run(framework: "Framework to test" = None,
     params["problem"] = {}
     params["problem"]["name"] = problem
     params["misc"] = misc
-    if len(gpus) > 0:
+    if gpus:
         params["gpus"] = list(map(int, gpus.split(',')))
     else:
         params["gpus"] = []

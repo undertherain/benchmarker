@@ -1,24 +1,14 @@
-import numpy as np
+# -*- coding: utf-8 -*-
+"""Chainer support.
+"""
+
 import chainer
-import chainer.functions as F
 import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 from timeit import default_timer as timer
 import importlib
 from .i_neural_net import INeuralNet
-
-
-#class Classifier(chainer.Chain):
-#    def __init__(self, predictor):
-#        super(Classifier, self).__init__(predictor=predictor)#
-#
-#    def __call__(self, x, t):
-#        y = self.predictor(x)
-#        loss = F.sigmoid_cross_entropy(y, t)
-#        accuracy = F.binary_accuracy(y, t)
-#        chainer.report({'loss': loss, 'accuracy': accuracy}, self)
-#        return loss
 
 
 class DoChainer(INeuralNet):
@@ -28,16 +18,15 @@ class DoChainer(INeuralNet):
 
     def run(self):
         params = self.params
-        X_train, Y_train = self.load_data()
+        x_train, y_train = self.load_data()
         nb_epoch = 10
-
-
-        mod = importlib.import_module("benchmarker.modules.problems." + params["problem"]["name"] + ".chainer")
+        mod = importlib.import_module("benchmarker.modules.problems." +
+                                      params["problem"]["name"] + ".chainer")
         Net = getattr(mod, 'Net')
-        #if len(Y_train.shape) == 1:
-        #    Y_train = Y_train[:, np.newaxis]
-        #    model = Classifier(Net())
-        #else:
+        # if len(Y_train.shape) == 1:
+        #     Y_train = Y_train[:, np.newaxis]
+        #     model = Classifier(Net())
+        # else:
         model = L.Classifier(Net())
         if params["nb_gpus"] == 1:
             id_device = params["gpus"][0]
@@ -52,13 +41,13 @@ class DoChainer(INeuralNet):
 
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)
-        train = chainer.datasets.tuple_dataset.TupleDataset(X_train, Y_train)
+        train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
         if params["nb_gpus"] == 0:
             train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
         else:
             train_iter = chainer.iterators.MultiprocessIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=True, n_processes=4)
-            #train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
+            # train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
         # test_iter = chainer.iterators.SerialIterator(test, batch_size=batch_size=params["batch_size"], repeat=False, shuffle=False)
         if params["nb_gpus"] == 0:
             updater = training.StandardUpdater(train_iter, optimizer)
@@ -86,5 +75,5 @@ class DoChainer(INeuralNet):
 
 
 def run(params):
-    m = DoChainer(params)
-    return m.run()
+    backend_chainer = DoChainer(params)
+    return backend_chainer.run()
