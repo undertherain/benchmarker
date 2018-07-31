@@ -8,6 +8,9 @@
     :target: https://travis-ci.org/undertherain/benchmarker
     :alt: build status from Travis CI
 
+.. image:: https://api.codacy.com/project/badge/Grade/a6094d03cc8446a9b851ce9dd298d3c8    
+    :target: https://www.codacy.com/project/undertherain/benchmarker/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=undertherain/benchmarker&amp;utm_campaign=Badge_Grade_Dashboard
+
 ========
 Synopsis
 ========
