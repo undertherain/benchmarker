@@ -66,16 +66,16 @@ def run(framework: "Framework to test" = None,
             print("\t", plugin[3:])
         return
 
-    #todo: load frameowrk's metadata from backend
+    # todo: load frameowrk's metadata from backend
     params["framework"] = framework
 
     if problem is None:
         print("choose a problem to run")
-        print(f"problems supported by {framework}:")
+        print("problems supported by {}:".format(framework))
         return
-    #todo: get a list of support problems for a given framework
+    # todo: get a list of support problems for a given framework
 
-    #todo: load problem's metadata from the problem itself
+    # todo: load problem's metadata from the problem itself
     params["problem"] = {}
     params["problem"]["name"] = problem
     params["misc"] = misc
