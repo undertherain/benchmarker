@@ -14,6 +14,7 @@ class Net(chainer.Chain):
             l=L.Linear(None, 2),
         )
         self.train = train
+
     def __call__(self, x):
         h = x
         h = self.conv1(h)
