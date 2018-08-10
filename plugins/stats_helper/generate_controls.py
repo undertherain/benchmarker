@@ -54,7 +54,9 @@ class Plugin(ShortcodePlugin):
 
 
 def main():
-    read_jsons()
+    df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
+    devices = list(df["device"].unique())
+    print(devices)
 
 
 if __name__ == "__main__":

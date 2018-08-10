@@ -1,0 +1,84 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "cnt_classes": 1000,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+    "framework": "tensorflow",
+    "framework_full": "Keras-2.2.0/tensorflow_1.9.0",
+    "gpus": [],
+    "misc": null,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "clock": 1505.0552250000005,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 20
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6373572608,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6373572608,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6373572608,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6373572608,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            }
+        ],
+        "host": "roma6.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-693.11.6.el7.x86_64-x86_64-with-centos-7.4.1708-Core",
+        "ram": {
+            "banks": [],
+            "total": 270183206912
+        },
+        "swap": 4294963200
+    },
+    "problem": {
+        "bytes_x_train": 616562688,
+        "cnt_batches_per_epoch": 32.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            1024,
+            224,
+            224,
+            3
+        ]
+    },
+    "time": 376.23901420552284
+}
