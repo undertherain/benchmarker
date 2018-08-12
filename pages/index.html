@@ -28,12 +28,11 @@
          //     filters_prim[key] = new Set(); }
         if (document.getElementById(id).checked)  {
           filters_prim[key].add(val);
-          } 
+          }
         else {
           filters_prim[key].delete(val);
         }
-          //document.getElementById("div_debug").innerHTML = JSON.stringify(Array.from(filters_prim[key]));
-          plot_chart(); 
+          plot_chart();
         }  
 
         function set_prim_key(key) {
@@ -42,7 +41,7 @@
           prim_key = key;
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
-          plot_chart();  };
+          plot_chart(); };
         function set_sec_key(key) {
           if (prim_key == key)
             prim_key = sec_key; 

@@ -52,25 +52,29 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
     <tr>
       <th class="align-middle" scope="row">${key}</th>
       <td>
-      <div class="custom-control custom-radio custom-control-inline">
-        <input class="custom-control-input" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
-        <label class="custom-control-label" for="radio_key1_${key}"></label>
-      </div>
+        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+        <div class="custom-control custom-radio custom-control-inline">
+          <input class="custom-control-input" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
+          <label class="custom-control-label" for="radio_key1_${key}"></label>
+        </div>
+        </div>
     </td>
       <td>
+        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
         <div class="custom-control custom-radio custom-control-inline">
-        <input class="custom-control-input" id="radio_key2_${key}" name="radio_for_key2" type="radio" onclick="set_sec_key('${key}')">
-        <label class="custom-control-label" for="radio_key2_${key}"></label>
-      </div>
+          <input class="custom-control-input" id="radio_key2_${key}" name="radio_for_key2" type="radio" onclick="set_sec_key('${key}')">
+          <label class="custom-control-label" for="radio_key2_${key}"></label>
+        </div>
+        </div>
 
       </td>
       <td>
-      <div id="div_radio_${key}" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
+      <div id="div_radio_${key}" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
         % for val in vals:
           ${make_radio_button(key, val)}
         % endfor
       </div>
-      <div id="div_check_${key}" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
+      <div id="div_check_${key}" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
         % for val in vals:
           ${make_checkbox(key, val)}
         % endfor
