@@ -41,12 +41,15 @@
           //document.getElementById("div_prim_key").innerHTML = prim_key;
           //document.getElementById("div_sec_key").innerHTML = sec_key;
           $("#div_radio_" + prim_key).hide('fast')
+          $("#div_check_" + prim_key).show('fast')
           $("#div_radio_" + sec_key).hide('fast')
+          $("#div_check_" + sec_key).show('fast')
           for (key in keyvals) {
               //str_filters += key +": "+filters[key];
               if ((key != prim_key) && (key != sec_key))
               {
                 $("#div_radio_" + key).show('fast')
+                $("#div_check_" + key).hide('fast')
                 if (! filters.hasOwnProperty(key))
                   filters[key] = keyvals[key][0]
               }
