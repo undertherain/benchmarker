@@ -15,6 +15,7 @@
 <h1>Performance measurement results</h1>
 <h3>[still debugging, expect more data to come soon]</h3>
 <div id="div_debug"> </div>
+
 {{% generate_controls %}}
       <script type="text/javascript">
         function set_filter(key, val) {
@@ -23,15 +24,15 @@
           plot_chart(); };
         function set_key_filter(key, val, id)
         {
-          if (!(filters_prim.hasOwnProperty(key)))  {           
-              filters_prim[key] = new Set(); }
+        //  if (!(filters_prim.hasOwnProperty(key))){
+         //     filters_prim[key] = new Set(); }
         if (document.getElementById(id).checked)  {
           filters_prim[key].add(val);
           } 
         else {
           filters_prim[key].delete(val);
         }
-          document.getElementById("div_debug").innerHTML = JSON.stringify(Array.from(filters_prim[key]));
+          //document.getElementById("div_debug").innerHTML = JSON.stringify(Array.from(filters_prim[key]));
           plot_chart(); 
         }  
 
@@ -152,7 +153,6 @@ var myBarChart = new Chart(ctx, {
 });
 
 }
-plot_chart();
-</script>
 
+</script>
 </section>

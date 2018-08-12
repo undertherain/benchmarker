@@ -8,9 +8,25 @@ var filters = {
   //"kernel": "conv2"
 }
 var filters_prim = {}
-filters_prim["device"] =  new Set(["Tesla K40c","test"]);
-
-
+% for key in keyvals:
+filters_prim["${key}"] =  new Set();
+% endfor
+function check_checkboxes()
+{
+% for key in keyvals:
+  % for val in keyvals[key]:
+if (document.getElementById("check_${key}_${val}").checked) {
+   filters_prim["${key}"].add("${val}"); } 
+else {
+  filters_prim["${key}"].delete("${val}"); }
+  % endfor
+% endfor
+}
+$( document ).ready(function() {
+    check_checkboxes();
+    //document.getElementById("div_debug").innerHTML ="checkboxes checked";
+    plot_chart();
+});
 var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 //todo generate colors from brewer2mpl
 </script>
@@ -25,8 +41,8 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 <%def name="make_checkbox(key, val)">
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" class="custom-control-input" id="check_${key}_${val}" onclick="set_key_filter('${key}','${val}','check_${key}_${val}')">
-  <label class="custom-control-label" for="check_${key}_${val}">${val}</label>
+  <input type="checkbox" checked class="custom-control-input" id="check_${key}_${val}" onclick="set_key_filter('${key}','${val}','check_${key}_${val}')">
+  <label class="custom-control-label " for="check_${key}_${val}">${val}</label>
 </div>
 
 
