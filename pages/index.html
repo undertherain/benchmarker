@@ -14,13 +14,27 @@
 <section class="container">
 <h1>Performance measurement results</h1>
 <h3>[still debugging, expect more data to come soon]</h3>
-
+<div id="div_debug"> </div>
 {{% generate_controls %}}
       <script type="text/javascript">
         function set_filter(key, val) {
           if ( (key != prim_key) && (key != sec_key))
           filters[key] = val;
           plot_chart(); };
+        function set_key_filter(key, val, id)
+        {
+          if (!(filters_prim.hasOwnProperty(key)))  {           
+              filters_prim[key] = new Set(); }
+        if (document.getElementById(id).checked)  {
+          filters_prim[key].add(val);
+          } 
+        else {
+          filters_prim[key].delete(val);
+        }
+          document.getElementById("div_debug").innerHTML = JSON.stringify(Array.from(filters_prim[key]));
+          plot_chart(); 
+        }  
+
         function set_prim_key(key) {
           if (sec_key == key)
             sec_key = prim_key;
@@ -95,6 +109,8 @@ function get_chart_data()
 {
   var prim_values = df.getColumns().where(column => column.name == prim_key).first().series.distinct().toArray();
   var sec_values = df.getColumns().where(column => column.name == sec_key).first().series.distinct().toArray();
+  prim_values = prim_values.filter(k => filters_prim[prim_key].has(k));
+  sec_values = sec_values.filter(k => filters_prim[sec_key].has(k));
   df_filtered = apply_filters(df, filters)
   var chart_data = {
     labels: prim_values,

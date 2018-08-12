@@ -7,6 +7,9 @@ var keyvals=${keyvals}
 var filters = {
   //"kernel": "conv2"
 }
+var filters_prim = {}
+filters_prim["device"] =  new Set(["Tesla K40c","test"]);
+
 
 var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 //todo generate colors from brewer2mpl
@@ -22,7 +25,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 <%def name="make_checkbox(key, val)">
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" class="custom-control-input" id="check_${key}_${val}">
+  <input type="checkbox" class="custom-control-input" id="check_${key}_${val}" onclick="set_key_filter('${key}','${val}','check_${key}_${val}')">
   <label class="custom-control-label" for="check_${key}_${val}">${val}</label>
 </div>
 
@@ -31,7 +34,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 <%def name="make_radio_line(key, vals)">
     <tr>
-      <th scope="row">${key}</th>
+      <th class="align-middle" scope="row">${key}</th>
       <td>
       <div class="custom-control custom-radio custom-control-inline">
         <input class="custom-control-input" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
@@ -64,9 +67,9 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 <table class="table  table-bordered">
   <thead>
     <tr>
-      <th class="col-1">field</th>
-      <th class="col-1">k1</th>
-      <th class="col-1">k2</th>
+      <th class="col-1"></th>
+      <th class="col-1">key1</th>
+      <th class="col-1">key2</th>
       <th class="col-9">values</th>
     </tr>
   </thead>
@@ -76,61 +79,3 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 % endfor
   </tbody>
 </table>
-
-
-
-<%doc>
-<div class="btn-group">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">prim. key:</button>
-    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
-      % for key in keyvals:
-      ${make_prim_key_line(key)}
-      % endfor
-    </div>
-  </div>
-  <div class="btn-group" id="div_prim_key">primary key</div>
-
-<%def name="make_prim_key_line(val)">
-      <a class="dropdown-item" onclick="set_prim_key('${val}')">${val}</a>
-</%def>
-
-<div class="btn-group">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">sec. key:</button>
-    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
-      % for key in keyvals:
-      ${make_sec_key_line(key)}
-      % endfor
-    </div>
-  </div>
-  <div class="btn-group" id="div_sec_key">sec key</div>
-
-<%def name="make_sec_key_line(val)">
-      <a class="dropdown-item" onclick="set_sec_key('${val}')">${val}</a>
-</%def>
-
-<br />
-      <!--a class="dropdown-item" id="dropdown_elem_${key}_prim" onclick="set_prim_key('${key}')">Primary Key</a-->
-      <!--a class="dropdown-item" id="dropdown_elem_${key}_sec" onclick="set_sec_key('${key}')">Secondary Key</a-->
-
-% for key in keyvals:
-  ${make_key_line(key)}
-% endfor
-
-
-<%def name="make_item(val)">
-      <a class="dropdown-item" onclick="set_filter('${key}','${val}')">${val}</a>
-</%def>
-
-  <div class="btn-group">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${key}</button>
-    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
-      <a class="dropdown-item" id="dropdown_elem_${key}_prim" onclick="set_prim_key('${key}')">Primary Key</a>
-      <a class="dropdown-item" id="dropdown_elem_${key}_sec" onclick="set_sec_key('${key}')">Secondary Key</a>
-      <div class="dropdown-divider"></div>
-% for val in vals:
-  ${make_item(val)}
-% endfor
-    </div>
-  </div><!-- /btn-group -->
- </%doc>
-
