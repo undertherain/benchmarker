@@ -12,6 +12,60 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 //todo generate colors from brewer2mpl
 </script>
 
+
+<%def name="make_radio_button(key, val)">
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_${key}_${val}" name="radio_for_${key}" onclick="set_filter('${key}','${val}')">
+  <label class="custom-control-label" for="radio_${key}_${val}">${val}</label>
+</div>
+</%def>
+
+<%def name="make_radio_line(key, vals)">
+    <tr>
+      <th scope="row">${key}</th>
+      <td>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input class="custom-control-input" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
+        <label class="custom-control-label" for="radio_key1_${key}"></label>
+      </div>
+    </td>
+      <td>
+        <div class="custom-control custom-radio custom-control-inline">
+        <input class="custom-control-input" id="radio_key2_${key}" name="radio_for_key2" type="radio" onclick="set_sec_key('${key}')">
+        <label class="custom-control-label" for="radio_key2_${key}"></label>
+      </div>
+
+      </td>
+      <td>
+        <div id="div_radio_${key}" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
+        % for val in vals:
+          ${make_radio_button(key, val)}
+        % endfor
+      </div>
+    </td>
+    </tr>
+</%def>
+
+
+<table class="table  table-bordered">
+  <thead>
+    <tr>
+      <th class="col-1">field</th>
+      <th class="col-1">k1</th>
+      <th class="col-1">k2</th>
+      <th class="col-9">values</th>
+    </tr>
+  </thead>
+  <tbody>
+% for key in keyvals:
+  ${make_radio_line(key, keyvals[key])}
+% endfor
+  </tbody>
+</table>
+
+
+
+<%doc>
 <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">prim. key:</button>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">
@@ -43,33 +97,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 <br />
 
 
-<%def name="make_radio_button(key, val)">
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_${key}_${val}" name="radio_for_${key}" onclick="set_filter('${key}','${val}')">
-  <label class="custom-control-label" for="radio_${key}_${val}">${val}</label>
-</div>
-</%def>
 
-
-<%def name="make_radio_line(key, vals)">
-<div id="div_radio_${key}" class="btn-group" role="group" aria-label="..." style="padding: 5px;">
-${key}:&nbsp;
-
-% for val in vals:
-  ${make_radio_button(key, val)}
-% endfor
-</div>
-
-</%def>
-
-% for key in keyvals:
-  ${make_radio_line(key, keyvals[key])}
-% endfor
-
-
-
-
-<%doc>
       <!--a class="dropdown-item" id="dropdown_elem_${key}_prim" onclick="set_prim_key('${key}')">Primary Key</a-->
       <!--a class="dropdown-item" id="dropdown_elem_${key}_sec" onclick="set_sec_key('${key}')">Secondary Key</a-->
 
@@ -94,3 +122,4 @@ ${key}:&nbsp;
     </div>
   </div><!-- /btn-group -->
  </%doc>
+

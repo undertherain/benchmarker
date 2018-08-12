@@ -16,9 +16,6 @@
 <h3>[still debugging, expect more data to come soon]</h3>
 
 {{% generate_controls %}}
-<br />
-<div id="filters"></div>
-
       <script type="text/javascript">
         function set_filter(key, val) {
           if ( (key != prim_key) && (key != sec_key))
@@ -39,8 +36,10 @@
               delete filters[key] }
           plot_chart();  };
         function display_filters() {
-          document.getElementById("div_prim_key").innerHTML = prim_key;
-          document.getElementById("div_sec_key").innerHTML = sec_key;
+          document.getElementById("radio_key1_" + prim_key).checked=true;
+          document.getElementById("radio_key2_" + sec_key).checked=true;
+          //document.getElementById("div_prim_key").innerHTML = prim_key;
+          //document.getElementById("div_sec_key").innerHTML = sec_key;
           $("#div_radio_" + prim_key).hide('fast')
           $("#div_radio_" + sec_key).hide('fast')
           for (key in keyvals) {
@@ -59,6 +58,7 @@
       </script>
 
 <canvas id="myChart" width="800" height="450"></canvas>
+
 <script>
 function apply_filters(df, filters)
 {
