@@ -3,10 +3,16 @@ import os
 import pandas
 from nikola.plugin_categories import ShortcodePlugin
 from mako.template import Template
-
+import importlib
+import importlib.util
+#from cute_device import get_cute_device_str
 
 plugin_path = os.path.dirname(os.path.realpath(__file__))
 
+spec = importlib.util.spec_from_file_location("module.name", os.path.join(plugin_path, "cute_device.py"))
+foo = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(foo)
+get_cute_device_str = foo.get_cute_device_str
 
 def read_file(filename):
     with open(filename) as f:
@@ -27,7 +33,7 @@ def get_entries(path):
 
 def read_df_from_dir(path):
     data = [read_file(os.path.join(path, f)) for f in get_entries(path) if not f.startswith("arch") and os.path.isfile(os.path.join(path, f))]
-    df = pandas.concat(data)
+    df = pandas.concat(data, sort=False)
     return df
 
 
@@ -40,6 +46,7 @@ class Plugin(ShortcodePlugin):
         # output = "Hi I'm plugin that will generate comtrols for charts"
         mytemplate = Template(filename=os.path.join(plugin_path, 'controls.tmpl'))
         df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
+        df['device'] = df['device'].map(get_cute_device_str)
         keyvals = {
             "kernel": list(df["problem.name"].unique()),
             "device": list(df["device"].unique()),
@@ -55,6 +62,7 @@ class Plugin(ShortcodePlugin):
 
 def main():
     df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
+    df['device'] = df['device'].map(get_cute_device_str)
     devices = list(df["device"].unique())
     print(devices)
 
