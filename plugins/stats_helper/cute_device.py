@@ -11,7 +11,7 @@ def get_cute_device_str(device_name):
               "(K20Xm)",
               "(K40c)",
               "(Xeon)(?:\(R\) CPU )(E5-[0-9]{4} v[0-9])",
-              "(Xeon)(?:`\(R\) CPU `)(E5-[0-9]{4} v[0-9])",
+              "(Core)(?:\(TM\) )(i5-[0-9]{4}[A-Z])",
               "i7-3820",
               "i7-3930K"]
     for short in shorts:

@@ -20,7 +20,7 @@ BLOG_AUTHOR = "Aleksandr Drozd"  # (translatable)
 BLOG_TITLE = "Performance data"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
-SITE_URL = "http://blackbird.pw/"
+SITE_URL = "http://benchmarker.blackbird.pw/"
 # This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://vecto.space/"

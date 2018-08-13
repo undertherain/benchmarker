@@ -66,8 +66,8 @@ def main():
     df['device'] = df['device'].map(get_cute_device_str)
     devices = list(df["device"].unique())
     df["images_per_second"] = df["problem.shape_x_train"].map(lambda x: x[0]) / df["time"]
-    #print(devices)
-    print(df)
+    print(devices)
+    #print(df)
 
 
 if __name__ == "__main__":
