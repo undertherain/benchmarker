@@ -13,24 +13,35 @@
 
 <section class="container">
 <h1>Performance measurement results</h1>
-<h3>[still debugging, expect more data to come soon]</h3>
+<h3>[FP32 precision, still debugging, expect more stuff to come soon]</h3>
+<div id="div_debug"> </div>
 
 {{% generate_controls %}}
-<br />
-<div id="filters"></div>
-
       <script type="text/javascript">
         function set_filter(key, val) {
           if ( (key != prim_key) && (key != sec_key))
           filters[key] = val;
           plot_chart(); };
+        function set_key_filter(key, val, id)
+        {
+        //  if (!(filters_prim.hasOwnProperty(key))){
+         //     filters_prim[key] = new Set(); }
+        if (document.getElementById(id).checked)  {
+          filters_prim[key].add(val);
+          }
+        else {
+          filters_prim[key].delete(val);
+        }
+          plot_chart();
+        }  
+
         function set_prim_key(key) {
           if (sec_key == key)
             sec_key = prim_key;
           prim_key = key;
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
-          plot_chart();  };
+          plot_chart(); };
         function set_sec_key(key) {
           if (prim_key == key)
             prim_key = sec_key; 
@@ -39,15 +50,20 @@
               delete filters[key] }
           plot_chart();  };
         function display_filters() {
-          document.getElementById("div_prim_key").innerHTML = prim_key;
-          document.getElementById("div_sec_key").innerHTML = sec_key;
+          document.getElementById("radio_key1_" + prim_key).checked=true;
+          document.getElementById("radio_key2_" + sec_key).checked=true;
+          //document.getElementById("div_prim_key").innerHTML = prim_key;
+          //document.getElementById("div_sec_key").innerHTML = sec_key;
           $("#div_radio_" + prim_key).hide('fast')
+          $("#div_check_" + prim_key).show('fast')
           $("#div_radio_" + sec_key).hide('fast')
+          $("#div_check_" + sec_key).show('fast')
           for (key in keyvals) {
               //str_filters += key +": "+filters[key];
               if ((key != prim_key) && (key != sec_key))
               {
                 $("#div_radio_" + key).show('fast')
+                $("#div_check_" + key).hide('fast')
                 if (! filters.hasOwnProperty(key))
                   filters[key] = keyvals[key][0]
               }
@@ -59,6 +75,7 @@
       </script>
 
 <canvas id="myChart" width="800" height="450"></canvas>
+
 <script>
 function apply_filters(df, filters)
 {
@@ -92,6 +109,8 @@ function get_chart_data()
 {
   var prim_values = df.getColumns().where(column => column.name == prim_key).first().series.distinct().toArray();
   var sec_values = df.getColumns().where(column => column.name == sec_key).first().series.distinct().toArray();
+  prim_values = prim_values.filter(k => filters_prim[prim_key].has(k));
+  sec_values = sec_values.filter(k => filters_prim[sec_key].has(k));
   df_filtered = apply_filters(df, filters)
   var chart_data = {
     labels: prim_values,
@@ -133,7 +152,6 @@ var myBarChart = new Chart(ctx, {
 });
 
 }
-plot_chart();
-</script>
 
+</script>
 </section>
