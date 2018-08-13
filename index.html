@@ -42,29 +42,22 @@
 <h3>[FP32 precision, still debugging, expect more stuff to come soon]</h3>
 <div id="div_debug"> </div>
 
+
 <script>
-//var prim_key="kernel"
-//var sec_key="device"
+//var prim_key="device"
+//var sec_key="framework"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'kernel': ['vgg16', 'resnet50'], 'device': ['Xeon E5-2650 v3', 'Xeon E5-2630 v4', 'Xeon E5-2699 v3', 'V100-SXM2', 'P100-SXM2', 'GTX 980 Ti', 'K40c', 'GTX 1080 Ti'], 'framework': ['tensorflow', 'chainer']}
+var keyvals={'device': ['Xeon E5-2650 v3', 'Xeon E5-2630 v4', 'Xeon E5-2699 v3', 'V100-SXM2', 'P100-SXM2', 'GTX 980 Ti', 'K40c', 'GTX 1080 Ti'], 'framework': ['tensorflow', 'chainer'], 'kernel': ['vgg16', 'resnet50']}
 var filters = {
   //"kernel": "conv2"
 }
 var filters_prim = {}
-filters_prim["kernel"] =  new Set();
 filters_prim["device"] =  new Set();
 filters_prim["framework"] =  new Set();
+filters_prim["kernel"] =  new Set();
 function check_checkboxes()
 {
-if (document.getElementById("check_kernel_vgg16").checked) {
-   filters_prim["kernel"].add("vgg16"); } 
-else {
-  filters_prim["kernel"].delete("vgg16"); }
-if (document.getElementById("check_kernel_resnet50").checked) {
-   filters_prim["kernel"].add("resnet50"); } 
-else {
-  filters_prim["kernel"].delete("resnet50"); }
 if (document.getElementById("check_device_Xeon E5-2650 v3").checked) {
    filters_prim["device"].add("Xeon E5-2650 v3"); } 
 else {
@@ -105,6 +98,14 @@ if (document.getElementById("check_framework_chainer").checked) {
    filters_prim["framework"].add("chainer"); } 
 else {
   filters_prim["framework"].delete("chainer"); }
+if (document.getElementById("check_kernel_vgg16").checked) {
+   filters_prim["kernel"].add("vgg16"); } 
+else {
+  filters_prim["kernel"].delete("vgg16"); }
+if (document.getElementById("check_kernel_resnet50").checked) {
+   filters_prim["kernel"].add("resnet50"); } 
+else {
+  filters_prim["kernel"].delete("resnet50"); }
 }
 $( document ).ready(function() {
     check_checkboxes();
@@ -121,54 +122,6 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
       <th class="col-9">values</th>
     </tr></thead>
 <tbody>
-<tr>
-<th class="align-middle" scope="row">kernel</th>
-      <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
-        <div class="custom-control custom-radio custom-control-inline">
-          <input class="custom-control-input" id="radio_key1_kernel" name="radio_for_key1" type="radio" onclick="set_prim_key('kernel')"><label class="custom-control-label" for="radio_key1_kernel"></label>
-        </div>
-        </div>
-    </td>
-      <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
-        <div class="custom-control custom-radio custom-control-inline">
-          <input class="custom-control-input" id="radio_key2_kernel" name="radio_for_key2" type="radio" onclick="set_sec_key('kernel')"><label class="custom-control-label" for="radio_key2_kernel"></label>
-        </div>
-        </div>
-
-      </td>
-      <td>
-      <div id="div_radio_kernel" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_kernel_vgg16" name="radio_for_kernel" onclick="set_filter('kernel','vgg16')"><label class="custom-control-label" for="radio_kernel_vgg16">vgg16</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_kernel_resnet50" name="radio_for_kernel" onclick="set_filter('kernel','resnet50')"><label class="custom-control-label" for="radio_kernel_resnet50">resnet50</label>
-</div>
-
-      </div>
-      <div id="div_check_kernel" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_kernel_vgg16" onclick="set_key_filter('kernel','vgg16','check_kernel_vgg16')"><label class="custom-control-label " for="check_kernel_vgg16">vgg16</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_kernel_resnet50" onclick="set_key_filter('kernel','resnet50','check_kernel_resnet50')"><label class="custom-control-label " for="check_kernel_resnet50">resnet50</label>
-</div>
-
-
-
-      </div>
-    </td>
-    </tr>
 <tr>
 <th class="align-middle" scope="row">device</th>
       <td>
@@ -337,12 +290,60 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
       </div>
     </td>
     </tr>
+<tr>
+<th class="align-middle" scope="row">kernel</th>
+      <td>
+        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+        <div class="custom-control custom-radio custom-control-inline">
+          <input class="custom-control-input" id="radio_key1_kernel" name="radio_for_key1" type="radio" onclick="set_prim_key('kernel')"><label class="custom-control-label" for="radio_key1_kernel"></label>
+        </div>
+        </div>
+    </td>
+      <td>
+        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+        <div class="custom-control custom-radio custom-control-inline">
+          <input class="custom-control-input" id="radio_key2_kernel" name="radio_for_key2" type="radio" onclick="set_sec_key('kernel')"><label class="custom-control-label" for="radio_key2_kernel"></label>
+        </div>
+        </div>
+
+      </td>
+      <td>
+      <div id="div_radio_kernel" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_kernel_vgg16" name="radio_for_kernel" onclick="set_filter('kernel','vgg16')"><label class="custom-control-label" for="radio_kernel_vgg16">vgg16</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_kernel_resnet50" name="radio_for_kernel" onclick="set_filter('kernel','resnet50')"><label class="custom-control-label" for="radio_kernel_resnet50">resnet50</label>
+</div>
+
+      </div>
+      <div id="div_check_kernel" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_kernel_vgg16" onclick="set_key_filter('kernel','vgg16','check_kernel_vgg16')"><label class="custom-control-label " for="check_kernel_vgg16">vgg16</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_kernel_resnet50" onclick="set_key_filter('kernel','resnet50','check_kernel_resnet50')"><label class="custom-control-label " for="check_kernel_resnet50">resnet50</label>
+</div>
+
+
+
+      </div>
+    </td>
+    </tr>
 </tbody>
 </table>
 <script type="text/javascript">
 var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 332.51691715605557], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 376.23901420552284], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 3927.6348025396464], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 343.6895098711054], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 266.83589018136263], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 204.09196933731437], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 860.6356758080423], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 757.994657984376], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 1660.2196759026497], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 4090.869143966306], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 346.22472753562033], ['vgg16', 'V100-SXM2', 'chainer', 8.88998506399803], ['resnet50', 'P100-SXM2', 'chainer', 5.231589577905834], ['vgg16', 'P100-SXM2', 'tensorflow', 9.196029103671512], ['resnet50', 'GTX 980 Ti', 'chainer', 9.374340819800272], ['resnet50', 'GTX 980 Ti', 'tensorflow', 12.00195481814444], ['vgg16', 'K40c', 'chainer', 64.92611408047378], ['resnet50', 'K40c', 'chainer', 24.31149594327435], ['resnet50', 'V100-SXM2', 'tensorflow', 5.189415666585167], ['vgg16', 'GTX 1080 Ti', 'chainer', 12.18715507676825], ['vgg16', 'V100-SXM2', 'tensorflow', 5.8794800123820705], ['resnet50', 'P100-SXM2', 'tensorflow', 7.681111094852288], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 7.798240661931534], ['vgg16', 'K40c', 'tensorflow', 30.62504617248972], ['vgg16', 'P100-SXM2', 'chainer', 12.036421794630588], ['vgg16', 'GTX 980 Ti', 'chainer', 19.79562048902735], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 10.405107443531355], ['resnet50', 'K40c', 'tensorflow', 29.00006337960561], ['resnet50', 'V100-SXM2', 'chainer', 3.7750129361171276], ['resnet50', 'GTX 1080 Ti', 'chainer', 5.906664744857698]]
+    rows: [['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257]]
   });
 </script><script type="text/javascript">
         function set_filter(key, val) {
@@ -351,8 +352,6 @@ var df = new dataForge.DataFrame({
           plot_chart(); };
         function set_key_filter(key, val, id)
         {
-        //  if (!(filters_prim.hasOwnProperty(key))){
-         //     filters_prim[key] = new Set(); }
         if (document.getElementById(id).checked)  {
           filters_prim[key].add(val);
           }
@@ -464,7 +463,7 @@ var myBarChart = new Chart(ctx, {
                 scaleLabel: 
                 {
                     display: true,
-                    labelString: 'Epoch time'
+                    labelString: 'samples per second'
                 }            
             }
             ]

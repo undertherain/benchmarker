@@ -16,6 +16,7 @@
 <h3>[FP32 precision, still debugging, expect more stuff to come soon]</h3>
 <div id="div_debug"> </div>
 
+
 {{% generate_controls %}}
       <script type="text/javascript">
         function set_filter(key, val) {
@@ -24,8 +25,6 @@
           plot_chart(); };
         function set_key_filter(key, val, id)
         {
-        //  if (!(filters_prim.hasOwnProperty(key))){
-         //     filters_prim[key] = new Set(); }
         if (document.getElementById(id).checked)  {
           filters_prim[key].add(val);
           }
@@ -143,7 +142,7 @@ var myBarChart = new Chart(ctx, {
                 scaleLabel: 
                 {
                     display: true,
-                    labelString: 'Epoch time'
+                    labelString: 'samples per second'
                 }            
             }
             ]
