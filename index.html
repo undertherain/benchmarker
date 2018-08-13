@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
-<link rel="canonical" href="http://blackbird.pw/">
+<link rel="canonical" href="http://benchmarker.blackbird.pw/">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><!--script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script--><script language="javascript" type="text/javascript" src="assets/js/Chart.min.js"></script><script language="javascript" type="text/javascript" src="assets/js/jquery.min.js"></script><script language="javascript" type="text/javascript" src="assets/js/data-forge/data-forge.js"></script>
 </head>
 <body>
@@ -19,7 +19,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark static-top mb-4"><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="http://blackbird.pw/">
+        <a class="navbar-brand" href="http://benchmarker.blackbird.pw/">
 
             <span id="blog-title">Performance data</span>
         </a>
@@ -28,18 +28,23 @@
         </button>
 
         <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto"><li class="nav-item">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="about" class="nav-link">about</a>
+                </li>
+<li class="nav-item">
 <a href="https://github.com/undertherain/benchmarker/" class="nav-link">source code</a>
 
                 
-            </li></ul>
+            </li>
+</ul>
 <ul class="navbar-nav navbar-right"></ul>
 </div>
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>Performance measurement results</h1>
-<h3>[FP32 precision, still debugging, expect more stuff to come soon]</h3>
+</nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>FP32 precision training</h1>
+<h3>[still debugging, expect more content soon]</h3>
 <div id="div_debug"> </div>
 
 
@@ -48,7 +53,7 @@
 //var sec_key="framework"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'device': ['Xeon E5-2650 v3', 'Xeon E5-2630 v4', 'Xeon E5-2699 v3', 'V100-SXM2', 'P100-SXM2', 'GTX 980 Ti', 'K40c', 'GTX 1080 Ti'], 'framework': ['tensorflow', 'chainer'], 'kernel': ['vgg16', 'resnet50']}
+var keyvals={'device': ['Xeon E5-2650 v3', 'Xeon E5-2630 v4', 'Core i5-3210M', 'Xeon E5-2699 v3', 'V100-SXM2', 'P100-SXM2', 'GTX 980 Ti', 'K40c', 'GTX 1080 Ti'], 'framework': ['tensorflow', 'chainer'], 'kernel': ['vgg16', 'resnet50']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -66,6 +71,10 @@ if (document.getElementById("check_device_Xeon E5-2630 v4").checked) {
    filters_prim["device"].add("Xeon E5-2630 v4"); } 
 else {
   filters_prim["device"].delete("Xeon E5-2630 v4"); }
+if (document.getElementById("check_device_Core i5-3210M").checked) {
+   filters_prim["device"].add("Core i5-3210M"); } 
+else {
+  filters_prim["device"].delete("Core i5-3210M"); }
 if (document.getElementById("check_device_Xeon E5-2699 v3").checked) {
    filters_prim["device"].add("Xeon E5-2699 v3"); } 
 else {
@@ -153,6 +162,11 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
           
 <div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Core i5-3210M" name="radio_for_device" onclick="set_filter('device','Core i5-3210M')"><label class="custom-control-label" for="radio_device_Core i5-3210M">Core i5-3210M</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
   <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2699 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2699 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
 </div>
 
@@ -193,6 +207,13 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
           
 <div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2630 v4" onclick="set_key_filter('device','Xeon E5-2630 v4','check_device_Xeon E5-2630 v4')"><label class="custom-control-label " for="check_device_Xeon E5-2630 v4">Xeon E5-2630 v4</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Core i5-3210M" onclick="set_key_filter('device','Core i5-3210M','check_device_Core i5-3210M')"><label class="custom-control-label " for="check_device_Core i5-3210M">Core i5-3210M</label>
 </div>
 
 
@@ -343,7 +364,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 <script type="text/javascript">
 var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257]]
+    rows: [['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257]]
   });
 </script><script type="text/javascript">
         function set_filter(key, val) {

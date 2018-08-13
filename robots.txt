@@ -1,4 +1,4 @@
-Sitemap: http://blackbird.pw/sitemapindex.xml
+Sitemap: http://benchmarker.blackbird.pw/sitemapindex.xml
 
 User-Agent: *
-Host: blackbird.pw
+Host: benchmarker.blackbird.pw
