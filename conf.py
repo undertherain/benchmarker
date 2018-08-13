@@ -77,6 +77,7 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 NAVIGATION_LINKS = {
     DEFAULT_LANG:
     (
+        ("about", "about"),
         ("https://github.com/undertherain/benchmarker/", "source code"),
     )
 }
