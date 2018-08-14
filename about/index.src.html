@@ -6,21 +6,65 @@
 .. link:
 .. type: text
 .. hidetitle: True
-.. author: 
+.. author:
 .. has_math: yes
 -->
 
 <section class="container">
 <h1>About this resource</h1>
 
+
 <h2>Motivation</h2>
-  
 
-<h2>Methodology</h2>
+<p>
+The variety of CPUs, GPUs, FPGAs, and now an explosion of new AI hardware accelerators
+is making the field of high performance machine learning hardware increasingly diverse.
+At the same time multiple deep learning frameworks exist, each providing unique
+performance/productivity trade-offs.
+Finally, the deep learning models themselves is the area in which true Cambrian explosion
+is happening. From convolutional nets, to recurrent nets to attention-based models
+to autoencoders to GANs to all sorts of previously unknown exotic beasts,
+new models emerge almost every day.
+</p>
 
-<h3>Om measuring deep learning performance</h3>
+<p>
+Which hardware is good for which models and is it properly supported by your favourite framework?
+This resource is our attempt to put together some statistics on performance of
+deep learning models implemented with different frameworks on a set of hardware platforms.
+</p>
 
-<h3>Fairness</h3>
+<h2>What are we measuring</h2>
+<p>
+First of all, let us clarify what is deep learning performance.
+For the user the ultimate parameter is the time needed to train a model.
+[this part is mostly relevant to training, for inference things are bit simpler]
+</p>
 
+<p>
+This time essentially depends on two factors: how many steps are needed to
+converge and how much time is needed to compute one step (sample/mini-batch/etc)
+
+Convergence rate does, with few exceptions, depend on a hardware platform.
+More importantly, optimizing for converge rate involves two many special tricks like
+learning rate scheduling, switching between different optimizers etc, so that maintaining same training
+regime across all frameworks is problematic.
+For this reason we focus on time to iterate over a training set with default SGD optimizer and fixed learning rate.
+
+One possible issues with this approach is that potentially a given platform could
+enable faster computation in terms of samples per second at the cost of weaker convergence rate.
+Most typical case would be the use of reduced arithmetic precision.
+We address this issue in several ways. First of
+</p>
+
+<h2>Few words on arithmetic precision</h2>
+
+<h2>Fairness</h2>
+We area doing our best to give equal amount of love to all hardware and
+software vendors.
+If you notice that your device or framework or model is dramatically under-performing,
+and it happens because of some mistake on our side: don't hesitate to contact.
+The code is open-source, we are hoping to include installation scripts as well soon.
+On the other hand, we tried to put a reasonable effort into installing every given piece properly.
+If it worked like that in our settings, it is quite likely that it will work like that for most of the users :-p
 
 </section>

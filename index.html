@@ -43,8 +43,8 @@
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>FP32 precision training</h1>
-<h3>[still debugging, expect more content soon]</h3>
+</nav><!-- End of Menubar --><!--Body content--><section class="container"><h1>FP32 precision training, batch size 32</h1>
+<h3>[still debugging, expect more content and controls soon]</h3>
 <div id="div_debug"> </div>
 
 
@@ -125,29 +125,25 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 //todo generate colors from brewer2mpl
 </script><table class="table  table-bordered">
 <thead><tr>
-<th class="col-1"></th>
-      <th class="col-1">key1</th>
+<th class="col-1">key1</th>
       <th class="col-1">key2</th>
+      <th class="col-1"></th>
       <th class="col-9">values</th>
     </tr></thead>
 <tbody>
 <tr>
-<th class="align-middle" scope="row">device</th>
-      <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+<td>
         <div class="custom-control custom-radio custom-control-inline">
           <input class="custom-control-input" id="radio_key1_device" name="radio_for_key1" type="radio" onclick="set_prim_key('device')"><label class="custom-control-label" for="radio_key1_device"></label>
         </div>
-        </div>
     </td>
       <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
         <div class="custom-control custom-radio custom-control-inline">
           <input class="custom-control-input" id="radio_key2_device" name="radio_for_key2" type="radio" onclick="set_sec_key('device')"><label class="custom-control-label" for="radio_key2_device"></label>
         </div>
-        </div>
 
       </td>
+      <th class="align-middle" scope="row">device</th>
       <td>
       <div id="div_radio_device" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
@@ -264,22 +260,18 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
     </td>
     </tr>
 <tr>
-<th class="align-middle" scope="row">framework</th>
-      <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+<td>
         <div class="custom-control custom-radio custom-control-inline">
           <input class="custom-control-input" id="radio_key1_framework" name="radio_for_key1" type="radio" onclick="set_prim_key('framework')"><label class="custom-control-label" for="radio_key1_framework"></label>
         </div>
-        </div>
     </td>
       <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
         <div class="custom-control custom-radio custom-control-inline">
           <input class="custom-control-input" id="radio_key2_framework" name="radio_for_key2" type="radio" onclick="set_sec_key('framework')"><label class="custom-control-label" for="radio_key2_framework"></label>
         </div>
-        </div>
 
       </td>
+      <th class="align-middle" scope="row">framework</th>
       <td>
       <div id="div_radio_framework" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
@@ -312,22 +304,18 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
     </td>
     </tr>
 <tr>
-<th class="align-middle" scope="row">kernel</th>
-      <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+<td>
         <div class="custom-control custom-radio custom-control-inline">
           <input class="custom-control-input" id="radio_key1_kernel" name="radio_for_key1" type="radio" onclick="set_prim_key('kernel')"><label class="custom-control-label" for="radio_key1_kernel"></label>
         </div>
-        </div>
     </td>
       <td>
-        <div class="btn-group" role="group" aria-label="..." style="padding: 2px;">
         <div class="custom-control custom-radio custom-control-inline">
           <input class="custom-control-input" id="radio_key2_kernel" name="radio_for_key2" type="radio" onclick="set_sec_key('kernel')"><label class="custom-control-label" for="radio_key2_kernel"></label>
         </div>
-        </div>
 
       </td>
+      <th class="align-middle" scope="row">kernel</th>
       <td>
       <div id="div_radio_kernel" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
