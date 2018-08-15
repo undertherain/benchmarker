@@ -1144,3 +1144,39 @@ header.masthead p {
   box-shadow: 0 0 0 0.2rem rgba(240, 95, 64, 0.5) !important;
 }
 
+.myradiolabel {
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 100% !important; 
+    border: none;
+    background-color: #79b8ff;
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+.my_table_no_pad tr td{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+.radio-toolbar input[type="radio"] {
+  display: none;
+}
+
+.radio-toolbar label {
+  display: inline-block;
+  background-color: #f0f0f0;
+  padding: 4px 11px;
+  font-family: Arial;
+  font-size: 16px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.radio-toolbar input[type="radio"]:checked+label {
+  background-color: #fbb;
+  color: #111;
+}
