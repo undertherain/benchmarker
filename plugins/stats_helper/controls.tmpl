@@ -51,13 +51,13 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 <%def name="make_radio_line(key, vals)">
     <tr>
       <td>
-        <div class="custom-control custom-radio custom-control-inline">
-          <input class="custom-control-input" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
+        <div class="custom-control custom-radio text-center h-100 mb-0 mt-0">
+          <input class="custom-control-input mb-0 mt-0" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
           <label class="custom-control-label" for="radio_key1_${key}"></label>
         </div>
     </td>
       <td>
-        <div class="custom-control custom-radio custom-control-inline">
+        <div class="custom-control custom-radio text-center">
           <input class="custom-control-input" id="radio_key2_${key}" name="radio_for_key2" type="radio" onclick="set_sec_key('${key}')">
           <label class="custom-control-label" for="radio_key2_${key}"></label>
         </div>
@@ -80,13 +80,13 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 </%def>
 
 
-<table class="table  table-bordered">
+<table class="table  table-bordered my_table_no_pad">
   <thead>
     <tr>
-      <th class="col-1">key1</th>
-      <th class="col-1">key2</th>
-      <th class="col-1"></th>
-      <th class="col-9">values</th>
+      <th class="w-10">key1</th>
+      <th class="w-10">key2</th>
+      <th class="w-10"></th>
+      <th class="w-70">values</th>
     </tr>
   </thead>
   <tbody>
