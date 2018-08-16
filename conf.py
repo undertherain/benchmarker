@@ -25,7 +25,7 @@ SITE_URL = "http://benchmarker.blackbird.pw/"
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://vecto.space/"
 BLOG_EMAIL = "alex@blackbird.pw"
-BLOG_DESCRIPTION = "Aleksandr Drozd homepage"  # (translatable)
+BLOG_DESCRIPTION = "Performance measurement results"  # (translatable)
 
 # What is the default language?
 DEFAULT_LANG = "en"
@@ -874,7 +874,7 @@ LICENSE = ""
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
-CONTENT_FOOTER = 'Maintained by  <a href="mailto:{email}">{author}</a>         {license}'
+CONTENT_FOOTER = 'Maintained by  <a href="http://blackbird.pw">{author}</a>         {license}'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will
