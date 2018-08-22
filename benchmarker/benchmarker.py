@@ -8,7 +8,6 @@ import importlib
 import json
 import os
 import datetime
-import sys
 import pkgutil
 # import logging
 
@@ -16,6 +15,9 @@ from .util import sysinfo
 
 
 def get_time_str():
+    """
+    returs current time formatted nicely
+    """
     time_now = datetime.datetime.now()
     str_time = time_now.strftime("%y.%m.%d_%H.%M.%S")
     return str_time
@@ -48,18 +50,12 @@ def get_modules():
             if not is_pkg and name.startswith('do_')]
 
 
-def run(framework: "Framework to test" = None,
-        problem: "problem to solve" = None,
-        path_out: "path to store results" = "./logs",
-        gpus: "list of gpus to use" = "",
-        misc: "comma separated list of key:value pairs" = None
-       ):
-
+def run(args):
     params = {}
     params["platform"] = sysinfo.get_sys_info()
-    params["path_out"] = path_out
+    params["path_out"] = args.path_out
 
-    if framework is None:
+    if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
         for plugin in get_modules():
@@ -67,20 +63,22 @@ def run(framework: "Framework to test" = None,
         return
 
     # todo: load frameowrk's metadata from backend
-    params["framework"] = framework
+    params["framework"] = args.framework
 
-    if problem is None:
+    if args.problem is None:
         print("choose a problem to run")
-        print("problems supported by {}:".format(framework))
+        print("problems supported by {}:".format(args.framework))
         return
     # todo: get a list of support problems for a given framework
 
     # todo: load problem's metadata from the problem itself
     params["problem"] = {}
-    params["problem"]["name"] = problem
-    params["misc"] = misc
-    if gpus:
-        params["gpus"] = list(map(int, gpus.split(',')))
+    params["problem"]["name"] = args.problem
+    if args.size is not None:
+        params["problem"]["size"] = int(args.size)
+    params["misc"] = args.misc
+    if args.gpus:
+        params["gpus"] = list(map(int, args.gpus.split(',')))
     else:
         params["gpus"] = []
 

@@ -2,12 +2,12 @@
 """Chainer support.
 """
 
+import importlib
+from timeit import default_timer as timer
 import chainer
 import chainer.links as L
 from chainer import training
 from chainer.training import extensions
-from timeit import default_timer as timer
-import importlib
 from .i_neural_net import INeuralNet
 
 
@@ -64,7 +64,6 @@ class DoChainer(INeuralNet):
         # trainer.extend(extensions.Evaluator(test_iter, model))
         trainer.extend(extensions.LogReport())
         trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy', "elapsed_time"]))
-        # trainer.extend(extensions.ProgressBar())
         start = timer()
         trainer.run()
         end = timer()
