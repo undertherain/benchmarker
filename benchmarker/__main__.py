@@ -11,7 +11,8 @@ def main():
     parser.add_argument("--problem")
     parser.add_argument('--path_out', type=str, default="./logs")
     parser.add_argument('--gpus', default="")
-    parser.add_argument('--size', default=None)
+    parser.add_argument('--problem_size', default=None)
+    parser.add_argument('--batch_size', default=None)
     parser.add_argument('--misc')
 
     args = parser.parse_args()
