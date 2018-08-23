@@ -1,0 +1,43 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz",
+    "framework": "chainer",
+    "framework_full": "Chainer-4.3.1",
+    "gpus": [],
+    "misc": null,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz",
+            "clock": 1361.81125,
+            "clock_max": 3100.0,
+            "clock_min": 1200.0,
+            "logical_cores": 4,
+            "physical_cores": 2
+        },
+        "gpus": [],
+        "host": "neuromancer",
+        "os": "Linux-4.17.4-041704-generic-x86_64-with-Ubuntu-18.10-cosmic",
+        "ram": {
+            "banks": [],
+            "total": 16722255872
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 19267584,
+        "cnt_batches_per_epoch": 2.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            32,
+            3,
+            224,
+            224
+        ],
+        "size": 32
+    },
+    "time": 46.22480221659934
+}
