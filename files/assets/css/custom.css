@@ -328,9 +328,10 @@ header.masthead p {
   margin: 0 !important;
 }
 
-rg {
+.rg {
   position: absolute;
   opacity: 0;
+  display: none;
 }
 
 .rg-mark {

@@ -51,11 +51,9 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 <%def name="make_radio_line(key, vals)">
     <tr>
       <td class="rg-container">
-        <div class="custom-control custom-radio text-center h-100 mb-0 mt-0">
-          <input class="custom-control-input mb-0 mt-0" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
-          <label class="custom-control-label" for="radio_key1_${key}"></label>
-        </div>
-    </td>
+          <input class="rg" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
+            <i class="fas fa-check fa-2x text-white rg-mark"></i>
+     </td>
       <td>
         <div class="custom-control custom-radio text-center">
           <input class="custom-control-input" id="radio_key2_${key}" name="radio_for_key2" type="radio" onclick="set_sec_key('${key}')">
@@ -95,3 +93,33 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 % endfor
   </tbody>
 </table>
+
+<script type="text/javascript">
+  $('.rg').click(function () {
+    $(this).parent().click();
+});
+
+$('.rg-container').click(function () {
+    var rgContainers = $('.rg-container');
+    var rgContainer = $(this);
+    var rgMarks = $('.rg-mark');
+    var rgMark = rgContainer.children('.rg-mark');
+    var rg = rgContainer.children('.rg');
+    var isChecked = rg.prop('checked');
+
+    // Reset everything.
+    rgContainers.toggleClass('bg-info', false);
+    rgMarks.hide();
+
+    if (isChecked) {
+        rg.prop('checked', false);
+        rgMark.hide();
+        rgContainer.toggleClass('bg-info', false);
+    }
+    else {
+        rg.prop('checked', true);
+        rgMark.show();
+        rgContainer.toggleClass('bg-info', true);
+    }
+});
+</script>
