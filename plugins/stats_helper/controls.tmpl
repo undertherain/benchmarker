@@ -50,16 +50,14 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 <%def name="make_radio_line(key, vals)">
     <tr>
-      <td class="rg-container">
-          <input class="rg" id="radio_key1_${key}" name="radio_for_key1" type="radio" onclick="set_prim_key('${key}')">
-            <i class="fas fa-check fa-2x text-white rg-mark"></i>
+      <td class="rg-container w-10" id="td_key1_${key}"  onclick="set_prim_key('${key}')">
+          <input class="rg" id="radio_key1_${key}" name="radio_for_key1" type="radio">
+          <span class="rg-mark text-white">key1</span>
+          <!--i class="fas fa-check fa-2x text-white rg-mark"></i-->
      </td>
-      <td>
-        <div class="custom-control custom-radio text-center">
-          <input class="custom-control-input" id="radio_key2_${key}" name="radio_for_key2" type="radio" onclick="set_sec_key('${key}')">
-          <label class="custom-control-label" for="radio_key2_${key}"></label>
-        </div>
-
+      <td  class="rg-container" id="td_key2_${key}"  onclick="set_sec_key('${key}')">
+          <input class="rg" id="radio_key2_${key}" name="radio_for_key2" type="radio">
+          <span class="rg-mark text-white">key2</span>
       </td>
       <th class="align-middle" scope="row">${key}</th>
       <td>
@@ -78,15 +76,15 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 </%def>
 
 
-<table class="table  table-bordered my_table_no_pad">
-  <thead>
+<table class="table  table-bordered ">
+  <!--thead>
     <tr>
       <th class="w-10">key1</th>
       <th class="w-10">key2</th>
       <th class="w-10"></th>
       <th class="w-70">values</th>
     </tr>
-  </thead>
+  </thead-->
   <tbody>
 % for key in keyvals:
   ${make_radio_line(key, keyvals[key])}
@@ -99,27 +97,95 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
     $(this).parent().click();
 });
 
-$('.rg-container').click(function () {
-    var rgContainers = $('.rg-container');
-    var rgContainer = $(this);
-    var rgMarks = $('.rg-mark');
-    var rgMark = rgContainer.children('.rg-mark');
-    var rg = rgContainer.children('.rg');
-    var isChecked = rg.prop('checked');
+        function set_filter(key, val) {
+          if ( (key != prim_key) && (key != sec_key))
+          filters[key] = val;
+          plot_chart(); };
+        
+        function set_key_filter(key, val, id)
+        {
+        if (document.getElementById(id).checked)  {
+          filters_prim[key].add(val);
+          }
+        else {
+          filters_prim[key].delete(val);
+        }
+          plot_chart();
+        }  
 
-    // Reset everything.
-    rgContainers.toggleClass('bg-info', false);
-    rgMarks.hide();
+        function set_prim_key(key) {
+          if (sec_key == key)
+            sec_key = prim_key;
+          prim_key = key;
+          if (filters.hasOwnProperty(key))  {           
+              delete filters[key] }
+          plot_chart(); };
+        
+        function set_sec_key(key) {
+          if (prim_key == key)
+            prim_key = sec_key; 
+          sec_key = key;
+          if (filters.hasOwnProperty(key))  {           
+              delete filters[key] }
+          plot_chart();  };
+        
+//$('.rg-container').click(function () {
+    //var rgMark = rgContainer.children('.rg-mark');
+    //var isChecked = rg.prop('checked');
 
-    if (isChecked) {
-        rg.prop('checked', false);
-        rgMark.hide();
-        rgContainer.toggleClass('bg-info', false);
-    }
-    else {
-        rg.prop('checked', true);
-        rgMark.show();
-        rgContainer.toggleClass('bg-info', true);
-    }
-});
+
+    //if (isChecked) {
+        //rg.prop('checked', false);
+        //rgMark.hide();
+        //rgContainer.toggleClass('bg-info', false);
+    //}
+    //else {
+        //rg.prop('checked', true);
+        //rgMark.show();
+        //rgContainer.toggleClass('bg-info', true);
+    //}
+//});
+        function set_rg_button(rgContainer)
+        {
+          rgContainer.toggleClass('bg-info', true);
+          var rgMark = rgContainer.children('.rg-mark');
+          rgMark.show();
+          var rg = rgContainer.children('.rg');
+          rg.prop('checked', true);
+        }
+        function update_controls() {
+          // Reset everything.
+          var rgContainers = $('.rg-container');
+          rgContainers.toggleClass('bg-info', false);
+          var rgMarks = $('.rg-mark');
+          rgMarks.hide();
+
+          set_rg_button($("#td_key1_" + prim_key));
+          set_rg_button($("#td_key2_" + sec_key));
+
+
+          //document.getElementById("radio_key1_" + prim_key).checked=true;
+          //document.getElementById("radio_key2_" + sec_key).checked=true;
+          //document.getElementById("div_prim_key").innerHTML = prim_key;
+          //document.getElementById("div_sec_key").innerHTML = sec_key;
+          $("#div_radio_" + prim_key).hide()
+          $("#div_check_" + prim_key).show()
+          $("#div_radio_" + sec_key).hide()
+          $("#div_check_" + sec_key).show()
+          for (key in keyvals) {
+              //str_filters += key +": "+filters[key];
+              if ((key != prim_key) && (key != sec_key))
+              {
+                $("#div_radio_" + key).show('fast')
+                $("#div_check_" + key).hide('fast')
+                if (! filters.hasOwnProperty(key))
+                  filters[key] = keyvals[key][0]
+              }
+          }  
+          for (key in filters) {
+            document.getElementById("radio_" + key + "_" + filters[key]).checked=true;
+          }
+        }
+
+
 </script>
