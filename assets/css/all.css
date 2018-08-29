@@ -650,7 +650,7 @@ div.figure > a > img {
 }
 
 blockquote p, blockquote {
-  font-size: 17.5px;
+  font-size: 1.25rem;
   font-weight: 300;
   line-height: 1.25;
 }
@@ -829,6 +829,25 @@ ul.pager li a {
     line-height: 1.25;
     border: 1px solid #ddd;
     border-radius: .25rem;
+}
+
+.codetable td {
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+.codetable td.linenos pre {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+.codetable td.code pre.code {
+    margin-left: 0;
+    margin-right: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 body,
@@ -1161,22 +1180,21 @@ header.masthead p {
   margin: 0 !important;
 }
 
-
-.radio-toolbar input[type="radio"] {
+.rg {
+  position: absolute;
+  opacity: 0;
   display: none;
 }
 
-.radio-toolbar label {
-  display: inline-block;
-  background-color: #f0f0f0;
-  padding: 4px 11px;
-  font-family: Arial;
-  font-size: 16px;
-  cursor: pointer;
-  color: #aaa;
+.rg-mark {
+  display: none;
 }
 
-.radio-toolbar input[type="radio"]:checked+label {
-  background-color: #fbb;
-  color: #111;
+.rg-container {
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.rg-container:hover {
+  background-color: #117a8b;
 }

@@ -17,62 +17,7 @@
 <h5>[still debugging, expect more content and controls soon]</h5>
 <div id="div_debug"> </div>
 
-
 {{% generate_controls %}}
-      <script type="text/javascript">
-        function set_filter(key, val) {
-          if ( (key != prim_key) && (key != sec_key))
-          filters[key] = val;
-          plot_chart(); };
-        function set_key_filter(key, val, id)
-        {
-        if (document.getElementById(id).checked)  {
-          filters_prim[key].add(val);
-          }
-        else {
-          filters_prim[key].delete(val);
-        }
-          plot_chart();
-        }  
-
-        function set_prim_key(key) {
-          if (sec_key == key)
-            sec_key = prim_key;
-          prim_key = key;
-          if (filters.hasOwnProperty(key))  {           
-              delete filters[key] }
-          plot_chart(); };
-        function set_sec_key(key) {
-          if (prim_key == key)
-            prim_key = sec_key; 
-          sec_key = key;
-          if (filters.hasOwnProperty(key))  {           
-              delete filters[key] }
-          plot_chart();  };
-        function display_filters() {
-          document.getElementById("radio_key1_" + prim_key).checked=true;
-          document.getElementById("radio_key2_" + sec_key).checked=true;
-          //document.getElementById("div_prim_key").innerHTML = prim_key;
-          //document.getElementById("div_sec_key").innerHTML = sec_key;
-          $("#div_radio_" + prim_key).hide('fast')
-          $("#div_check_" + prim_key).show('fast')
-          $("#div_radio_" + sec_key).hide('fast')
-          $("#div_check_" + sec_key).show('fast')
-          for (key in keyvals) {
-              //str_filters += key +": "+filters[key];
-              if ((key != prim_key) && (key != sec_key))
-              {
-                $("#div_radio_" + key).show('fast')
-                $("#div_check_" + key).hide('fast')
-                if (! filters.hasOwnProperty(key))
-                  filters[key] = keyvals[key][0]
-              }
-          }  
-          for (key in filters) {
-            document.getElementById("radio_" + key + "_" + filters[key]).checked=true;
-          }
-        }
-      </script>
 
 <canvas id="myChart" width="800" height="450"></canvas>
 
@@ -123,7 +68,7 @@ function get_chart_data()
 <script>
 function plot_chart()
 {
-display_filters();
+update_controls();
 var ctx = document.getElementById("myChart").getContext("2d");
 var color = Chart.helpers.color;
 

@@ -48,13 +48,12 @@
 <h5>[still debugging, expect more content and controls soon]</h5>
 <div id="div_debug"> </div>
 
-
 <script>
 //var prim_key="device"
 //var sec_key="framework"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'device': ['Xeon E5-2699 v3', 'Xeon E5-2630 v4', 'Xeon E5-2650 v3', 'Core i5-3210M', 'K40c', 'GTX 980 Ti', 'P100-SXM2', 'V100-SXM2', 'GTX 1080 Ti'], 'framework': ['tensorflow', 'chainer'], 'kernel': ['resnet50', 'vgg16']}
+var keyvals={'device': ['GTX 980 Ti', 'GTX 1080 Ti', 'P100-SXM2', 'K40c', 'V100-SXM2', 'Core i5-3210M', 'Xeon E5-2650 v3', 'Xeon E5-2699 v3', 'Xeon E5-2630 v4'], 'framework': ['chainer', 'tensorflow'], 'kernel': ['resnet50', 'vgg16']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -64,6 +63,34 @@ filters_prim["framework"] =  new Set();
 filters_prim["kernel"] =  new Set();
 function check_checkboxes()
 {
+if (document.getElementById("check_device_GTX 980 Ti").checked) {
+   filters_prim["device"].add("GTX 980 Ti"); } 
+else {
+  filters_prim["device"].delete("GTX 980 Ti"); }
+if (document.getElementById("check_device_GTX 1080 Ti").checked) {
+   filters_prim["device"].add("GTX 1080 Ti"); } 
+else {
+  filters_prim["device"].delete("GTX 1080 Ti"); }
+if (document.getElementById("check_device_P100-SXM2").checked) {
+   filters_prim["device"].add("P100-SXM2"); } 
+else {
+  filters_prim["device"].delete("P100-SXM2"); }
+if (document.getElementById("check_device_K40c").checked) {
+   filters_prim["device"].add("K40c"); } 
+else {
+  filters_prim["device"].delete("K40c"); }
+if (document.getElementById("check_device_V100-SXM2").checked) {
+   filters_prim["device"].add("V100-SXM2"); } 
+else {
+  filters_prim["device"].delete("V100-SXM2"); }
+if (document.getElementById("check_device_Core i5-3210M").checked) {
+   filters_prim["device"].add("Core i5-3210M"); } 
+else {
+  filters_prim["device"].delete("Core i5-3210M"); }
+if (document.getElementById("check_device_Xeon E5-2650 v3").checked) {
+   filters_prim["device"].add("Xeon E5-2650 v3"); } 
+else {
+  filters_prim["device"].delete("Xeon E5-2650 v3"); }
 if (document.getElementById("check_device_Xeon E5-2699 v3").checked) {
    filters_prim["device"].add("Xeon E5-2699 v3"); } 
 else {
@@ -72,42 +99,14 @@ if (document.getElementById("check_device_Xeon E5-2630 v4").checked) {
    filters_prim["device"].add("Xeon E5-2630 v4"); } 
 else {
   filters_prim["device"].delete("Xeon E5-2630 v4"); }
-if (document.getElementById("check_device_Xeon E5-2650 v3").checked) {
-   filters_prim["device"].add("Xeon E5-2650 v3"); } 
-else {
-  filters_prim["device"].delete("Xeon E5-2650 v3"); }
-if (document.getElementById("check_device_Core i5-3210M").checked) {
-   filters_prim["device"].add("Core i5-3210M"); } 
-else {
-  filters_prim["device"].delete("Core i5-3210M"); }
-if (document.getElementById("check_device_K40c").checked) {
-   filters_prim["device"].add("K40c"); } 
-else {
-  filters_prim["device"].delete("K40c"); }
-if (document.getElementById("check_device_GTX 980 Ti").checked) {
-   filters_prim["device"].add("GTX 980 Ti"); } 
-else {
-  filters_prim["device"].delete("GTX 980 Ti"); }
-if (document.getElementById("check_device_P100-SXM2").checked) {
-   filters_prim["device"].add("P100-SXM2"); } 
-else {
-  filters_prim["device"].delete("P100-SXM2"); }
-if (document.getElementById("check_device_V100-SXM2").checked) {
-   filters_prim["device"].add("V100-SXM2"); } 
-else {
-  filters_prim["device"].delete("V100-SXM2"); }
-if (document.getElementById("check_device_GTX 1080 Ti").checked) {
-   filters_prim["device"].add("GTX 1080 Ti"); } 
-else {
-  filters_prim["device"].delete("GTX 1080 Ti"); }
-if (document.getElementById("check_framework_tensorflow").checked) {
-   filters_prim["framework"].add("tensorflow"); } 
-else {
-  filters_prim["framework"].delete("tensorflow"); }
 if (document.getElementById("check_framework_chainer").checked) {
    filters_prim["framework"].add("chainer"); } 
 else {
   filters_prim["framework"].delete("chainer"); }
+if (document.getElementById("check_framework_tensorflow").checked) {
+   filters_prim["framework"].add("tensorflow"); } 
+else {
+  filters_prim["framework"].delete("tensorflow"); }
 if (document.getElementById("check_kernel_resnet50").checked) {
    filters_prim["kernel"].add("resnet50"); } 
 else {
@@ -124,29 +123,61 @@ $( document ).ready(function() {
 });
 var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 //todo generate colors from brewer2mpl
-</script><table class="table  table-bordered my_table_no_pad">
-<thead><tr>
-<th class="w-10">key1</th>
+</script><table class="table  table-bordered ">
+<!--thead>
+    <tr>
+      <th class="w-10">key1</th>
       <th class="w-10">key2</th>
       <th class="w-10"></th>
       <th class="w-70">values</th>
-    </tr></thead>
-<tbody>
+    </tr>
+  </thead--><tbody>
 <tr>
-<td>
-        <div class="custom-control custom-radio text-center h-100 mb-0 mt-0">
-          <input class="custom-control-input mb-0 mt-0" id="radio_key1_device" name="radio_for_key1" type="radio" onclick="set_prim_key('device')"><label class="custom-control-label" for="radio_key1_device"></label>
-        </div>
-    </td>
-      <td>
-        <div class="custom-control custom-radio text-center">
-          <input class="custom-control-input" id="radio_key2_device" name="radio_for_key2" type="radio" onclick="set_sec_key('device')"><label class="custom-control-label" for="radio_key2_device"></label>
-        </div>
-
+<td class="rg-container w-10" id="td_key1_device" onclick="set_prim_key('device')">
+          <input class="rg" id="radio_key1_device" name="radio_for_key1" type="radio"><span class="rg-mark text-white">key1</span>
+          <!--i class="fas fa-check fa-2x text-white rg-mark"></i-->
+     </td>
+      <td class="rg-container" id="td_key2_device" onclick="set_sec_key('device')">
+          <input class="rg" id="radio_key2_device" name="radio_for_key2" type="radio"><span class="rg-mark text-white">key2</span>
       </td>
       <th class="align-middle" scope="row">device</th>
       <td>
       <div id="div_radio_device" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_GTX 980 Ti" name="radio_for_device" onclick="set_filter('device','GTX 980 Ti')"><label class="custom-control-label" for="radio_device_GTX 980 Ti">GTX 980 Ti</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_GTX 1080 Ti" name="radio_for_device" onclick="set_filter('device','GTX 1080 Ti')"><label class="custom-control-label" for="radio_device_GTX 1080 Ti">GTX 1080 Ti</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_P100-SXM2" name="radio_for_device" onclick="set_filter('device','P100-SXM2')"><label class="custom-control-label" for="radio_device_P100-SXM2">P100-SXM2</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_K40c" name="radio_for_device" onclick="set_filter('device','K40c')"><label class="custom-control-label" for="radio_device_K40c">K40c</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_V100-SXM2" name="radio_for_device" onclick="set_filter('device','V100-SXM2')"><label class="custom-control-label" for="radio_device_V100-SXM2">V100-SXM2</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Core i5-3210M" name="radio_for_device" onclick="set_filter('device','Core i5-3210M')"><label class="custom-control-label" for="radio_device_Core i5-3210M">Core i5-3210M</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2650 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2650 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
+</div>
+
           
 <div class="custom-control custom-radio custom-control-inline">
   <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2699 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2699 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
@@ -157,43 +188,57 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
   <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2630 v4" name="radio_for_device" onclick="set_filter('device','Xeon E5-2630 v4')"><label class="custom-control-label" for="radio_device_Xeon E5-2630 v4">Xeon E5-2630 v4</label>
 </div>
 
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2650 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2650 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Core i5-3210M" name="radio_for_device" onclick="set_filter('device','Core i5-3210M')"><label class="custom-control-label" for="radio_device_Core i5-3210M">Core i5-3210M</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_K40c" name="radio_for_device" onclick="set_filter('device','K40c')"><label class="custom-control-label" for="radio_device_K40c">K40c</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_GTX 980 Ti" name="radio_for_device" onclick="set_filter('device','GTX 980 Ti')"><label class="custom-control-label" for="radio_device_GTX 980 Ti">GTX 980 Ti</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_P100-SXM2" name="radio_for_device" onclick="set_filter('device','P100-SXM2')"><label class="custom-control-label" for="radio_device_P100-SXM2">P100-SXM2</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_V100-SXM2" name="radio_for_device" onclick="set_filter('device','V100-SXM2')"><label class="custom-control-label" for="radio_device_V100-SXM2">V100-SXM2</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_GTX 1080 Ti" name="radio_for_device" onclick="set_filter('device','GTX 1080 Ti')"><label class="custom-control-label" for="radio_device_GTX 1080 Ti">GTX 1080 Ti</label>
-</div>
-
       </div>
       <div id="div_check_device" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_GTX 980 Ti" onclick="set_key_filter('device','GTX 980 Ti','check_device_GTX 980 Ti')"><label class="custom-control-label " for="check_device_GTX 980 Ti">GTX 980 Ti</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_GTX 1080 Ti" onclick="set_key_filter('device','GTX 1080 Ti','check_device_GTX 1080 Ti')"><label class="custom-control-label " for="check_device_GTX 1080 Ti">GTX 1080 Ti</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_P100-SXM2" onclick="set_key_filter('device','P100-SXM2','check_device_P100-SXM2')"><label class="custom-control-label " for="check_device_P100-SXM2">P100-SXM2</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_K40c" onclick="set_key_filter('device','K40c','check_device_K40c')"><label class="custom-control-label " for="check_device_K40c">K40c</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_V100-SXM2" onclick="set_key_filter('device','V100-SXM2','check_device_V100-SXM2')"><label class="custom-control-label " for="check_device_V100-SXM2">V100-SXM2</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Core i5-3210M" onclick="set_key_filter('device','Core i5-3210M','check_device_Core i5-3210M')"><label class="custom-control-label " for="check_device_Core i5-3210M">Core i5-3210M</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2650 v3" onclick="set_key_filter('device','Xeon E5-2650 v3','check_device_Xeon E5-2650 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
+</div>
+
+
+
           
 <div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2699 v3" onclick="set_key_filter('device','Xeon E5-2699 v3','check_device_Xeon E5-2699 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
@@ -208,92 +253,32 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 
 
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2650 v3" onclick="set_key_filter('device','Xeon E5-2650 v3','check_device_Xeon E5-2650 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_Core i5-3210M" onclick="set_key_filter('device','Core i5-3210M','check_device_Core i5-3210M')"><label class="custom-control-label " for="check_device_Core i5-3210M">Core i5-3210M</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_K40c" onclick="set_key_filter('device','K40c','check_device_K40c')"><label class="custom-control-label " for="check_device_K40c">K40c</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_GTX 980 Ti" onclick="set_key_filter('device','GTX 980 Ti','check_device_GTX 980 Ti')"><label class="custom-control-label " for="check_device_GTX 980 Ti">GTX 980 Ti</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_P100-SXM2" onclick="set_key_filter('device','P100-SXM2','check_device_P100-SXM2')"><label class="custom-control-label " for="check_device_P100-SXM2">P100-SXM2</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_V100-SXM2" onclick="set_key_filter('device','V100-SXM2','check_device_V100-SXM2')"><label class="custom-control-label " for="check_device_V100-SXM2">V100-SXM2</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_GTX 1080 Ti" onclick="set_key_filter('device','GTX 1080 Ti','check_device_GTX 1080 Ti')"><label class="custom-control-label " for="check_device_GTX 1080 Ti">GTX 1080 Ti</label>
-</div>
-
-
-
       </div>
     </td>
     </tr>
 <tr>
-<td>
-        <div class="custom-control custom-radio text-center h-100 mb-0 mt-0">
-          <input class="custom-control-input mb-0 mt-0" id="radio_key1_framework" name="radio_for_key1" type="radio" onclick="set_prim_key('framework')"><label class="custom-control-label" for="radio_key1_framework"></label>
-        </div>
-    </td>
-      <td>
-        <div class="custom-control custom-radio text-center">
-          <input class="custom-control-input" id="radio_key2_framework" name="radio_for_key2" type="radio" onclick="set_sec_key('framework')"><label class="custom-control-label" for="radio_key2_framework"></label>
-        </div>
-
+<td class="rg-container w-10" id="td_key1_framework" onclick="set_prim_key('framework')">
+          <input class="rg" id="radio_key1_framework" name="radio_for_key1" type="radio"><span class="rg-mark text-white">key1</span>
+          <!--i class="fas fa-check fa-2x text-white rg-mark"></i-->
+     </td>
+      <td class="rg-container" id="td_key2_framework" onclick="set_sec_key('framework')">
+          <input class="rg" id="radio_key2_framework" name="radio_for_key2" type="radio"><span class="rg-mark text-white">key2</span>
       </td>
       <th class="align-middle" scope="row">framework</th>
       <td>
       <div id="div_radio_framework" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_tensorflow" name="radio_for_framework" onclick="set_filter('framework','tensorflow')"><label class="custom-control-label" for="radio_framework_tensorflow">tensorflow</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_chainer" name="radio_for_framework" onclick="set_filter('framework','chainer')"><label class="custom-control-label" for="radio_framework_chainer">chainer</label>
 </div>
 
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_chainer" name="radio_for_framework" onclick="set_filter('framework','chainer')"><label class="custom-control-label" for="radio_framework_chainer">chainer</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_tensorflow" name="radio_for_framework" onclick="set_filter('framework','tensorflow')"><label class="custom-control-label" for="radio_framework_tensorflow">tensorflow</label>
 </div>
 
       </div>
       <div id="div_check_framework" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_framework_tensorflow" onclick="set_key_filter('framework','tensorflow','check_framework_tensorflow')"><label class="custom-control-label " for="check_framework_tensorflow">tensorflow</label>
-</div>
-
-
-
           
 <div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_framework_chainer" onclick="set_key_filter('framework','chainer','check_framework_chainer')"><label class="custom-control-label " for="check_framework_chainer">chainer</label>
@@ -301,20 +286,23 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 
 
 
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_framework_tensorflow" onclick="set_key_filter('framework','tensorflow','check_framework_tensorflow')"><label class="custom-control-label " for="check_framework_tensorflow">tensorflow</label>
+</div>
+
+
+
       </div>
     </td>
     </tr>
 <tr>
-<td>
-        <div class="custom-control custom-radio text-center h-100 mb-0 mt-0">
-          <input class="custom-control-input mb-0 mt-0" id="radio_key1_kernel" name="radio_for_key1" type="radio" onclick="set_prim_key('kernel')"><label class="custom-control-label" for="radio_key1_kernel"></label>
-        </div>
-    </td>
-      <td>
-        <div class="custom-control custom-radio text-center">
-          <input class="custom-control-input" id="radio_key2_kernel" name="radio_for_key2" type="radio" onclick="set_sec_key('kernel')"><label class="custom-control-label" for="radio_key2_kernel"></label>
-        </div>
-
+<td class="rg-container w-10" id="td_key1_kernel" onclick="set_prim_key('kernel')">
+          <input class="rg" id="radio_key1_kernel" name="radio_for_key1" type="radio"><span class="rg-mark text-white">key1</span>
+          <!--i class="fas fa-check fa-2x text-white rg-mark"></i-->
+     </td>
+      <td class="rg-container" id="td_key2_kernel" onclick="set_sec_key('kernel')">
+          <input class="rg" id="radio_key2_kernel" name="radio_for_key2" type="radio"><span class="rg-mark text-white">key2</span>
       </td>
       <th class="align-middle" scope="row">kernel</th>
       <td>
@@ -351,15 +339,15 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED"]
 </tbody>
 </table>
 <script type="text/javascript">
-var df = new dataForge.DataFrame({
-    columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['resnet50', 'Xeon E5-2650 v3', 'chainer', 1.1851680632105968], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['resnet50', 'Core i5-3210M', 'chainer', 0.692269051797236], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974]]
-  });
-</script><script type="text/javascript">
+  $('.rg').click(function () {
+    $(this).parent().click();
+});
+
         function set_filter(key, val) {
           if ( (key != prim_key) && (key != sec_key))
           filters[key] = val;
           plot_chart(); };
+        
         function set_key_filter(key, val, id)
         {
         if (document.getElementById(id).checked)  {
@@ -378,6 +366,7 @@ var df = new dataForge.DataFrame({
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
           plot_chart(); };
+        
         function set_sec_key(key) {
           if (prim_key == key)
             prim_key = sec_key; 
@@ -385,15 +374,50 @@ var df = new dataForge.DataFrame({
           if (filters.hasOwnProperty(key))  {           
               delete filters[key] }
           plot_chart();  };
-        function display_filters() {
-          document.getElementById("radio_key1_" + prim_key).checked=true;
-          document.getElementById("radio_key2_" + sec_key).checked=true;
+        
+//$('.rg-container').click(function () {
+    //var rgMark = rgContainer.children('.rg-mark');
+    //var isChecked = rg.prop('checked');
+
+
+    //if (isChecked) {
+        //rg.prop('checked', false);
+        //rgMark.hide();
+        //rgContainer.toggleClass('bg-info', false);
+    //}
+    //else {
+        //rg.prop('checked', true);
+        //rgMark.show();
+        //rgContainer.toggleClass('bg-info', true);
+    //}
+//});
+        function set_rg_button(rgContainer)
+        {
+          rgContainer.toggleClass('bg-info', true);
+          var rgMark = rgContainer.children('.rg-mark');
+          rgMark.show();
+          var rg = rgContainer.children('.rg');
+          rg.prop('checked', true);
+        }
+        function update_controls() {
+          // Reset everything.
+          var rgContainers = $('.rg-container');
+          rgContainers.toggleClass('bg-info', false);
+          var rgMarks = $('.rg-mark');
+          rgMarks.hide();
+
+          set_rg_button($("#td_key1_" + prim_key));
+          set_rg_button($("#td_key2_" + sec_key));
+
+
+          //document.getElementById("radio_key1_" + prim_key).checked=true;
+          //document.getElementById("radio_key2_" + sec_key).checked=true;
           //document.getElementById("div_prim_key").innerHTML = prim_key;
           //document.getElementById("div_sec_key").innerHTML = sec_key;
-          $("#div_radio_" + prim_key).hide('fast')
-          $("#div_check_" + prim_key).show('fast')
-          $("#div_radio_" + sec_key).hide('fast')
-          $("#div_check_" + sec_key).show('fast')
+          $("#div_radio_" + prim_key).hide()
+          $("#div_check_" + prim_key).show()
+          $("#div_radio_" + sec_key).hide()
+          $("#div_check_" + sec_key).show()
           for (key in keyvals) {
               //str_filters += key +": "+filters[key];
               if ((key != prim_key) && (key != sec_key))
@@ -408,7 +432,14 @@ var df = new dataForge.DataFrame({
             document.getElementById("radio_" + key + "_" + filters[key]).checked=true;
           }
         }
-      </script><canvas id="myChart" width="800" height="450"></canvas><script>
+
+
+</script><script type="text/javascript">
+var df = new dataForge.DataFrame({
+    columnNames: ["kernel", "device", "framework", "perf"],
+    rows: [['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['resnet50', 'Core i5-3210M', 'chainer', 0.692269051797236], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['resnet50', 'Xeon E5-2650 v3', 'chainer', 1.1851680632105968], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783]]
+  });
+</script><canvas id="myChart" width="800" height="450"></canvas><script>
 function apply_filters(df, filters)
 {
   res = df
@@ -453,7 +484,7 @@ function get_chart_data()
 </script><script>
 function plot_chart()
 {
-display_filters();
+update_controls();
 var ctx = document.getElementById("myChart").getContext("2d");
 var color = Chart.helpers.color;
 

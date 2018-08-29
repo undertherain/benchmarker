@@ -328,22 +328,21 @@ header.masthead p {
   margin: 0 !important;
 }
 
-
-.radio-toolbar input[type="radio"] {
+.rg {
+  position: absolute;
+  opacity: 0;
   display: none;
 }
 
-.radio-toolbar label {
-  display: inline-block;
-  background-color: #f0f0f0;
-  padding: 4px 11px;
-  font-family: Arial;
-  font-size: 16px;
-  cursor: pointer;
-  color: #aaa;
+.rg-mark {
+  display: none;
 }
 
-.radio-toolbar input[type="radio"]:checked+label {
-  background-color: #fbb;
-  color: #111;
+.rg-container {
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.rg-container:hover {
+  background-color: #117a8b;
 }
