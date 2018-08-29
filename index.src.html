@@ -22,6 +22,7 @@
 <canvas id="myChart" width="800" height="450"></canvas>
 
 <script>
+var myBarChart = null;
 function apply_filters(df, filters)
 {
   res = df
@@ -72,7 +73,11 @@ update_controls();
 var ctx = document.getElementById("myChart").getContext("2d");
 var color = Chart.helpers.color;
 
-var myBarChart = new Chart(ctx, {
+    if(myBarChart!=null){
+        myBarChart.destroy();
+    }
+
+    myBarChart = new Chart(ctx, {
     type: 'bar',
     data: get_chart_data(),
     options: {
@@ -106,8 +111,6 @@ var myBarChart = new Chart(ctx, {
         }
     }
 });
-
 }
-
 </script>
 </section>
