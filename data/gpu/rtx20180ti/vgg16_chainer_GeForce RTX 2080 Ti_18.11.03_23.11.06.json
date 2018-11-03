@@ -1,0 +1,55 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce RTX 2080 Ti",
+    "framework": "chainer",
+    "framework_full": "Chainer-5.0.0",
+    "gpus": [
+        0
+    ],
+    "misc": null,
+    "nb_gpus": 1,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "clock": 1358.4583333333333,
+            "clock_max": 2201.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 24
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2080 Ti",
+                "clock": 1635000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 11523260416,
+                "memory_clock": 7000000,
+                "multiprocessors": 68,
+                "warp_size": 32
+            }
+        ],
+        "host": "kiev3.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-862.14.4.el7.x86_64-x86_64-with-centos-7.5.1804-Core",
+        "ram": {
+            "banks": [],
+            "total": 270179958784
+        },
+        "swap": 4294963200
+    },
+    "problem": {
+        "bytes_x_train": 616562688,
+        "cnt_batches_per_epoch": 32.0,
+        "name": "vgg16",
+        "shape_x_train": [
+            1024,
+            3,
+            224,
+            224
+        ]
+    },
+    "time": 9.068044768499385
+}
