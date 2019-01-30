@@ -53,7 +53,7 @@
 //var sec_key="framework"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'device': ['GeForce RTX 2080 Ti', 'P100-SXM2', 'V100-SXM2', 'GTX 980 Ti', 'K40c', 'GTX 1080 Ti', 'Core i5-3210M', 'Xeon E5-2630 v4', 'Xeon E5-2650 v3', 'Xeon E5-2699 v3'], 'framework': ['tensorflow', 'chainer'], 'kernel': ['vgg16', 'resnet50']}
+var keyvals={'device': ['GeForce RTX 2070', 'GeForce RTX 2080 Ti', 'Core i5-3210M', 'Xeon E5-2650 v3', 'Xeon E5-2699 v3', 'Xeon E5-2630 v4', 'V100-SXM2', 'P100-SXM2', 'GTX 980 Ti', 'K40c', 'GTX 1080 Ti'], 'framework': ['chainer', 'tensorflow'], 'kernel': ['vgg16', 'resnet50']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -63,18 +63,38 @@ filters_prim["framework"] =  new Set();
 filters_prim["kernel"] =  new Set();
 function check_checkboxes()
 {
+if (document.getElementById("check_device_GeForce RTX 2070").checked) {
+   filters_prim["device"].add("GeForce RTX 2070"); } 
+else {
+  filters_prim["device"].delete("GeForce RTX 2070"); }
 if (document.getElementById("check_device_GeForce RTX 2080 Ti").checked) {
    filters_prim["device"].add("GeForce RTX 2080 Ti"); } 
 else {
   filters_prim["device"].delete("GeForce RTX 2080 Ti"); }
-if (document.getElementById("check_device_P100-SXM2").checked) {
-   filters_prim["device"].add("P100-SXM2"); } 
+if (document.getElementById("check_device_Core i5-3210M").checked) {
+   filters_prim["device"].add("Core i5-3210M"); } 
 else {
-  filters_prim["device"].delete("P100-SXM2"); }
+  filters_prim["device"].delete("Core i5-3210M"); }
+if (document.getElementById("check_device_Xeon E5-2650 v3").checked) {
+   filters_prim["device"].add("Xeon E5-2650 v3"); } 
+else {
+  filters_prim["device"].delete("Xeon E5-2650 v3"); }
+if (document.getElementById("check_device_Xeon E5-2699 v3").checked) {
+   filters_prim["device"].add("Xeon E5-2699 v3"); } 
+else {
+  filters_prim["device"].delete("Xeon E5-2699 v3"); }
+if (document.getElementById("check_device_Xeon E5-2630 v4").checked) {
+   filters_prim["device"].add("Xeon E5-2630 v4"); } 
+else {
+  filters_prim["device"].delete("Xeon E5-2630 v4"); }
 if (document.getElementById("check_device_V100-SXM2").checked) {
    filters_prim["device"].add("V100-SXM2"); } 
 else {
   filters_prim["device"].delete("V100-SXM2"); }
+if (document.getElementById("check_device_P100-SXM2").checked) {
+   filters_prim["device"].add("P100-SXM2"); } 
+else {
+  filters_prim["device"].delete("P100-SXM2"); }
 if (document.getElementById("check_device_GTX 980 Ti").checked) {
    filters_prim["device"].add("GTX 980 Ti"); } 
 else {
@@ -87,30 +107,14 @@ if (document.getElementById("check_device_GTX 1080 Ti").checked) {
    filters_prim["device"].add("GTX 1080 Ti"); } 
 else {
   filters_prim["device"].delete("GTX 1080 Ti"); }
-if (document.getElementById("check_device_Core i5-3210M").checked) {
-   filters_prim["device"].add("Core i5-3210M"); } 
-else {
-  filters_prim["device"].delete("Core i5-3210M"); }
-if (document.getElementById("check_device_Xeon E5-2630 v4").checked) {
-   filters_prim["device"].add("Xeon E5-2630 v4"); } 
-else {
-  filters_prim["device"].delete("Xeon E5-2630 v4"); }
-if (document.getElementById("check_device_Xeon E5-2650 v3").checked) {
-   filters_prim["device"].add("Xeon E5-2650 v3"); } 
-else {
-  filters_prim["device"].delete("Xeon E5-2650 v3"); }
-if (document.getElementById("check_device_Xeon E5-2699 v3").checked) {
-   filters_prim["device"].add("Xeon E5-2699 v3"); } 
-else {
-  filters_prim["device"].delete("Xeon E5-2699 v3"); }
-if (document.getElementById("check_framework_tensorflow").checked) {
-   filters_prim["framework"].add("tensorflow"); } 
-else {
-  filters_prim["framework"].delete("tensorflow"); }
 if (document.getElementById("check_framework_chainer").checked) {
    filters_prim["framework"].add("chainer"); } 
 else {
   filters_prim["framework"].delete("chainer"); }
+if (document.getElementById("check_framework_tensorflow").checked) {
+   filters_prim["framework"].add("tensorflow"); } 
+else {
+  filters_prim["framework"].delete("tensorflow"); }
 if (document.getElementById("check_kernel_vgg16").checked) {
    filters_prim["kernel"].add("vgg16"); } 
 else {
@@ -150,17 +154,42 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
       <div id="div_radio_device" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
 <div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_GeForce RTX 2070" name="radio_for_device" onclick="set_filter('device','GeForce RTX 2070')"><label class="custom-control-label" for="radio_device_GeForce RTX 2070">GeForce RTX 2070</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
   <input type="radio" class="custom-control-input" id="radio_device_GeForce RTX 2080 Ti" name="radio_for_device" onclick="set_filter('device','GeForce RTX 2080 Ti')"><label class="custom-control-label" for="radio_device_GeForce RTX 2080 Ti">GeForce RTX 2080 Ti</label>
 </div>
 
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_P100-SXM2" name="radio_for_device" onclick="set_filter('device','P100-SXM2')"><label class="custom-control-label" for="radio_device_P100-SXM2">P100-SXM2</label>
+  <input type="radio" class="custom-control-input" id="radio_device_Core i5-3210M" name="radio_for_device" onclick="set_filter('device','Core i5-3210M')"><label class="custom-control-label" for="radio_device_Core i5-3210M">Core i5-3210M</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2650 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2650 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2699 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2699 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2630 v4" name="radio_for_device" onclick="set_filter('device','Xeon E5-2630 v4')"><label class="custom-control-label" for="radio_device_Xeon E5-2630 v4">Xeon E5-2630 v4</label>
 </div>
 
           
 <div class="custom-control custom-radio custom-control-inline">
   <input type="radio" class="custom-control-input" id="radio_device_V100-SXM2" name="radio_for_device" onclick="set_filter('device','V100-SXM2')"><label class="custom-control-label" for="radio_device_V100-SXM2">V100-SXM2</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_P100-SXM2" name="radio_for_device" onclick="set_filter('device','P100-SXM2')"><label class="custom-control-label" for="radio_device_P100-SXM2">P100-SXM2</label>
 </div>
 
           
@@ -178,28 +207,15 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
   <input type="radio" class="custom-control-input" id="radio_device_GTX 1080 Ti" name="radio_for_device" onclick="set_filter('device','GTX 1080 Ti')"><label class="custom-control-label" for="radio_device_GTX 1080 Ti">GTX 1080 Ti</label>
 </div>
 
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Core i5-3210M" name="radio_for_device" onclick="set_filter('device','Core i5-3210M')"><label class="custom-control-label" for="radio_device_Core i5-3210M">Core i5-3210M</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2630 v4" name="radio_for_device" onclick="set_filter('device','Xeon E5-2630 v4')"><label class="custom-control-label" for="radio_device_Xeon E5-2630 v4">Xeon E5-2630 v4</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2650 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2650 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_Xeon E5-2699 v3" name="radio_for_device" onclick="set_filter('device','Xeon E5-2699 v3')"><label class="custom-control-label" for="radio_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
-</div>
-
       </div>
       <div id="div_check_device" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_GeForce RTX 2070" onclick="set_key_filter('device','GeForce RTX 2070','check_device_GeForce RTX 2070')"><label class="custom-control-label " for="check_device_GeForce RTX 2070">GeForce RTX 2070</label>
+</div>
+
+
+
           
 <div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_device_GeForce RTX 2080 Ti" onclick="set_key_filter('device','GeForce RTX 2080 Ti','check_device_GeForce RTX 2080 Ti')"><label class="custom-control-label " for="check_device_GeForce RTX 2080 Ti">GeForce RTX 2080 Ti</label>
@@ -209,7 +225,28 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 
           
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_P100-SXM2" onclick="set_key_filter('device','P100-SXM2','check_device_P100-SXM2')"><label class="custom-control-label " for="check_device_P100-SXM2">P100-SXM2</label>
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Core i5-3210M" onclick="set_key_filter('device','Core i5-3210M','check_device_Core i5-3210M')"><label class="custom-control-label " for="check_device_Core i5-3210M">Core i5-3210M</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2650 v3" onclick="set_key_filter('device','Xeon E5-2650 v3','check_device_Xeon E5-2650 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2699 v3" onclick="set_key_filter('device','Xeon E5-2699 v3','check_device_Xeon E5-2699 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2630 v4" onclick="set_key_filter('device','Xeon E5-2630 v4','check_device_Xeon E5-2630 v4')"><label class="custom-control-label " for="check_device_Xeon E5-2630 v4">Xeon E5-2630 v4</label>
 </div>
 
 
@@ -217,6 +254,13 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
           
 <div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_device_V100-SXM2" onclick="set_key_filter('device','V100-SXM2','check_device_V100-SXM2')"><label class="custom-control-label " for="check_device_V100-SXM2">V100-SXM2</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_P100-SXM2" onclick="set_key_filter('device','P100-SXM2','check_device_P100-SXM2')"><label class="custom-control-label " for="check_device_P100-SXM2">P100-SXM2</label>
 </div>
 
 
@@ -242,34 +286,6 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 
 
 
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_Core i5-3210M" onclick="set_key_filter('device','Core i5-3210M','check_device_Core i5-3210M')"><label class="custom-control-label " for="check_device_Core i5-3210M">Core i5-3210M</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2630 v4" onclick="set_key_filter('device','Xeon E5-2630 v4','check_device_Xeon E5-2630 v4')"><label class="custom-control-label " for="check_device_Xeon E5-2630 v4">Xeon E5-2630 v4</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2650 v3" onclick="set_key_filter('device','Xeon E5-2650 v3','check_device_Xeon E5-2650 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2650 v3">Xeon E5-2650 v3</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_Xeon E5-2699 v3" onclick="set_key_filter('device','Xeon E5-2699 v3','check_device_Xeon E5-2699 v3')"><label class="custom-control-label " for="check_device_Xeon E5-2699 v3">Xeon E5-2699 v3</label>
-</div>
-
-
-
       </div>
     </td>
     </tr>
@@ -286,26 +302,26 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
       <div id="div_radio_framework" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_tensorflow" name="radio_for_framework" onclick="set_filter('framework','tensorflow')"><label class="custom-control-label" for="radio_framework_tensorflow">tensorflow</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_chainer" name="radio_for_framework" onclick="set_filter('framework','chainer')"><label class="custom-control-label" for="radio_framework_chainer">chainer</label>
 </div>
 
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_framework_chainer" name="radio_for_framework" onclick="set_filter('framework','chainer')"><label class="custom-control-label" for="radio_framework_chainer">chainer</label>
+  <input type="radio" class="custom-control-input" id="radio_framework_tensorflow" name="radio_for_framework" onclick="set_filter('framework','tensorflow')"><label class="custom-control-label" for="radio_framework_tensorflow">tensorflow</label>
 </div>
 
       </div>
       <div id="div_check_framework" class="btn-group" role="group" aria-label="..." style="padding: 2px;">
           
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_framework_tensorflow" onclick="set_key_filter('framework','tensorflow','check_framework_tensorflow')"><label class="custom-control-label " for="check_framework_tensorflow">tensorflow</label>
+  <input type="checkbox" checked class="custom-control-input" id="check_framework_chainer" onclick="set_key_filter('framework','chainer','check_framework_chainer')"><label class="custom-control-label " for="check_framework_chainer">chainer</label>
 </div>
 
 
 
           
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_framework_chainer" onclick="set_key_filter('framework','chainer','check_framework_chainer')"><label class="custom-control-label " for="check_framework_chainer">chainer</label>
+  <input type="checkbox" checked class="custom-control-input" id="check_framework_tensorflow" onclick="set_key_filter('framework','tensorflow','check_framework_tensorflow')"><label class="custom-control-label " for="check_framework_tensorflow">tensorflow</label>
 </div>
 
 
@@ -454,7 +470,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 </script><script type="text/javascript">
 var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [['vgg16', 'GeForce RTX 2080 Ti', 'tensorflow', 144.1434104682126], ['resnet50', 'GeForce RTX 2080 Ti', 'chainer', 249.85906544475623], ['resnet50', 'GeForce RTX 2080 Ti', 'tensorflow', 173.95556521441094], ['vgg16', 'GeForce RTX 2080 Ti', 'chainer', 112.92401241303702], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['resnet50', 'Core i5-3210M', 'chainer', 0.692269051797236], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['resnet50', 'Xeon E5-2650 v3', 'chainer', 1.1851680632105968], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494]]
+    rows: [['vgg16', 'GeForce RTX 2070', 'chainer', 67.12638601239159], ['vgg16', 'GeForce RTX 2070', 'chainer', 69.87960439893925], ['resnet50', 'GeForce RTX 2070', 'chainer', 133.53826552175593], ['resnet50', 'GeForce RTX 2080 Ti', 'tensorflow', 173.95556521441094], ['resnet50', 'GeForce RTX 2080 Ti', 'chainer', 249.85906544475623], ['vgg16', 'GeForce RTX 2080 Ti', 'chainer', 112.92401241303702], ['vgg16', 'GeForce RTX 2080 Ti', 'tensorflow', 144.1434104682126], ['resnet50', 'Core i5-3210M', 'chainer', 0.692269051797236], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['resnet50', 'Xeon E5-2650 v3', 'chainer', 1.1851680632105968], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236]]
   });
 </script><canvas id="myChart" width="800" height="450"></canvas><script>
 var myBarChart = null;
