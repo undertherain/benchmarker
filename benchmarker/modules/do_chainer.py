@@ -47,7 +47,6 @@ class DoChainer(INeuralNet):
         # print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])
         # result = model.predictor(X_train)
         # print (result.shape)
-        # return
 
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)
@@ -78,7 +77,7 @@ class DoChainer(INeuralNet):
         trainer.run()
         end = timer()
 
-        params["time"] = (end-start) / nb_epoch
+        params["time"] = (end - start) / nb_epoch
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params
 
