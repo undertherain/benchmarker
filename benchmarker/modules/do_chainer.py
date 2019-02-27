@@ -18,7 +18,7 @@ class DoChainer(INeuralNet):
         self.params["channels_first"] = True
 
     def run(self):
-        #TODO set a config option to use ChainerX or other backend
+        # TODO set a config option to use ChainerX or other backend
         use_chainer_x = False
         params = self.params
         x_train, y_train = self.load_data()
