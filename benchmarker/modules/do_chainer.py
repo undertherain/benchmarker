@@ -9,6 +9,7 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 from .i_neural_net import INeuralNet
+import chainerx as chx
 
 
 class DoChainer(INeuralNet):
@@ -17,6 +18,8 @@ class DoChainer(INeuralNet):
         self.params["channels_first"] = True
 
     def run(self):
+        #TODO set a config option to use ChainerX or other backend
+        use_chainer_x = False
         params = self.params
         x_train, y_train = self.load_data()
         nb_epoch = 10
@@ -28,10 +31,17 @@ class DoChainer(INeuralNet):
         #     model = Classifier(Net())
         # else:
         model = L.Classifier(Net())
+        if use_chainer_x:
+            x_train = chx.array(x_train)
+            y_train = chx.array(y_train)
+            model.to_device('native:0')
         if params["nb_gpus"] == 1:
             id_device = params["gpus"][0]
             chainer.cuda.get_device(id_device).use()
-            model.to_gpu()
+            if use_chainer_x:
+                model.to_device('cuda:0')
+            else:
+                model.to_gpu()
 
         # print("X_train:", type(X_train), X_train.shape)
         # print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])
