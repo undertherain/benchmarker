@@ -16,13 +16,41 @@ class DoChainer(INeuralNet):
     def __init__(self, params):
         super().__init__(params)
         self.params["channels_first"] = True
+        self.params["nb_epoch"] = 10
+
+    def do_training(self, model, x_train, y_train, params):
+        optimizer = chainer.optimizers.SGD()
+        optimizer.setup(model)
+        train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
+        # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
+        if params["nb_gpus"] == 0:
+            train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
+        else:
+            train_iter = chainer.iterators.MultiprocessIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=True, n_processes=4)
+            # train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
+        # test_iter = chainer.iterators.SerialIterator(test, batch_size=batch_size=params["batch_size"], repeat=False, shuffle=False)
+        if params["nb_gpus"] == 0:
+            updater = training.StandardUpdater(train_iter, optimizer)
+        else:
+            if params["nb_gpus"] == 1:
+                updater = training.StandardUpdater(train_iter, optimizer, device=id_device)
+            else:
+                dic_devices = {str(i): i for i in params["gpus"][1:]}
+                dic_devices["main"] = params["gpus"][0]
+                updater = training.ParallelUpdater(train_iter, optimizer, devices=dic_devices)
+
+        trainer = training.Trainer(updater, (self.params["nb_epoch"], 'epoch'), out='/tmp/result')
+        # trainer.extend(extensions.Evaluator(test_iter, model, device=id_device))
+        # trainer.extend(extensions.Evaluator(test_iter, model))
+        trainer.extend(extensions.LogReport())
+        trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy', "elapsed_time"]))
+        trainer.run()
 
     def run(self):
         # TODO set a config option to use ChainerX or other backend
         use_chainer_x = False
         params = self.params
         x_train, y_train = self.load_data()
-        nb_epoch = 10
         mod = importlib.import_module("benchmarker.modules.problems." +
                                       params["problem"]["name"] + ".chainer")
         Net = getattr(mod, 'Net')
@@ -48,36 +76,11 @@ class DoChainer(INeuralNet):
         # result = model.predictor(X_train)
         # print (result.shape)
 
-        optimizer = chainer.optimizers.SGD()
-        optimizer.setup(model)
-        train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
-        # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
-        if params["nb_gpus"] == 0:
-            train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
-        else:
-            train_iter = chainer.iterators.MultiprocessIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=True, n_processes=4)
-            # train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
-        # test_iter = chainer.iterators.SerialIterator(test, batch_size=batch_size=params["batch_size"], repeat=False, shuffle=False)
-        if params["nb_gpus"] == 0:
-            updater = training.StandardUpdater(train_iter, optimizer)
-        else:
-            if params["nb_gpus"] == 1:
-                updater = training.StandardUpdater(train_iter, optimizer, device=id_device)
-            else:
-                dic_devices = {str(i): i for i in params["gpus"][1:]}
-                dic_devices["main"] = params["gpus"][0]
-                updater = training.ParallelUpdater(train_iter, optimizer, devices=dic_devices)
-
-        trainer = training.Trainer(updater, (nb_epoch, 'epoch'), out='/tmp/result')
-        # trainer.extend(extensions.Evaluator(test_iter, model, device=id_device))
-        # trainer.extend(extensions.Evaluator(test_iter, model))
-        trainer.extend(extensions.LogReport())
-        trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy', "elapsed_time"]))
         start = timer()
-        trainer.run()
+        self.do_training(model, x_train, y_train, params)
         end = timer()
 
-        params["time"] = (end - start) / nb_epoch
+        params["time"] = (end - start) / self.params["nb_epoch"]
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params
 
