@@ -1,0 +1,44 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "AMD Ryzen 5 2600X Six-Core Processor",
+    "framework": "chainer",
+    "framework_full": "Chainer-5.3.0",
+    "gpus": [],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "AMD Ryzen 5 2600X Six-Core Processor",
+            "clock": null,
+            "clock_max": null,
+            "clock_min": null,
+            "logical_cores": null,
+            "physical_cores": null
+        },
+        "gpus": [],
+        "hdds": {},
+        "host": "blackthorn",
+        "os": "Linux-5.0.0-7-generic-x86_64-with-Ubuntu-19.04-disco",
+        "ram": {
+            "total": null
+        },
+        "swap": null
+    },
+    "problem": {
+        "bytes_x_train": 19267584,
+        "cnt_batches_per_epoch": 2.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            32,
+            3,
+            224,
+            224
+        ],
+        "size": 32
+    },
+    "time": 26.106162135400155
+}
