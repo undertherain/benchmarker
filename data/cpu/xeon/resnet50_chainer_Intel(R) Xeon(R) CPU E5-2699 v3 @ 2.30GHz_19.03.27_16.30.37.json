@@ -1,0 +1,44 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz",
+    "framework": "chainer",
+    "framework_full": "Chainer-5.2.0",
+    "gpus": [],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz",
+            "clock": 2799.938861111109,
+            "clock_max": 3600.0,
+            "clock_min": 1200.0,
+            "logical_cores": 36,
+            "physical_cores": 18
+        },
+        "gpus": [],
+        "host": "paris0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.10.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "banks": [],
+            "total": 134941597696
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 38535168,
+        "cnt_batches_per_epoch": 4.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            64,
+            3,
+            224,
+            224
+        ],
+        "size": 64
+    },
+    "time": 47.90072422430094
+}
