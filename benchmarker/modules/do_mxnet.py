@@ -12,11 +12,17 @@ from .i_neural_net import INeuralNet
 
 class DoMxnet(INeuralNet):
 
+    def __init__(self, params):
+        super().__init__(params)
+        self.params["nb_epoch"] = 10
+        # TODO: confirm tensor ordering in mxnet
+        # self.params["channels_first"] = True
+
     def run(self):
         x_train, y_train = self.load_data()
 
         mod = importlib.import_module("benchmarker.modules.problems." +
-                                      self.params["problem"] + ".mxnet")
+                                      self.params["problem"]["name"] + ".mxnet")
         get_model = getattr(mod, 'get_model')
 
         net = get_model(x_train[0].shape)
