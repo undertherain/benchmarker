@@ -1,0 +1,44 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.0",
+    "gpus": [],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz",
+            "clock": 1511.9354999999998,
+            "clock_max": 3100.0,
+            "clock_min": 1200.0,
+            "logical_cores": 4,
+            "physical_cores": 2
+        },
+        "gpus": [],
+        "host": "neuromancer",
+        "os": "Linux-4.18.0-16-generic-x86_64-with-Ubuntu-18.10-cosmic",
+        "ram": {
+            "total": 16722186240
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 19267584,
+        "cnt_batches_per_epoch": 2.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            32,
+            3,
+            224,
+            224
+        ],
+        "size": 32
+    },
+    "time": 17.47514735289733,
+    "time_epoch": 17.47514735289733
+}
