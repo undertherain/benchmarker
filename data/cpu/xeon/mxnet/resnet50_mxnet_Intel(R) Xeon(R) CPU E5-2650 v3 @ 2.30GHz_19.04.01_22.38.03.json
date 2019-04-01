@@ -1,0 +1,45 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.0",
+    "gpus": [],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "clock": null,
+            "clock_max": null,
+            "clock_min": null,
+            "logical_cores": null,
+            "physical_cores": null
+        },
+        "gpus": [],
+        "hdds": {},
+        "host": "roma7.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.10.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": null
+        },
+        "swap": null
+    },
+    "problem": {
+        "bytes_x_train": 38535168,
+        "cnt_batches_per_epoch": 4.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            64,
+            3,
+            224,
+            224
+        ],
+        "size": 64
+    },
+    "time": 15.343351430993062,
+    "time_epoch": 15.343351430993062
+}
