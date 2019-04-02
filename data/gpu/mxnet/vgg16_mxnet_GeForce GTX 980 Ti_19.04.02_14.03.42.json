@@ -1,0 +1,78 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce GTX 980 Ti",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.0",
+    "gpus": [
+        0
+    ],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "clock": null,
+            "clock_max": null,
+            "clock_min": null,
+            "logical_cores": null,
+            "physical_cores": null
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla K20Xm",
+                "clock": 732000,
+                "compute_capability": 3.5,
+                "cores": 2688,
+                "memory": 6379143168,
+                "memory_clock": 2600000,
+                "multiprocessors": 14,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {},
+        "host": "roma7.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.10.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": null
+        },
+        "swap": null
+    },
+    "problem": {
+        "bytes_x_train": 616562688,
+        "cnt_batches_per_epoch": 32.0,
+        "name": "vgg16",
+        "shape_x_train": [
+            1024,
+            3,
+            224,
+            224
+        ],
+        "size": 1024
+    },
+    "time": 11.621581091708503,
+    "time_epoch": 11.621581091708503
+}

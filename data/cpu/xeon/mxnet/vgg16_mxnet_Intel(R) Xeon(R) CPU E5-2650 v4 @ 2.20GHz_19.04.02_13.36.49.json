@@ -1,0 +1,56 @@
+{
+    "batch_size": 8,
+    "batch_size_per_device": 8,
+    "channels_first": true,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.0",
+    "gpus": [],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "clock": null,
+            "clock_max": null,
+            "clock_min": null,
+            "logical_cores": null,
+            "physical_cores": null
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {},
+        "host": "kiev0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.10.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": null
+        },
+        "swap": null
+    },
+    "problem": {
+        "bytes_x_train": 38535168,
+        "cnt_batches_per_epoch": 8.0,
+        "name": "vgg16",
+        "shape_x_train": [
+            64,
+            3,
+            224,
+            224
+        ],
+        "size": 64
+    },
+    "time": 51.50539726299466,
+    "time_epoch": 51.50539726299466
+}
