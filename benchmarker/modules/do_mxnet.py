@@ -32,7 +32,14 @@ class DoMxnet(INeuralNet):
         # if opt.dtype == 'float16':
         #     out = mx.sym.Cast(data=out, dtype=np.float32)
         softmax = mx.sym.SoftmaxOutput(out, name='softmax')
-        mod = mx.mod.Module(softmax, context=mx.cpu())
+        if self.params["nb_gpus"] > 0:
+            devices = [mx.gpu(i) for i in self.params["gpus"]]
+        else:
+            devices = mx.cpu()
+        if self.params["nb_gpus"] == 1:
+            devices = mx.gpu(self.params["gpus"][0])
+
+        mod = mx.mod.Module(softmax, context=devices)
 #         train_data, val_data = get_data_iters(dataset, batch_size, opt)
         train_iter = mx.io.NDArrayIter(x_train, y_train, batch_size=self.params["batch_size"])
 
@@ -47,13 +54,6 @@ class DoMxnet(INeuralNet):
                 optimizer_params={'learning_rate': 0.1},
                 # optimizer_params={'learning_rate': opt.lr, 'wd': opt.wd, 'momentum': opt.momentum, 'multi_precision': True},
                 initializer=mx.init.Xavier(magnitude=2))
-
-# if self.params["nb_gpus"] > 0:
-        #     devices = [mx.gpu(i) for i in self.params["gpus"]]
-        # else:
-        #     devices = mx.cpu()
-        # if self.params["nb_gpus"] == 1:
-        #     devices = mx.gpu(self.params["gpus"][0])
 
         # print(devices)
 #        mod = mx.mod.Module(symbol=net,

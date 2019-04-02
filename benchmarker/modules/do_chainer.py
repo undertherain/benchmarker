@@ -9,7 +9,7 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 from .i_neural_net import INeuralNet
-import chainerx as chx
+# import chainerx as chx
 
 
 class DoChainer(INeuralNet):
