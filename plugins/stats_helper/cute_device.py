@@ -4,7 +4,7 @@ import re
 
 def get_cute_device_str(device_name):
     shorts = ["(GTX 980 Ti)",
-              "(GTX 1080 Ti)",
+              "(GTX \d\d\d\d Ti)",
               "(P100-PCIE)",
               "(P100-SXM2)",
               "(V100-SXM2)",
