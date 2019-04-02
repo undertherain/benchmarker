@@ -1,0 +1,68 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce RTX 2070",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.0",
+    "gpus": [
+        0
+    ],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "clock": null,
+            "clock_max": null,
+            "clock_min": null,
+            "logical_cores": null,
+            "physical_cores": null
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8338604032,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8338604032,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {},
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.10.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": null
+        },
+        "swap": null
+    },
+    "problem": {
+        "bytes_x_train": 616562688,
+        "cnt_batches_per_epoch": 32.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            1024,
+            3,
+            224,
+            224
+        ],
+        "size": 1024
+    },
+    "time": 5.710370207997039,
+    "time_epoch": 5.710370207997039
+}
