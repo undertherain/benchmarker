@@ -1,0 +1,56 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "AMD Ryzen 5 2600X Six-Core Processor",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.0",
+    "gpus": [],
+    "misc": null,
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "AMD Ryzen 5 2600X Six-Core Processor",
+            "clock": 2002.162,
+            "clock_max": 3600.0,
+            "clock_min": 2200.0,
+            "logical_cores": 12,
+            "physical_cores": 6
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1060 6GB",
+                "clock": 1708500,
+                "compute_capability": 6.1,
+                "cores": 1280,
+                "memory": 6370295808,
+                "memory_clock": 4004000,
+                "multiprocessors": 10,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {},
+        "host": "blackthorn",
+        "os": "Linux-5.0.0-8-generic-x86_64-with-Ubuntu-19.04-disco",
+        "ram": {
+            "total": 67565441024
+        },
+        "swap": 1027600384
+    },
+    "problem": {
+        "bytes_x_train": 38535168,
+        "cnt_batches_per_epoch": 4.0,
+        "name": "vgg16",
+        "shape_x_train": [
+            64,
+            3,
+            224,
+            224
+        ],
+        "size": 64
+    },
+    "time": 50.217711177299954,
+    "time_epoch": 50.217711177299954
+}
