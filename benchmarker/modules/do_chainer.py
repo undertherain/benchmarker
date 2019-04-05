@@ -19,6 +19,7 @@ class DoChainer(INeuralNet):
         self.params["nb_epoch"] = 10
 
     def do_inference(self, model, x_train, y_train):
+        chainer.enable_backprop = False
         print("doing inference")
 
     def do_training(self, model, x_train, y_train):
