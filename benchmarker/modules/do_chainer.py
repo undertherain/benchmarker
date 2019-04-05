@@ -21,6 +21,9 @@ class DoChainer(INeuralNet):
     def do_inference(self, model, x_train, y_train):
         chainer.enable_backprop = False
         print("doing inference")
+        print("x_train:", x_train.shape)
+        # TODO: add iterator
+        # iterate over all mini-batches
 
     def do_training(self, model, x_train, y_train):
         params = self.params
