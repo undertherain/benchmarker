@@ -18,7 +18,11 @@ class DoChainer(INeuralNet):
         self.params["channels_first"] = True
         self.params["nb_epoch"] = 10
 
-    def do_training(self, model, x_train, y_train, params):
+    def do_inference(self, model, x_train, y_train, params):
+        print("doing inference")
+
+    def do_training(self, model, x_train, y_train):
+        params = self.params
         optimizer = chainer.optimizers.SGD()
         optimizer.setup(model)
         train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
@@ -77,7 +81,7 @@ class DoChainer(INeuralNet):
         # print (result.shape)
 
         start = timer()
-        self.do_training(model, x_train, y_train, params)
+        self.do_training(model, x_train, y_train)
         end = timer()
 
         params["time"] = (end - start) / self.params["nb_epoch"]

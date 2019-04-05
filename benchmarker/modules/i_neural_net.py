@@ -4,6 +4,7 @@ import importlib
 
 class INeuralNet():
     """Interface for all deep learning modules"""
+
     def __init__(self, params):
         self.params = params
         if "batch_size_per_device" in params:
@@ -14,6 +15,9 @@ class INeuralNet():
         if self.params["nb_gpus"] > 0:
             self.params["batch_size"] = self.params["batch_size_per_device"] * self.params["nb_gpus"]
         self.params["channels_first"] = True
+        if params["mode"] is None:
+            params["mode"] = "training"
+        assert params["mode"] in ["training", "inference"]
 
     def load_data(self):
         params = self.params

@@ -42,7 +42,7 @@ def run(args):
         return
     # todo: get a list of support problems for a given framework
 
-    # todo: load problem's metadata from the problem itself
+    # TODO: load problem's metadata from the problem itself
     params["problem"] = {}
     params["problem"]["name"] = args.problem
     if args.problem_size is not None:
@@ -50,6 +50,7 @@ def run(args):
     if args.batch_size is not None:
         params["batch_size_per_device"] = int(args.batch_size)
     params["misc"] = args.misc
+    params["mode"] = args.mode
     if args.gpus:
         params["gpus"] = list(map(int, args.gpus.split(',')))
     else:
