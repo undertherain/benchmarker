@@ -12,6 +12,8 @@ from .i_neural_net import INeuralNet
 # import chainerx as chx
 
 
+
+
 class DoChainer(INeuralNet):
     def __init__(self, params):
         super().__init__(params)
@@ -22,6 +24,15 @@ class DoChainer(INeuralNet):
         chainer.enable_backprop = False
         print("doing inference")
         print("x_train:", x_train.shape)
+        # TODO: move to GPU id needed 
+        batch_size = self.params["batch_size"]
+        cnt_minibatches = (x_train.shape[0] + batch_size - 1) // batch_size
+        for id_epoch in range(self.params["nb_epoch"]):
+            print("epoch ", id_epoch)
+            for i in range(cnt_minibatches):
+                minibatch = x_train[i * batch_size: (i + 1) * batch_size]
+                _ = model.predictor(minibatch)
+
         # TODO: add iterator
         # iterate over all mini-batches
 
@@ -83,7 +94,7 @@ class DoChainer(INeuralNet):
         # print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])
         # result = model.predictor(X_train)
         # print (result.shape)
-
+        # TODO: pre-heat
         start = timer()
         if params["mode"] == "training":
             self.do_training(model, x_train, y_train)
@@ -91,7 +102,7 @@ class DoChainer(INeuralNet):
             self.do_inference(model, x_train, y_train)
         end = timer()
 
-        params["time"] = (end - start) / self.params["nb_epoch"]
+        params["time_epoch"] = (end - start) / self.params["nb_epoch"]
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params
 
