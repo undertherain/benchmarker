@@ -12,8 +12,6 @@ from .i_neural_net import INeuralNet
 # import chainerx as chx
 
 
-
-
 class DoChainer(INeuralNet):
     def __init__(self, params):
         super().__init__(params)
@@ -24,7 +22,16 @@ class DoChainer(INeuralNet):
         chainer.enable_backprop = False
         print("doing inference")
         print("x_train:", x_train.shape)
-        # TODO: move to GPU id needed 
+        # TODO: move to GPU id needed
+        if self.params["nb_gpus"] > 1:
+            print("multi-gpu inference is not support")
+            exit(-1)
+        if self.params["nb_gpus"] == 1:
+            print("movin data to gpu")
+            import cupy
+            cupy.cuda.Device(self.params["gpus"][0]).use()
+            x_train = cupy.array(x_train)
+
         batch_size = self.params["batch_size"]
         cnt_minibatches = (x_train.shape[0] + batch_size - 1) // batch_size
         for id_epoch in range(self.params["nb_epoch"]):
