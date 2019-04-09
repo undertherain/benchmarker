@@ -102,6 +102,7 @@ class DoChainer(INeuralNet):
             self.do_inference(model, x_train, y_train)
         end = timer()
 
+        params["time"] = (end - start) / self.params["nb_epoch"]
         params["time_epoch"] = (end - start) / self.params["nb_epoch"]
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params
