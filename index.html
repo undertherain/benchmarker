@@ -53,7 +53,7 @@
 //var sec_key="framework"
 var prim_key="device"
 var sec_key="framework"
-var keyvals={'device': ['Core i5-3210M', 'Ryzen 5 2600X', 'Xeon E5-2699 v3', 'Xeon E5-2630 v4', 'Xeon E5-2650 v3', 'Xeon E5-2650 v4', 'K40c', 'P100-SXM2', 'GTX 980 Ti', 'V100-SXM2', 'GTX 1080 Ti', 'P100-PCIE', 'RTX 2080 Ti', 'RTX 2070'], 'framework': ['mxnet', 'chainer', 'tensorflow'], 'kernel': ['resnet50', 'vgg16']}
+var keyvals={'device': ['Core i5-3210M', 'Ryzen 5 2600X', 'Xeon E5-2699 v3', 'Xeon E5-2630 v4', 'Xeon E5-2650 v3', 'Xeon E5-2650 v4', 'P100-SXM2', 'K40c', 'V100-SXM2', 'GTX 980 Ti', 'GTX 1080 Ti', 'P100-PCIE', 'RTX 2080 Ti', 'RTX 2070'], 'framework': ['mxnet', 'chainer', 'tensorflow'], 'kernel': ['resnet50', 'vgg16']}
 var filters = {
   //"kernel": "conv2"
 }
@@ -87,22 +87,22 @@ if (document.getElementById("check_device_Xeon E5-2650 v4").checked) {
    filters_prim["device"].add("Xeon E5-2650 v4"); } 
 else {
   filters_prim["device"].delete("Xeon E5-2650 v4"); }
-if (document.getElementById("check_device_K40c").checked) {
-   filters_prim["device"].add("K40c"); } 
-else {
-  filters_prim["device"].delete("K40c"); }
 if (document.getElementById("check_device_P100-SXM2").checked) {
    filters_prim["device"].add("P100-SXM2"); } 
 else {
   filters_prim["device"].delete("P100-SXM2"); }
-if (document.getElementById("check_device_GTX 980 Ti").checked) {
-   filters_prim["device"].add("GTX 980 Ti"); } 
+if (document.getElementById("check_device_K40c").checked) {
+   filters_prim["device"].add("K40c"); } 
 else {
-  filters_prim["device"].delete("GTX 980 Ti"); }
+  filters_prim["device"].delete("K40c"); }
 if (document.getElementById("check_device_V100-SXM2").checked) {
    filters_prim["device"].add("V100-SXM2"); } 
 else {
   filters_prim["device"].delete("V100-SXM2"); }
+if (document.getElementById("check_device_GTX 980 Ti").checked) {
+   filters_prim["device"].add("GTX 980 Ti"); } 
+else {
+  filters_prim["device"].delete("GTX 980 Ti"); }
 if (document.getElementById("check_device_GTX 1080 Ti").checked) {
    filters_prim["device"].add("GTX 1080 Ti"); } 
 else {
@@ -200,22 +200,22 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_K40c" name="radio_for_device" onclick="set_filter('device','K40c')"><label class="custom-control-label" for="radio_device_K40c">K40c</label>
-</div>
-
-          
-<div class="custom-control custom-radio custom-control-inline">
   <input type="radio" class="custom-control-input" id="radio_device_P100-SXM2" name="radio_for_device" onclick="set_filter('device','P100-SXM2')"><label class="custom-control-label" for="radio_device_P100-SXM2">P100-SXM2</label>
 </div>
 
           
 <div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="radio_device_GTX 980 Ti" name="radio_for_device" onclick="set_filter('device','GTX 980 Ti')"><label class="custom-control-label" for="radio_device_GTX 980 Ti">GTX 980 Ti</label>
+  <input type="radio" class="custom-control-input" id="radio_device_K40c" name="radio_for_device" onclick="set_filter('device','K40c')"><label class="custom-control-label" for="radio_device_K40c">K40c</label>
 </div>
 
           
 <div class="custom-control custom-radio custom-control-inline">
   <input type="radio" class="custom-control-input" id="radio_device_V100-SXM2" name="radio_for_device" onclick="set_filter('device','V100-SXM2')"><label class="custom-control-label" for="radio_device_V100-SXM2">V100-SXM2</label>
+</div>
+
+          
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="radio_device_GTX 980 Ti" name="radio_for_device" onclick="set_filter('device','GTX 980 Ti')"><label class="custom-control-label" for="radio_device_GTX 980 Ti">GTX 980 Ti</label>
 </div>
 
           
@@ -284,13 +284,6 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 
           
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_K40c" onclick="set_key_filter('device','K40c','check_device_K40c')"><label class="custom-control-label " for="check_device_K40c">K40c</label>
-</div>
-
-
-
-          
-<div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_device_P100-SXM2" onclick="set_key_filter('device','P100-SXM2','check_device_P100-SXM2')"><label class="custom-control-label " for="check_device_P100-SXM2">P100-SXM2</label>
 </div>
 
@@ -298,7 +291,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 
           
 <div class="custom-control custom-checkbox custom-control-inline">
-  <input type="checkbox" checked class="custom-control-input" id="check_device_GTX 980 Ti" onclick="set_key_filter('device','GTX 980 Ti','check_device_GTX 980 Ti')"><label class="custom-control-label " for="check_device_GTX 980 Ti">GTX 980 Ti</label>
+  <input type="checkbox" checked class="custom-control-input" id="check_device_K40c" onclick="set_key_filter('device','K40c','check_device_K40c')"><label class="custom-control-label " for="check_device_K40c">K40c</label>
 </div>
 
 
@@ -306,6 +299,13 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
           
 <div class="custom-control custom-checkbox custom-control-inline">
   <input type="checkbox" checked class="custom-control-input" id="check_device_V100-SXM2" onclick="set_key_filter('device','V100-SXM2','check_device_V100-SXM2')"><label class="custom-control-label " for="check_device_V100-SXM2">V100-SXM2</label>
+</div>
+
+
+
+          
+<div class="custom-control custom-checkbox custom-control-inline">
+  <input type="checkbox" checked class="custom-control-input" id="check_device_GTX 980 Ti" onclick="set_key_filter('device','GTX 980 Ti','check_device_GTX 980 Ti')"><label class="custom-control-label " for="check_device_GTX 980 Ti">GTX 980 Ti</label>
 </div>
 
 
@@ -534,7 +534,7 @@ var colors = ["TEAL", "OLIVE", "ORANGE", "RED", "#1b9e77", "#d95f02", "#7570b3",
 </script><script type="text/javascript">
 var df = new dataForge.DataFrame({
     columnNames: ["kernel", "device", "framework", "perf"],
-    rows: [['resnet50', 'Core i5-3210M', 'mxnet', 1.831171969757067], ['vgg16', 'Ryzen 5 2600X', 'mxnet', 1.2894206218448463], ['resnet50', 'Core i5-3210M', 'chainer', 0.692269051797236], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['resnet50', 'Xeon E5-2650 v3', 'chainer', 1.1851680632105968], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'Ryzen 5 2600X', 'mxnet', 1.2744507565077974], ['resnet50', 'Ryzen 5 2600X', 'tensorflow', 3.6697589974575924], ['resnet50', 'Ryzen 5 2600X', 'mxnet', 4.057158747189187], ['resnet50', 'Ryzen 5 2600X', 'chainer', 1.2257642404131], ['resnet50', 'Ryzen 5 2600X', 'mxnet', 3.5947476979396686], ['vgg16', 'Ryzen 5 2600X', 'chainer', 0.49872902447296846], ['vgg16', 'Xeon E5-2630 v4', 'mxnet', 1.226374024936633], ['vgg16', 'Xeon E5-2650 v4', 'mxnet', 1.2425882218363626], ['vgg16', 'Xeon E5-2699 v3', 'mxnet', 1.3693509141667686], ['resnet50', 'Xeon E5-2630 v4', 'mxnet', 3.886037499668903], ['resnet50', 'Xeon E5-2650 v3', 'mxnet', 4.171187780442943], ['resnet50', 'Xeon E5-2650 v3', 'mxnet', 4.040479696881414], ['resnet50', 'Xeon E5-2650 v3', 'mxnet', 4.124645002186888], ['resnet50', 'Xeon E5-2630 v4', 'mxnet', 3.739761700147238], ['resnet50', 'Xeon E5-2630 v4', 'mxnet', 3.781942614599556], ['resnet50', 'Xeon E5-2699 v3', 'mxnet', 4.598317810469241], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3360967091084521], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 6.0117312291998335], ['resnet50', 'Xeon E5-2699 v3', 'mxnet', 4.597304501853293], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257], ['resnet50', 'P100-SXM2', 'mxnet', 216.36210596377077], ['vgg16', 'P100-SXM2', 'mxnet', 142.42884313374103], ['resnet50', 'K40c', 'mxnet', 56.148981789590756], ['vgg16', 'GTX 980 Ti', 'mxnet', 88.55967790642707], ['vgg16', 'GTX 1080 Ti', 'mxnet', 133.98046259819697], ['resnet50', 'P100-PCIE', 'mxnet', 202.26278411908544], ['resnet50', 'RTX 2080 Ti', 'mxnet', 278.21851537746016], ['resnet50', 'GTX 980 Ti', 'mxnet', 127.19212268045905], ['vgg16', 'K40c', 'mxnet', 37.38014224783272], ['vgg16', 'RTX 2080 Ti', 'mxnet', 175.62616340736113], ['resnet50', 'GTX 1080 Ti', 'mxnet', 197.49524518306904], ['resnet50', 'RTX 2070', 'mxnet', 179.32287447247253], ['vgg16', 'RTX 2070', 'mxnet', 113.18643574345946], ['vgg16', 'P100-PCIE', 'mxnet', 131.13434974803096], ['vgg16', 'GTX 980 Ti', 'mxnet', 88.11193519361835], ['resnet50', 'P100-PCIE', 'mxnet', 202.9563020272423], ['vgg16', 'P100-PCIE', 'mxnet', 131.19102144011217], ['resnet50', 'RTX 2070', 'tensorflow', 126.41001909872989], ['vgg16', 'RTX 2070', 'chainer', 69.87960439893925], ['resnet50', 'RTX 2070', 'chainer', 133.53826552175593], ['vgg16', 'RTX 2070', 'chainer', 67.12638601239159], ['vgg16', 'RTX 2070', 'tensorflow', 98.54055180709108], ['vgg16', 'RTX 2080 Ti', 'chainer', 112.92401241303702], ['resnet50', 'RTX 2080 Ti', 'tensorflow', 173.95556521441094], ['resnet50', 'RTX 2080 Ti', 'chainer', 249.85906544475623], ['vgg16', 'RTX 2080 Ti', 'tensorflow', 144.1434104682126]]
+    rows: [['resnet50', 'Core i5-3210M', 'mxnet', 1.831171969757067], ['vgg16', 'Ryzen 5 2600X', 'mxnet', 1.2894206218448463], ['resnet50', 'Core i5-3210M', 'chainer', 0.692269051797236], ['vgg16', 'Xeon E5-2699 v3', 'chainer', 0.6167858475977033], ['resnet50', 'Xeon E5-2630 v4', 'chainer', 1.1898182108690494], ['vgg16', 'Xeon E5-2699 v3', 'tensorflow', 3.8375647267839765], ['resnet50', 'Core i5-3210M', 'tensorflow', 0.8537541367663309], ['vgg16', 'Xeon E5-2630 v4', 'chainer', 0.2607167039404661], ['vgg16', 'Xeon E5-2650 v3', 'chainer', 0.2503135553749783], ['resnet50', 'Xeon E5-2650 v3', 'chainer', 1.1851680632105968], ['resnet50', 'Xeon E5-2650 v3', 'tensorflow', 2.721674152167095], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 5.017345872671634], ['resnet50', 'Xeon E5-2630 v4', 'tensorflow', 2.9794333856277224], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3509330035688814], ['vgg16', 'Xeon E5-2650 v3', 'tensorflow', 3.079542565106305], ['vgg16', 'Xeon E5-2630 v4', 'tensorflow', 2.9576165956969342], ['vgg16', 'Ryzen 5 2600X', 'mxnet', 1.2744507565077974], ['resnet50', 'Ryzen 5 2600X', 'tensorflow', 3.6697589974575924], ['resnet50', 'Ryzen 5 2600X', 'mxnet', 4.057158747189187], ['resnet50', 'Ryzen 5 2600X', 'chainer', 1.2257642404131], ['resnet50', 'Ryzen 5 2600X', 'mxnet', 3.5947476979396686], ['vgg16', 'Ryzen 5 2600X', 'chainer', 0.49872902447296846], ['vgg16', 'Xeon E5-2630 v4', 'mxnet', 1.226374024936633], ['vgg16', 'Xeon E5-2650 v4', 'mxnet', 1.2425882218363626], ['vgg16', 'Xeon E5-2699 v3', 'mxnet', 1.3693509141667686], ['resnet50', 'Xeon E5-2630 v4', 'mxnet', 3.886037499668903], ['resnet50', 'Xeon E5-2650 v3', 'mxnet', 4.171187780442943], ['resnet50', 'Xeon E5-2650 v3', 'mxnet', 4.040479696881414], ['resnet50', 'Xeon E5-2650 v3', 'mxnet', 4.124645002186888], ['resnet50', 'Xeon E5-2630 v4', 'mxnet', 3.739761700147238], ['resnet50', 'Xeon E5-2630 v4', 'mxnet', 3.781942614599556], ['resnet50', 'Xeon E5-2699 v3', 'mxnet', 4.598317810469241], ['resnet50', 'Xeon E5-2699 v3', 'chainer', 1.3360967091084521], ['resnet50', 'Xeon E5-2699 v3', 'tensorflow', 6.0117312291998335], ['resnet50', 'Xeon E5-2699 v3', 'mxnet', 4.597304501853293], ['resnet50', 'P100-SXM2', 'mxnet', 216.36210596377077], ['vgg16', 'P100-SXM2', 'mxnet', 142.42884313374103], ['resnet50', 'K40c', 'mxnet', 56.148981789590756], ['resnet50', 'V100-SXM2', 'mxnet', 302.1059458240457], ['vgg16', 'GTX 980 Ti', 'mxnet', 88.55967790642707], ['vgg16', 'GTX 1080 Ti', 'mxnet', 133.98046259819697], ['resnet50', 'P100-PCIE', 'mxnet', 202.26278411908544], ['resnet50', 'RTX 2080 Ti', 'mxnet', 278.21851537746016], ['resnet50', 'GTX 980 Ti', 'mxnet', 127.19212268045905], ['vgg16', 'K40c', 'mxnet', 37.38014224783272], ['vgg16', 'RTX 2080 Ti', 'mxnet', 175.62616340736113], ['resnet50', 'GTX 1080 Ti', 'mxnet', 197.49524518306904], ['resnet50', 'P100-SXM2', 'mxnet', 215.68548742130517], ['resnet50', 'RTX 2070', 'mxnet', 179.32287447247253], ['vgg16', 'RTX 2070', 'mxnet', 113.18643574345946], ['vgg16', 'P100-PCIE', 'mxnet', 131.13434974803096], ['vgg16', 'V100-SXM2', 'mxnet', 206.39365532649379], ['vgg16', 'GTX 980 Ti', 'mxnet', 88.11193519361835], ['resnet50', 'P100-PCIE', 'mxnet', 202.9563020272423], ['vgg16', 'P100-PCIE', 'mxnet', 131.19102144011217], ['resnet50', 'RTX 2070', 'tensorflow', 126.41001909872989], ['vgg16', 'RTX 2070', 'chainer', 69.87960439893925], ['resnet50', 'RTX 2070', 'chainer', 133.53826552175593], ['vgg16', 'RTX 2070', 'chainer', 67.12638601239159], ['vgg16', 'RTX 2070', 'tensorflow', 98.54055180709108], ['vgg16', 'RTX 2080 Ti', 'chainer', 112.92401241303702], ['resnet50', 'RTX 2080 Ti', 'tensorflow', 173.95556521441094], ['resnet50', 'RTX 2080 Ti', 'chainer', 249.85906544475623], ['vgg16', 'RTX 2080 Ti', 'tensorflow', 144.1434104682126], ['resnet50', 'K40c', 'tensorflow', 35.31026765686765], ['vgg16', 'P100-SXM2', 'tensorflow', 111.35240966029221], ['resnet50', 'GTX 980 Ti', 'tensorflow', 85.31943466841973], ['vgg16', 'K40c', 'chainer', 15.771774031182364], ['resnet50', 'V100-SXM2', 'tensorflow', 197.32472127711267], ['vgg16', 'K40c', 'tensorflow', 33.436684282286976], ['resnet50', 'GTX 980 Ti', 'chainer', 109.23434721267337], ['vgg16', 'V100-SXM2', 'tensorflow', 174.16506184959826], ['resnet50', 'V100-SXM2', 'chainer', 271.25734860481236], ['resnet50', 'GTX 1080 Ti', 'tensorflow', 131.31166943831752], ['vgg16', 'GTX 1080 Ti', 'chainer', 84.0228907853974], ['resnet50', 'K40c', 'chainer', 42.119991397867246], ['vgg16', 'GTX 1080 Ti', 'tensorflow', 98.41320770181956], ['resnet50', 'P100-SXM2', 'tensorflow', 133.31404628247887], ['resnet50', 'P100-SXM2', 'chainer', 195.73400870828624], ['vgg16', 'P100-SXM2', 'chainer', 85.07511762813125], ['vgg16', 'GTX 980 Ti', 'chainer', 51.728613435865775], ['vgg16', 'V100-SXM2', 'chainer', 115.18579532230213], ['resnet50', 'GTX 1080 Ti', 'chainer', 173.36348755725257]]
   });
 </script><canvas id="myChart" width="800" height="450"></canvas><script>
 var myBarChart = null;
