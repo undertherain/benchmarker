@@ -24,7 +24,6 @@ def get_modules():
 def run(args):
     params = {}
     params["platform"] = sysinfo.get_sys_info()
-    params["path_out"] = args.path_out
 
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
@@ -66,5 +65,6 @@ def run(args):
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     run = getattr(mod, 'run')
 
+    params["path_out"] = os.path.join(args.path_out, params["mode"])
     params = run(params)
     save_json(params)
