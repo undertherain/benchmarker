@@ -2,7 +2,7 @@ import chainer
 import chainer.functions as F
 import chainer.links as L
 
-class Net(chainer.Chain):
+class Model(chainer.Chain):
     def __init__(self, train=True):
         super(Net, self).__init__(
             conv1=L.ConvolutionND(3, 1, 16, 3), #Convolution2D(in_channels, out_channels, ksize, stride=1, pad=0, wscale=1, bias=0, nobias=False, use_cudnn=True, initialW=None, initial_bias=None, deterministic=False)
@@ -20,3 +20,5 @@ class Net(chainer.Chain):
         #h = F.relu(self.l1(h))
         h = self.l(h)
         return h
+
+Net = Model()

@@ -1,3 +1,3 @@
 import chainercv
 
-Net = chainercv.links.VGG16
+Net = chainercv.links.VGG16()

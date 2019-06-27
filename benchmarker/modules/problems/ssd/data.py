@@ -9,5 +9,5 @@ def get_data(params):
         cnt_samples = params["problem"]["size"]
     else:
         cnt_samples = 1024
-    return get_cubes(dims=2, edge=224, channels=3, cnt_samples=cnt_samples,
+    return get_cubes(dims=2, edge=300, channels=3, cnt_samples=cnt_samples,
                      channels_first=params["channels_first"], onehot=False)

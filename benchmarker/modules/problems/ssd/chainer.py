@@ -1,3 +1,3 @@
 import chainercv
 
-Net = chainercv.links.SSD
+Net = chainercv.links.SSD300(1)

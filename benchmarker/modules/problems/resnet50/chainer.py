@@ -1,3 +1,3 @@
 import chainercv
 
-Net = chainercv.links.ResNet50
+Net = chainercv.links.ResNet50()
