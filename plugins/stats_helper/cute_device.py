@@ -12,6 +12,7 @@ def get_cute_device_str(device_name):
               "(V100-SXM2)",
               "(K20Xm)",
               "(K40c)",
+              "(ThunderX2)",
               "(Xeon)(?:\(R\) CPU )(E5-[0-9]{4} v[0-9])",
               "(Core)(?:\(TM\) )(i5-[0-9]{4}[A-Z])",
               "(?:AMD) (Ryzen [0-9] [0-9]{4}[A-Z])",
