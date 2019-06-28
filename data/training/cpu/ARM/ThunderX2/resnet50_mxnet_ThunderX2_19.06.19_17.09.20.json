@@ -1,0 +1,88 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "Cavium ThunderX2(R) CPU CN9975 v2.1 @ 2.0GHz",
+    "framework": "mxnet",
+    "framework_full": "MXNet-1.4.1",
+    "gpus": [],
+    "misc": null,
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs",
+    "platform": {
+        "cpu": {
+            "brand": "Cavium ThunderX2(R) CPU CN9975 v2.1 @ 2.0GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 33554432
+            },
+            "clock": null,
+            "clock_max": null,
+            "clock_min": null,
+            "logical_cores": 224,
+            "physical_cores": 56
+        },
+        "gpus": [],
+        "hdds": {
+            "/dev/sda": {
+                "model": "VK000480GWSXF   ",
+                "size": 937703088
+            },
+            "/dev/sdb": {
+                "model": "Virtual Floppy0 ",
+                "size": 0
+            },
+            "/dev/sdc": {
+                "model": "Virtual Floppy1 ",
+                "size": 0
+            },
+            "/dev/sdd": {
+                "model": "Virtual Floppy2 ",
+                "size": 0
+            },
+            "/dev/sde": {
+                "model": "Virtual Floppy3 ",
+                "size": 0
+            },
+            "/dev/sr0": {
+                "model": "Virtual CDROM0  ",
+                "size": 2097151
+            },
+            "/dev/sr1": {
+                "model": "Virtual CDROM3  ",
+                "size": 2097151
+            },
+            "/dev/sr2": {
+                "model": "Virtual CDROM1  ",
+                "size": 2097151
+            },
+            "/dev/sr3": {
+                "model": "Virtual CDROM2  ",
+                "size": 2097151
+            }
+        },
+        "host": "oslo.m.gsic.titech.ac.jp",
+        "os": "Linux-4.14.0-115.5.1.el7a.aarch64-aarch64-with-centos-7.6.1810-AltArch",
+        "ram": {
+            "total": 33550368768
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 38535168,
+        "cnt_batches_per_epoch": 2.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            64,
+            3,
+            224,
+            224
+        ],
+        "size": 64
+    },
+    "time": 86.78317465642468,
+    "time_epoch": 86.78317465642468
+}
