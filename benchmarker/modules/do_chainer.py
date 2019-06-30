@@ -77,14 +77,12 @@ class DoChainer(INeuralNet):
         use_chainer_x = False
         params = self.params
         x_train, y_train = self.load_data()
-        mod = importlib.import_module("benchmarker.modules.problems." +
-                                      params["problem"]["name"] + ".chainer")
-        net = getattr(mod, 'Net')
+
         # if len(Y_train.shape) == 1:
         #     Y_train = Y_train[:, np.newaxis]
         #     model = Classifier(Net())
         # else:
-        model = L.Classifier(net)
+        model = L.Classifier(self.net)
         if use_chainer_x:
             x_train = chx.array(x_train)
             y_train = chx.array(y_train)

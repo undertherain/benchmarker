@@ -18,6 +18,9 @@ class INeuralNet():
         if params["mode"] is None:
             params["mode"] = "training"
         assert params["mode"] in ["training", "inference"]
+        mod = importlib.import_module("benchmarker.modules.problems." +
+                                      params["problem"]["name"] + "." + params["framework"])
+        self.net = getattr(mod, 'Net')
 
     def load_data(self):
         params = self.params
