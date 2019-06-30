@@ -5,9 +5,6 @@ from .i_neural_net import INeuralNet
 
 
 class BackendOpenCV(INeuralNet):
-    # move to problem module
-    PATH_PROTO = "/mnt/kodi/blackbird/Scry/models/3rd_party/res10_ssd/deploy.prototxt.txt"
-    PATH_WEIGHTS = "/mnt/kodi/blackbird/Scry/models/3rd_party/res10_ssd/res10_300x300_ssd_iter_140000.caffemodel"
 
     def __init__(self, params):
         super().__init__(params)
@@ -17,7 +14,6 @@ class BackendOpenCV(INeuralNet):
     def run(self):
         params = self.params
         x_train, y_train = self.load_data()
-        self.net = cv2.dnn.readNetFromCaffe(self.PATH_PROTO, self.PATH_WEIGHTS)
         start = timer()
         for i in range(x_train.shape[0]):
             frame = x_train[0]
