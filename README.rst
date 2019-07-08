@@ -21,7 +21,8 @@ Benchmarker is a modular framework to automate a set of performance benchmarks, 
 Run
 ===
 
-python3 -m benchmarker --framework=theano --problem=conv2d_1 --path-out=./
+python3 -m benchmarker  --mode=training --framework=chainer --problem=resnet50 --problem_size=32 --batch_size=4
+
 
 ==========
 Motivation
