@@ -7,3 +7,5 @@ def get_model(shape):
     optimizer = keras.optimizers.Adam()
     model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=["accuracy"])
     return model
+
+Net = get_model
