@@ -13,7 +13,7 @@ class DoTensorflow(INeuralNet):
         super().__init__(params)
         self.params["channels_first"] = False
 
-    def run(self):
+    def run_internal(self):
         # todo set image format
         data = self.load_data()
 

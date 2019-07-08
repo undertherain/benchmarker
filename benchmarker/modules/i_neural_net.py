@@ -31,3 +31,9 @@ class INeuralNet():
         params["problem"]["shape_x_train"] = data[0].shape
         params["problem"]["cnt_batches_per_epoch"] = data[0].shape[0] / self.params["batch_size"]
         return data
+
+    def run(self):
+        results = self.run_internal()
+        results["time_epoch"] = results["time"]
+        results["samples_per_second"] = results["problem"]["shape_x_train"][0] / results["time_epoch"]
+        return results
