@@ -8,4 +8,4 @@ import cProfile
 from .__main__ import main
 
 if __name__ == "__main__":
-    cProfile.run("main()", filename=".beholder.cprofile")
+    cProfile.run("main()", filename=".nemchmarker.cprofile")
