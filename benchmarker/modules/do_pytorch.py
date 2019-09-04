@@ -11,7 +11,7 @@ from .i_neural_net import INeuralNet
 class DoPytorch(INeuralNet):
     def __init__(self, params):
         super().__init__(params)
-        # self.params["channels_first"] = True
+        self.params["channels_first"] = True
         self.params["nb_epoch"] = 10
 
     def train(self, model, device, train_loader, optimizer, epoch):
