@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
@@ -12,7 +11,7 @@ class DoPytorch(INeuralNet):
         # self.params["channels_first"] = True
         self.params["nb_epoch"] = 10
 
-    def train(self, args, model, device, train_loader, optimizer, epoch):
+    def train(self, model, device, train_loader, optimizer, epoch):
         model.train()
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
@@ -21,7 +20,8 @@ class DoPytorch(INeuralNet):
             loss = F.nll_loss(output, target)
             loss.backward()
             optimizer.step()
-            if batch_idx % args.log_interval == 0:
+            log_interval = 10
+            if batch_idx % log_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
                     100. * batch_idx / len(train_loader), loss.item()))
@@ -44,7 +44,7 @@ class DoPytorch(INeuralNet):
             test_loss, correct, len(test_loader.dataset),
             100. * correct / len(test_loader.dataset)))
 
-    def run(self, params):
+    def run(self):
         # Training settings
         # parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
         # parser.add_argument('--batch-size', type=int, default=64, metavar='N',
@@ -82,21 +82,22 @@ class DoPytorch(INeuralNet):
                                transforms.ToTensor(),
                                transforms.Normalize((0.1307,), (0.3081,))
                            ])),
-            batch_size=params["batch_size"], shuffle=True, **kwargs)
+            batch_size=self.params["batch_size"], shuffle=True, **kwargs)
         test_loader = torch.utils.data.DataLoader(
             datasets.MNIST('../data', train=False, transform=transforms.Compose([
                                transforms.ToTensor(),
                                transforms.Normalize((0.1307,), (0.3081,))
                            ])),
-            batch_size=args.test_batch_size, shuffle=True, **kwargs)
+            batch_size=self.params["batch_size"], shuffle=True, **kwargs)
+            # TODO: create arg for test barch size
 
+        model = self.net().to(device)
+        # TODO: args for training hyperparameters
+        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
 
-        model = Net().to(device)
-        optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
-
-        for epoch in range(1, args.epochs + 1):
-            train(args, model, device, train_loader, optimizer, epoch)
-            test(args, model, device, test_loader)
+        for epoch in range(1, self.params["nb_epoch"] + 1):
+            self.train(model, device, train_loader, optimizer, epoch)
+            # test(args, model, device, test_loader)
 
         # TODO: return stats
         return {}
