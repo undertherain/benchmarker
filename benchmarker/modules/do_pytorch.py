@@ -1,7 +1,10 @@
+import numpy as np
 import torch
-import torch.nn.functional as F
+import torch.nn as nn
+from timeit import default_timer as timer
+# import torch.nn.functional as F
 import torch.optim as optim
-from torchvision import datasets, transforms
+# from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
 
 
@@ -17,7 +20,11 @@ class DoPytorch(INeuralNet):
             data, target = data.to(device), target.to(device)
             optimizer.zero_grad()
             output = model(data)
-            loss = F.nll_loss(output, target)
+            # print (output.shape, output[0][:10])
+            # exit(-1)
+            # loss = F.nll_loss(output, target)
+            criterion = nn.CrossEntropyLoss()
+            loss = criterion(output, target)
             loss.backward()
             optimizer.step()
             log_interval = 10
@@ -45,29 +52,6 @@ class DoPytorch(INeuralNet):
     #         100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        # Training settings
-        # parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
-        # parser.add_argument('--batch-size', type=int, default=64, metavar='N',
-        #                     help='input batch size for training (default: 64)')
-        # parser.add_argument('--test-batch-size', type=int, default=1000, metavar='N',
-        #                     help='input batch size for testing (default: 1000)')
-        # parser.add_argument('--epochs', type=int, default=10, metavar='N',
-        #                     help='number of epochs to train (default: 10)')
-        # parser.add_argument('--lr', type=float, default=0.01, metavar='LR',
-        #                     help='learning rate (default: 0.01)')
-        # parser.add_argument('--momentum', type=float, default=0.5, metavar='M',
-        #                     help='SGD momentum (default: 0.5)')
-        # parser.add_argument('--no-cuda', action='store_true', default=False,
-        #                     help='disables CUDA training')
-        # parser.add_argument('--seed', type=int, default=1, metavar='S',
-        #                     help='random seed (default: 1)')
-        # parser.add_argument('--log-interval', type=int, default=10, metavar='N',
-        #                     help='how many batches to wait before logging training status')
-        
-        # parser.add_argument('--save-model', action='store_true', default=False,
-        #                     help='For Saving the current Model')
-        # args = parser.parse_args()
-
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
         if self.params["gpus"]:
             raise RuntimeError("GPU support is not implemented yet")
@@ -80,7 +64,7 @@ class DoPytorch(INeuralNet):
         # kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
         x_train, y_train = self.load_data()
         x_train = torch.from_numpy(x_train)
-        y_train = torch.from_numpy(y_train)
+        y_train = torch.from_numpy(y_train.astype(np.int64))
         train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
         train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=True)
         # train_loader = torch.utils.data.DataLoader(
@@ -98,17 +82,19 @@ class DoPytorch(INeuralNet):
         #     batch_size=self.params["batch_size"], shuffle=True, **kwargs)
             # TODO: create arg for test barch size
 
-        model = self.net().to(device)
+        model = self.net.to(device)
         # TODO: args for training hyperparameters
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
-
+        start = timer()
         for epoch in range(1, self.params["nb_epoch"] + 1):
             self.train(model, device, train_loader, optimizer, epoch)
             # test(args, model, device, test_loader)
 
         # TODO: return stats
-        return {}
-
+        end = timer()
+        self.params["time"] = (end - start) / self.params["nb_epoch"]
+        self.params["framework_full"] = "PyTorch-" + torch.__version__
+        return self.params
 
 def run(params):
     backend = DoPytorch(params)

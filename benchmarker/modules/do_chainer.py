@@ -2,7 +2,6 @@
 """Chainer support.
 """
 
-import importlib
 from timeit import default_timer as timer
 import chainer
 import chainer.links as L
@@ -45,7 +44,8 @@ class DoChainer(INeuralNet):
 
     def do_training(self, model, x_train, y_train):
         params = self.params
-        optimizer = chainer.optimizers.SGD()
+        # optimizer = chainer.optimizers.SGD()
+        optimizer = chainer.optimizers.MomentumSGD(lr=0.001, momentum=0.95)
         optimizer.setup(model)
         train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
