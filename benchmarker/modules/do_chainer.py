@@ -83,6 +83,9 @@ class DoChainer(INeuralNet):
         #     model = Classifier(Net())
         # else:
         model = L.Classifier(self.net)
+        # r = self.net(x_train[:1])
+        # print(r.shape, r[0][:10])
+        # exit(-1)
         if use_chainer_x:
             x_train = chx.array(x_train)
             y_train = chx.array(y_train)
