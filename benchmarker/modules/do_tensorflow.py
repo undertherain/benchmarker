@@ -6,7 +6,6 @@ import os
 from timeit import default_timer as timer
 from .i_neural_net import INeuralNet
 from benchmarker.util.data import to_categorical
-import importlib
 import tensorflow as tf
 
 
