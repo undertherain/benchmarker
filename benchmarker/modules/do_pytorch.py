@@ -86,10 +86,12 @@ class DoPytorch(INeuralNet):
         # TODO: args for training hyperparameters
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
         start = timer()
-        for epoch in range(1, self.params["nb_epoch"] + 1):
-            self.train(model, device, train_loader, optimizer, epoch)
+        if self.params["mode"] == "training":
+            for epoch in range(1, self.params["nb_epoch"] + 1):
+                self.train(model, device, train_loader, optimizer, epoch)
             # test(args, model, device, test_loader)
-
+        else:
+            raise NotImplementedError("inference with PyTorch not implemented yet")
         # TODO: return stats
         end = timer()
         self.params["time"] = (end - start) / self.params["nb_epoch"]

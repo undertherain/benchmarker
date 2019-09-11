@@ -1,5 +1,5 @@
-from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.optimizers import SGD
 
 
 def get_model(shape):
