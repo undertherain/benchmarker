@@ -2,7 +2,7 @@ from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.optimizers import SGD
 
 
-def get_model(shape):
+def get_model():
     model = ResNet50(weights=None)
     optimizer = SGD()
     model.compile(loss='categorical_crossentropy',
@@ -11,4 +11,4 @@ def get_model(shape):
     return model
 
 
-Net = get_model
+Net = get_model()
