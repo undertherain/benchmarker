@@ -18,7 +18,7 @@ class DoMxnet(INeuralNet):
         # TODO: confirm tensor ordering in mxnet
         # self.params["channels_first"] = True
 
-    def run(self):
+    def run_internal(self):
         params = self.params
         x_train, y_train = self.load_data()
 
