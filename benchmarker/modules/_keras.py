@@ -6,19 +6,18 @@ Used for Tensofrlow and Theano
 
 from timeit import default_timer as timer
 import importlib
-import keras
-import keras.models
+from benchmarker.util.data import to_categorical
 
 
 def run(params, data):
-    if params["channels_first"]:
-        keras.backend.set_image_data_format("channels_first")
-    else:
-        keras.backend.set_image_data_format("channels_last")
+    # if params["channels_first"]:
+    #     keras.backend.set_image_data_format("channels_first")
+    # else:
+    #     keras.backend.set_image_data_format("channels_last")
 
     x_train, y_train = data
 
-    y_train = keras.utils.to_categorical(y_train, num_classes=1000)
+    y_train = to_categorical(y_train, num_classes=1000)
 
     mod = importlib.import_module("benchmarker.modules.problems." +
                                   params["problem"]["name"] + ".keras")
@@ -30,6 +29,8 @@ def run(params, data):
         cnt_classes = 1
     params["cnt_classes"] = cnt_classes
     model = get_model(params)
+    if params["mode"] != "training":
+        raise NotADirectoryError("only training is implemented for TF")
     print("preheat")
     model.fit(x_train, y_train, batch_size=params["batch_size"], epochs=1)
     nb_epoch = 3
@@ -37,12 +38,14 @@ def run(params, data):
     start = timer()
     model.fit(x_train, y_train, batch_size=params["batch_size"], epochs=nb_epoch, verbose=1)
     end = timer()
-    params["time"] = (end-start)/nb_epoch
+    params["time"] = (end - start) / nb_epoch
     if params["framework"] == "theano":
         import theano
         version_backend = theano.__version__
     else:
         import tensorflow as tf
         version_backend = tf.__version__
-    params["framework_full"] = "Keras-" + keras.__version__ + "/" + keras.backend.backend() + "_" + version_backend
+    # TODO: make this a nested dict
+    # params["framework_full"] = "Keras-" + keras.__version__ + "/" + keras.backend.backend() + "_" + version_backend
+    params["framework_full"] = "TensorFlow-" + version_backend
     return params

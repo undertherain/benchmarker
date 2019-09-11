@@ -5,9 +5,7 @@ This is where all magic is happening
 """
 
 import importlib
-import json
 import os
-import datetime
 import pkgutil
 # import logging
 
@@ -32,14 +30,14 @@ def run(args):
             print("\t", plugin[3:])
         return
 
-    # todo: load frameowrk's metadata from backend
+    # TODO: load frameowork's metadata from backend
     params["framework"] = args.framework
 
     if args.problem is None:
         print("choose a problem to run")
         print("problems supported by {}:".format(args.framework))
         return
-    # todo: get a list of support problems for a given framework
+    # TODO: get a list of support problems for a given framework
 
     # TODO: load problem's metadata from the problem itself
     params["problem"] = {}
