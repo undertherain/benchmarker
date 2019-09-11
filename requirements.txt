@@ -1,4 +1,5 @@
 begins
 py-cpuinfo
 pydataset
-system_query[all]
+system_query[cpu, hdd, ram, swap]
+# install system_query[all] for GPU systems
