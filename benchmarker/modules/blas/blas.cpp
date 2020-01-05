@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
-#include <cblas.h>
-
-typedef float t_float;
+#include "config.h"
 
 void transpose(t_float *A, t_float *B, int n) {
     int i,j;
@@ -89,12 +87,10 @@ void gemmT_omp(t_float *A, t_float *B, t_float *C, int n)
 }
 
 int main() {
-    size_t i, n;
+    size_t i;
     t_float *A, *B, *C;
     double dtime;
 
-//    n=2048;
-    n=1024;
     A = (t_float*) malloc(sizeof(t_float)*n*n);
     B = (t_float*) malloc(sizeof(t_float)*n*n);
     C = (t_float*) malloc(sizeof(t_float)*n*n);
@@ -121,11 +117,7 @@ int main() {
     printf("transpose, openmp\t%f\n", dtime);
 
 
-    dtime = omp_get_wtime();
-    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans,n,n,n, 1, A, n, B, n, 1, C ,n);
-    dtime = omp_get_wtime() - dtime;
-    printf("Openblas\t%f\n", dtime);
-    
+
     return 0;
 
 }

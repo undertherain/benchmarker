@@ -12,12 +12,12 @@ CUDAFLAGS=-O3  -Wno-deprecated-gpu-targets -arch sm_50
 all: run
 
 blas: blas.cpp
-	$(CXX) -o $@ $^ $(CXXFLAGS)  -lopenblas
+	$(CXX) -o $@ $^ $(CXXFLAGS)
 
-#cuda: cuda.cu
-#	nvcc -o $@ $^ $(CUDAFLAGS)  
+# TODO: make blas library a parameter
+blas_cblas: blas_cblas.cpp
+	$(CXX) -o $@ $^ $(CXXFLAGS) -lopenblas
 
-run: blas
-#	./serial
+run: blas blas_cblas
 	./blas
-#	./cuda
+	./blas_cblas
