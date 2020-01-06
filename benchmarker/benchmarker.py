@@ -62,5 +62,5 @@ def run(args, unknown_args):
 
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
-    params = benchmark.run()
+    benchmark.run()
     save_json(params)
