@@ -11,9 +11,9 @@ from .i_neural_net import INeuralNet
 # import chainerx as chx
 
 
-class DoChainer(INeuralNet):
-    def __init__(self, params):
-        super().__init__(params)
+class Benchmark(INeuralNet):
+    def __init__(self, params, remaining_args=None):
+        super().__init__(params, remaining_args)
         self.params["channels_first"] = True
         self.params["nb_epoch"] = 10
 
@@ -113,8 +113,3 @@ class DoChainer(INeuralNet):
         params["time"] = (end - start) / self.params["nb_epoch"]
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params
-
-
-def run(params):
-    backend_chainer = DoChainer(params)
-    return backend_chainer.run()

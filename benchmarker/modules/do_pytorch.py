@@ -8,9 +8,9 @@ import torch.optim as optim
 from .i_neural_net import INeuralNet
 
 
-class DoPytorch(INeuralNet):
-    def __init__(self, params):
-        super().__init__(params)
+class Benchmark(INeuralNet):
+    def __init__(self, params, remaining_args=None):
+        super().__init__(params, remaining_args)
         self.params["channels_first"] = True
         self.params["nb_epoch"] = 10
 
@@ -97,7 +97,3 @@ class DoPytorch(INeuralNet):
         self.params["time"] = (end - start) / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
         return self.params
-
-def run(params):
-    backend = DoPytorch(params)
-    return backend.run()

@@ -13,11 +13,10 @@ def main():
     parser.add_argument('--gpus', default="")
     parser.add_argument('--problem_size', default=None)
     parser.add_argument('--batch_size', default=None)
-    # TODO: let submodules define their own extra parameters
-    parser.add_argument('--mode', default=None)
-    parser.add_argument('--misc')
-    args = parser.parse_args()
-    run(args)
+    # parser.add_argument('--misc')
+    # TODO: move this inside benchmarker class
+    args, unknown_args = parser.parse_known_args()
+    run(args, unknown_args)
 
 
 if __name__ == "__main__":

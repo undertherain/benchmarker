@@ -19,7 +19,7 @@ def get_modules():
             if not is_pkg and name.startswith('do_')]
 
 
-def run(args):
+def run(args, unknown_args):
     params = {}
     params["platform"] = sysinfo.get_sys_info()
 
@@ -32,6 +32,7 @@ def run(args):
 
     # TODO: load frameowork's metadata from backend
     params["framework"] = args.framework
+    params["path_out"] = args.path_out
 
     if args.problem is None:
         print("choose a problem to run")
@@ -46,8 +47,7 @@ def run(args):
         params["problem"]["size"] = int(args.problem_size)
     if args.batch_size is not None:
         params["batch_size_per_device"] = int(args.batch_size)
-    params["misc"] = args.misc
-    params["mode"] = args.mode
+    # params["misc"] = args.misc
     if args.gpus:
         params["gpus"] = list(map(int, args.gpus.split(',')))
     else:
@@ -61,8 +61,6 @@ def run(args):
         params["device"] = params["platform"]["cpu"]["brand"]
 
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
-    run = getattr(mod, 'run')
-
-    params["path_out"] = os.path.join(args.path_out, params["mode"])
-    params = run(params)
+    benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
+    params = benchmark.run()
     save_json(params)

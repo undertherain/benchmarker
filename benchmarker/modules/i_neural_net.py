@@ -1,11 +1,19 @@
 """Module contains the interface for all deep learning modules"""
+import argparse
 import importlib
+import os
 
 
 class INeuralNet():
     """Interface for all deep learning modules"""
 
-    def __init__(self, params):
+    def __init__(self, params, remaining_args=None):
+        parser = argparse.ArgumentParser(description='Benchmark deep learning frameworks')
+        parser.add_argument('--mode', default=None)
+        args = parser.parse_args(remaining_args)
+        params["mode"] = args.mode
+        params["path_out"] = os.path.join(params["path_out"], params["mode"])
+
         self.params = params
         if "batch_size_per_device" in params:
             self.params["batch_size_per_device"] = params["batch_size_per_device"]

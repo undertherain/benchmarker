@@ -9,11 +9,11 @@ from benchmarker.util.data import to_categorical
 import tensorflow as tf
 
 
-class DoTensorflow(INeuralNet):
+class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
-    def __init__(self, params):
-        super().__init__(params)
+    def __init__(self, params, remaining_args=None):
+        super().__init__(params, remaining_args)
         self.params["channels_first"] = False
 
     def run_internal(self):
@@ -58,8 +58,3 @@ class DoTensorflow(INeuralNet):
         # params["framework_full"] = "Keras-" + keras.__version__ + "/" + keras.backend.backend() + "_" + version_backend
         self.params["framework_full"] = "TensorFlow-" + version_backend
         return self.params
-
-
-def run(params):
-    backend_tf = DoTensorflow(params)
-    return backend_tf.run()
