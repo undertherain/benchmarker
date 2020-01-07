@@ -4,7 +4,6 @@
 
 from timeit import default_timer as timer
 import numpy as np
-import os
 from .i_gemm import IGEMM
 
 
@@ -13,9 +12,8 @@ class Benchmark(IGEMM):
         super().__init__(params, remaining_args)
 
     def run(self):
-        params = self.params
-        if "nb_gpus" in params:
-            if params["nb_gpus"] > 0:
+        if "nb_gpus" in self.params:
+            if self.params["nb_gpus"] > 0:
                 raise Exception("Numpy framework does not work with GPU back-end")
         M, N, K = self.matrix_size
         dtype = np.float32
@@ -28,6 +26,5 @@ class Benchmark(IGEMM):
             c = a @ b # + c
         time_end = timer()
         elapsed_time = (time_end - time_start) / nb_epoch
-        params["time"] = elapsed_time
-        params["GFLOP/sec"] = params["GFLOP"] / elapsed_time
-        return params
+        self.params["time"] = elapsed_time
+        self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
