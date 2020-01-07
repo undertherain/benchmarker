@@ -2,6 +2,7 @@
 """NumPy support.
 """
 
+import argparse
 from timeit import default_timer as timer
 import numpy as np
 
@@ -9,6 +10,12 @@ import numpy as np
 class Benchmark():
     def __init__(self, params, remaining_args=None):
         self.params = params
+        parser = argparse.ArgumentParser(description='Benchmark GEMM operations')
+        #parser.add_argument('--size', default=None)
+        #args = parser.parse_args(remaining_args)
+        #params["mode"] = args.mode
+        #params["path_out"] = os.path.join(params["path_out"], params["mode"])
+
         # TODO: read size from args
         # TODO: add float type as arg
 
@@ -20,9 +27,9 @@ class Benchmark():
             if params["nb_gpus"] > 0:
                 raise Exception("Numpy framework does not work with GPU back-end")
 
-        M = 16 * 700
-        N = 16 * 700
-        K = 16 * 700
+        M = 16 * 400
+        N = 16 * 400
+        K = 16 * 400
         a = np.random.random((M, K))
         b = np.random.random((K, N))
         c = np.random.random((K, K))

@@ -5,7 +5,7 @@ This is where all magic is happening
 """
 
 import importlib
-import os
+import ast
 import pkgutil
 # import logging
 
@@ -43,8 +43,9 @@ def run(args, unknown_args):
     # TODO: load problem's metadata from the problem itself
     params["problem"] = {}
     params["problem"]["name"] = args.problem
+    # TODO: move this to the root base benchmark
     if args.problem_size is not None:
-        params["problem"]["size"] = int(args.problem_size)
+        params["problem"]["size"] = ast.literal_eval(args.problem_size)
     if args.batch_size is not None:
         params["batch_size_per_device"] = int(args.batch_size)
     # params["misc"] = args.misc
