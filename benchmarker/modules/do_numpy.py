@@ -5,6 +5,7 @@
 import argparse
 from timeit import default_timer as timer
 import numpy as np
+import os
 
 
 class Benchmark():
@@ -13,8 +14,8 @@ class Benchmark():
         parser = argparse.ArgumentParser(description='Benchmark GEMM operations')
         #parser.add_argument('--size', default=None)
         #args = parser.parse_args(remaining_args)
-        #params["mode"] = args.mode
-        #params["path_out"] = os.path.join(params["path_out"], params["mode"])
+        params["problem"]["precision"] = "FP32"
+        params["path_out"] = os.path.join(params["path_out"], params["problem"]["precision"])
 
         # TODO: read size from args
         # TODO: add float type as arg
@@ -31,15 +32,16 @@ class Benchmark():
             M = N = K = params["problem"]["size"]
         else:
             M, N, K = params["problem"]["size"]
-        a = np.random.random((M, N))
-        b = np.random.random((N, K))
-        c = np.random.random((M, K))
+        dtype = np.float32
+        a = np.random.random((M, N)).astype(dtype)
+        b = np.random.random((N, K)).astype(dtype)
+        c = np.random.random((M, K)).astype(dtype)
 
         nb_epoch = 2
 
         time_start = timer()
         for _ in range(nb_epoch):
-            c = a @ b + c
+            c = a @ b # + c
         time_end = timer()
         gflop = (2.0 * M * N * K) / (1024 ** 3)
         #print(f"GFlop: {gflop:.5f}")
