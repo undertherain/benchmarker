@@ -13,14 +13,19 @@ class Benchmark(IGEMM):
         super().__init__(params, remaining_args)
 
     def run(self):
-        if "nb_gpus" in self.params:
-            if self.params["nb_gpus"] > 0:
-                raise NotImplementedError("wip on GPU execution")
         M, N, K = self.matrix_size
         dtype = np.float32
         a = torch.tensor(np.random.random((M, N)).astype(dtype))
         b = torch.tensor(np.random.random((N, K)).astype(dtype))
         c = torch.tensor(np.random.random((M, K)).astype(dtype))
+        if "nb_gpus" in self.params:
+            if self.params["nb_gpus"] > 1:
+                raise RuntimeError("Only 1 GPU is supported")
+            if self.params["nb_gpus"] == 1:
+                torch.cuda.set_device(self.params["gpu"])
+                a.to("cuda")
+                b.to("cuda")
+                c.to("cuda")
         nb_epoch = 2
         time_start = timer()
         for _ in range(nb_epoch):
