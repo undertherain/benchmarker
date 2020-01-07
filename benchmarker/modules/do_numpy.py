@@ -2,23 +2,15 @@
 """NumPy support.
 """
 
-import argparse
 from timeit import default_timer as timer
 import numpy as np
 import os
+from .i_gemm import IGEMM
 
 
-class Benchmark():
+class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
-        self.params = params
-        parser = argparse.ArgumentParser(description='Benchmark GEMM operations')
-        #parser.add_argument('--size', default=None)
-        #args = parser.parse_args(remaining_args)
-        params["problem"]["precision"] = "FP32"
-        params["path_out"] = os.path.join(params["path_out"], params["problem"]["precision"])
-
-        # TODO: read size from args
-        # TODO: add float type as arg
+        super().__init__(params, remaining_args)
 
     def run(self):
         params = self.params
