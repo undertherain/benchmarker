@@ -27,12 +27,13 @@ class Benchmark():
             if params["nb_gpus"] > 0:
                 raise Exception("Numpy framework does not work with GPU back-end")
 
-        M = 16 * 400
-        N = 16 * 400
-        K = 16 * 400
-        a = np.random.random((M, K))
-        b = np.random.random((K, N))
-        c = np.random.random((K, K))
+        if isinstance(params["problem"]["size"], int):
+            M = N = K = params["problem"]["size"]
+        else:
+            M, N, K = params["problem"]["size"]
+        a = np.random.random((M, N))
+        b = np.random.random((N, K))
+        c = np.random.random((M, K))
 
         nb_epoch = 2
 
