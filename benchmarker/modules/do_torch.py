@@ -29,7 +29,7 @@ class Benchmark(IGEMM):
         nb_epoch = 2
         time_start = timer()
         for _ in range(nb_epoch):
-            c = a @ b # + c
+            c = a @ b  # + c
         time_end = timer()
         elapsed_time = (time_end - time_start) / nb_epoch
         self.params["time"] = elapsed_time
