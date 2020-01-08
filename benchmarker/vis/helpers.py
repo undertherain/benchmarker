@@ -1,9 +1,7 @@
 import os
 import json
-import sys
 import pandas
-sys.path.append("./../util")
-from cute_device import get_cute_device_str
+from benchmarker.util.cute_device import get_cute_device_str
 
 
 def read_file(filename):
