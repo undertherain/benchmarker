@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import json
 import pandas
 from benchmarker.util.cute_device import get_cute_device_str
@@ -11,7 +12,10 @@ def read_file(filename):
 
 
 def read_df_from_dir(path):
-    data = [read_file(os.path.join(path, f)) for f in os.listdir(path) if not f.startswith("arch") and os.path.isfile(os.path.join(path, f))]
+    path = Path(path)
+    data = [read_file(f) for f in path.glob("**/*.json") if not f.name.startswith("arch")]
+    if len(data) == 0:
+        raise RuntimeError("no data to load")
     df = pandas.DataFrame(data)
     df["device"] = df["device"].apply(get_cute_device_str)
     return df
