@@ -19,10 +19,3 @@ def read_df_from_dir(path):
     df = pandas.concat(data)
     df["device"] = df["device"].apply(get_cute_device_str)
     return df
-
-
-def filter_by(df, filters):
-    df_plot = df
-    for key in filters:
-        df_plot = df_plot[df_plot[key] == filters[key]]
-    return df_plot
