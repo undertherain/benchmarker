@@ -22,7 +22,7 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] > 1:
                 raise RuntimeError("Only 1 GPU is supported")
             if self.params["nb_gpus"] == 1:
-                torch.cuda.set_device(self.params["gpu"])
+                torch.cuda.set_device(self.params["gpus"][0])
                 a.to("cuda")
                 b.to("cuda")
                 c.to("cuda")
