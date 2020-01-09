@@ -32,6 +32,8 @@ class Benchmark(IGEMM):
         time_start = timer()
         for _ in range(nb_epoch):
             c = a @ b  # + c
+        if self.params["nb_gpus"] == 1:
+            torch.cuda.synchronize()
         time_end = timer()
         elapsed_time = (time_end - time_start) / nb_epoch
         self.params["time"] = elapsed_time
