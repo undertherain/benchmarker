@@ -8,9 +8,10 @@ import importlib
 import ast
 import pkgutil
 # import logging
-
+import os
 from .util import sysinfo
 from .util.io import save_json
+from benchmarker.util.cute_device import get_cute_device_str
 
 
 def get_modules():
@@ -64,4 +65,6 @@ def run(args, unknown_args):
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
     benchmark.run()
+    cute_device = get_cute_device_str(params["device"])
+    params["path_out"] = os.path.join(params["path_out"], cute_device)
     save_json(params)
