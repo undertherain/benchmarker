@@ -7,7 +7,7 @@ class Package(setup_boilerplate.Package):
 
     """Package metadata."""
 
-    name = 'protonn'
+    name = 'benchmarker'
     description = 'performance benchamrking framework'
     url = "https://benchmarker.blackbird.pw/"
     classifiers = [
