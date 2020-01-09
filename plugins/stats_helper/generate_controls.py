@@ -3,16 +3,15 @@ import os
 import pandas
 from nikola.plugin_categories import ShortcodePlugin
 from mako.template import Template
-import importlib
-import importlib.util
-#from cute_device import get_cute_device_str
+#import importlib
+#import importlib.util
+from benchmarker.util.cute_device import get_cute_device_str
 
 plugin_path = os.path.dirname(os.path.realpath(__file__))
 
-spec = importlib.util.spec_from_file_location("module.name", os.path.join(plugin_path, "cute_device.py"))
-foo = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(foo)
-get_cute_device_str = foo.get_cute_device_str
+#spec = importlib.util.spec_from_file_location("module.name", os.path.join(plugin_path, "cute_device.py"))
+#foo = importlib.util.module_from_spec(spec)
+#spec.loader.exec_module(foo)
 
 def read_file(filename):
     with open(filename) as f:
