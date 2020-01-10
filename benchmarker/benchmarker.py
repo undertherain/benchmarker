@@ -62,9 +62,10 @@ def run(args, unknown_args):
     else:
         params["device"] = params["platform"]["cpu"]["brand"]
 
+    params["path_out"] = os.path.join(params["path_out"], params["problem"]["name"])
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
     benchmark.run()
-    cute_device = get_cute_device_str(params["device"])
+    cute_device = get_cute_device_str(params["device"]).replace(" ", "_")
     params["path_out"] = os.path.join(params["path_out"], cute_device)
     save_json(params)

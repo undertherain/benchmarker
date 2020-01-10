@@ -13,12 +13,9 @@ def get_time_str():
 
 
 def gen_name_output_file(params):
-    name = "{}_{}_{}_{}.json".format(
-        params["problem"]["name"],
+    name = "{}_{}.json".format(
         params["framework"],
-        params["device"],
-        get_time_str()
-        )
+        get_time_str())
     return name
 
 
