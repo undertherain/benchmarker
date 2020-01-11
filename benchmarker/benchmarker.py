@@ -32,6 +32,7 @@ def run(args, unknown_args):
         return
 
     # TODO: load frameowork's metadata from backend
+    # TODO: make framework details nested
     params["framework"] = args.framework
     params["path_out"] = args.path_out
 

@@ -9,7 +9,7 @@ class INeuralNet():
 
     def __init__(self, params, remaining_args=None):
         parser = argparse.ArgumentParser(description='Benchmark deep learning frameworks')
-        parser.add_argument('--mode', default=None)
+        parser.add_argument('--mode', default="training")
         args = parser.parse_args(remaining_args)
         params["mode"] = args.mode
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
