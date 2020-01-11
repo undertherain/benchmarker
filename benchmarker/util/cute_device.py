@@ -16,6 +16,7 @@ def get_cute_device_str(device_name):
               "(Core)(?:\(TM\) )(i5-[0-9]{4}[A-Z])",
               "(?:AMD) (Ryzen [0-9] [0-9]{4}[A-Z])",
               "(?:AMD) (Ryzen [0-9] [0-9]{4})",
+              "(?:AMD) (EPYC [0-9]{4})",
               "i7-3820",
               "i7-3930K"]
     for short in shorts:
