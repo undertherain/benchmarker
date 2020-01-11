@@ -60,7 +60,11 @@ def run(args, unknown_args):
     if params["nb_gpus"] > 0:
         params["device"] = params["platform"]["gpus"][0]["brand"]
     else:
-        params["device"] = params["platform"]["cpu"]["brand"]
+        if "brand" in params["platform"]["cpu"]:
+            params["device"] = params["platform"]["cpu"]["brand"]
+        else:
+            # TODO: add arch when it becomes available thougg sys query
+            params["device"] = "unknown CPU"
 
     params["path_out"] = os.path.join(params["path_out"], params["problem"]["name"])
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
