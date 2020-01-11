@@ -60,7 +60,7 @@ def run(args, unknown_args):
     if params["nb_gpus"] > 0:
         params["device"] = params["platform"]["gpus"][0]["brand"]
     else:
-        if "brand" in params["platform"]["cpu"]:
+        if params["platform"]["cpu"] is not None:
             params["device"] = params["platform"]["cpu"]["brand"]
         else:
             # TODO: add arch when it becomes available thougg sys query
