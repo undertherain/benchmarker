@@ -6,10 +6,11 @@
 
 CXXFLAGS=-Wall -O3  -fopenmp --std=c++14 -msse3  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-info-vec
 
-CFLAGS=-Wall -O3  -fopenmp -msse3  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-info-vec
+CFLAGS=-Wall -O3  -fopenmp  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-info-vec
+# -msse3 
 
 CUDAFLAGS=-O3  -Wno-deprecated-gpu-targets -arch sm_50
-all: run
+# all: run
 
 blas: blas.cpp
 	$(CXX) -o $@ $^ $(CXXFLAGS)
@@ -18,6 +19,6 @@ blas: blas.cpp
 blas_cblas: blas_cblas.cpp
 	$(CXX) -o $@ $^ $(CXXFLAGS) -lopenblas
 
-run: blas blas_cblas
+run: blas_cblas blas 
 	./blas
 	./blas_cblas
