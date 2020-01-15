@@ -1,4 +1,4 @@
-./PHONY: run
+.PHONY: run
 
 #for icpc
 #source /opt/ohpc/pub/compiler/intel/compilers_and_libraries_2016.0.109/linux/bin/compilervars.sh  intel64
@@ -10,14 +10,15 @@ CFLAGS=-Wall -O3  -fopenmp  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-i
 # -msse3 
 
 CUDAFLAGS=-O3  -Wno-deprecated-gpu-targets -arch sm_50
+
 # all: run
 
-blas: blas.cpp
-	$(CXX) -o $@ $^ $(CXXFLAGS)
+blas: blas.cpp config.h
+	$(CXX) -o $@ blas.cpp $(CXXFLAGS)
 
 # TODO: make blas library a parameter
-blas_cblas: blas_cblas.cpp
-	$(CXX) -o $@ $^ $(CXXFLAGS) -lopenblas
+blas_cblas: blas_cblas.cpp config.h
+	$(CXX) -o $@ blas_cblas.cpp $(CXXFLAGS) -lopenblas
 
 run: blas_cblas blas 
 	./blas
