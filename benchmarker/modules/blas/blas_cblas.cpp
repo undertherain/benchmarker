@@ -33,7 +33,7 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "done random init\n");
 
     dtime = omp_get_wtime();
-    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, n, k, 1, A, m, B, n, 1, C, m);
+    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, 1, A, m, B, k, 1, C, m);
     dtime = omp_get_wtime() - dtime;
     double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
     double gflops = gflop / dtime;
