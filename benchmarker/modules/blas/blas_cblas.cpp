@@ -27,7 +27,8 @@ int main(int argc, char * argv[]) {
     A = (t_float*) malloc(sizeof(t_float)*m*n);
     B = (t_float*) malloc(sizeof(t_float)*n*k);
     C = (t_float*) malloc(sizeof(t_float)*m*k);
-    for(i=0; i<n*n; i++) { A[i] = rand()/RAND_MAX; B[i] = rand()/RAND_MAX;}
+    for(i=0; i<m*n; i++) { A[i] = rand()/RAND_MAX;}
+    for(i=0; i<n*k; i++) { B[i] = rand()/RAND_MAX;}
     fprintf(stderr, "done random init\n");
 
     dtime = omp_get_wtime();
