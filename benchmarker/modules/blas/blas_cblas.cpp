@@ -26,7 +26,7 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "doing clbas\n");
     A = (t_float*) malloc(sizeof(t_float)*m*n);
     B = (t_float*) malloc(sizeof(t_float)*n*k);
-    C = (t_float*) malloc(sizeof(t_float)*m*n);
+    C = (t_float*) malloc(sizeof(t_float)*m*k);
     for(i=0; i<n*n; i++) { A[i] = rand()/RAND_MAX; B[i] = rand()/RAND_MAX;}
     fprintf(stderr, "done random init\n");
 
