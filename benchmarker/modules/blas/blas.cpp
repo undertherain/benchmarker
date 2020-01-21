@@ -99,16 +99,17 @@ void report_flops(size_t m, size_t n, size_t k, double time)
 
 int main(int argc, char * argv[]) {
     #include "args.hpp"
+
+    dtime = omp_get_wtime();
+    gemmT_omp(A,B,C, n);
+    dtime = omp_get_wtime() - dtime;
+    printf("transpose, openmp\n");
+    report_flops(m, n, k, dtime);
+
     dtime = omp_get_wtime();
     gemm(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
     printf("no transpose  no openmp\n");
-    report_flops(m, n, k, dtime);
-
-    dtime = omp_get_wtime();
-    gemm_omp(A,B,C, n);
-    dtime = omp_get_wtime() - dtime;
-    printf("no transpose, openmp\n");
     report_flops(m, n, k, dtime);
 
     dtime = omp_get_wtime();
@@ -118,10 +119,12 @@ int main(int argc, char * argv[]) {
     report_flops(m, n, k, dtime);
 
     dtime = omp_get_wtime();
-    gemmT_omp(A,B,C, n);
+    gemm_omp(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
-    printf("transpose, openmp\n");
+    printf("no transpose, openmp\n");
     report_flops(m, n, k, dtime);
+
+
 
 
 
