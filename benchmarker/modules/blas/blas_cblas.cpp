@@ -5,7 +5,7 @@
 #include "config.h"
 
 int main(int argc, char * argv[]) {
-    long m, n, k;
+    long unsigned m, n, k;
     if (argc==2) {
         m = atoi(argv[1]);
         n = m;
@@ -32,7 +32,7 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "done random init\n");
 
     dtime = omp_get_wtime();
-    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans,n,n,n, 1, A, n, B, n, 1, C ,n);
+    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, n, k, 1, A, m, B, n, 1, C ,m);
     dtime = omp_get_wtime() - dtime;
     double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
     double gflops = gflop / dtime;
