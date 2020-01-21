@@ -9,12 +9,12 @@ int main() {
     double dtime;
     size_t i;
     // TODO: move this to shared module
-    printf("doing clbas");
+    printf("doing clbas\n");
     A = (t_float*) malloc(sizeof(t_float)*n*n);
     B = (t_float*) malloc(sizeof(t_float)*n*n);
     C = (t_float*) malloc(sizeof(t_float)*n*n);
     for(i=0; i<n*n; i++) { A[i] = rand()/RAND_MAX; B[i] = rand()/RAND_MAX;}
-    printf("done random init");
+    printf("done random init\n");
 
     dtime = omp_get_wtime();
     cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans,n,n,n, 1, A, n, B, n, 1, C ,n);
