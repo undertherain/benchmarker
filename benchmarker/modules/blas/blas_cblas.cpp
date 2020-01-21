@@ -4,6 +4,7 @@
 #include <omp.h>
 #include "config.h"
 
+
 int main(int argc, char * argv[]) {
     // this is super-upgly, but maybe I'll fix it some time later :)
     fprintf(stderr, "doing clbas\n");

@@ -86,27 +86,42 @@ void gemmT_omp(t_float *A, t_float *B, t_float *C, int n)
     free(B2);
 }
 
+
+void report_flops(size_t m, size_t n, size_t k, double time)
+{
+    double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
+    double gflops = gflop / time;
+    printf("time: \t%f\n", time);
+    printf("gflops/s: \t%f\n", gflops);
+    printf("\n");
+}
+
+
 int main(int argc, char * argv[]) {
     #include "args.hpp"
     dtime = omp_get_wtime();
     gemm(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
-    printf("no transpose  no openmp\t%f\n", dtime);
+    printf("no transpose  no openmp\n");
+    report_flops(m, n, k, dtime);
 
     dtime = omp_get_wtime();
     gemm_omp(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
-    printf("no transpose, openmp\t%f\n", dtime);
+    printf("no transpose, openmp\n");
+    report_flops(m, n, k, dtime);
 
     dtime = omp_get_wtime();
     gemmT(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
-    printf("tranpose, no openmp\t%f\n", dtime);
+    printf("tranpose, no openmp\n");
+    report_flops(m, n, k, dtime);
 
     dtime = omp_get_wtime();
     gemmT_omp(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
-    printf("transpose, openmp\t%f\n", dtime);
+    printf("transpose, openmp\n");
+    report_flops(m, n, k, dtime);
 
 
 
