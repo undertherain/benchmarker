@@ -25,4 +25,4 @@ class IGEMM():
         gflop = (2.0 * M * N * K) / (1024 ** 3)
         params["GFLOP"] = gflop
         if params["problem"]["name"] != "gemm":
-            raise Exception("only gemm problem is defined for this framework")
+            raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")

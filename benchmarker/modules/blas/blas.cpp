@@ -87,25 +87,7 @@ void gemmT_omp(t_float *A, t_float *B, t_float *C, int n)
 }
 
 int main(int argc, char * argv[]) {
-    size_t i;
-    t_float *A, *B, *C;
-    double dtime;
-    long m, n, k;
-    if (argc==2)
-        m = atoi(argv[1]);
-        n = m;
-        k = m;
-    if (argc==4)
-        m = atoi(argv[1]);
-        n = atoi(argv[2]);
-        k = atoi(argv[3]);
-
-
-    A = (t_float*) malloc(sizeof(t_float)*m*n);
-    B = (t_float*) malloc(sizeof(t_float)*n*k);
-    C = (t_float*) malloc(sizeof(t_float)*m*k);
-    for(i=0; i<n*n; i++) { A[i] = rand()/RAND_MAX; B[i] = rand()/RAND_MAX;}
-
+    #include "args.hpp"
     dtime = omp_get_wtime();
     gemm(A,B,C, n);
     dtime = omp_get_wtime() - dtime;
