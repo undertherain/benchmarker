@@ -17,6 +17,8 @@ blas: blas.cpp config.h
 	$(CXX) -o $@ blas.cpp $(CXXFLAGS)
 
 # TODO: make blas library a parameter
+# FCC -### -SSL2BLAMP -Kopenmp blas_cblas.cpp -o cblas
+
 blas_cblas: blas_cblas.cpp config.h
 	$(CXX) -o $@ blas_cblas.cpp $(CXXFLAGS) -lopenblas
 
