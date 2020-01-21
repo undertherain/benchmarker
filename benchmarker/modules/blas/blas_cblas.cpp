@@ -33,7 +33,7 @@ int main(int argc, char * argv[]) {
     dtime = omp_get_wtime();
     cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans,n,n,n, 1, A, n, B, n, 1, C ,n);
     dtime = omp_get_wtime() - dtime;
-    double gflop = (2.0 * n * n * n) / (1024 * 1024 * 1024);
+    double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
     double gflops = gflop / dtime;
     printf("time: \t%f\n", dtime);
     printf("gflops/s: \t%f\n", gflops);
