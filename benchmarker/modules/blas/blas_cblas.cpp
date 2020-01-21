@@ -4,7 +4,7 @@
 #include <omp.h>
 #include "config.h"
 
-int main() {    
+int main(int argc, char * argv[]) {    
     t_float *A, *B, *C;
     double dtime;
     size_t i;

@@ -11,7 +11,7 @@ CFLAGS=-Wall -O3  -fopenmp  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-i
 
 CUDAFLAGS=-O3  -Wno-deprecated-gpu-targets -arch sm_50
 
-# all: run
+all: blas blas_cblas
 
 blas: blas.cpp config.h
 	$(CXX) -o $@ blas.cpp $(CXXFLAGS)

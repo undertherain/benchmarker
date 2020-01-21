@@ -53,15 +53,13 @@ class Benchmark(INeuralNet):
 
     def run_internal(self):
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
+        if self.params["nb_gpus"] > 1:
+            raise NotADirectoryError("multyple GPUs not supported yet")
         if self.params["gpus"]:
             device = torch.device("cuda")
         else:
             device = torch.device("cpu")
 
-            # raise RuntimeError("GPU support is not implemented yet")
-            # use_cuda = False
-        # torch.manual_seed(args.seed)
-        # kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
         x_train, y_train = self.load_data()
         x_train = torch.from_numpy(x_train)
         y_train = torch.from_numpy(y_train.astype(np.int64))
