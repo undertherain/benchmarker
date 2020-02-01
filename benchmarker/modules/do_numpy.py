@@ -5,6 +5,7 @@
 from timeit import default_timer as timer
 import numpy as np
 from .i_gemm import IGEMM
+from pypapi import events, papi_high as high
 
 
 class Benchmark(IGEMM):
@@ -21,10 +22,17 @@ class Benchmark(IGEMM):
         b = np.random.random((N, K)).astype(dtype)
         c = np.random.random((M, K)).astype(dtype)
         nb_epoch = 2
+        papi_availalbe = True
+        try:
+            high.start_counters([events.PAPI_SP_OPS,])
+        except:
+            papi_availalbe = False
         time_start = timer()
         for _ in range(nb_epoch):
             c = a @ b # + c
         time_end = timer()
+        if papi_availalbe:
+            self.params["GFLOP_papi"]=high.stop_counters()
         elapsed_time = (time_end - time_start) / nb_epoch
         self.params["time"] = elapsed_time
         self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
