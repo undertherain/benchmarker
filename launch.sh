@@ -21,7 +21,9 @@ for i in {1..64}
 do
 	size=$((i * 2))
     echo $size
-    python3 -m benchmarker --framework=pytorch \
+    python3 -m benchmarker \
+	    --framework=pytorch \
+	    --backend=native \
     	    --problem=resnet50 \
     	    --batch_size=$i \
     	    --problem_size=$size
