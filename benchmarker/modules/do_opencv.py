@@ -4,14 +4,14 @@ from timeit import default_timer as timer
 from .i_neural_net import INeuralNet
 
 
-class BackendOpenCV(INeuralNet):
+class Benchmark(INeuralNet):
 
-    def __init__(self, params):
-        super().__init__(params)
+    def __init__(self, params, extra_args):
+        super().__init__(params, extra_args)
         self.params["channels_first"] = False
         self.params["nb_epoch"] = 1
 
-    def run(self):
+    def run_internal(self):
         params = self.params
         x_train, y_train = self.load_data()
         start = timer()
@@ -29,8 +29,3 @@ class BackendOpenCV(INeuralNet):
         params["time_epoch"] = (end - start) / self.params["nb_epoch"]
         params["framework_full"] = "opencv-" + cv2.__version__
         return self.params
-
-
-def run(params):
-    backend_cv = BackendOpenCV(params)
-    return backend_cv.run()
