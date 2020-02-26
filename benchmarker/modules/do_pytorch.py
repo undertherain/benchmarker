@@ -6,11 +6,21 @@ from timeit import default_timer as timer
 import torch.optim as optim
 # from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
+import argparse
 
 
 class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
+        parser = argparse.ArgumentParser(description='pytorch extra args')
+        parser.add_argument('--backend', default="native")
+        args = parser.parse_args(remaining_args)
+        # TODO: check available 
+        self.params["backend"] = args.backend
+        if self.params["nb_gpus"] > 0:
+            if self.params["backend"] != "native":
+                raise RuntimeError("only native backend is supported for GPUs")
+
         self.params["channels_first"] = True
         self.params["nb_epoch"] = 10
 
@@ -53,6 +63,11 @@ class Benchmark(INeuralNet):
 
     def run_internal(self):
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
+        if self.params["backend"] == "DNNL":
+            torch.backends.mkldnn.enabled = True
+        else:
+            torch.backends.mkldnn.enabled = False
+
         if self.params["nb_gpus"] > 1:
             raise NotADirectoryError("multyple GPUs not supported yet")
         if self.params["gpus"]:
