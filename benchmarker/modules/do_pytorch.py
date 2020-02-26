@@ -7,15 +7,17 @@ import torch.optim as optim
 # from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
 import argparse
+# TODO: should we expect an import error here? 
+import torch.backends.mkldnn
 
 
 class Benchmark(INeuralNet):
-    def __init__(self, params, remaining_args=None):
-        super().__init__(params, remaining_args)
+    def __init__(self, params, extra_args=None):
         parser = argparse.ArgumentParser(description='pytorch extra args')
         parser.add_argument('--backend', default="native")
-        args = parser.parse_args(remaining_args)
+        args, remaining_args = parser.parse_known_args(extra_args)
         # TODO: check available 
+        super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
