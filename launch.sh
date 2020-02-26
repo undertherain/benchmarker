@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -o xtrace
 #/work/alex/data/DL_perf/json
 
