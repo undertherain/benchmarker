@@ -4,10 +4,8 @@ import torch.nn as nn
 # TODO: move this to params
 cnt_channels = 3
 size_image = 224
-cnt_filters = 3
+cnt_filters = 64
 size_kernel = 3
-size_batch = 32
-cnt_repeats = 2
 
 Net = nn.Conv2d(in_channels=cnt_channels,
                 out_channels=cnt_filters,
