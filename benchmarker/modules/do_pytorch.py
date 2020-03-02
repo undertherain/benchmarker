@@ -45,23 +45,22 @@ class Benchmark(INeuralNet):
                     epoch, batch_idx * len(data), len(train_loader.dataset),
                     100. * batch_idx / len(train_loader), loss.item()))
 
-    # def test(args, model, device, test_loader):
-    #     model.eval()
-    #     test_loss = 0
-    #     correct = 0
-    #     with torch.no_grad():
-    #         for data, target in test_loader:
-    #             data, target = data.to(device), target.to(device)
-    #             output = model(data)
-    #             test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
-    #             pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
-    #             correct += pred.eq(target.view_as(pred)).sum().item()
+    def inference(self, model, device, data_loader):
+        test_loss = 0
+        correct = 0
+        with torch.no_grad():
+            for data, target in data_loader:
+                data, target = data.to(device), target.to(device)
+                output = model(data)
+                # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
+                pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
+                # correct += pred.eq(target.view_as(pred)).sum().item()
 
-    #     test_loss /= len(test_loader.dataset)
+        # test_loss /= len(test_loader.dataset)
 
-    #     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-    #         test_loss, correct, len(test_loader.dataset),
-    #         100. * correct / len(test_loader.dataset)))
+        #print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        #    test_loss, correct, len(test_loader.dataset),
+        #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
@@ -92,7 +91,9 @@ class Benchmark(INeuralNet):
                 self.train(model, device, train_loader, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
-            raise NotImplementedError("inference with PyTorch not implemented yet")
+            model.eval()
+            for epoch in range(1, self.params["nb_epoch"] + 1):
+                self.inference(model, device, train_loader)
         # TODO: return stats
         end = timer()
         self.params["time"] = (end - start) / self.params["nb_epoch"]
