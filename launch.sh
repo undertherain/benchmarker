@@ -23,8 +23,10 @@ do
     echo $size
     python3 -m benchmarker \
 	    --framework=pytorch \
+	    --mode=inference \
 	    --backend=native \
     	    --problem=resnet50 \
     	    --batch_size=$i \
-    	    --problem_size=$size
+    	    --problem_size=$size \
+	    --gpu=0
 done
