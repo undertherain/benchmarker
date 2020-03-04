@@ -32,7 +32,7 @@ class Benchmark(IGEMM):
             c = a @ b # + c
         time_end = timer()
         if papi_availalbe:
-            gflop_papi = high.stop_counters() / (1024 ** 3)
+            gflop_papi = high.stop_counters()[0] / (1024 ** 3)
             self.params["GFLOP_papi"] = gflop_papi
         elapsed_time = (time_end - time_start) / nb_epoch
         self.params["time"] = elapsed_time
