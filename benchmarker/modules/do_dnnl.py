@@ -10,6 +10,7 @@ command = [os.path.join(path_benchdnn, "./benchdnn"),
 process = Process(command=command)
 result = process.get_output()
 std_out = result["out"]
-print(type(std_out))
-# parse out
-print(std_out)
+lines = [line for line in std_out.split() if len(line) > 0]
+time = lines[-1].split(":")[-1]
+seconds = float(time) / 1000
+print(seconds)
