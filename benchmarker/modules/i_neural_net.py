@@ -44,6 +44,6 @@ class INeuralNet():
         results = self.run_internal()
         results["time_epoch"] = results["time"]
         results["time_batch"] = results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
-        results["time_sample"] = results["time_epoch"] / results["problem"]["shape_x_train"][0]
+        results["time_sample"] = results["time_batch"] / results["batch_size"]
         results["samples_per_second"] = results["problem"]["shape_x_train"][0] / results["time_epoch"]
         return results
