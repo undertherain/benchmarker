@@ -15,6 +15,7 @@ int main(int argc, char * argv[]) {
     dtime = omp_get_wtime() - dtime;
     double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
     double gflops = gflop / dtime;
+    printf("gflops: \t%f\n", gflop);
     printf("time: \t%f\n", dtime);
     printf("gflops/s: \t%f\n", gflops);
 }
