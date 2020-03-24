@@ -33,7 +33,7 @@ class INeuralNet():
         )
         module_kernel = importlib.import_module(path_kenel)
         get_kernel = getattr(module_kernel, 'get_kernel')
-        self.net = get_kernel(remaining_args)
+        self.net = get_kernel(params, remaining_args)
 
     def load_data(self):
         params = self.params
