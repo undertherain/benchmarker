@@ -16,7 +16,6 @@ class Benchmark(INeuralNet):
         parser = argparse.ArgumentParser(description='pytorch extra args')
         parser.add_argument('--backend', default="native")
         args, remaining_args = parser.parse_known_args(extra_args)
-        # TODO: check available 
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
         if self.params["nb_gpus"] > 0:
@@ -50,7 +49,8 @@ class Benchmark(INeuralNet):
         correct = 0
         with torch.no_grad():
             for data, target in data_loader:
-                data, target = data.to(device), target.to(device)
+                # TODO: add option to keep data on GPU
+                # data, target = data.to(device), target.to(device)
                 output = model(data)
                 # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
                 # TODO: get back softmax for ResNet-like models
@@ -79,10 +79,11 @@ class Benchmark(INeuralNet):
             device = torch.device("cpu")
 
         x_train, y_train = self.load_data()
-        x_train = torch.from_numpy(x_train)
-        y_train = torch.from_numpy(y_train.astype(np.int64))
+        # TODO: make of/on-core optional
+        x_train = torch.from_numpy(x_train).to(device)
+        y_train = torch.from_numpy(y_train.astype(np.int64)).to(device)
         train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
-        train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=True)
+        train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
         model = self.net.to(device)
         # TODO: args for training hyperparameters
