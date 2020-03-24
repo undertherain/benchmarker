@@ -1,6 +1,9 @@
 import torchvision.models as models
 
-Net = models.resnet50()
+
+def get_kernel(remaining_args):
+    return models.resnet50()
+
 
 # import torch.nn as nn
 # import torch.nn.functional as F
