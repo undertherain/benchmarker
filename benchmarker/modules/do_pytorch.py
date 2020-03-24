@@ -43,6 +43,7 @@ class Benchmark(INeuralNet):
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
                     100. * batch_idx / len(train_loader), loss.item()))
+        torch.cuda.synchronize()
 
     def inference(self, model, device, data_loader):
         test_loss = 0
@@ -56,7 +57,7 @@ class Benchmark(INeuralNet):
                 # TODO: get back softmax for ResNet-like models
                 # pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
                 # correct += pred.eq(target.view_as(pred)).sum().item()
-
+        torch.cuda.synchronize()
         # test_loss /= len(test_loader.dataset)
 
         #print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
