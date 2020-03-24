@@ -1,4 +1,8 @@
+import argparse
 from mxnet.gluon.model_zoo import vision
 
-#Net = vision.resnet50_v1(pretrained=False)
-Net = vision.get_model("resnet50_v1")
+
+def get_kernel(params, unparsed_args):
+    parser = argparse.ArgumentParser(description='Benchmark resnet50')
+    parser.parse_args(unparsed_args)
+    return vision.get_model("resnet50_v1")
