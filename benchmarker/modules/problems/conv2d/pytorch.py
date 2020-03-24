@@ -1,9 +1,6 @@
 import argparse
 import torch.nn as nn
 
-# TODO: move this to params
-cnt_channels = 3
-
 # TODO: the CLI interface becoming too clumsy
 # TODO: migrade to json configs
 
@@ -19,7 +16,7 @@ def get_kernel(params, unparsed_args=None):
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
     print(params["problem"])
-    Net = nn.Conv2d(in_channels=cnt_channels,
+    Net = nn.Conv2d(in_channels=params["problem"]["size"][1],
                     out_channels=args.cnt_filters,
                     kernel_size=args.size_kernel,
                     stride=args.stride,

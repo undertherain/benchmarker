@@ -17,15 +17,18 @@ set -o xtrace
 #        done
 #   done
 #done
-for i in {1..64}
+backend=native
+for i in {8..8}
 do
     size=$((i * 2))
     echo $i $size
     python3 -m benchmarker \
         --framework=pytorch \
         --mode=inference \
-        --backend=DNNL \
+        --backend=$backend \
         --problem=conv2d \
         --batch_size=$i \
-        --problem_size=$size
+        --problem_size=$size,3,224,224 \
+	--stride=1 \
+	--gpus=0
 done
