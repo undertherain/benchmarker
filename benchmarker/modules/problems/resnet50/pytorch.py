@@ -1,6 +1,12 @@
+import argparse
 import torchvision.models as models
 
-Net = models.resnet50()
+
+def get_kernel(params, unparsed_args):
+    parser = argparse.ArgumentParser(description='Benchmark resnet50')
+    parser.parse_args(unparsed_args)
+    return models.resnet50()
+
 
 # import torch.nn as nn
 # import torch.nn.functional as F

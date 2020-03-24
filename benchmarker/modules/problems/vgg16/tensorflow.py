@@ -1,9 +1,9 @@
-from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.optimizers import SGD
 
 
 def get_kernel(parsm, unparsed_args):
-    model = ResNet50(weights=None)
+    model = VGG16(weights=None)
     optimizer = SGD()
     model.compile(loss='categorical_crossentropy',
                   optimizer=optimizer,

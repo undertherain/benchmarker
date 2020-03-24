@@ -7,11 +7,11 @@ import os
 class INeuralNet():
     """Interface for all deep learning modules"""
 
-    def __init__(self, params, remaining_args=None):
-        parser = argparse.ArgumentParser(description='Benchmark deep learning frameworks')
+    def __init__(self, params, extra_args=None):
+        parser = argparse.ArgumentParser(description='Benchmark deep learning models')
         parser.add_argument('--mode', default="training")
-        args = parser.parse_args(remaining_args)
-        params["mode"] = args.mode
+        parsed_args, remaining_args = parser.parse_known_args(extra_args)
+        params["mode"] = parsed_args.mode
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
 
         self.params = params
@@ -26,9 +26,14 @@ class INeuralNet():
         if params["mode"] is None:
             params["mode"] = "training"
         assert params["mode"] in ["training", "inference"]
-        mod = importlib.import_module("benchmarker.modules.problems." +
-                                      params["problem"]["name"] + "." + params["framework"])
-        self.net = getattr(mod, 'Net')
+        path_kenel = (
+            f"benchmarker.modules.problems."
+            f"{params['problem']['name']}."
+            f"{params['framework']}"
+        )
+        module_kernel = importlib.import_module(path_kenel)
+        get_kernel = getattr(module_kernel, 'get_kernel')
+        self.net = get_kernel(params, remaining_args)
 
     def load_data(self):
         params = self.params

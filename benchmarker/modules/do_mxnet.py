@@ -3,17 +3,15 @@
 
 This module integrates MxNet framework into the benchmarker
 """
-
-import importlib
 from timeit import default_timer as timer
 import mxnet as mx
 from .i_neural_net import INeuralNet
 
 
-class DoMxnet(INeuralNet):
+class Benchmark(INeuralNet):
 
-    def __init__(self, params):
-        super().__init__(params)
+    def __init__(self, params, unparsed_args):
+        super().__init__(params, unparsed_args)
         self.params["nb_epoch"] = 10
         # TODO: confirm tensor ordering in mxnet
         # self.params["channels_first"] = True
@@ -22,13 +20,10 @@ class DoMxnet(INeuralNet):
         params = self.params
         x_train, y_train = self.load_data()
 
-        mod = importlib.import_module("benchmarker.modules.problems." +
-                                      params["problem"]["name"] + ".mxnet")
-        net = getattr(mod, 'Net')
         data = mx.sym.var('data')
         # if opt.dtype == 'float16':
         #     data = mx.sym.Cast(data=data, dtype=np.float16)
-        out = net(data)
+        out = self.net(data)
         # if opt.dtype == 'float16':
         #     out = mx.sym.Cast(data=out, dtype=np.float32)
         softmax = mx.sym.SoftmaxOutput(out, name='softmax')
@@ -74,8 +69,3 @@ class DoMxnet(INeuralNet):
         self.params["time_epoch"] = (end - start) / params["nb_epoch"]
         self.params["framework_full"] = "MXNet-" + mx.__version__
         return self.params
-
-
-def run(params):
-    mxnet_backend = DoMxnet(params)
-    return mxnet_backend.run()
