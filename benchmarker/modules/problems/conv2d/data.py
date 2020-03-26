@@ -1,22 +1,15 @@
-import numpy as np
-from benchmarker.util.data.cubes import get_cubes
+#import numpy as np
+# from benchmarker.util.data.cubes import get_cubes
 
 # TODO: reuse single code for Imagenet-like data
+from benchmarker.modules.problems.images_randomized import gen_images
 
 
 def get_data(params):
-    """generates sinthetic dataset"""
-    # (cnt_batches, batch, channels, x, h)
-    assert len(params["problem"]["size"]) == 4
+    # TODO: expand to tuple if needed
+    return gen_images(params)
 
-    shape = (params["problem"]["cnt_batches_per_epoch"],
-             params["batch_size"],
-             params["problem"]["size"][1],
-             params["problem"]["size"][2],
-             params["problem"]["size"][3])
-    X = np.random.random(shape).astype(np.float32)
-    Y = np.random.random((params["problem"]["size"][0])).astype(np.int64)
-    return X, Y
+
 
     # TODO: restore making images of different patterns to correspong to different labels
     # if isinstance(params["problem"]["size"], int):

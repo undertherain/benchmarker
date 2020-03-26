@@ -25,10 +25,9 @@ class Benchmark(INeuralNet):
         self.params["channels_first"] = True
         self.params["nb_epoch"] = 6
 
-    def train(self, model, device, train_loader, optimizer, epoch):
+    def train(self, model, device, optimizer, epoch):
         model.train()
-        for batch_idx, (data, target) in enumerate(train_loader):
-            data, target = data.to(device), target.to(device)
+        for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
             output = model(data)
             # print (output.shape, output[0][:10])
@@ -41,8 +40,8 @@ class Benchmark(INeuralNet):
             log_interval = 10
             if batch_idx % log_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    epoch, batch_idx * len(data), len(train_loader.dataset),
-                    100. * batch_idx / len(train_loader), loss.item()))
+                    epoch, batch_idx * len(data), len(self.x_train),
+                    100. * batch_idx / len(self.x_train), loss.item()))
         torch.cuda.synchronize()
 
     def inference(self, model, device):
