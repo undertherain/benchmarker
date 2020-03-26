@@ -1,0 +1,90 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce RTX 2070",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.4.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 6,
+    "nb_gpus": 1,
+    "path_out": "./logs/resnet50/training/RTX_2070",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2582.9967000000006,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8338604032,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8338604032,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.1.2.el7.x86_64-x86_64-with-centos-7.7.1908-Core",
+        "ram": {
+            "total": 270177976320
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 308281344,
+        "cnt_batches_per_epoch": 16.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            512,
+            3,
+            224,
+            224
+        ],
+        "size": 512
+    },
+    "samples_per_second": 167.84234076904085,
+    "time": 3.0504817655310035,
+    "time_batch": 0.19065511034568772,
+    "time_epoch": 3.0504817655310035,
+    "time_sample": 0.005957972198302741
+}

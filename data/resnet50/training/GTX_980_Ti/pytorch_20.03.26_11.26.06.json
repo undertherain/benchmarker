@@ -1,0 +1,100 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce GTX 980 Ti",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.4.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 6,
+    "nb_gpus": 1,
+    "path_out": "./logs/resnet50/training/GTX_980_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2600.477575000001,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla K20Xm",
+                "clock": 732000,
+                "compute_capability": 3.5,
+                "cores": 2688,
+                "memory": 6379143168,
+                "memory_clock": 2600000,
+                "multiprocessors": 14,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma7.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.12.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": 270181457920
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 308281344,
+        "cnt_batches_per_epoch": 16.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            512,
+            3,
+            224,
+            224
+        ],
+        "size": 512
+    },
+    "samples_per_second": 124.23518741732944,
+    "time": 4.121215660745899,
+    "time_batch": 0.2575759787966187,
+    "time_epoch": 4.121215660745899,
+    "time_sample": 0.008049249337394334
+}

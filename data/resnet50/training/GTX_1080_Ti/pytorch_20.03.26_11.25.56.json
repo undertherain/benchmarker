@@ -1,0 +1,80 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce GTX 1080 Ti",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.4.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 6,
+    "nb_gpus": 1,
+    "path_out": "./logs/resnet50/training/GTX_1080_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2493.6165625,
+            "clock_max": 2900.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-957.12.1.el7.x86_64-x86_64-with-centos-7.6.1810-Core",
+        "ram": {
+            "total": 270180261888
+        },
+        "swap": 0
+    },
+    "problem": {
+        "bytes_x_train": 308281344,
+        "cnt_batches_per_epoch": 16.0,
+        "name": "resnet50",
+        "shape_x_train": [
+            512,
+            3,
+            224,
+            224
+        ],
+        "size": 512
+    },
+    "samples_per_second": 178.5692723239317,
+    "time": 2.867234621817867,
+    "time_batch": 0.17920216386361668,
+    "time_epoch": 2.867234621817867,
+    "time_sample": 0.005600067620738021
+}
