@@ -17,7 +17,7 @@ set -o xtrace
 #        done
 #   done
 #done
-backend=native
+backend=DNLL
 for i in {8..8}
 do
     size=$((i * 2))
@@ -29,6 +29,6 @@ do
         --problem=conv2d \
         --batch_size=$i \
         --problem_size=$size,3,224,224 \
-	--stride=1 \
-	--gpus=0
+	--stride=1 #\
+	#--gpus=0
 done
