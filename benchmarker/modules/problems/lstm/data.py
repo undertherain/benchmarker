@@ -6,9 +6,10 @@ def get_data(params):
     # (seq_len, batch, input_size)
     # pre-batch elements
     assert len(params["problem"]["size"]) == 2
+    assert params["problem"]["size"][0] % params["batch_size"] == 0
     params["problem"]["len_sequence"] = 1
 
-    shape = (params["problem"]["size"][0],
+    shape = (params["problem"]["size"][0] // params["batch_size"],
              params["problem"]["len_sequence"],
              params["batch_size"],
              params["problem"]["size"][1])
