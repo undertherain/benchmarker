@@ -19,7 +19,11 @@ class INeuralNet():
         else:
             self.params["batch_size_per_device"] = 32
         self.params["batch_size"] = self.params["batch_size_per_device"]
-        assert params["problem"]["size"][0] % params["batch_size"] == 0
+        if isinstance(params["problem"]["size"], int):
+            params["problem"]["cnt_samples"] = params["problem"]["size"]
+        else:
+            params["problem"]["cnt_samples"] = params["problem"]["size"][0]
+        assert params["problem"]["cnt_samples"] % params["batch_size"] == 0
         if self.params["nb_gpus"] > 0:
             self.params["batch_size"] = self.params["batch_size_per_device"] * self.params["nb_gpus"]
         self.params["channels_first"] = True
@@ -37,7 +41,6 @@ class INeuralNet():
 
     def load_data(self):
         params = self.params
-        params["problem"]["cnt_samples"] = params["problem"]["size"][0]
         params["problem"]["cnt_batches_per_epoch"] = params["problem"]["size"][0] // self.params["batch_size"]
         mod = importlib.import_module("benchmarker.modules.problems." + params["problem"]["name"] + ".data")
         get_data = getattr(mod, 'get_data')
