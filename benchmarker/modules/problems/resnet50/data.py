@@ -2,6 +2,8 @@ from benchmarker.modules.problems.images_randomized import gen_images
 
 
 def get_data(params):
+    if isinstance(params["problem"]["size"], int):
+        params["problem"]["size"] = (params["problem"]["size"], 3, 224, 224)
     assert params["problem"]["size"][1] == 3
     assert params["problem"]["size"][2] == 224
     assert params["problem"]["size"][3] == 224
