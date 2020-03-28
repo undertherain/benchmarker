@@ -51,21 +51,21 @@ class Benchmark(INeuralNet):
             cupy.cuda.Device(id_device).use()
         optimizer = chainer.optimizers.MomentumSGD(lr=0.001, momentum=0.95)
         optimizer.setup(model)
+        for id_epoch in range(self.params["nb_epoch"]):
+            print("epoch ", id_epoch)
+            for data, target in zip(x_train, y_train):
+                if self.params["nb_gpus"] == 1:
+                    # TODO: option for on-core training
+                    data = cupy.array(data)
+                    target = cupy.array(target)
+                pred = model.predictor(data)
+                loss = F.softmax_cross_entropy(pred, target)
+                loss.backward()
+        return
+
+        # using Chainer's native iterators
         x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],)+x_train.shape[2:])
         y_train = y_train.reshape((y_train.shape[0] * y_train.shape[1],))
-        #print(x_train.shape)
-        #exit(-1)
-        # for id_epoch in range(self.params["nb_epoch"]):
-        #     print("epoch ", id_epoch)
-        #     for data, target in zip(x_train, y_train):
-        #         if self.params["nb_gpus"] == 1:
-        #             data = cupy.array(data)
-        #             target = cupy.array(target)
-        #         pred = model.predictor(data)
-        #         loss = F.softmax_cross_entropy(pred, target)
-        #         loss.backward()
-        # return
-
         train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
         if params["nb_gpus"] == 0:
