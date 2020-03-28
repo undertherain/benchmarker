@@ -18,9 +18,9 @@ set -o xtrace
 #   done
 #done
 backend=native
-for i in {8..8}
+for i in {16..16}
 do
-    size=$((i * 2))
+    size=$((i * 4))
     echo $i $size
     python3 -m benchmarker \
         --framework=pytorch \
@@ -29,6 +29,7 @@ do
         --problem=conv2d \
         --batch_size=$i \
         --problem_size=$size,3,224,224 \
-	--stride=1 \
-	--gpus=0
+    	--size_kernel=3 \
+    	--stride=1 \
+	    --gpus=0
 done

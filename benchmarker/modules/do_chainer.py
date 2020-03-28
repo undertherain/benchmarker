@@ -5,6 +5,7 @@
 from timeit import default_timer as timer
 import chainer
 import chainer.links as L
+import chainer.functions as F
 from chainer import training
 from chainer.training import extensions
 from .i_neural_net import INeuralNet
@@ -29,14 +30,13 @@ class Benchmark(INeuralNet):
             print("movin data to gpu")
             import cupy
             cupy.cuda.Device(self.params["gpus"][0]).use()
-            x_train = cupy.array(x_train)
+            # TODO if in core
+            # x_train = cupy.array(x_train)
 
-        batch_size = self.params["batch_size"]
-        cnt_minibatches = (x_train.shape[0] + batch_size - 1) // batch_size
         for id_epoch in range(self.params["nb_epoch"]):
             print("epoch ", id_epoch)
-            for i in range(cnt_minibatches):
-                minibatch = x_train[i * batch_size: (i + 1) * batch_size]
+            for i in range(x_train.shape[0]):
+                minibatch = x_train[i]
                 _ = model.predictor(minibatch)
 
         # TODO: add iterator
@@ -45,8 +45,27 @@ class Benchmark(INeuralNet):
     def do_training(self, model, x_train, y_train):
         params = self.params
         # optimizer = chainer.optimizers.SGD()
+        if params["nb_gpus"] == 1:
+            import cupy
+            id_device = params["gpus"][0]
+            cupy.cuda.Device(id_device).use()
         optimizer = chainer.optimizers.MomentumSGD(lr=0.001, momentum=0.95)
         optimizer.setup(model)
+        for id_epoch in range(self.params["nb_epoch"]):
+            print("epoch ", id_epoch)
+            for data, target in zip(x_train, y_train):
+                if self.params["nb_gpus"] == 1:
+                    # TODO: option for on-core training
+                    data = cupy.array(data)
+                    target = cupy.array(target)
+                pred = model.predictor(data)
+                loss = F.softmax_cross_entropy(pred, target)
+                loss.backward()
+        return
+
+        # using Chainer's native iterators
+        x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],)+x_train.shape[2:])
+        y_train = y_train.reshape((y_train.shape[0] * y_train.shape[1],))
         train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
         if params["nb_gpus"] == 0:
@@ -94,9 +113,9 @@ class Benchmark(INeuralNet):
             id_device = params["gpus"][0]
             chainer.cuda.get_device(id_device).use()
             if use_chainer_x:
-                model.to_device('cuda:0')
+                model.to_device(f'cuda:{id_device}')
             else:
-                model.to_gpu()
+                model.to_gpu(self.params["gpus"][id_device])
 
         # print("X_train:", type(X_train), X_train.shape)
         # print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])

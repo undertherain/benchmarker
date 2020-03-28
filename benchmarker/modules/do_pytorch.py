@@ -25,10 +25,9 @@ class Benchmark(INeuralNet):
         self.params["channels_first"] = True
         self.params["nb_epoch"] = 6
 
-    def train(self, model, device, train_loader, optimizer, epoch):
+    def train(self, model, device, optimizer, epoch):
         model.train()
-        for batch_idx, (data, target) in enumerate(train_loader):
-            data, target = data.to(device), target.to(device)
+        for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
             output = model(data)
             # print (output.shape, output[0][:10])
@@ -41,23 +40,25 @@ class Benchmark(INeuralNet):
             log_interval = 10
             if batch_idx % log_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    epoch, batch_idx * len(data), len(train_loader.dataset),
-                    100. * batch_idx / len(train_loader), loss.item()))
+                    epoch, batch_idx * len(data), len(self.x_train),
+                    100. * batch_idx / len(self.x_train), loss.item()))
         torch.cuda.synchronize()
 
-    def inference(self, model, device, data_loader):
-        test_loss = 0
-        correct = 0
+    def inference(self, model, device):
+        # test_loss = 0
+        # correct = 0
         with torch.no_grad():
-            for data, target in data_loader:
+            for data, target in zip(self.x_train, self.y_train):
                 # TODO: add option to keep data on GPU
                 # data, target = data.to(device), target.to(device)
+                # print(data.shape)
                 output = model(data)
                 # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
                 # TODO: get back softmax for ResNet-like models
                 # pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
                 # correct += pred.eq(target.view_as(pred)).sum().item()
-        torch.cuda.synchronize()
+        if self.params["nb_gpus"] > 0:
+            torch.cuda.synchronize()
         # test_loss /= len(test_loader.dataset)
 
         #print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
@@ -81,10 +82,10 @@ class Benchmark(INeuralNet):
 
         x_train, y_train = self.load_data()
         # TODO: make of/on-core optional
-        x_train = torch.from_numpy(x_train).to(device)
-        y_train = torch.from_numpy(y_train.astype(np.int64)).to(device)
-        train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
-        train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
+        self.x_train = torch.from_numpy(x_train).to(device)
+        self.y_train = torch.from_numpy(y_train.astype(np.int64)).to(device)
+        # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
+        # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
         model = self.net.to(device)
         # TODO: args for training hyperparameters
@@ -92,12 +93,12 @@ class Benchmark(INeuralNet):
         start = timer()
         if self.params["mode"] == "training":
             for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.train(model, device, train_loader, optimizer, epoch)
+                self.train(model, device, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
             model.eval()
             for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.inference(model, device, train_loader)
+                self.inference(model, device)
         # TODO: return stats
         end = timer()
         self.params["time"] = (end - start) / self.params["nb_epoch"]
