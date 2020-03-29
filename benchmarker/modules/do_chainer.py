@@ -64,7 +64,7 @@ class Benchmark(INeuralNet):
         return
 
         # using Chainer's native iterators
-        x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],)+x_train.shape[2:])
+        x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],) + x_train.shape[2:])
         y_train = y_train.reshape((y_train.shape[0] * y_train.shape[1],))
         train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
         # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
