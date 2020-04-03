@@ -11,6 +11,7 @@ class Benchmark():
 
     def run(self):
         params = self.params
+        params["batch_size_per_device"] = params["batch_size"]
         # TODO: move this to problems
         params["problem"]["cnt_filters"] = 64
         # cnt_channels = 3

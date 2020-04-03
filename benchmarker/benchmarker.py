@@ -49,6 +49,7 @@ def run(args, unknown_args):
     if args.problem_size is not None:
         params["problem"]["size"] = ast.literal_eval(args.problem_size)
     if args.batch_size is not None:
+        params["batch_size"] = int(args.batch_size)
         params["batch_size_per_device"] = int(args.batch_size)
     # params["misc"] = args.misc
     if args.gpus:
