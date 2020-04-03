@@ -2,7 +2,11 @@ import os
 from benchmarker.util.abstractprocess import Process
 
 # TODO: get this from env variable, error if not set
-path_benchdnn = "/home/blackbird/Projects_heavy/DL/mkl-dnn/build/tests/benchdnn"
+import os
+print(os.environ['DNNL_HOME'])
+
+path_dnnl = os.environ['DNNL_HOME']
+path_benchdnn = os.path.join(path_dnnl, "tests/benchdnn")
 
 
 class Benchmark():
@@ -28,7 +32,7 @@ class Benchmark():
                     f"kh{params['problem']['size_kernel']}"
                     f"ph1n\"myconv\"")
         # print(spec_run)
-        command = [os.path.join(path_benchdnn, "./benchdnn"),
+        command = [os.path.join(path_benchdnn, "benchdnn"),
                    "--conv",
                    "--mode=p",
                    spec_run]
