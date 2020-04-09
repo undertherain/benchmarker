@@ -17,5 +17,6 @@ int main(int argc, char * argv[]) {
     double gflops = gflop / dtime;
     printf("gflops: \t%f\n", gflop);
     printf("time: \t%f\n", dtime);
+    printf("ips: \t%f\n", 1 / dtime);
     printf("gflops/s: \t%f\n", gflops);
 }
