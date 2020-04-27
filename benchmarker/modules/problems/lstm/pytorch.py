@@ -15,7 +15,7 @@ def get_kernel(params, unparsed_args=None):
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
     # print(params["problem"])
-    Net = nn.LSTM(input_size=params["problem"]["size"][1],
+    Net = nn.LSTM(input_size=params["problem"]["size"][2],
                   hidden_size=args.cnt_units,
                   num_layers=args.cnt_layers,
                   bias=True,
