@@ -12,6 +12,7 @@ def get_kernel(params, unparsed_args=None):
     parser = argparse.ArgumentParser(description='Benchmark lstm kernel')
     parser.add_argument('--cnt_units', type=int, default=512)
     parser.add_argument('--cnt_layers', type=int, default=1)
+    parser.add_argument('--bidirectional', type=bool, default=False)
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
     # print(params["problem"])
@@ -19,5 +20,5 @@ def get_kernel(params, unparsed_args=None):
                   hidden_size=args.cnt_units,
                   num_layers=args.cnt_layers,
                   bias=True,
-                  bidirectional=False)
+                  bidirectional=params["problem"]["bidirectional"])
     return Net
