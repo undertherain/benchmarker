@@ -70,8 +70,10 @@ class Benchmark(INeuralNet):
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
         else:
-            torch.backends.mkldnn.enabled = False
-
+            if self.params["backend"] == "native":
+                torch.backends.mkldnn.enabled = False
+            else:
+                raise RuntimeError("Unknown backend")
         if self.params["nb_gpus"] > 1:
             raise NotADirectoryError("multyple GPUs not supported yet")
         if self.params["gpus"]:
