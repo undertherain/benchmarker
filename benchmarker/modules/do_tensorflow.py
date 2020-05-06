@@ -5,7 +5,6 @@
 import os
 from timeit import default_timer as timer
 from .i_neural_net import INeuralNet
-from benchmarker.util.data import to_categorical
 import tensorflow as tf
 
 
@@ -17,12 +16,10 @@ class Benchmark(INeuralNet):
         self.params["channels_first"] = False
 
     def run_internal(self):
-        # todo set image format
-        data = self.load_data()
 
         os.environ["KERAS_BACKEND"] = "tensorflow"
         if self.params["nb_gpus"] < 1:
-            os.environ['CUDA_VISIBLE_DEVICES'] = ""
+            os.environ["CUDA_VISIBLE_DEVICES"] = ""
         if self.params["nb_gpus"] > 1:
             print("multiple gpus with TF not supported yet")
             return
@@ -32,10 +29,14 @@ class Benchmark(INeuralNet):
         # else:
         #     keras.backend.set_image_data_format("channels_last")
 
+        # todo set image format
+        data = self.load_data()
         x_train, y_train = data
+        # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
+        x_train = x_train.reshape((-1,) + x_train.shape[2:])
+        y_train = y_train.reshape((-1,) + y_train.shape[2:])
 
-        y_train = to_categorical(y_train, num_classes=1000)
-
+        y_train = tf.keras.utils.to_categorical(y_train, num_classes=1000)
 
         if len(y_train.shape) > 1:
             cnt_classes = y_train.shape[1]
@@ -50,7 +51,13 @@ class Benchmark(INeuralNet):
         nb_epoch = 3
         print("train")
         start = timer()
-        model.fit(x_train, y_train, batch_size=self.params["batch_size"], epochs=nb_epoch, verbose=1)
+        model.fit(
+            x_train,
+            y_train,
+            batch_size=self.params["batch_size"],
+            epochs=nb_epoch,
+            verbose=1,
+        )
         end = timer()
         self.params["time"] = (end - start) / nb_epoch
         version_backend = tf.__version__

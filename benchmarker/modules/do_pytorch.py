@@ -7,7 +7,8 @@ import torch.optim as optim
 # from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
 import argparse
-# TODO: should we expect an import error here? 
+# TODO: should we expect an import error here?
+# https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
 import torch.backends.mkldnn
 
 
