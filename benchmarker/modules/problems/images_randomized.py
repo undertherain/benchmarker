@@ -3,7 +3,7 @@ import numpy as np
 
 # TODO: get back generation of somewhat patterned images
 def gen_images(params):
-    #"""generates sinthetic dataset"""
+    """Generates synthetic dataset."""
 
     if (params["problem"]["name"]) == 'conv1d':
         # (cnt_batches, batch, channels, x)
