@@ -13,7 +13,7 @@ def get_data(params):
             params["problem"]["size"] = (params["problem"]["size"], 224, 224, 3)
         assert params["problem"]["size"][1] == 224
         assert params["problem"]["size"][2] == 224
-        assert params["problem"]["size"][3] == 3        
+        assert params["problem"]["size"][3] == 3
     return gen_images(params)
     """generates sinthetic dataset"""
 
