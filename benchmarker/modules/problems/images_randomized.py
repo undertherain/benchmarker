@@ -1,5 +1,4 @@
 import numpy as np
-from benchmarker.util.data.cubes import get_cubes
 
 
 # TODO: get back generation of somewhat patterned images
