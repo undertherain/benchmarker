@@ -17,8 +17,6 @@ class Benchmark(INeuralNet):
         self.params["channels_first"] = False
 
     def run_internal(self):
-        # todo set image format
-        data = self.load_data()
 
         os.environ["KERAS_BACKEND"] = "tensorflow"
         if self.params["nb_gpus"] < 1:
@@ -32,6 +30,8 @@ class Benchmark(INeuralNet):
         # else:
         #     keras.backend.set_image_data_format("channels_last")
 
+        # todo set image format
+        data = self.load_data()
         x_train, y_train = data
 
         y_train = to_categorical(y_train, num_classes=1000)
