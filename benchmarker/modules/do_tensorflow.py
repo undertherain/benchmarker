@@ -19,7 +19,7 @@ class Benchmark(INeuralNet):
 
         os.environ["KERAS_BACKEND"] = "tensorflow"
         if self.params["nb_gpus"] < 1:
-            os.environ['CUDA_VISIBLE_DEVICES'] = ""
+            os.environ["CUDA_VISIBLE_DEVICES"] = ""
         if self.params["nb_gpus"] > 1:
             print("multiple gpus with TF not supported yet")
             return
@@ -51,7 +51,13 @@ class Benchmark(INeuralNet):
         nb_epoch = 3
         print("train")
         start = timer()
-        model.fit(x_train, y_train, batch_size=self.params["batch_size"], epochs=nb_epoch, verbose=1)
+        model.fit(
+            x_train,
+            y_train,
+            batch_size=self.params["batch_size"],
+            epochs=nb_epoch,
+            verbose=1,
+        )
         end = timer()
         self.params["time"] = (end - start) / nb_epoch
         version_backend = tf.__version__
