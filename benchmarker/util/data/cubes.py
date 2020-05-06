@@ -21,10 +21,16 @@ def to_one_hot(Y, cnt_classes):
     return Y_new
 
 
-def main():
-    x, y = get_cubes(2, 1, 4)
-    print(x.shape)
+def test():
+    params = {
+        "dims": 2,
+        "edge": 1,
+        "channels": 4,
+    }
+    X, Y = get_cubes(**params)
+    assert X.shape == (16, 4, 1, 1)
+    assert Y.shape == (16,)
 
 
 if __name__ == "__main__":
-    main()
+    test()
