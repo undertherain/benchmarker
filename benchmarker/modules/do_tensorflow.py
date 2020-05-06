@@ -5,7 +5,6 @@
 import os
 from timeit import default_timer as timer
 from .i_neural_net import INeuralNet
-from benchmarker.util.data import to_categorical
 import tensorflow as tf
 
 
@@ -37,8 +36,7 @@ class Benchmark(INeuralNet):
         x_train = x_train.reshape((-1,) + x_train.shape[2:])
         y_train = y_train.reshape((-1,) + y_train.shape[2:])
 
-        y_train = to_categorical(y_train, num_classes=1000)
-
+        y_train = tf.keras.utils.to_categorical(y_train, num_classes=1000)
 
         if len(y_train.shape) > 1:
             cnt_classes = y_train.shape[1]
