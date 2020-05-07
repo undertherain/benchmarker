@@ -8,7 +8,7 @@
     :target: https://travis-ci.org/undertherain/benchmarker
     :alt: build status from Travis CI
 
-.. image:: https://coveralls.io/repos/github/undertehrain/benchmarker/badge.svg?branch=master
+.. image:: https://coveralls.io/repos/github/undertherain/benchmarker/badge.svg?branch=master
     :target: https://coveralls.io/github/undertherain/benchmarker?branch=master
     :alt: coveralls badge
 
