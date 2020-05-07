@@ -53,9 +53,9 @@ Contributors
 The original version was developed in 2017 by `Aleksandr Drozd <https://blackbird.pw/>`_.
 Since then to the project contributed (in alphabetical order)
 
-- Kevin Brown
+- `Kevin Brown <https://kevinabrown.github.io/>`_
 - Mateusz Bysiek
-- Aleksandr Drozd
+- `Aleksandr Drozd <https://blackbird.pw/>`_
 - Artur Podobas
 - Shweta Salaria
 - Emil Vatai
