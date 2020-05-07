@@ -56,6 +56,6 @@ Since then to the project contributed (in alphabetical order)
 - `Kevin Brown <https://kevinabrown.github.io/>`_
 - `Mateusz Bysiek <https://mbdevpl.github.io/>`_
 - `Aleksandr Drozd <https://blackbird.pw/>`_
-- Artur Podobas
+- `Artur Podobas <http://podobas.net/>`_
 - Shweta Salaria
 - Emil Vatai
