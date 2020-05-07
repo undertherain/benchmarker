@@ -54,7 +54,7 @@ The original version was developed in 2017 by `Aleksandr Drozd <https://blackbir
 Since then to the project contributed (in alphabetical order)
 
 - `Kevin Brown <https://kevinabrown.github.io/>`_
-- Mateusz Bysiek
+- `Mateusz Bysiek <https://mbdevpl.github.io/>`_
 - `Aleksandr Drozd <https://blackbird.pw/>`_
 - Artur Podobas
 - Shweta Salaria
