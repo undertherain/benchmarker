@@ -46,25 +46,16 @@ for example by running
 ``pip3 install [--user] -r requirements.txt``
 
 
-=============
-API Reference
-=============
-
-under development 
-
-
 ============
 Contributors
 ============
 
-Aleksandr Drozd
+The original version was developed in 2017 by Aleksandr Drozd 
+Since then to the project contributed (in alphabetical order)
 
-Kevin Brown
-
-Artur Podobas
-
-Mateusz Bysiek
-
-
-
-
+- Kevin Brown
+- Mateusz Bysiek
+- Aleksandr Drozd
+- Artur Podobas
+- Shweta Salaria
+- Emil Vatai
