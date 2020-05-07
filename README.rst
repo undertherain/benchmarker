@@ -46,25 +46,16 @@ for example by running
 ``pip3 install [--user] -r requirements.txt``
 
 
-=============
-API Reference
-=============
-
-under development 
-
-
 ============
 Contributors
 ============
 
-Aleksandr Drozd
+The original version was developed in 2017 by `Aleksandr Drozd <https://blackbird.pw/>`_.
+Since then to the project contributed (in alphabetical order)
 
-Kevin Brown
-
-Artur Podobas
-
-Mateusz Bysiek
-
-
-
-
+- `Kevin Brown <https://kevinabrown.github.io/>`_
+- `Mateusz Bysiek <https://mbdevpl.github.io/>`_
+- `Aleksandr Drozd <https://blackbird.pw/>`_
+- `Artur Podobas <http://podobas.net/>`_
+- Shweta Salaria
+- Emil Vatai
