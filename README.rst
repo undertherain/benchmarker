@@ -50,7 +50,7 @@ for example by running
 Contributors
 ============
 
-The original version was developed in 2017 by Aleksandr Drozd.
+The original version was developed in 2017 by `Aleksandr Drozd <htts://blackbird.pw/>`_..
 Since then to the project contributed (in alphabetical order)
 
 - Kevin Brown
