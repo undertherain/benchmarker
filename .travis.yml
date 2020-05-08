@@ -19,7 +19,6 @@ install:
   - pip install -U -r requirements.txt
 
 script:
-  - python -m unittest discover
   - python -m coverage run --branch --source . -m unittest discover --verbose
 
 after_success:
