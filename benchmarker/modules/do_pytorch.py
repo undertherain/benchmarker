@@ -43,7 +43,8 @@ class Benchmark(INeuralNet):
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(self.x_train),
                     100. * batch_idx / len(self.x_train), loss.item()))
-        torch.cuda.synchronize()
+        if device.type == "cuda":
+            torch.cuda.synchronize()
 
     def inference(self, model, device):
         # test_loss = 0
