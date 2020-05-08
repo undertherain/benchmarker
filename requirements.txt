@@ -3,7 +3,4 @@ py-cpuinfo
 pydataset
 system_query[cpu, hdd, ram, swap]
 python_papi
-tensorflow
-torch
-torchvision
 # install system_query[all] for GPU systems

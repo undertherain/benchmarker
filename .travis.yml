@@ -12,10 +12,10 @@ python:
 os:
 - linux
 
+before_install:
+  - pip install -r test_requirements.txt
+
 install:
-  - pip install -U coveralls
-  - pip install -U coverage
-  - pip install -U pylint
   - pip install -U -r requirements.txt
 
 script:
