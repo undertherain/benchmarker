@@ -1,6 +1,5 @@
 import sys
 import runpy
-import os
 from io import StringIO
 from contextlib import redirect_stderr, redirect_stdout
 
@@ -13,7 +12,6 @@ def run_module(name: str, *args, run_name: str = "__main__") -> None:
     :param run_name: Entry point's name.
     """
 
-    os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
     sio = StringIO()
     with redirect_stdout(sio), redirect_stderr(sio):
         backup_sys_argv = sys.argv

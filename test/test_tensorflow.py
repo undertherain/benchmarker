@@ -1,12 +1,16 @@
 import unittest
 import logging
 from .helpers import run_module
+import os
 
 logging.basicConfig(level=logging.DEBUG)
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
+# vatai: I think loading TF here makes the tests a little faster :-/
+import tensorflow as tf
 
 
 class TensorflowTests(unittest.TestCase):
-    # TODO(vatai): Run it quietly
     def setUp(self):
         self.name = "benchmarker"
         self.imgnet_args = [
