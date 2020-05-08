@@ -11,8 +11,9 @@ class TensorflowTests(unittest.TestCase):
         self.name = "benchmarker"
         self.imgnet_args = [
             "--framework=tensorflow",
-            "--problem_size=32",
-            "--batch_size=16",
+            "--problem_size=4",
+            "--batch_size=2",
+            "--epochs=1",
         ]
 
     def test_vgg16(self):
