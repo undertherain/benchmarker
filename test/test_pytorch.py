@@ -28,7 +28,7 @@ class TorchTests(unittest.TestCase):
             self.name,
             "--framework=pytorch",
             "--problem conv1d",
-            "--problem_size='(4,4,4)'",
+            "--problem_size='(4, 4, 4)'",
             "--batch_size=64",
             "--mode=inference",
         )
@@ -38,7 +38,7 @@ class TorchTests(unittest.TestCase):
             self.name,
             "--framework=pytorch",
             "--problem conv1d",
-            "--problem_size='(4,4,4,4)'",
+            "--problem_size='(4, 4, 4, 4)'",
             "--batch_size=64",
             "--mode=inference",
         )
@@ -48,7 +48,7 @@ class TorchTests(unittest.TestCase):
             self.name,
             "--framework=pytorch",
             "--problem conv1d_1",
-            "--problem_size='(4,4,4,4)'",
+            "--problem_size='(4, 4, 4, 4)'",
             "--batch_size=64",
             "--mode=inference",
         )
@@ -58,7 +58,27 @@ class TorchTests(unittest.TestCase):
             self.name,
             "--framework=pytorch",
             "--problem conv1d_2",
-            "--problem_size='(4,4,4,4)'",
+            "--problem_size='(4, 4, 4, 4)'",
+            "--batch_size=64",
+            "--mode=inference",
+        )
+
+    def test_conv3d(self):
+        run_module(
+            self.name,
+            "--framework=pytorch",
+            "--problem conv1d_2",
+            "--problem_size='(4, 4, 4, 4, 4)'",
+            "--batch_size=64",
+            "--mode=inference",
+        )
+
+    def test_conv3d_1(self):
+        run_module(
+            self.name,
+            "--framework=pytorch",
+            "--problem conv1d_2",
+            "--problem_size='(4, 4, 4, 4, 4)'",
             "--batch_size=64",
             "--mode=inference",
         )
