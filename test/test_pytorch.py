@@ -82,3 +82,13 @@ class TorchTests(unittest.TestCase):
             "--batch_size=4",
             "--mode=inference",
         )
+
+    def test_lstm(self):
+        run_module(
+            self.name,
+            "--framework=pytorch",
+            "--problem lstm",
+            "--problem_size='(4, 4, 4)'",
+            "--batch_size=4",
+            "--mode=inference",
+        )
