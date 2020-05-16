@@ -4,3 +4,5 @@ pylint
 tensorflow
 torch
 torchvision
+mxnet
+# mxnet-mkl # vatai: ???
