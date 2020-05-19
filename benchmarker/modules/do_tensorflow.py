@@ -17,31 +17,29 @@ class Benchmark(INeuralNet):
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
 
-    def get_tpu_addr(self):
-        """Return grpc address if COLAB_TPU_ADDR is in the environment,
-        otherwise None.
-
-        Can be used to check if a TPU is present."""
-        colab_tpu_addr = "COLAB_TPU_ADDR"
-        if colab_tpu_addr not in os.environ:
-            return None
-        return "grpc://" + os.environ[colab_tpu_addr]
+    def get_strategy(self):
+        try:
+            tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
+            print("Running on TPU ", tpu.cluster_spec().as_dict()["worker"])
+        except ValueError:
+            tpu = None
+            gpus = tf.config.experimental.list_logical_devices("GPU")
+        if tpu:
+            tf.config.experimental_connect_to_cluster(tpu)
+            tf.tpu.experimental.initialize_tpu_system(tpu)
+            strategy = tf.distribute.experimental.TPUStrategy(tpu)
+        elif len(gpus) > 1:  # multiple GPUs in one VM
+            strategy = tf.distribute.MirroredStrategy(gpus)
+        else:  # default strategy that works on CPU and single GPU
+            strategy = tf.distribute.get_strategy()
+        return strategy
 
     def get_kernel(self, module, remaining_args):
         """
         Custom TF `get_kernel` method to handle TPU if
         available. https://www.tensorflow.org/guide/tpu
         """
-        addr = self.get_tpu_addr()
-        if addr:
-            resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu=addr)
-            tf.config.experimental_connect_to_cluster(resolver)
-            tf.tpu.experimental.initialize_tpu_system(resolver)
-            strategy = tf.distribute.experimental.TPUStrategy(resolver)
-            with strategy.scope():
-                super().get_kernel(module, remaining_args)
-        else:
-
+        with self.get_strategy().scope():
             super().get_kernel(module, remaining_args)
 
     def run_internal(self):
