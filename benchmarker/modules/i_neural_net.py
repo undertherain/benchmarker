@@ -32,14 +32,21 @@ class INeuralNet:
         if params["mode"] is None:
             params["mode"] = "training"
         assert params["mode"] in ["training", "inference"]
-        path_kenel = (
-            f"benchmarker.modules.problems."
-            f"{params['problem']['name']}."
-            f"{params['framework']}"
-        )
-        module_kernel = importlib.import_module(path_kenel)
-        get_kernel = getattr(module_kernel, "get_kernel")
-        self.net = get_kernel(params, remaining_args)
+        path = f"benchmarker.modules.problems.{params['problem']['name']}.{params['framework']}"
+        kernel_module = importlib.import_module(path)
+        self.get_kernel(kernel_module, remaining_args)
+
+    def get_kernel(self, module, remaining_args):
+        """Default function to set `self.net`.  The derived do_* classes can
+        override this function if there is some framework specific
+        logic involved (e.g. GPU/TPU management etc).
+
+        :param module: module which implements the framework specific
+        `get_kernel` method.
+        :param remaining_args: (Sub)problem dependent arguments.
+
+        """
+        self.net = module.get_kernel(self.params, remaining_args)
 
     def load_data(self):
         params = self.params
