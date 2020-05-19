@@ -106,15 +106,16 @@ def get_kernel(params, unparsed_args=None):
     assert params["mode"] == "inference"
     parser = argparse.ArgumentParser(description='Benchmark lstm kernel')
     parser.add_argument('--cnt_units', type=int, default=512)
+    parser.add_argument('--cnt_heads', type=int, default=8)
     parser.add_argument('--cnt_layers', type=int, default=1)
     parser.add_argument('--bidirectional', type=bool, default=False)
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
     # print(params["problem"])
     Net = TransformerModel(ntoken=30000,
-                           ninp=768,
-                           nhead=8,
-                           nhid=768,
-                           nlayers=8,
+                           ninp=params["cnt_units"],
+                           nhead=params["cnt_heads"],
+                           nhid=params["cnt_units"],
+                           nlayers=params["cnt_layers"],
                            dropout=0.5)
     return Net
