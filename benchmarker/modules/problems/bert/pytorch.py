@@ -108,11 +108,13 @@ def get_kernel(params, unparsed_args=None):
     parser.add_argument('--cnt_units', type=int, default=512)
     parser.add_argument('--cnt_heads', type=int, default=8)
     parser.add_argument('--cnt_layers', type=int, default=1)
+    parser.add_argument('--cnt_tokens', type=int, default=1)
     parser.add_argument('--bidirectional', type=bool, default=False)
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
     # print(params["problem"])
-    Net = TransformerModel(ntoken=30000,
+    # TODO: use cnt_tokens in data generation as max rand!
+    Net = TransformerModel(ntoken=params["problem"]["cnt_tokens"],
                            ninp=params["problem"]["cnt_units"],
                            nhead=params["problem"]["cnt_heads"],
                            nhid=params["problem"]["cnt_units"],
