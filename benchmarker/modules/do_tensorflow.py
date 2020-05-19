@@ -4,8 +4,10 @@
 
 import os
 from timeit import default_timer as timer
-from .i_neural_net import INeuralNet
+
 import tensorflow as tf
+
+from .i_neural_net import INeuralNet
 
 
 class Benchmark(INeuralNet):
@@ -14,6 +16,33 @@ class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
+
+    def get_tpu_addr(self):
+        """Return grpc address if COLAB_TPU_ADDR is in the environment,
+        otherwise None.
+
+        Can be used to check if a TPU is present."""
+        colab_tpu_addr = "COLAB_TPU_ADDR"
+        if colab_tpu_addr not in os.environ:
+            return None
+        return "grpc://" + os.environ[colab_tpu_addr]
+
+    def get_kernel(self, module, remaining_args):
+        """
+        Custom TF `get_kernel` method to handle TPU if
+        available. https://www.tensorflow.org/guide/tpu
+        """
+        addr = self.get_tpu_addr()
+        if addr:
+            resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu=addr)
+            tf.config.experimental_connect_to_cluster(resolver)
+            tf.tpu.experimental.initialize_tpu_system(resolver)
+            strategy = tf.distribute.experimental.TPUStrategy(resolver)
+            with strategy.scope():
+                super().get_kernel(module, remaining_args)
+        else:
+
+            super().get_kernel(module, remaining_args)
 
     def run_internal(self):
 
