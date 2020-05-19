@@ -113,9 +113,9 @@ def get_kernel(params, unparsed_args=None):
     params["problem"].update(vars(args))
     # print(params["problem"])
     Net = TransformerModel(ntoken=30000,
-                           ninp=params["cnt_units"],
-                           nhead=params["cnt_heads"],
-                           nhid=params["cnt_units"],
-                           nlayers=params["cnt_layers"],
+                           ninp=params["problem"]["cnt_units"],
+                           nhead=params["problem"]["cnt_heads"],
+                           nhid=params["problem"]["cnt_units"],
+                           nlayers=params["problem"]["cnt_layers"],
                            dropout=0.5)
     return Net
