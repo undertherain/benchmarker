@@ -14,9 +14,7 @@ class INeuralNet:
         params["mode"] = parsed_args.mode
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
         self.params = params
-        if "batch_size_per_device" in params:
-            self.params["batch_size_per_device"] = params["batch_size_per_device"]
-        else:
+        if "batch_size_per_device" not in params:
             self.params["batch_size_per_device"] = 32
         self.params["batch_size"] = self.params["batch_size_per_device"]
         if isinstance(params["problem"]["size"], int):
