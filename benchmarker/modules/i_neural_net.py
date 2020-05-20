@@ -8,6 +8,8 @@ class INeuralNet:
     """Interface for all deep learning modules"""
 
     def __init__(self, params, extra_args=None):
+        self.params = params
+
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
@@ -16,7 +18,6 @@ class INeuralNet:
         assert params["mode"] in ["training", "inference"]
 
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
-        self.params = params
         if "batch_size_per_device" not in params:
             self.params["batch_size_per_device"] = 32
         self.params["batch_size"] = self.params["batch_size_per_device"]
