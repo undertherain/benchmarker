@@ -2,7 +2,7 @@
 This is transformer-based language model for benchmarker
 it is based on the torch sample code and is not 100% identical
 to the original BERT model from Vaswani et al., 2017 paper.
-It should, however, expose simular performace behaviour.
+It should, however, expose similar performace behaviour.
 
 Multuple parameters cab be specified for this model:
 number of layers, attention heads, hidden size etc.
