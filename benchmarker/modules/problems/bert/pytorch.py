@@ -1,3 +1,18 @@
+"""
+This is transformer-based language model for benchmarker
+it is based on the torch sample code and is not 100% identical
+to the original BERT model from Vaswani et al., 2017 paper.
+It should, however, expose simular performace behaviour.
+
+Multuple parameters cab be cpecified for this model:
+number of layers, attention heads, hidden size etc.
+
+One thing to keep in mind is that this should not be used
+for comparison between different framworks.
+
+Hopefully this should be fixed when we start importing models from ONNX
+"""
+
 import argparse
 import math
 import torch
