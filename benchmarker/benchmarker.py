@@ -29,7 +29,7 @@ def run(args, unknown_args):
         print("available frameworks:")
         for plugin in get_modules():
             print("\t", plugin[3:])
-        return
+        raise Exception
 
     # TODO: load frameowork's metadata from backend
     # TODO: make framework details nested
@@ -39,7 +39,7 @@ def run(args, unknown_args):
     if args.problem is None:
         print("choose a problem to run")
         print("problems supported by {}:".format(args.framework))
-        return
+        raise Exception
     # TODO: get a list of support problems for a given framework
 
     # TODO: load problem's metadata from the problem itself
