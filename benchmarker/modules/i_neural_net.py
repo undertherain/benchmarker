@@ -11,7 +11,10 @@ class INeuralNet:
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
+
         params["mode"] = parsed_args.mode
+        assert params["mode"] in ["training", "inference"]
+
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
         self.params = params
         if "batch_size_per_device" not in params:
@@ -27,9 +30,6 @@ class INeuralNet:
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]
             )
         self.params["channels_first"] = True
-        if params["mode"] is None:
-            params["mode"] = "training"
-        assert params["mode"] in ["training", "inference"]
         path = f"benchmarker.modules.problems.{params['problem']['name']}.{params['framework']}"
         kernel_module = importlib.import_module(path)
         self.get_kernel(kernel_module, remaining_args)
