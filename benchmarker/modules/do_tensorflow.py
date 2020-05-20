@@ -4,8 +4,10 @@
 
 import os
 from timeit import default_timer as timer
-from .i_neural_net import INeuralNet
+
 import tensorflow as tf
+
+from .i_neural_net import INeuralNet
 
 
 class Benchmark(INeuralNet):
@@ -14,6 +16,37 @@ class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
+
+    def get_strategy(self):
+        try:
+            tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
+        except ValueError:
+            tpu = None
+            gpus = tf.config.experimental.list_logical_devices("GPU")
+        if tpu:
+            tf.config.experimental_connect_to_cluster(tpu)
+            tf.tpu.experimental.initialize_tpu_system(tpu)
+            strategy = tf.distribute.experimental.TPUStrategy(tpu)
+            worker_str = tpu.cluster_spec().as_dict()["worker"]
+            rep = strategy.num_replicas_in_sync
+            self.params["device"] = "COLAB TPU"
+            self.params["tpus"] = {
+                "worker_srt": worker_str,
+                "num_replicas_in_sync": rep,
+            }
+        elif len(gpus) > 1:  # multiple GPUs in one VM
+            strategy = tf.distribute.MirroredStrategy(gpus)
+        else:  # default strategy that works on CPU and single GPU
+            strategy = tf.distribute.get_strategy()
+        return strategy
+
+    def get_kernel(self, module, remaining_args):
+        """
+        Custom TF `get_kernel` method to handle TPU if
+        available. https://www.tensorflow.org/guide/tpu
+        """
+        with self.get_strategy().scope():
+            super().get_kernel(module, remaining_args)
 
     def run_internal(self):
 
