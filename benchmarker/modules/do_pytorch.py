@@ -31,9 +31,8 @@ class Benchmark(INeuralNet):
         for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
             output = model(data)
-            # print (output.shape, output[0][:10])
-            # exit(-1)
             # loss = F.nll_loss(output, target)
+            # TODO: criterion should be included in the model, deepening on params
             criterion = nn.CrossEntropyLoss()
             loss = criterion(output, target)
             loss.backward()

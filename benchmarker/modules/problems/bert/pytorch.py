@@ -1,10 +1,10 @@
 """
 This is transformer-based language model for benchmarker
-it is based on the torch sample code and is not 100% identical
+it is based on the torch sample code and is not identical
 to the original BERT model from Vaswani et al., 2017 paper.
 It should, however, expose similar performace behaviour.
 
-Multuple parameters cab be specified for this model:
+Multuple parameters can be specified for this model:
 number of layers, attention heads, hidden size etc.
 
 One thing to keep in mind is that this should not be used
@@ -108,7 +108,9 @@ class TransformerModel(nn.Module):
         src = self.pos_encoder(src)
         output = self.transformer_encoder(src, self.src_mask)
         output = self.decoder(output)
-        return F.log_softmax(output, dim=-1)
+        # TODO: return softmax or cross_entropy depending on the mode
+        return output
+        # return F.log_softmax(output, dim=-1)
 
 
 def get_kernel(params, unparsed_args=None):
@@ -117,7 +119,7 @@ def get_kernel(params, unparsed_args=None):
     parser.add_argument('--cnt_units', type=int, default=512)
     parser.add_argument('--cnt_heads', type=int, default=8)
     parser.add_argument('--cnt_layers', type=int, default=1)
-    parser.add_argument('--cnt_tokens', type=int, default=1)
+    parser.add_argument('--cnt_tokens', type=int, default=1000)
     parser.add_argument('--bidirectional', type=bool, default=False)
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
