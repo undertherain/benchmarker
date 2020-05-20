@@ -20,13 +20,14 @@ class Benchmark(INeuralNet):
     def get_strategy(self):
         try:
             tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
-            print("Running on TPU ", tpu.cluster_spec().as_dict()["worker"])
         except ValueError:
             tpu = None
             gpus = tf.config.experimental.list_logical_devices("GPU")
         if tpu:
             tf.config.experimental_connect_to_cluster(tpu)
             tf.tpu.experimental.initialize_tpu_system(tpu)
+            worker_str = tpu.cluster_spec().as_dict()["worker"]
+            self.params["device"] = "COLAB TPU: {}".format(worker_str)
             strategy = tf.distribute.experimental.TPUStrategy(tpu)
         elif len(gpus) > 1:  # multiple GPUs in one VM
             strategy = tf.distribute.MirroredStrategy(gpus)
