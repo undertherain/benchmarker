@@ -4,7 +4,7 @@ it is based on the torch sample code and is not 100% identical
 to the original BERT model from Vaswani et al., 2017 paper.
 It should, however, expose simular performace behaviour.
 
-Multuple parameters cab be cpecified for this model:
+Multuple parameters cab be specified for this model:
 number of layers, attention heads, hidden size etc.
 
 One thing to keep in mind is that this should not be used
@@ -109,12 +109,6 @@ class TransformerModel(nn.Module):
         output = self.transformer_encoder(src, self.src_mask)
         output = self.decoder(output)
         return F.log_softmax(output, dim=-1)
-
-    def truncate(self):
-        self.zero_grad()
-
-    def reset(self):
-        self.zero_grad()
 
 
 def get_kernel(params, unparsed_args=None):
