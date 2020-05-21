@@ -6,7 +6,7 @@ from ..helpers import run_module
 logging.basicConfig(level=logging.DEBUG)
 
 
-class TorchTests(unittest.TestCase):
+class PytorchBertTest(unittest.TestCase):
     def setUp(self):
         self.name = "benchmarker"
 
@@ -19,5 +19,5 @@ class TorchTests(unittest.TestCase):
             "--batch_size=8",
             "--mode=inference",
             "--cnt_units=128",
-            "--cnt_heads=4"
+            "--cnt_heads=4",
         )
