@@ -107,13 +107,9 @@ class TransformerModel(nn.Module):
         src = self.encoder(src) * math.sqrt(self.ninp)
         src = self.pos_encoder(src)
         output = self.transformer_encoder(src, self.src_mask)
-        #print("bert last: ", output.shape)
         output = output[-1]
         output = self.decoder(output)
-        #print("decoded: ", output.shape)
-        #exit(0)
         # TODO: return softmax or cross_entropy depending on the mode
-        #output = output.
         return output
         # return F.log_softmax(output, dim=-1)
 
