@@ -3,4 +3,6 @@
 /.settings
 logs
 
+*~
+
 __pycache__
