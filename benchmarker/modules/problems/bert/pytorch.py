@@ -67,7 +67,7 @@ class PositionalEncoding(nn.Module):
 class TransformerModel(nn.Module):
     """Container module with an encoder, a recurrent or transformer module, and a decoder."""
 
-    def __init__(self, ntoken, ninp, nhead, nhid, nlayers, dropout=0.5):
+    def __init__(self, ntokens, ninp, nhead, nhid, nlayers, dropout=0.5):
         super(TransformerModel, self).__init__()
         try:
             from torch.nn import TransformerEncoder, TransformerEncoderLayer
@@ -78,10 +78,10 @@ class TransformerModel(nn.Module):
         self.pos_encoder = PositionalEncoding(ninp, dropout)
         encoder_layers = TransformerEncoderLayer(ninp, nhead, nhid, dropout)
         self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
-        self.encoder = nn.Embedding(ntoken, ninp)
+        self.encoder = nn.Embedding(ntokens, ninp)
         self.ninp = ninp
-        self.decoder = nn.Linear(ninp, ntoken)
-
+        self.decoder = nn.Linear(ninp, ntokens)
+        self.ntokens = ntokens
         self.init_weights()
 
     def _generate_square_subsequent_mask(self, sz):
@@ -107,14 +107,19 @@ class TransformerModel(nn.Module):
         src = self.encoder(src) * math.sqrt(self.ninp)
         src = self.pos_encoder(src)
         output = self.transformer_encoder(src, self.src_mask)
+        #print("bert last: ", output.shape)
+        output = output[-1]
         output = self.decoder(output)
+        #print("decoded: ", output.shape)
+        #exit(0)
         # TODO: return softmax or cross_entropy depending on the mode
+        #output = output.
         return output
         # return F.log_softmax(output, dim=-1)
 
 
 def get_kernel(params, unparsed_args=None):
-    assert params["mode"] == "inference"
+    # assert params["mode"] == "inference"
     parser = argparse.ArgumentParser(description='Benchmark lstm kernel')
     parser.add_argument('--cnt_units', type=int, default=512)
     parser.add_argument('--cnt_heads', type=int, default=8)
@@ -125,7 +130,7 @@ def get_kernel(params, unparsed_args=None):
     params["problem"].update(vars(args))
     # print(params["problem"])
     # TODO: use cnt_tokens in data generation as max rand!
-    Net = TransformerModel(ntoken=params["problem"]["cnt_tokens"],
+    Net = TransformerModel(ntokens=params["problem"]["cnt_tokens"],
                            ninp=params["problem"]["cnt_units"],
                            nhead=params["problem"]["cnt_heads"],
                            nhid=params["problem"]["cnt_units"],

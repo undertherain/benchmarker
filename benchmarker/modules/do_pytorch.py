@@ -34,6 +34,7 @@ class Benchmark(INeuralNet):
             # loss = F.nll_loss(output, target)
             # TODO: criterion should be included in the model, deepening on params
             criterion = nn.CrossEntropyLoss()
+            print(output.shape, target.shape)
             loss = criterion(output, target)
             loss.backward()
             optimizer.step()

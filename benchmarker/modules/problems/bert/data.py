@@ -12,5 +12,5 @@ def get_data(params):
              params["problem"]["len_sequence"],
              params["batch_size"])
     X = np.random.random(shape).astype(np.int64)
-    Y = np.ones((cnt_batches))
+    Y = np.ones((cnt_batches, params["batch_size"]))
     return X, Y
