@@ -1,7 +1,7 @@
 """Generate synthetic data for 224x224 images"""
 
 
-from .helpers import gen_classification_data
+from .helpers import gen_classification_data, set_image_size
 
 
 def get_data(params):
@@ -10,11 +10,5 @@ def get_data(params):
     problem, so it can be called by `INeuralNet`.
 
     """
-
-    if isinstance(params["problem"]["size"], int):
-        if params["channels_first"]:
-            params["problem"]["size"] = (params["problem"]["size"], 3, 224, 224)
-        else:
-            params["problem"]["size"] = (params["problem"]["size"], 224, 224, 3)
-
+    set_image_size(params, 224)
     return gen_classification_data(params)

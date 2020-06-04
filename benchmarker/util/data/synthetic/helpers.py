@@ -23,3 +23,18 @@ def gen_classification_data(params):
     X = np.random.random(shape).astype(np.float32)
     Y = np.random.random(shape[:2]).astype(np.int64)
     return X, Y
+
+
+def set_image_size(params, height, width=None):
+    """Set params["problem"]["size"] based on height."""
+
+    if width is None:
+        width = height
+
+    if isinstance(params["problem"]["size"], int):
+        if params["channels_first"]:
+            shape = (3, height, width)
+        else:
+            shape = (height, width, 3)
+
+    params["problem"]["size"] = (params["problem"]["size"],) + shape
