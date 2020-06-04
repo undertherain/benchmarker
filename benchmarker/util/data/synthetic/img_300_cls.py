@@ -1,7 +1,7 @@
 """Generate synthetic data for 300x300 images"""
 
 
-from .helpers import gen_classification_data, set_image_size
+from .helpers import gen_classification_data
 
 
 def get_data(params):
@@ -10,5 +10,4 @@ def get_data(params):
     problem, so it can be called by `INeuralNet`.
 
     """
-    set_image_size(params, 300)
-    return gen_classification_data(params)
+    return gen_classification_data(params, 300)
