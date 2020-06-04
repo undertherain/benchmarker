@@ -63,8 +63,7 @@ class Benchmark(INeuralNet):
         #     keras.backend.set_image_data_format("channels_last")
 
         # todo set image format
-        data = self.load_data()
-        x_train, y_train = data
+        x_train, y_train = self.load_data()
         # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
         x_train = x_train.reshape((-1,) + x_train.shape[-3:])
         y_train = y_train.reshape((-1,))
