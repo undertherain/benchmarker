@@ -4,7 +4,7 @@ import cv2
 
 
 def get_kernel(params, unparsed_args=None):
-    proto = "deploy.prototxt.txt"
+    proto = "res10_300x300_ssd_deploy.prototxt.txt"
     weights = "res10_300x300_ssd_iter_140000.caffemodel"
 
     BASE = Path("~/.cache/benchmarker/models").expanduser()
