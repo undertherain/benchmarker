@@ -65,8 +65,8 @@ class Benchmark(INeuralNet):
         # todo set image format
         x_train, y_train = self.load_data()
         # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
-        x_train = x_train.reshape((-1,) + x_train.shape[-3:])
-        y_train = y_train.reshape((-1,))
+        x_train = x_train.reshape((-1,) + x_train.shape[2:])
+        y_train = y_train.reshape((-1,) + y_train.shape[2:])
 
         y_train = tf.keras.utils.to_categorical(y_train, num_classes=1000)
 
