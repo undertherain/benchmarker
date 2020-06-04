@@ -76,20 +76,19 @@ class Benchmark(INeuralNet):
             cnt_classes = 1
         self.params["cnt_classes"] = cnt_classes
         model = self.net
-        if self.params["mode"] != "training":
-            raise NotADirectoryError("only training is implemented for TF")
-        print("preheat")
-        model.fit(x_train, y_train, batch_size=self.params["batch_size"], epochs=1)
         nb_epoch = 3
-        print("train")
-        start = timer()
-        model.fit(
-            x_train,
-            y_train,
-            batch_size=self.params["batch_size"],
-            epochs=nb_epoch,
-            verbose=1,
-        )
+        bs = self.params["batch_size"]
+        if self.params["mode"] == "training":
+            print("preheat")
+            model.fit(x_train, y_train, batch_size=bs, epochs=1)
+            print("train")
+            start = timer()
+            model.fit(x_train, y_train, batch_size=bs, epochs=nb_epoch, verbose=1)
+        else:
+            # preheat
+            model.predict(x_train, bs)
+            start = timer()
+            model.predict(x_train, bs, verbose=1)
         end = timer()
         self.params["time"] = (end - start) / nb_epoch
         version_backend = tf.__version__
