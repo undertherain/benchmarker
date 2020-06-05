@@ -1,9 +1,10 @@
+# mxnet-mkl # vatai: ???
 coverage
 coveralls
 docutils
+mxnet
+opencv-python
 pylint
 tensorflow
 torch
 torchvision
-mxnet
-# mxnet-mkl # vatai: ???
