@@ -1,5 +1,6 @@
 coverage
 coveralls
+docutils
 pylint
 tensorflow
 torch
