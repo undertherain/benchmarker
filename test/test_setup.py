@@ -36,14 +36,6 @@ def run_pip(*args, **kwargs):
     run_program(pip_exec_name, *args, **kwargs)
 
 
-# TODO: move this to helper module
-def run_module(name: str, *args, run_name: str = '__main__') -> None:
-    backup_sys_argv = sys.argv
-    sys.argv = [name + '.py'] + list(args)
-    runpy.run_module(name, run_name=run_name)
-    sys.argv = backup_sys_argv
-
-
 def import_module(name: str = 'setup') -> 'module':
     setup_module = importlib.import_module(name)
     return setup_module
