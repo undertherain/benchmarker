@@ -239,8 +239,7 @@ def get_kernel(params, unparsed_args=None):
     ssd_cpu = SSD300()
     CACHE = Path("~/.cache/benchmarker").expanduser()
     PATH = CACHE.joinpath("models/nvidia_ssdpyt_fp32_20190225.pt")
-    print(PATH)
-    ckpt = torch.load(PATH)
+    ckpt = torch.load(PATH, map_location=lambda storage, loc: storage)
     ckpt = ckpt["model"]
     if checkpoint_from_distributed(ckpt):
         ckpt = unwrap_distributed(ckpt)
