@@ -31,6 +31,7 @@ class Net4Inference(nn.Module):
         return F.softmax(self.net(x))
 
 
+# TODO: reuse this code for prediction models
 class Net4Train(nn.Module):
     def __init__(self):
         super().__init__()
