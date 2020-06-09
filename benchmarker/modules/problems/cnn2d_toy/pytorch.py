@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from benchmarker.modules.problems.helpers_torch import Net4Inference, Net4Train
 
 
 class Net(nn.Module):
@@ -22,30 +23,10 @@ class Net(nn.Module):
         return h
 
 
-class Net4Inference(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.net = Net()
-
-    def __call__(self, x):
-        return F.softmax(self.net(x))
-
-
-# TODO: reuse this code for prediction models
-class Net4Train(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.net = Net()
-        self.criterion = nn.CrossEntropyLoss()
-
-    def __call__(self, x, t):
-        output = self.net(x)
-        return self.criterion(output, t)
-
-
-def get_kernel(params, unparsed_args=None):
+# TODO: this can be reused as well
+def get_kernel(net, params, unparsed_args=None):
     if params["mode"] == "inference":
-        net = Net4Inference()
+        net = Net4Inference(net)
     else:
-        net = Net4Train()
+        net = Net4Train(net)
     return net
