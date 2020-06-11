@@ -12,10 +12,10 @@ class Net4Inference(nn.Module):
 
 
 class Net4Train(nn.Module):
-    def __init__(self, net):
+    def __init__(self, net, criterion=nn.CrossEntropyLoss()):
         super().__init__()
         self.net = net
-        self.criterion = nn.CrossEntropyLoss()
+        self.criterion = criterion
 
     def __call__(self, x, t):
         output = self.net(x)
