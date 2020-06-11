@@ -24,7 +24,6 @@ class Net(nn.Module):
         return h
 
 
-# TODO: this can be reused as well
 def get_kernel(params, unparsed_args=None):
     net = Net()
     if params["mode"] == "inference":
