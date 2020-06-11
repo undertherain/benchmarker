@@ -10,4 +10,4 @@ def get_data(params):
     problem, so it can be called by `INeuralNet`.
 
     """
-    return gen_classification_data(params, 300)
+    return gen_classification_data(params, 1000, 300)
