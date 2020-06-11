@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from benchmarker.modules.problems.helpers_torch import Net4Both
+from ..helpers_torch import Net4Both
 
 
 class Net(nn.Module):
