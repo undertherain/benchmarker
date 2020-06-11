@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from benchmarker.modules.problems.helpers_torch import Net4Inference, Net4Train
+from benchmarker.modules.problems.helpers_torch import Net4Both
 
 
 class Net(nn.Module):
@@ -26,8 +26,4 @@ class Net(nn.Module):
 
 def get_kernel(params, unparsed_args=None):
     net = Net()
-    if params["mode"] == "inference":
-        net = Net4Inference(net, F.softmax)
-    else:
-        net = Net4Train(net)
-    return net
+    return Net4Both(params, net, F.softmax)

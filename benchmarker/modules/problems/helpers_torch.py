@@ -20,3 +20,10 @@ class Net4Train(nn.Module):
     def __call__(self, x, t):
         output = self.net(x)
         return self.criterion(output, t)
+
+
+def Net4Both(params, net, head=id, criterion=nn.CrossEntropyLoss()):
+    if params["mode"] == "inference":
+        return Net4Inference(net, head)
+    else:
+        return Net4Train(net, criterion)
