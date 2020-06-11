@@ -1,6 +1,7 @@
 begins
 py-cpuinfo
+pycocotools
 pydataset
-system_query[cpu, hdd, ram, swap]
 python_papi
+system_query[cpu, hdd, ram, swap]
 # install system_query[all] for GPU systems
