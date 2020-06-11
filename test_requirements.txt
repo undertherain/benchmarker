@@ -2,7 +2,6 @@
 coverage
 coveralls
 mxnet
-opencv-python
 pylint
 tensorflow
 torch

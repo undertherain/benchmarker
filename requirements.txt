@@ -1,4 +1,5 @@
 begins
+opencv-python
 py-cpuinfo
 pycocotools
 pydataset
