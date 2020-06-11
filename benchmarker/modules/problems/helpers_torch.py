@@ -1,14 +1,14 @@
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class Net4Inference(nn.Module):
-    def __init__(self, net):
+    def __init__(self, net, head=id):
         super().__init__()
         self.net = net
+        self.head = head
 
     def __call__(self, x):
-        return F.softmax(self.net(x))
+        return self.head(self.net(x))
 
 
 class Net4Train(nn.Module):

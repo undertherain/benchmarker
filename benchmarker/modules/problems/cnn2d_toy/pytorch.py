@@ -28,7 +28,7 @@ class Net(nn.Module):
 def get_kernel(params, unparsed_args=None):
     net = Net()
     if params["mode"] == "inference":
-        net = Net4Inference(net)
+        net = Net4Inference(net, F.softmax)
     else:
         net = Net4Train(net)
     return net
