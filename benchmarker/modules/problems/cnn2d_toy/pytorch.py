@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from benchmarker.modules.problems.helpers_torch import Net4Inference, Net4Train
 
 
@@ -24,7 +25,8 @@ class Net(nn.Module):
 
 
 # TODO: this can be reused as well
-def get_kernel(net, params, unparsed_args=None):
+def get_kernel(params, unparsed_args=None):
+    net = Net()
     if params["mode"] == "inference":
         net = Net4Inference(net)
     else:
