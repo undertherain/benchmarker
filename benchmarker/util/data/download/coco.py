@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import cv2
 from pycocotools.coco import COCO
 
 from helpers import get_file
@@ -22,9 +23,10 @@ def get_data(params, N=20):
         return get_file(fname, imgUrl, cache_subdir="images", cache_dir=COCODIR)
 
     file_paths = map(_get_file, imgStructs)
-
-    return list(file_paths)
+    X = list(map(cv2.imread, file_paths))
+    return X
 
 
 if __name__ == "__main__":
-    print(get_data(None))
+    for arr in get_data(None):
+        print(arr.shape)
