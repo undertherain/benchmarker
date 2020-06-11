@@ -26,4 +26,4 @@ class Net(nn.Module):
 
 def get_kernel(params, unparsed_args=None):
     net = Net()
-    return Net4Both(params, net, F.softmax)
+    return Net4Both(params, net, lambda t1: F.softmax(t1, dim=1))
