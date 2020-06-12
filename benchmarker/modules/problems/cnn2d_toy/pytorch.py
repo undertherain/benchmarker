@@ -11,7 +11,7 @@ class Net(nn.Module):
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=2)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=2)
         # TODO: make sure we check cnt_classes
-        self.dense1 = nn.Linear(1577088, 2)
+        self.dense1 = nn.Linear(1577088, 4)
 
     def __call__(self, x):
         h = x
@@ -26,4 +26,4 @@ class Net(nn.Module):
 
 def get_kernel(params, unparsed_args=None):
     net = Net()
-    return Net4Both(params, net, lambda t1: F.softmax(t1, dim=-1))
+    return Net4Both(params, net, lambda t: F.softmax(t, dim=-1))
