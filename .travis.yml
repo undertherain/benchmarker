@@ -19,6 +19,7 @@ install:
   - mkdir -p ~/.cache/benchmarker/models
   - wget https://github.com/thegopieffect/computer_vision/raw/master/CAFFE_DNN/deploy.prototxt.txt -O ~/.cache/benchmarker/models/res10_300x300_ssd_deploy.prototxt.txt
   - wget https://github.com/thegopieffect/computer_vision/raw/master/CAFFE_DNN/res10_300x300_ssd_iter_140000.caffemodel -O ~/.cache/benchmarker/models/res10_300x300_ssd_iter_140000.caffemodel
+  - wget https://api.ngc.nvidia.com/v2/models/nvidia/ssdpyt_fp32/versions/1/files/nvidia_ssdpyt_fp32_20190225.pt -O ~/.cache/benchmarker/models/nvidia_ssdpyt_fp32_20190225.pt
   - pip install -U -r requirements.txt
 
 script:
