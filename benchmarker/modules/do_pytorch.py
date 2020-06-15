@@ -30,11 +30,11 @@ class Benchmark(INeuralNet):
         model.train()
         for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
-            output = model(data)
+            loss = model(data, target)
             # loss = F.nll_loss(output, target)
             # TODO: criterion should be included in the model, deepening on params
-            criterion = nn.CrossEntropyLoss()
-            loss = criterion(output, target)
+            #criterion = nn.CrossEntropyLoss()
+            #loss = criterion(output, target)
             loss.backward()
             optimizer.step()
             log_interval = 10
