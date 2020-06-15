@@ -34,7 +34,7 @@ class Benchmark(INeuralNet):
                 "worker_srt": worker_str,
                 "num_replicas_in_sync": rep,
             }
-        elif len(gpus) > 1:  # multiple GPUs in one VM
+        elif len(gpus) > 1 and self.params["nb_gpus"] > 0:  # multiple GPUs in one VM
             strategy = tf.distribute.MirroredStrategy(gpus)
         else:  # default strategy that works on CPU and single GPU
             strategy = tf.distribute.get_strategy()
