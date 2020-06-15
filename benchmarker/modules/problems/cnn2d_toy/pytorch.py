@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ..helpers_torch import Net4Both
+from ..helpers_torch import Classifier
 
 
 class Net(nn.Module):
@@ -26,4 +26,4 @@ class Net(nn.Module):
 
 def get_kernel(params, unparsed_args=None):
     net = Net()
-    return Net4Both(params, net, lambda t: F.softmax(t, dim=-1))
+    return Classifier(params, net)
