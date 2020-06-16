@@ -16,6 +16,12 @@ class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
+        os.environ["KERAS_BACKEND"] = "tensorflow"
+        if self.params["nb_gpus"] < 1:
+            os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+        if self.params["nb_gpus"] > 1:
+            print("multiple gpus with TF not supported yet")
+            return
 
     def get_strategy(self):
         try:
@@ -49,13 +55,6 @@ class Benchmark(INeuralNet):
             super().get_kernel(module, remaining_args)
 
     def run_internal(self):
-
-        os.environ["KERAS_BACKEND"] = "tensorflow"
-        if self.params["nb_gpus"] < 1:
-            os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-        if self.params["nb_gpus"] > 1:
-            print("multiple gpus with TF not supported yet")
-            return
 
         # if params["channels_first"]:
         #     keras.backend.set_image_data_format("channels_first")
