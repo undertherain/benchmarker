@@ -52,7 +52,7 @@ class Benchmark(INeuralNet):
 
         os.environ["KERAS_BACKEND"] = "tensorflow"
         if self.params["nb_gpus"] < 1:
-            os.environ["CUDA_VISIBLE_DEVICES"] = ""
+            os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
         if self.params["nb_gpus"] > 1:
             print("multiple gpus with TF not supported yet")
             return
