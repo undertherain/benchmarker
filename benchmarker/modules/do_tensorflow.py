@@ -40,10 +40,19 @@ class Benchmark(INeuralNet):
                 "worker_srt": worker_str,
                 "num_replicas_in_sync": rep,
             }
-        elif len(gpus) > 1 and self.params["nb_gpus"] > 0:  # multiple GPUs in one VM
+        elif len(gpus) > 1 and self.params["nb_gpus"] > 0:
+            # TODO: compare requested and evailable GPUs
             strategy = tf.distribute.MirroredStrategy(gpus)
-        else:  # default strategy that works on CPU and single GPU
+        elif self.params["nb_gpus"] == 1:
+            # TODO: check if GPU is actually available
+            if tf.test.gpu_device_name():
+                strategy = tf.distribute.get_strategy()
+            else:
+                raise RuntimeError("No GPU found")
+        else:
+            # TODO: make sure we run on CPU
             strategy = tf.distribute.get_strategy()
+
         return strategy
 
     def get_kernel(self, module, remaining_args):
@@ -51,7 +60,8 @@ class Benchmark(INeuralNet):
         Custom TF `get_kernel` method to handle TPU if
         available. https://www.tensorflow.org/guide/tpu
         """
-        with self.get_strategy().scope():
+        #with self.get_strategy().scope():
+        with tf.device('/CPU:0'):
             super().get_kernel(module, remaining_args)
 
     def run_internal(self):
