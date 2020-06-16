@@ -3,8 +3,9 @@
 """
 
 import os
-import tensorflow as tf
 from timeit import default_timer as timer
+
+import tensorflow as tf
 
 from .i_neural_net import INeuralNet
 
@@ -40,16 +41,13 @@ class Benchmark(INeuralNet):
                 "num_replicas_in_sync": rep,
             }
         elif len(gpus) > 1 and self.params["nb_gpus"] > 0:
-            # TODO: compare requested and evailable GPUs
             strategy = tf.distribute.MirroredStrategy(gpus)
         elif self.params["nb_gpus"] == 1:
-            # TODO: check if GPU is actually available
             if tf.test.gpu_device_name():
                 strategy = tf.distribute.get_strategy()
             else:
                 raise RuntimeError("No GPU found")
-        else:
-            # TODO: make sure we run on CPU
+        else:  # Make sure we run on CPU
             strategy = tf.distribute.get_strategy()
 
         return strategy
