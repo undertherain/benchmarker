@@ -14,8 +14,14 @@ class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
     def __init__(self, params, remaining_args=None):
+        if params["nb_gpus"] < 1:
+            os.environ["CUDA_VISIBLE_DEVICES"] = ""
+        if params["nb_gpus"] > 1:
+            print("multiple gpus with TF not supported yet")
+            return
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
+        os.environ["KERAS_BACKEND"] = "tensorflow"
 
     def get_strategy(self):
         try:
@@ -34,10 +40,16 @@ class Benchmark(INeuralNet):
                 "worker_srt": worker_str,
                 "num_replicas_in_sync": rep,
             }
-        elif len(gpus) > 1:  # multiple GPUs in one VM
+        elif len(gpus) > 1 and self.params["nb_gpus"] > 0:
             strategy = tf.distribute.MirroredStrategy(gpus)
-        else:  # default strategy that works on CPU and single GPU
+        elif self.params["nb_gpus"] == 1:
+            if tf.test.gpu_device_name():
+                strategy = tf.distribute.get_strategy()
+            else:
+                raise RuntimeError("No GPU found")
+        else:  # Make sure we run on CPU
             strategy = tf.distribute.get_strategy()
+
         return strategy
 
     def get_kernel(self, module, remaining_args):
@@ -49,13 +61,6 @@ class Benchmark(INeuralNet):
             super().get_kernel(module, remaining_args)
 
     def run_internal(self):
-
-        os.environ["KERAS_BACKEND"] = "tensorflow"
-        if self.params["nb_gpus"] < 1:
-            os.environ["CUDA_VISIBLE_DEVICES"] = ""
-        if self.params["nb_gpus"] > 1:
-            print("multiple gpus with TF not supported yet")
-            return
 
         # if params["channels_first"]:
         #     keras.backend.set_image_data_format("channels_first")
