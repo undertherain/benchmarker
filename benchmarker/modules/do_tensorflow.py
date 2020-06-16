@@ -3,6 +3,7 @@
 """
 
 import os
+import tensorflow as tf
 from timeit import default_timer as timer
 
 from .i_neural_net import INeuralNet
@@ -22,7 +23,6 @@ class Benchmark(INeuralNet):
         os.environ["KERAS_BACKEND"] = "tensorflow"
 
     def get_strategy(self):
-        import tensorflow as tf
         try:
             tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
         except ValueError:
@@ -63,7 +63,6 @@ class Benchmark(INeuralNet):
             super().get_kernel(module, remaining_args)
 
     def run_internal(self):
-        import tensorflow as tf
 
         # if params["channels_first"]:
         #     keras.backend.set_image_data_format("channels_first")
