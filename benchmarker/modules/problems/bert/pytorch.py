@@ -29,7 +29,6 @@ class BertInference(nn.Module):
 
 
 def get_kernel(params, unparsed_args=None):
-    raise RuntimeError(str(unparsed_args))
     assert unparsed_args == []
     net = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", config=config)
     if params["mode"] == "inference":
