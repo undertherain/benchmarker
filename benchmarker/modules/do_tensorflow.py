@@ -16,9 +16,6 @@ class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
         gpus = params["gpus"]
         os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, gpus)) if gpus else "-1"
-        if params["nb_gpus"] > 1:
-            print("multiple gpus with TF not supported yet")
-            return
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
         os.environ["KERAS_BACKEND"] = "tensorflow"
