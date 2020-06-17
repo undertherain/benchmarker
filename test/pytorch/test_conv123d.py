@@ -12,6 +12,7 @@ class PytorchConv123dTests(unittest.TestCase):
             "benchmarker",
             "--framework=pytorch",
             "--batch_size=2",
+            "--nb_epoch=1",
             "--mode=inference",
             "--platform_info=no"
         ]
