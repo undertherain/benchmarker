@@ -15,5 +15,7 @@ def get_data(params):
 
     # TODO: num classes in place of num channels
     images = np.random.random(shape).astype(np.float32)
-    masks = np.random.random(shape).astype(np.int8)
+    shape = (params["problem"]["cnt_batches_per_epoch"], params["batch_size"])
+    shape = shape + (params["problem"]["cnt_classes"],) + params["problem"]["size"][2:]
+    masks = np.ones(shape, dtype=np.float32)
     return images, masks

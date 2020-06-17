@@ -18,8 +18,7 @@ class Net4Train(nn.Module):
         self.criterion = criterion
 
     def __call__(self, x, t):
-        outs, _loss_f = self.net(x)
-        print(outs)
+        outs = self.net(x)["out"]
         return self.criterion(outs, t)
 
 
