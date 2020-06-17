@@ -22,6 +22,7 @@ def get_modules():
 
 def run(args, unknown_args):
     params = {}
+    params["platform"] = sysinfo.get_sys_info()
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
