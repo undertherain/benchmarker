@@ -15,8 +15,8 @@ class PytorchBertTest(unittest.TestCase):
             self.name,
             "--framework=pytorch",
             "--problem=bert",
-            "--problem_size=2,8",
-            "--batch_size=8",
+            "--problem_size=4,8",
+            "--batch_size=2",
             "--nb_epoch=1",
             "--mode=inference",
         )
