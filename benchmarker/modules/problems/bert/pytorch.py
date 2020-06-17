@@ -14,7 +14,7 @@ class BertTraining(nn.Module):
 
     def __call__(self, x, t):
         loss, _logits = self.net(input_ids=x,
-                        labels=t)
+                                 labels=t)
         return loss
 
 
