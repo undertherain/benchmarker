@@ -16,7 +16,6 @@ class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
         self.params["channels_first"] = True
-        self.params["nb_epoch"] = 10
 
     def do_inference(self, model, x_train, y_train):
         chainer.enable_backprop = False
