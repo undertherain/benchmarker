@@ -14,8 +14,7 @@ class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
     def __init__(self, params, remaining_args=None):
-        if params["nb_gpus"] < 1:
-            os.environ["CUDA_VISIBLE_DEVICES"] = ""
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(params["nb_gpus"] - 1)
         if params["nb_gpus"] > 1:
             print("multiple gpus with TF not supported yet")
             return
@@ -24,6 +23,8 @@ class Benchmark(INeuralNet):
         os.environ["KERAS_BACKEND"] = "tensorflow"
 
     def get_strategy(self):
+        tf_gpus = tf.config.list_physical_devices("GPU")
+        assert self.params["nb_gpus"] == len(tf_gpus)
         try:
             tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
         except ValueError:
@@ -40,7 +41,7 @@ class Benchmark(INeuralNet):
                 "worker_srt": worker_str,
                 "num_replicas_in_sync": rep,
             }
-        elif len(gpus) > 1 and self.params["nb_gpus"] > 0:
+        elif len(gpus) > 1:
             strategy = tf.distribute.MirroredStrategy(gpus)
         elif self.params["nb_gpus"] == 1:
             if tf.test.gpu_device_name():
