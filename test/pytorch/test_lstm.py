@@ -16,5 +16,4 @@ class PytorchLstmTest(unittest.TestCase):
             "--batch_size=4",
             "--nb_epoch=1",
             "--mode=inference",
-            "--platform_info=no"
         )

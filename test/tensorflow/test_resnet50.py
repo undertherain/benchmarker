@@ -16,7 +16,6 @@ class Resnet50Tests(unittest.TestCase):
             "--problem_size=2",
             "--batch_size=2",
             "--nb_epoch=1",
-            "--platform_info=no"
         ]
 
     def test_resnet50(self):

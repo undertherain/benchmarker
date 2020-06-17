@@ -22,10 +22,6 @@ def get_modules():
 
 def run(args, unknown_args):
     params = {}
-    if args.platform_info:
-        params["platform"] = sysinfo.get_sys_info()
-    else:
-        params["platform"] = {"device": "dummy"}
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
