@@ -24,7 +24,6 @@ class Benchmark(INeuralNet):
                 raise RuntimeError("only native backend is supported for GPUs")
 
         self.params["channels_first"] = True
-        self.params["nb_epoch"] = 6
 
     def train(self, model, device, optimizer, epoch):
         model.train()
