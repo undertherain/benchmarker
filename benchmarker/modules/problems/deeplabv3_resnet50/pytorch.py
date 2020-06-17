@@ -5,8 +5,7 @@ from ..helpers_torch import Classifier
 
 
 def get_kernel(params, unparsed_args):
-    # TODO: assert unparsed args are empty
-    # TODO: make in a per-pixel classifier for training
+    assert unparsed_args == []
     # TODO: cnt classes as parameter
     params["problem"]["cnt_classes"] = 21
     net = deeplabv3_resnet50(num_classes=params["problem"]["cnt_classes"])
