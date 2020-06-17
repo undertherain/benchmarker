@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
+from collections import OrderedDict
 
 
 class Net4Inference(nn.Module):
@@ -18,8 +19,11 @@ class Net4Train(nn.Module):
         self.criterion = criterion
 
     def __call__(self, x, t):
-        # TODO: some models return dictionary with output and loss
-        outs = self.net(x)["out"]
+        outs = self.net(x)
+        # TODO: figure this out. there's a reason why backward finction is returned
+        # precompiled? is it correct to ignore it? 
+        if isinstance(outs, OrderedDict):
+            outs = outs["out"]
         loss = self.criterion(outs, t)
         return loss
 
