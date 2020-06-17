@@ -21,7 +21,7 @@ class Net4Train(nn.Module):
     def __call__(self, x, t):
         outs = self.net(x)
         # TODO: figure this out. there's a reason why backward finction is returned
-        # precompiled? is it correct to ignore it? 
+        # precompiled? is it correct to ignore it?
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
         loss = self.criterion(outs, t)
@@ -37,7 +37,12 @@ def Net4Both(params, net, inference, training):
 
 class ClassifierInference(Net4Inference):
     def __call__(self, x):
-        return F.softmax(self.net(x), dim=-1)
+        outs = self.net(x)
+        # TODO: figure this out. there's a reason why backward finction is returned
+        # precompiled? is it correct to ignore it?
+        if isinstance(outs, OrderedDict):
+            outs = outs["out"]
+        return F.softmax(outs, dim=-1)
 
 
 class ClassifierTraining(Net4Train):
