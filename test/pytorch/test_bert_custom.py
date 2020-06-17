@@ -14,9 +14,11 @@ class PytorchBertTest(unittest.TestCase):
         run_module(
             self.name,
             "--framework=pytorch",
-            "--problem=bert",
-            "--problem_size=2,8",
+            "--problem=bert_custom",
+            "--problem_size=32,32",
             "--batch_size=8",
             "--nb_epoch=1",
             "--mode=inference",
+            "--cnt_units=128",
+            "--cnt_heads=4",
         )
