@@ -14,7 +14,8 @@ class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
     def __init__(self, params, remaining_args=None):
-        os.environ["CUDA_VISIBLE_DEVICES"] = str(params["nb_gpus"] - 1)
+        gpus = params["gpus"]
+        os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, gpus)) if gpus else "-1"
         if params["nb_gpus"] > 1:
             print("multiple gpus with TF not supported yet")
             return
