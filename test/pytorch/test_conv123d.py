@@ -13,6 +13,7 @@ class PytorchConv123dTests(unittest.TestCase):
             "--framework=pytorch",
             "--batch_size=2",
             "--mode=inference",
+            "--platform_info=no"
         ]
 
     def test_conv1d(self):

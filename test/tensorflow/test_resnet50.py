@@ -15,6 +15,7 @@ class Resnet50Tests(unittest.TestCase):
             "--framework=tensorflow",
             "--problem_size=2",
             "--batch_size=2",
+            "--platform_info=no"
         ]
 
     def test_resnet50(self):

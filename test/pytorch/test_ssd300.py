@@ -17,6 +17,7 @@ class PytorchSsd300Tests(unittest.TestCase):
             "--problem_size=4",
             "--batch_size=2",
             "--mode=inference",
+            "--platform_info=no"
         ]
 
     def test_ssd300(self):

@@ -15,6 +15,7 @@ class TensorflowTests(unittest.TestCase):
             "--framework=tensorflow",
             "--problem_size=2",
             "--batch_size=2",
+            "--platform_info=no"
         ]
 
     def test_vgg16(self):

@@ -12,9 +12,11 @@ class INeuralNet:
 
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
+        parser.add_argument("--nb_epoch", type=int, default=10)
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
 
         params["mode"] = parsed_args.mode
+        params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
 
         params["path_out"] = os.path.join(params["path_out"], params["mode"])

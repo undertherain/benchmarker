@@ -13,6 +13,7 @@ def main():
     parser.add_argument('--gpus', default="")
     parser.add_argument('--problem_size', default=None)
     parser.add_argument('--batch_size', default=None)
+    parser.add_argument('--platform_info', default=True)
     # parser.add_argument('--misc')
     # TODO: move this inside benchmarker class
     args, unknown_args = parser.parse_known_args()

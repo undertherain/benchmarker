@@ -14,6 +14,7 @@ class PytorchVgg16Test(unittest.TestCase):
             "--framework=pytorch",
             "--problem_size=4",
             "--batch_size=2",
+            "--platform_info=no"
         ]
 
     def test_vgg16(self):

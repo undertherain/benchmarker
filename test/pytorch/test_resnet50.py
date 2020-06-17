@@ -14,6 +14,7 @@ class PytorchResnet50Test(unittest.TestCase):
             "--framework=pytorch",
             "--problem_size=4",
             "--batch_size=2",
+            "--platform_info=no"
         ]
 
     def test_resnet50(self):

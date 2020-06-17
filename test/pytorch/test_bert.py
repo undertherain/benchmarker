@@ -20,4 +20,5 @@ class PytorchBertTest(unittest.TestCase):
             "--mode=inference",
             "--cnt_units=128",
             "--cnt_heads=4",
+            "--platform_info=no"
         )
