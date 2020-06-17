@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
+from collections import OrderedDict
 
 
 class Net4Inference(nn.Module):
@@ -18,7 +19,13 @@ class Net4Train(nn.Module):
         self.criterion = criterion
 
     def __call__(self, x, t):
-        return self.criterion(self.net(x), t)
+        outs = self.net(x)
+        # TODO: figure this out. there's a reason why backward finction is returned
+        # precompiled? is it correct to ignore it?
+        if isinstance(outs, OrderedDict):
+            outs = outs["out"]
+        loss = self.criterion(outs, t)
+        return loss
 
 
 def Net4Both(params, net, inference, training):
@@ -30,7 +37,12 @@ def Net4Both(params, net, inference, training):
 
 class ClassifierInference(Net4Inference):
     def __call__(self, x):
-        return F.softmax(self.net(x), dim=-1)
+        outs = self.net(x)
+        # TODO: figure this out. there's a reason why backward finction is returned
+        # precompiled? is it correct to ignore it?
+        if isinstance(outs, OrderedDict):
+            outs = outs["out"]
+        return F.softmax(outs, dim=-1)
 
 
 class ClassifierTraining(Net4Train):

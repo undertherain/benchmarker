@@ -85,7 +85,7 @@ class Benchmark(INeuralNet):
         x_train, y_train = self.load_data()
         # TODO: make of/on-core optional
         self.x_train = torch.from_numpy(x_train).to(device)
-        self.y_train = torch.from_numpy(y_train.astype(np.int64)).to(device)
+        self.y_train = torch.from_numpy(y_train).to(device)
         # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
         # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
