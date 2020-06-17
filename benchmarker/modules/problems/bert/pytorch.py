@@ -13,9 +13,19 @@ class BertTraining(nn.Module):
         self.net = net
 
     def __call__(self, x, t):
-        loss, _ = self.net(input_ids=x,
+        loss, _logits = self.net(input_ids=x,
                         labels=t)
         return loss
+
+
+class BertInference(nn.Module):
+    def __init__(self, net):
+        super().__init__()
+        self.net = net
+
+    def __call__(self, x):
+        logits = self.net(input_ids=x)
+        return logits
 
 
 def get_kernel(params, unparsed_args=None):
@@ -23,7 +33,7 @@ def get_kernel(params, unparsed_args=None):
     net = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", config=config)
     if params["mode"] == "inference":
         # return inference(net)
-        raise NotImplemented("OLOLO")
+        return BertInference(net)
     else:
         return BertTraining(net)
     return net
