@@ -13,7 +13,7 @@ class TensorflowTests(unittest.TestCase):
         self.name = "benchmarker"
         self.imgnet_args = [
             "--framework=tensorflow",
-            "--problem_size=4",
+            "--problem_size=2",
             "--batch_size=2",
         ]
 
