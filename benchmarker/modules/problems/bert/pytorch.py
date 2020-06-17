@@ -32,7 +32,6 @@ def get_kernel(params, unparsed_args=None):
     assert unparsed_args == []
     net = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", config=config)
     if params["mode"] == "inference":
-        # return inference(net)
         return BertInference(net)
     else:
         return BertTraining(net)
