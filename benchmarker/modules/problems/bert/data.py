@@ -1,0 +1,14 @@
+import numpy as np
+
+
+def get_data(params):
+    assert params["problem"]["size"][0] % params["batch_size"] == 0
+    params["problem"]["len_sequence"] = params["problem"]["size"][1]
+    cnt_batches = params["problem"]["size"][0] // params["batch_size"]
+    shape = (cnt_batches,
+             params["batch_size"],
+             params["problem"]["len_sequence"],
+             )
+    X = np.random.random(shape).astype(np.int64)
+    Y = np.ones((cnt_batches, params["batch_size"]))
+    return X, Y
