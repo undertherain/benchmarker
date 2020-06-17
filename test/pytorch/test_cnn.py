@@ -14,6 +14,7 @@ class PytorchCNNTest(unittest.TestCase):
             "--framework=pytorch",
             "--problem_size=4",
             "--batch_size=2",
+            "--nb_epoch=1",
         ]
 
     def test_cnn2d_inference(self):

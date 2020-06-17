@@ -12,7 +12,6 @@ class Benchmark(INeuralNet):
 
     def __init__(self, params, unparsed_args):
         super().__init__(params, unparsed_args)
-        self.params["nb_epoch"] = 10
         # TODO: confirm tensor ordering in mxnet
         # self.params["channels_first"] = True
 
