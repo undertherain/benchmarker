@@ -18,7 +18,9 @@ class Net4Train(nn.Module):
         self.criterion = criterion
 
     def __call__(self, x, t):
-        return self.criterion(self.net(x), t)
+        outs, _loss_f = self.net(x)
+        print(outs)
+        return self.criterion(outs, t)
 
 
 def Net4Both(params, net, inference, training):

@@ -1,9 +1,16 @@
+import torch.nn as nn
 from torchvision.models.segmentation import deeplabv3_resnet50
+
+from ..helpers_torch import Net4Train
 
 
 def get_kernel(params, unparsed_args):
-    net = deeplabv3_resnet50()
     # TODO: assert unparsed args are empty
     # TODO: make in a per-pixel classifier for training
-    assert params["mode"] == "inference"
-    return net
+    # TODO: cnt classes as parameter
+    params["problem"]["cnt_classes"] = 21
+    net = deeplabv3_resnet50(num_classes=params["problem"]["cnt_classes"])
+    if params["mode"] == "inference":
+        return net
+    else:
+        return Net4Train(net, nn.BCELoss())
