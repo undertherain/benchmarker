@@ -18,8 +18,10 @@ class Net4Train(nn.Module):
         self.criterion = criterion
 
     def __call__(self, x, t):
+        # TODO: some models return dictionary with output and loss
         outs = self.net(x)["out"]
-        return self.criterion(outs, t)
+        loss = self.criterion(outs, t)
+        return loss
 
 
 def Net4Both(params, net, inference, training):

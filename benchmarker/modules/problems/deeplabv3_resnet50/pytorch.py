@@ -13,4 +13,4 @@ def get_kernel(params, unparsed_args):
     if params["mode"] == "inference":
         return net
     else:
-        return Net4Train(net, nn.BCELoss())
+        return Net4Train(net, nn.CrossEntropyLoss())
