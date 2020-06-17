@@ -21,8 +21,10 @@ class Benchmark(INeuralNet):
         os.environ["KERAS_BACKEND"] = "tensorflow"
 
     def get_strategy(self):
-        tf_gpus = tf.config.list_physical_devices("GPU")
-        assert self.params["nb_gpus"] == len(tf_gpus)
+        gpu_count_same = self.params["nb_gpus"] == len(
+            tf.config.list_physical_devices("GPU")
+        )
+        assert gpu_count_same, "Tensorflow not compiled with GPU support"
         try:
             tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
         except ValueError:
