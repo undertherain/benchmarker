@@ -34,13 +34,13 @@ class Benchmark(INeuralNet):
             # TODO: criterion should be included in the model, deepening on params
             #criterion = nn.CrossEntropyLoss()
             #loss = criterion(output, target)
-            loss.backward()
+            loss.mean().backward()
             optimizer.step()
             log_interval = 10
             if batch_idx % log_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(self.x_train),
-                    100. * batch_idx / len(self.x_train), loss.item()))
+                    100. * batch_idx / len(self.x_train), loss.mean().item()))
         if device.type == "cuda":
             torch.cuda.synchronize()
 
@@ -74,13 +74,7 @@ class Benchmark(INeuralNet):
                 torch.backends.mkldnn.enabled = False
             else:
                 raise RuntimeError("Unknown backend")
-        if self.params["nb_gpus"] > 1:
-            raise NotADirectoryError("multyple GPUs not supported yet")
-        if self.params["gpus"]:
-            torch.cuda.set_device(self.params["gpus"][0])
-            device = torch.device("cuda")
-        else:
-            device = torch.device("cpu")
+        device = torch.device("cuda" if self.params["gpus"] else "cpu")
 
         x_train, y_train = self.load_data()
         # TODO: make of/on-core optional
@@ -89,7 +83,10 @@ class Benchmark(INeuralNet):
         # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
         # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
-        model = self.net.to(device)
+        model = self.net
+        if len(self.params["gpus"]) > 1:
+            model = nn.DataParallel(model)
+        model.to(device)
         # TODO: args for training hyperparameters
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
         start = timer()
