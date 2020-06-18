@@ -74,8 +74,6 @@ class Benchmark(INeuralNet):
                 torch.backends.mkldnn.enabled = False
             else:
                 raise RuntimeError("Unknown backend")
-        if self.params["nb_gpus"] > 1:
-            raise NotADirectoryError("multyple GPUs not supported yet")
         if self.params["gpus"]:
             torch.cuda.set_device(self.params["gpus"][0])
             device = torch.device("cuda")
