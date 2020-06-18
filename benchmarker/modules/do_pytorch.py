@@ -90,6 +90,8 @@ class Benchmark(INeuralNet):
         # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
         model = self.net.to(device)
+        if len(self.params["gpus"]) > 1:
+            model = nn.DataParallel(model)
         # TODO: args for training hyperparameters
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
         start = timer()
