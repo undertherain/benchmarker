@@ -52,7 +52,8 @@ def run(args, unknown_args):
         params["batch_size_per_device"] = int(args.batch_size)
     # params["misc"] = args.misc
     if args.gpus:
-        params["gpus"] = list(map(int, args.gpus.split(',')))
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
+        params["gpus"] = list(map(int, args.gpus.split(",")))
     else:
         params["gpus"] = []
 
