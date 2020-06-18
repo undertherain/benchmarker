@@ -44,10 +44,7 @@ class Benchmark(INeuralNet):
         elif len(gpus) > 1:
             strategy = tf.distribute.MirroredStrategy(gpus)
         elif self.params["nb_gpus"] == 1:
-            if tf.test.gpu_device_name():
-                strategy = tf.distribute.get_strategy()
-            else:
-                raise RuntimeError("No GPU found")
+            strategy = tf.distribute.get_strategy()
         else:  # Make sure we run on CPU
             strategy = tf.distribute.get_strategy()
 
