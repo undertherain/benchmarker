@@ -74,11 +74,7 @@ class Benchmark(INeuralNet):
                 torch.backends.mkldnn.enabled = False
             else:
                 raise RuntimeError("Unknown backend")
-        if self.params["gpus"]:
-            torch.cuda.set_device(self.params["gpus"][0])
-            device = torch.device("cuda")
-        else:
-            device = torch.device("cpu")
+        device = torch.device("cuda" if self.params["gpus"] else "cpu")
 
         x_train, y_train = self.load_data()
         # TODO: make of/on-core optional
