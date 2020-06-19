@@ -2,7 +2,7 @@ import logging
 import os
 import unittest
 
-from ..helpers import run_module
+from benchmarker.benchmarker import run
 
 logging.basicConfig(level=logging.DEBUG)
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -19,4 +19,7 @@ class TensorflowTests(unittest.TestCase):
         ]
 
     def test_vgg16(self):
-        run_module(self.name, "--problem=vgg16", *self.imgnet_args)
+        run(["--problem=vgg16", *self.imgnet_args])
+
+    def test_vgg16_inference(self):
+        run(["--problem=vgg16", "--mode=inference", *self.imgnet_args])

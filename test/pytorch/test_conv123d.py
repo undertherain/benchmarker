@@ -1,7 +1,7 @@
 import logging
 import unittest
 
-from ..helpers import run_module
+from benchmarker.benchmarker import run
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -9,7 +9,6 @@ logging.basicConfig(level=logging.DEBUG)
 class PytorchConv123dTests(unittest.TestCase):
     def setUp(self):
         self.args = [
-            "benchmarker",
             "--framework=pytorch",
             "--batch_size=2",
             "--nb_epoch=1",
@@ -17,10 +16,10 @@ class PytorchConv123dTests(unittest.TestCase):
         ]
 
     def test_conv1d(self):
-        run_module(*self.args + ["--problem=conv1d", "--problem_size=2,4,4"])
+        run(self.args + ["--problem=conv1d", "--problem_size=2,4,4"])
 
     def test_conv2d(self):
-        run_module(*self.args + ["--problem=conv2d", "--problem_size=2,4,4,4"])
+        run(self.args + ["--problem=conv2d", "--problem_size=2,4,4,4"])
 
     def test_conv3d(self):
-        run_module(*self.args + ["--problem=conv3d", "--problem_size=2,4,4,4,4"])
+        run(self.args + ["--problem=conv3d", "--problem_size=2,4,4,4,4"])
