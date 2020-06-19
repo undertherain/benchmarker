@@ -3,7 +3,7 @@
 import logging
 import unittest
 
-from ..helpers import run_module
+from benchmarker.benchmarker import run
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -11,7 +11,6 @@ logging.basicConfig(level=logging.DEBUG)
 class PytorchSsd300Tests(unittest.TestCase):
     def setUp(self):
         self.args = [
-            "benchmarker",
             "--problem=ssd300",
             "--framework=pytorch",
             "--problem_size=4",
@@ -21,4 +20,4 @@ class PytorchSsd300Tests(unittest.TestCase):
         ]
 
     def test_ssd300(self):
-        run_module(*self.args)
+        run(self.args)
