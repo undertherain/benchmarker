@@ -45,6 +45,8 @@ class Benchmark(INeuralNet):
         # correct = 0
         with torch.no_grad():
             for data, target in zip(self.x_train, self.y_train):
+                if self.params["backend"] == "DNNL":
+                    data = data.to_mkldnn()
                 # TODO: add option to keep data on GPU
                 # data, target = data.to(device), target.to(device)
                 # print(data.shape)
@@ -78,28 +80,26 @@ class Benchmark(INeuralNet):
         # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
         model = self.net
+        model.train()
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
         # TODO: make of/on-core optional
-        if self.params["backend"] == "DNNL":
-            self.x_train = torch.from_numpy(x_train).to_mkldnn()
-            mkldnn_utils.to_mkldnn(model)
-        else:
-            self.x_train = torch.from_numpy(x_train).to(device)
-            self.y_train = torch.from_numpy(y_train).to(device)
-            model.to(device)
+        self.x_train = torch.from_numpy(x_train).to(device)
+        self.y_train = torch.from_numpy(y_train).to(device)
+        model.to(device)
         # TODO: args for training hyperparameters
-        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
         start = timer()
         if self.params["mode"] == "training":
+            optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.train(model, device, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
             model.eval()
+            if self.params["backend"] == "DNNL":
+                mkldnn_utils.to_mkldnn(model)
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, device)
-        # TODO: return stats
         end = timer()
         self.params["time"] = (end - start) / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
