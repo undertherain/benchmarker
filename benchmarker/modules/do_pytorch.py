@@ -1,6 +1,6 @@
-import numpy as np
 import torch
 import torch.nn as nn
+from torch.utils import mkldnn as mkldnn_utils
 from timeit import default_timer as timer
 # import torch.nn.functional as F
 import torch.optim as optim
@@ -30,10 +30,6 @@ class Benchmark(INeuralNet):
         for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
             loss = model(data, target)
-            # loss = F.nll_loss(output, target)
-            # TODO: criterion should be included in the model, deepening on params
-            #criterion = nn.CrossEntropyLoss()
-            #loss = criterion(output, target)
             loss.mean().backward()
             optimizer.step()
             log_interval = 10
@@ -77,16 +73,21 @@ class Benchmark(INeuralNet):
         device = torch.device("cuda" if self.params["gpus"] else "cpu")
 
         x_train, y_train = self.load_data()
-        # TODO: make of/on-core optional
-        self.x_train = torch.from_numpy(x_train).to(device)
-        self.y_train = torch.from_numpy(y_train).to(device)
+
         # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
         # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
-        model.to(device)
+        # TODO: make of/on-core optional
+        if self.params["backend"] == "DNNL":
+            self.x_train = torch.from_numpy(x_train).to_mkldnn()
+            mkldnn_utils.to_mkldnn(model)
+        else:
+            self.x_train = torch.from_numpy(x_train).to(device)
+            self.y_train = torch.from_numpy(y_train).to(device)
+            model.to(device)
         # TODO: args for training hyperparameters
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
         start = timer()
