@@ -8,6 +8,7 @@ def main():
     params["problem"] = "vgg16"
     params["mode"] = "training"
     for batch_size in range(1, 256):
+        params["backend"] = "native"
         params["batch_size"] = batch_size
         prob_size = params["batch_size"] * 4
         params["problem_size"] = f"{prob_size}"
