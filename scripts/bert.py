@@ -7,8 +7,9 @@ def main():
     params["framework"] = "pytorch"
     params["problem"] = "bert_custom"
     params["mode"] = "training"
-    params["gpus"] = "0"
     for batch_size in range(1, 256):
+        params["gpus"] = "0"
+        params["backend"] = "native"
         params["batch_size"] = batch_size
         prob_size = params["batch_size"] * 4
         params["problem_size"] = f"{prob_size}, 128"
