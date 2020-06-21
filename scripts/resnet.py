@@ -8,7 +8,15 @@ def main():
     params["problem"] = "resnet50"
     params["mode"] = "training"
     params["gpus"] = "0"
-#    params["backend"] = "DNNL"
+    for batch_size in range(1, 256):
+        params["batch_size"] = batch_size
+        prob_size = params["batch_size"] * 4
+        params["problem_size"] = f"{prob_size}"
+        print(batch_size)
+        run(params)
+
+    params.pop("gpus")
+    params["backend"] = "DNNL"
     for batch_size in range(1, 256):
         params["batch_size"] = batch_size
         prob_size = params["batch_size"] * 4
