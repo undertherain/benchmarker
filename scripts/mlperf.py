@@ -7,12 +7,14 @@ def main():
     params["framework"] = "pytorch"
     params["problem"] = "resnet50"
     params["mode"] = "training"
-    params["batch_size"] = 32
-    prob_size = params["batch_size"] * 4
-    params["problem_size"] = f"{prob_size}"
     params["gpus"] = "0"
 #    params["backend"] = "DNNL"
-    run(params)
+    for batch_size in range(1, 256):
+        params["batch_size"] = batch_size
+        prob_size = params["batch_size"] * 4
+        params["problem_size"] = f"{prob_size}"
+        print(batch_size)
+        run(params)
 
 
 if __name__ == "__main__":
