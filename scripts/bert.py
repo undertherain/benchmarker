@@ -5,22 +5,17 @@ from run import run
 def main():
     params = {}
     params["framework"] = "pytorch"
-    params["problem"] = "bert"
+    params["problem"] = "bert_custom"
     params["mode"] = "training"
     params["gpus"] = "0"
     for batch_size in range(1, 256):
         params["batch_size"] = batch_size
         prob_size = params["batch_size"] * 4
-        params["problem_size"] = f"{prob_size},128"
+        params["problem_size"] = f"{prob_size}, 128"
         print(batch_size)
         run(params)
-
-    params.pop("gpus")
-    params["backend"] = "DNNL"
-    for batch_size in range(1, 256):
-        params["batch_size"] = batch_size
-        prob_size = params["batch_size"] * 4
-        params["problem_size"] = f"{prob_size}"
+        params.pop("gpus")
+        params["backend"] = "DNNL"
         print(batch_size)
         run(params)
 
