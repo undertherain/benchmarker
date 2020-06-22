@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from run import run
+from run import run, fast_batches
 
 
 def main():
@@ -7,8 +7,8 @@ def main():
     params["framework"] = "pytorch"
     params["problem"] = "bert"
     params["mode"] = "training"
-    for batch_size in range(1, 256):
-        params["batch_size"] = batch_size
+    for batch_size in fast_batches:
+        params["batch_size"] = batch_size * 2
         prob_size = params["batch_size"] * 4
         params["problem_size"] = f"{prob_size}, 128"
         print(batch_size)

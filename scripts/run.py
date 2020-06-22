@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 import subprocess
 import tempfile
+import multiprocessing
+
+
+fast_batches = set()
+fast_batches.update(range(1, 10))
+fast_batches.add(multiprocessing.cpu_count())
+fast_batches.add(multiprocessing.cpu_count() // 2)
+fast_batches.update(range(10, 32, 2))
+fast_batches.update(range(32, 64, 4))
+fast_batches.update(range(64, 128, 8))
+fast_batches.update(range(128, 256, 16))
+fast_batches = sorted(list(fast_batches))
 
 
 def run(params):
@@ -23,3 +35,17 @@ def run(params):
     # print(result)
     if result["returncode"] != 0:
         print(result["err"])
+
+
+def run_on_all_backends(params):
+    params["framework"] = "tensorflow"
+    run(params)
+    params["gpus"] = "0"
+    run(params)
+    params["framework"] = "pytorch"
+    params["backend"] = "native"
+    run(params)
+    params.pop("gpus")
+    run(params)
+    params["backend"] = "DNNL"
+    run(params)
