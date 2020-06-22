@@ -6,8 +6,8 @@ def main():
     params = {}
     params["problem"] = "vgg16"
     params["mode"] = "training"
-    for batch_size in fast_batches:
-        print(batch_size)
+    for params["batch_size"] in fast_batches:
+        print(params["batch_size"])
         run_on_all_backends(params)
 
 
