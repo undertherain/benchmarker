@@ -38,6 +38,7 @@ def run(params):
 
 
 def run_on_all_backends(params):
+    params["problem_size"] = params["batch_size"] * 4
     params["framework"] = "tensorflow"
     run(params)
     params["gpus"] = "0"
