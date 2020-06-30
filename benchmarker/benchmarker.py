@@ -4,8 +4,9 @@
 This is where all magic is happening
 """
 
-import importlib
+import argparse
 import ast
+import importlib
 import pkgutil
 # import logging
 import os
@@ -20,10 +21,22 @@ def get_modules():
             if not is_pkg and name.startswith('do_')]
 
 
-def run(args, unknown_args):
+def parse_basic_args(argv):
+    parser = argparse.ArgumentParser(description='Benchmark me up, Scotty!')
+    parser.add_argument("--framework")
+    parser.add_argument("--problem")
+    parser.add_argument('--path_out', type=str, default="./logs")
+    parser.add_argument('--gpus', default="")
+    parser.add_argument('--problem_size', default=None)
+    parser.add_argument('--batch_size', default=None)
+    # parser.add_argument('--misc')
+    return parser.parse_known_args(argv)
+
+
+def run(argv):
+    args, unknown_args = parse_basic_args(argv)
     params = {}
     params["platform"] = sysinfo.get_sys_info()
-
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
@@ -52,8 +65,10 @@ def run(args, unknown_args):
         params["batch_size"] = int(args.batch_size)
         params["batch_size_per_device"] = int(args.batch_size)
     # params["misc"] = args.misc
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     if args.gpus:
-        params["gpus"] = list(map(int, args.gpus.split(',')))
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
+        params["gpus"] = list(map(int, args.gpus.split(",")))
     else:
         params["gpus"] = []
 

@@ -15,7 +15,7 @@ def set_image_size(params, height, width):
     params["problem"]["size"] = (params["problem"]["size"],) + shape
 
 
-def gen_classification_data(params, height, width=None):
+def gen_classification_data(params, num_cls, height, width=None):
     """Make classification data based on `params["size"]`.
     `param["size"]` has shape (N, H, W, ...) where N is the number of
     samples, and (H, W, ...) is the shape of a single sample. This
@@ -24,6 +24,7 @@ def gen_classification_data(params, height, width=None):
     classes.
 
     :param params: Dictionary of parameters.
+    :param num_cls: Number of classes.
 
     :return: The images and classes (in batches) as described above.
 
@@ -38,5 +39,5 @@ def gen_classification_data(params, height, width=None):
     shape = shape + params["problem"]["size"][1:]
 
     X = np.random.random(shape).astype(np.float32)
-    Y = np.random.random(shape[:2]).astype(np.int64)
+    Y = np.random.randint(0, num_cls, shape[:2])
     return X, Y
