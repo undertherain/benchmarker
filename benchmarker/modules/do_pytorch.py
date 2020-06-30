@@ -97,7 +97,7 @@ class Benchmark(INeuralNet):
         else:
             model.eval()
             if self.params["backend"] == "DNNL":
-                mkldnn_utils.to_mkldnn(model)
+                model = mkldnn_utils.to_mkldnn(model)
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, device)
         end = timer()
