@@ -46,7 +46,8 @@ class NeuMF(nn.Module):
             golorot_uniform(layer)
         lecunn_uniform(self.final)
 
-    def forward(self, user, item, sigmoid=False):
+    def forward(self, user, sigmoid=False):
+        item = user #item should be passed as a positional argument
         xmfu = self.mf_user_embed(user)
         xmfi = self.mf_item_embed(item)
         xmf = xmfu * xmfi
@@ -54,6 +55,7 @@ class NeuMF(nn.Module):
         xmlpu = self.mlp_user_embed(user)
         xmlpi = self.mlp_item_embed(item)
         xmlp = torch.cat((xmlpu, xmlpi), dim=1)
+        print(xmlp.shape)
         for i, layer in enumerate(self.mlp):
             xmlp = layer(xmlp)
             xmlp = nn.functional.relu(xmlp)

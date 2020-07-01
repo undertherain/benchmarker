@@ -10,10 +10,7 @@ def get_data(params):
     params["problem"]["nb_items"] = params["problem"]["size"][2]
     cnt_batches = params["problem"]["size"][0] // params["batch_size"]
     shape = (cnt_batches,
-             params["batch_size"],
              params["problem"]["nb_users"])
     X = np.random.random(shape).astype(np.int64)
-    print(X.shape)
     Y = np.ones((cnt_batches,params["batch_size"]))
-    print(Y.shape)
     return X, Y
