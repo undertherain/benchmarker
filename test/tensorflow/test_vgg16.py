@@ -10,7 +10,6 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 class TensorflowTests(unittest.TestCase):
     def setUp(self):
-        self.name = "benchmarker"
         self.imgnet_args = [
             "--framework=tensorflow",
             "--problem_size=2",
