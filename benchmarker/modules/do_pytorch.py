@@ -35,7 +35,7 @@ class Benchmark(INeuralNet):
             log_interval = 10
             if batch_idx % log_interval == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    epoch, batch_idx * len(data), len(self.x_train),
+                    epoch, batch_idx, len(self.x_train),
                     100. * batch_idx / len(self.x_train), loss.mean().item()))
         if device.type == "cuda":
             torch.cuda.synchronize()
