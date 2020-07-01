@@ -46,8 +46,7 @@ class NeuMF(nn.Module):
             golorot_uniform(layer)
         lecunn_uniform(self.final)
 
-    def forward(self, user, sigmoid=False):
-        item = user #item should be passed as a positional argument
+    def forward(self, user, item, sigmoid=False):
         xmfu = self.mf_user_embed(user)
         xmfi = self.mf_item_embed(item)
         xmf = xmfu * xmfi
