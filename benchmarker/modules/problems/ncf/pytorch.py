@@ -55,7 +55,6 @@ class NeuMF(nn.Module):
         xmlpu = self.mlp_user_embed(user)
         xmlpi = self.mlp_item_embed(item)
         xmlp = torch.cat((xmlpu, xmlpi), dim=1)
-        print(xmlp.shape)
         for i, layer in enumerate(self.mlp):
             xmlp = layer(xmlp)
             xmlp = nn.functional.relu(xmlp)
@@ -75,7 +74,6 @@ def get_kernel(params, unparsed_args=None):
                         help='size of hidden layers for MLP')
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
-    print(params["problem"])
     Net = NeuMF(nb_users=params["problem"]["size"][1], 
                 nb_items=params["problem"]["size"][2],
                 mf_dim=args.factors, mf_reg=0.,

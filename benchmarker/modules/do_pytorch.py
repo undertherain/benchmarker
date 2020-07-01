@@ -52,7 +52,8 @@ class Benchmark(INeuralNet):
             for data, target in zip(self.x_train, self.y_train):
                 # TODO: add option to keep data on GPU
                 # data, target = data.to(device), target.to(device)
-                output = model(data)
+                output = model(data, data) #ncf requires two positional arguments, user and item 
+                #output = model(data)
                 # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
                 # TODO: get back softmax for ResNet-like models
                 # pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
