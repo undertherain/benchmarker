@@ -1,15 +1,17 @@
-import torch
-import torch.nn as nn
-from torch.utils import mkldnn as mkldnn_utils
-from timeit import default_timer as timer
-# import torch.nn.functional as F
-import torch.optim as optim
-# from torchvision import datasets, transforms
-from .i_neural_net import INeuralNet
 import argparse
+from timeit import default_timer as timer
+
+import torch
 # TODO: should we expect an import error here?
 # https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
 import torch.backends.mkldnn
+import torch.nn as nn
+# import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils import mkldnn as mkldnn_utils
+
+# from torchvision import datasets, transforms
+from .i_neural_net import INeuralNet
 
 
 class Benchmark(INeuralNet):
