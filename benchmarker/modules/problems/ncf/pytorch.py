@@ -47,7 +47,8 @@ class NeuMF(nn.Module):
         lecunn_uniform(self.final)
 
     def forward(self, data, sigmoid=False):
-        user = item = torch.reshape(data, (-1,))
+        user, item = data
+        # torch.reshape(data, (-1,))
         xmfu = self.mf_user_embed(user)
         xmfi = self.mf_item_embed(item)
         xmf = xmfu * xmfi
