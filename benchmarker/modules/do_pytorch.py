@@ -16,8 +16,8 @@ from .i_neural_net import INeuralNet
 
 class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
-        parser = argparse.ArgumentParser(description='pytorch extra args')
-        parser.add_argument('--backend', default="native")
+        parser = argparse.ArgumentParser(description="pytorch extra args")
+        parser.add_argument("--backend", default="native")
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
@@ -61,7 +61,7 @@ class Benchmark(INeuralNet):
             torch.cuda.synchronize()
         # test_loss /= len(test_loader.dataset)
 
-        #print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        # print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         #    test_loss, correct, len(test_loader.dataset),
         #    100. * correct / len(test_loader.dataset)))
 
