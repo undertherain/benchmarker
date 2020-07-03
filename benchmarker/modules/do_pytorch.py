@@ -45,6 +45,10 @@ class Benchmark(INeuralNet):
         if device.type == "cuda":
             torch.cuda.synchronize()
 
+    def set_random_seed(self, seed):
+        super().set_random_seed(seed)
+        torch.manual_seed(seed)
+
     def inference(self, model, device):
         # test_loss = 0
         # correct = 0
