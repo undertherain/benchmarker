@@ -14,6 +14,13 @@ from torch.utils import mkldnn as mkldnn_utils
 from .i_neural_net import INeuralNet
 
 
+def progress(epoch, idx, nb, loss, log_interval=10):
+    if idx % log_interval == 0:
+        prc = 100.0 * idx / nb
+        stat = f"{epoch} [{idx}/{nb} ({prc:.0f}%)]\tLoss: {loss:.6f}"
+        print("Train Epoch: " + stat)
+
+
 class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
         parser = argparse.ArgumentParser(description="pytorch extra args")
@@ -34,11 +41,7 @@ class Benchmark(INeuralNet):
             loss = model(data, target)
             loss.mean().backward()
             optimizer.step()
-            log_interval = 10
-            if batch_idx % log_interval == 0:
-                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    epoch, batch_idx, len(self.x_train),
-                    100. * batch_idx / len(self.x_train), loss.mean().item()))
+            progress(epoch, batch_idx, len(self.x_train), loss.mean().item())
         if device.type == "cuda":
             torch.cuda.synchronize()
 
