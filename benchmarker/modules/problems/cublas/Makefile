@@ -6,10 +6,11 @@ CFLAGS=-Wall -O3  -fopenmp  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-i
 
 CUDAFLAGS=-O3  -Wno-deprecated-gpu-targets -arch sm_50
 
-all: blas
+all: main
 
-blas: blas.cpp config.h
-	$(CXX) -o $@ blas.cpp $(CXXFLAGS) -lopenblas
+main: main.cu
+	nvcc -o $@ $^ $(CUDAFLAGS)
+#-lopenblas
 
-run: blas 
-	./blas 128 128 128
+run: main
+	./main 128 128 128
