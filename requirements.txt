@@ -1,5 +1,5 @@
 begins
-py-cpuinfo
+py-cpuinfo==5.0.0
 pydataset
 system_query[cpu, hdd, ram, swap]
 python_papi
