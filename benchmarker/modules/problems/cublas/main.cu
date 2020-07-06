@@ -41,11 +41,12 @@ int main(int argc, char * argv[]) {
     cudaSetDevice(gpu_id);
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
+    // TODO: this m n k ordering is a mess, rename them intuitively ><
     if (precision == "FP32")
         cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
     else
         cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
-                     alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb,beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
+                     alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb, beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
                      CUBLAS_GEMM_DEFAULT_TENSOR_OP);
     cudaDeviceSynchronize();
     auto stop = high_resolution_clock::now();
