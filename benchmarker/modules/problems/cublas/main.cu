@@ -2,7 +2,7 @@
 //#include <stdlib.h>
 #include <iostream>
 #include <cblas.h>
-#include <omp.h>
+#include <cublas_v2.h>
 #include <chrono> 
 #include "config.h"
 #include "args.hpp"
@@ -24,8 +24,15 @@ int main(int argc, char * argv[]) {
     cudaMalloc(&d_C, m * k * sizeof(float));
     cudaMemcpy(d_A, A, m * n * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, B, n * k * sizeof(float), cudaMemcpyHostToDevice);
-     
-    // call cublas
+    // TODO: add error checking
+    cublasHandle_t handle;
+    cublasCreate(&handle);
+    const float alf = 1;
+    const float bet = 0;
+    const float *alpha = &alf;
+    const float *beta = &bet;
+    int lda=m,ldb=k,ldc=m;
+    cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
     // sync
     // cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, 1, A, m, B, k, 1, C, m);
     sleep(1);
