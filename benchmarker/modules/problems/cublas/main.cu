@@ -41,6 +41,9 @@ int main(int argc, char * argv[]) {
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
     cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
+    //cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
+    //             alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb,beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
+    //             CUBLAS_GEMM_DEFAULT_TENSOR_OP);
     cudaDeviceSynchronize();
     auto stop = high_resolution_clock::now();
     cudaFree(d_A);
