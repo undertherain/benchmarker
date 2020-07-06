@@ -12,16 +12,27 @@ using namespace std::chrono;
 
 
 int main(int argc, char * argv[]) {
-    // this is super-upgly, but maybe I'll fix it some time later :)
-    // fprintf(stderr, "doing clbas\n");
     size_t m, n, k;
     float * A, *B, *C;
     double dtime;
     args_to_matrices(argc, argv, m, n, k, A, B, C);
     auto start = high_resolution_clock::now(); 
+    // move to gpu
+    float *d_A, *d_B, *d_C;
+    cudaMalloc(&d_A, m * n * sizeof(float));
+    cudaMalloc(&d_B, n * k * sizeof(float));
+    cudaMalloc(&d_C, m * k * sizeof(float));
+
+     
+    // call cublas
+    // sync
     // cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, 1, A, m, B, k, 1, C, m);
     sleep(1);
     auto stop = high_resolution_clock::now();
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
+    
     std::chrono::duration<double> seconds = (stop - start); 
     dtime = seconds.count();
     double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
