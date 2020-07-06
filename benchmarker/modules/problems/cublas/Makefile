@@ -12,4 +12,4 @@ blas: blas.cpp config.h
 	$(CXX) -o $@ blas.cpp $(CXXFLAGS) -lopenblas
 
 run: blas 
-	./blas
+	./blas 128 128 128
