@@ -2,12 +2,7 @@ import json
 import os
 import sys
 
-from benchmarker.util import abstractprocess
-
-
-def get_script_dir():
-    path = os.path.dirname(os.path.realpath(__file__))
-    return path
+from benchmarker.util import abstractprocess, get_script_dir
 
 
 def get_sys_info():

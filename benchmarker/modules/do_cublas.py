@@ -1,4 +1,6 @@
+import os
 from .i_gemm import IGEMM
+from benchmarker.util import get_script_dir
 from benchmarker.util.abstractprocess import Process
 
 
@@ -11,14 +13,12 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] != 1:
                 raise Exception("cublas requires one GPU")
         size = " ".join(map(str, self.params['problem']['size']))
-        command = ["/home/blackbird/Projects_heavy/performance/benchmarker/benchmarker/modules/problems/cublas/main",
+        command = [os.path.join(get_script_dir(), "../modules/problems/cublas/main"),
                    self.params["problem"]["precision"],
                    size]
-        # print(command)
         process = Process(command=command)
         result = process.get_output()
         std_out = result["out"]
-        # print(std_out)
         elapsed_time = float(std_out.strip())
         self.params["time"] = elapsed_time
         self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
