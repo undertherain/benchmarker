@@ -42,9 +42,9 @@ class INeuralNet:
         self.params["channels_first"] = True
         path = f"benchmarker.modules.problems.{params['problem']['name']}.{params['framework']}"
         kernel_module = importlib.import_module(path)
-        self.get_kernel(kernel_module, remaining_args)
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
+        self.get_kernel(kernel_module, remaining_args)
 
     def get_kernel(self, module, remaining_args):
         """Default function to set `self.net`.  The derived do_* classes can
