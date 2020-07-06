@@ -78,7 +78,7 @@ class Benchmark(INeuralNet):
             cnt_classes = 1
         self.params["cnt_classes"] = cnt_classes
         model = self.net
-        nb_epoch = 3
+        nb_epoch = self.params["nb_epoch"]
         bs = self.params["batch_size"]
         if self.params["mode"] == "training":
             print("preheat")
