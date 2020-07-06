@@ -1,6 +1,5 @@
 import os
 from .i_gemm import IGEMM
-from benchmarker.util import get_script_dir
 from benchmarker.util.abstractprocess import Process
 
 
@@ -13,7 +12,11 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] != 1:
                 raise Exception("cublas requires one GPU")
         size = " ".join(map(str, self.params['problem']['size']))
-        command = [os.path.join(get_script_dir(), "../modules/problems/cublas/main"),
+        path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                   "problems/cublas/main")
+        if not os.path.isfile(path_binary):
+            raise(RuntimeError(f"{path_binary} not found, run make manually"))
+        command = [path_binary,
                    self.params["problem"]["precision"],
                    size]
         process = Process(command=command)
