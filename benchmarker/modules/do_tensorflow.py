@@ -57,6 +57,10 @@ class Benchmark(INeuralNet):
         with self.get_strategy().scope():
             super().get_kernel(module, remaining_args)
 
+    def set_random_seed(self, seed):
+        super().set_random_seed(seed)
+        tf.random.set_seed(seed)
+
     def run_internal(self):
 
         # if params["channels_first"]:

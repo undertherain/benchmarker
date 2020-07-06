@@ -1,21 +1,30 @@
-import torch
-import torch.nn as nn
-from torch.utils import mkldnn as mkldnn_utils
-from timeit import default_timer as timer
-# import torch.nn.functional as F
-import torch.optim as optim
-# from torchvision import datasets, transforms
-from .i_neural_net import INeuralNet
 import argparse
+from timeit import default_timer as timer
+
+import torch
 # TODO: should we expect an import error here?
 # https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
 import torch.backends.mkldnn
+import torch.nn as nn
+# import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils import mkldnn as mkldnn_utils
+
+# from torchvision import datasets, transforms
+from .i_neural_net import INeuralNet
+
+
+def progress(epoch, idx, nb, loss, log_interval=10):
+    if idx % log_interval == 0:
+        prc = 100.0 * idx / nb
+        stat = f"{epoch} [{idx}/{nb} ({prc:.0f}%)]\tLoss: {loss:.6f}"
+        print("Train Epoch: " + stat)
 
 
 class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
-        parser = argparse.ArgumentParser(description='pytorch extra args')
-        parser.add_argument('--backend', default="native")
+        parser = argparse.ArgumentParser(description="pytorch extra args")
+        parser.add_argument("--backend", default="native")
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
@@ -32,13 +41,13 @@ class Benchmark(INeuralNet):
             loss = model(data, target)
             loss.mean().backward()
             optimizer.step()
-            log_interval = 10
-            if batch_idx % log_interval == 0:
-                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    epoch, batch_idx, len(self.x_train),
-                    100. * batch_idx / len(self.x_train), loss.mean().item()))
+            progress(epoch, batch_idx, len(self.x_train), loss.mean().item())
         if device.type == "cuda":
             torch.cuda.synchronize()
+
+    def set_random_seed(self, seed):
+        super().set_random_seed(seed)
+        torch.manual_seed(seed)
 
     def inference(self, model, device):
         # test_loss = 0
@@ -59,7 +68,7 @@ class Benchmark(INeuralNet):
             torch.cuda.synchronize()
         # test_loss /= len(test_loader.dataset)
 
-        #print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        # print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         #    test_loss, correct, len(test_loader.dataset),
         #    100. * correct / len(test_loader.dataset)))
 
