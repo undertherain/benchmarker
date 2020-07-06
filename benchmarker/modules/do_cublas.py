@@ -18,14 +18,16 @@ class Benchmark(IGEMM):
         b = np.random.random((N, K)).astype(dtype)
         c = np.random.random((M, K)).astype(dtype)
         nb_epoch = 2
+        # print(self.params['problem']['size'])
+        size = " ".join(map(str, self.params['problem']['size']))
         command = ["/home/blackbird/Projects_heavy/performance/benchmarker/benchmarker/modules/problems/cublas/main",
-                   "FP32",
-                   "16000"]
+                   self.params["problem"]["precision"],
+                   size]
+        # print(command)
         process = Process(command=command)
         result = process.get_output()
         std_out = result["out"]
-        print(std_out)
-        exit(0)
-        elapsed_time = (time_end - time_start) / nb_epoch
+        # print(std_out)
+        elapsed_time = float(std_out.strip())
         self.params["time"] = elapsed_time
         self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time

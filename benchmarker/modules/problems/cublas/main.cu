@@ -59,9 +59,10 @@ int main(int argc, char * argv[]) {
     dtime = seconds.count();
     double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
     double gflops = gflop / dtime;
-    printf("gflops: \t%f\n", gflop);
-    printf("time: \t%f\n", dtime);
-    printf("ips: \t%f\n", 1 / dtime);
-    printf("gflops/s: \t%f\n", gflops);
+    printf("%f\n", dtime);
+    fprintf(stderr, "gflops: \t%f\n", gflop);
+    fprintf(stderr, "time: \t%f\n", dtime);
+    fprintf(stderr, "ips: \t%f\n", 1 / dtime);
+    fprintf(stderr, "gflops/s: \t%f\n", gflops);
     return 0;
 }
