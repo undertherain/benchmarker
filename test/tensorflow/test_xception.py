@@ -14,6 +14,7 @@ class XceptionTests(unittest.TestCase):
             "--framework=tensorflow",
             "--problem_size=4",
             "--batch_size=2",
+            "--nb_epoch=1",
         ]
 
     def test_xception(self):
