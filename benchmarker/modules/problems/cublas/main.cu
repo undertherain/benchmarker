@@ -35,7 +35,6 @@ int main(int argc, char * argv[]) {
     cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
     // sync
     // cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, 1, A, m, B, k, 1, C, m);
-    sleep(1);
     auto stop = high_resolution_clock::now();
     cudaFree(d_A);
     cudaFree(d_B);
