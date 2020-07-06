@@ -22,7 +22,8 @@ int main(int argc, char * argv[]) {
     cudaMalloc(&d_A, m * n * sizeof(float));
     cudaMalloc(&d_B, n * k * sizeof(float));
     cudaMalloc(&d_C, m * k * sizeof(float));
-
+    cudaMemcpy(d_A, A, m * n * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, B, n * k * sizeof(float), cudaMemcpyHostToDevice);
      
     // call cublas
     // sync
