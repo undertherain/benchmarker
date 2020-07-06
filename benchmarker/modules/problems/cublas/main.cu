@@ -1,9 +1,8 @@
-//#include <stdio.h>
-//#include <stdlib.h>
 #include <iostream>
-#include <cblas.h>
 #include <cublas_v2.h>
-#include <chrono> 
+#include <chrono>
+//#include <cuda.h> 
+//#include <cuda_device_runtime_api.h> 
 #include "config.h"
 #include "args.hpp"
 #include <unistd.h>
@@ -33,13 +32,13 @@ int main(int argc, char * argv[]) {
     const float *beta = &bet;
     int lda=m,ldb=k,ldc=m;
     cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
-    // sync
+    cudaDeviceSynchronize();
     // cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, 1, A, m, B, k, 1, C, m);
     auto stop = high_resolution_clock::now();
     cudaFree(d_A);
     cudaFree(d_B);
     cudaFree(d_C);
-    
+    cublasDestroy(handle);
     std::chrono::duration<double> seconds = (stop - start); 
     dtime = seconds.count();
     double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
