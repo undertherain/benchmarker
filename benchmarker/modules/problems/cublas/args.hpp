@@ -1,5 +1,4 @@
 void args_to_matrices(int argc, char *argv[], size_t &m, size_t &n, size_t &k, float * & A, float *& B, float * & C) {
-    std::cerr << argc << "LOL\n";
     if (argc==2) {
         m = atoi(argv[1]);
         n = m;
