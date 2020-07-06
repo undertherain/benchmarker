@@ -23,7 +23,8 @@ int main(int argc, char * argv[]) {
     size_t m, n, k;
     float *A, *B, *C;
     double dtime;
-    args_to_matrices<float>(argc, argv, m, n, k, A, B, C);
+    std::string precision(argv[1]);
+    args_to_matrices<float>(argc - 1, argv + 1, m, n, k, A, B, C);
     float *d_A, *d_B, *d_C;
     cudaMalloc(&d_A, m * k * sizeof(float));
     cudaMalloc(&d_B, k * n * sizeof(float));
@@ -40,10 +41,12 @@ int main(int argc, char * argv[]) {
     cudaSetDevice(gpu_id);
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
-    cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
-    //cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
-    //             alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb,beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
-    //             CUBLAS_GEMM_DEFAULT_TENSOR_OP);
+    if (precision == "FP32")
+        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
+    else
+        cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
+                     alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb,beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
+                     CUBLAS_GEMM_DEFAULT_TENSOR_OP);
     cudaDeviceSynchronize();
     auto stop = high_resolution_clock::now();
     cudaFree(d_A);
