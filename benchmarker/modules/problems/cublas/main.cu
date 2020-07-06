@@ -5,7 +5,6 @@
 #include <chrono>
 #include "config.h"
 #include "args.hpp"
-//#include <unistd.h>
 
 using namespace std::chrono; 
 
@@ -24,7 +23,7 @@ int main(int argc, char * argv[]) {
     size_t m, n, k;
     float *A, *B, *C;
     double dtime;
-    args_to_matrices(argc, argv, m, n, k, A, B, C);
+    args_to_matrices<float>(argc, argv, m, n, k, A, B, C);
     float *d_A, *d_B, *d_C;
     cudaMalloc(&d_A, m * k * sizeof(float));
     cudaMalloc(&d_B, k * n * sizeof(float));
