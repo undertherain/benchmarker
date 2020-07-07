@@ -100,10 +100,18 @@ class Benchmark(INeuralNet):
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
+            if self.params["problem"]["precision"] == "mixed":
+                from apex import amp
+                assert len(self.params["gpus"]) == 1
+                # TODO: use distributed trainer from apex for multy-gpu\
+                model, optimizer = amp.initialize(model, optimizer, opt_level="01")
+                # TODO: make opt level a parameter
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.train(model, device, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
+            assert self.params["problem"]["precision"] == "FP32"
+            # TODO: add mixed/FP16 precision for inference
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
