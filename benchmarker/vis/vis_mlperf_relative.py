@@ -44,14 +44,9 @@ for problem in df_original["problem.name"].unique():
     df_new = df_new.groupby(["device"]).max()
     df_new.reset_index(inplace=True)
     #   print(df_new)
-    if problem == "gemm":
-        perf_baseline = df_new[df_new["device"] == dev_baseline]["GFLOP/sec"].max()
-        df_new["perf_relative"] = df_new["GFLOP/sec"] / perf_baseline
-    else:
-        perf_baseline = df_new[df_new["device"] == dev_baseline][
-            "samples_per_second"
-        ].max()
-        df_new["perf_relative"] = df_new["samples_per_second"] / perf_baseline
+    key = "GFLOP/sec" if problem == "gemm" else "samples_per_second"
+    perf_baseline = df_new[df_new["device"] == dev_baseline][key].max()
+    df_new["perf_relative"] = df_new[key] / perf_baseline
     df_plot = df_plot.append(df_new)
 
 df_plot.reset_index(inplace=True)
