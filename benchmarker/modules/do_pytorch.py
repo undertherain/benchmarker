@@ -106,6 +106,7 @@ class Benchmark(INeuralNet):
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
+                # TODO: convert inputs to FP16 for more agressive opt levels
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.train(model, device, optimizer, epoch)
             # test(args, model, device, test_loader)
