@@ -17,7 +17,7 @@ def get_data(params):
         batch_x = np.array([users, items])
         batch_y = np.random.random(batch_size)
         X.append(batch_x)
-        Y.append(batch_y)
+        Y.append(batch_y.reshape([-1, 1]))
 
     X = np.array(X)
     Y = np.array(Y)
