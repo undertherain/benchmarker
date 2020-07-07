@@ -1,4 +1,5 @@
 # This class is from https://github.com/mlperf.
+# https://github.com/mlperf/training/blob/master/recommendation/pytorch/ncf.py
 import argparse
 
 import numpy as np
