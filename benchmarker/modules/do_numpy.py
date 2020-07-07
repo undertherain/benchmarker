@@ -17,7 +17,10 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] > 0:
                 raise Exception("Numpy framework does not work with GPU back-end")
         M, N, K = self.matrix_size
-        dtype = np.float32
+        types = {"mixed": np.float32,
+                 "FP32": np.float32,
+                 "FP16": np.float16}
+        dtype = types[self.params["problem"]["precision"]]
         a = np.random.random((M, N)).astype(dtype)
         b = np.random.random((N, K)).astype(dtype)
         c = np.random.random((M, K)).astype(dtype)
