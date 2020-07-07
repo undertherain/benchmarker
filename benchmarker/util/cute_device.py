@@ -13,6 +13,7 @@ def get_cute_device_str(device_name):
               "(K40c)",
               "(ThunderX2)",
               "(Xeon)(?:\(R\) CPU )(E5-[0-9]{4} v[0-9])",
+              "(Xeon)(?:\(R\)) (Gold) ([0-9]{4})",  # 'Intel(R)_Xeon(R)_Gold_6148_CPU_@_2.40GHz'
               "(Core)(?:\(TM\) )(i5-[0-9]{4}[A-Z])",
               "(?:AMD) (Ryzen [0-9] [0-9]{4}[A-Z])",
               "(?:AMD) (Ryzen [0-9] [0-9]{4})",

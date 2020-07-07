@@ -39,8 +39,14 @@ def unwrap_distributed(state_dict):
 
 def get_kernel(params, unparsed_args=None):
     ssd_cpu = SSD300()
-    CACHE = Path("~/.cache/benchmarker").expanduser()
-    PATH = CACHE.joinpath("models/nvidia_ssdpyt_fp32_20190225.pt")
+    CACHE = Path("~/.cache/benchmarker/models/").expanduser()
+    FNAME = "nvidia_ssdpyt_fp32_20190225.pt"
+    PATH = CACHE.joinpath(FNAME)
+    REPO = Path("https://api.ngc.nvidia.com/")
+    REPO = REPO.joinpath("v2/models/nvidia/ssdpyt_fp32/versions/1/files/")
+    URL = REPO.joinpath(FNAME)
+    error_msg = "Download weights using wget {} -O {}".format(URL, PATH)
+    assert PATH.exists(), error_msg
     ckpt = torch.load(PATH, map_location=lambda storage, loc: storage)
     ckpt = ckpt["model"]
     if checkpoint_from_distributed(ckpt):

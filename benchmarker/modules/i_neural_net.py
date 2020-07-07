@@ -2,6 +2,9 @@
 import argparse
 import importlib
 import os
+import random
+
+import numpy
 
 
 class INeuralNet:
@@ -12,9 +15,15 @@ class INeuralNet:
 
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
+        parser.add_argument("--nb_epoch", type=int, default=10)
+
+        #
+        parser.add_argument("--random_seed", default=None)
+
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
 
         params["mode"] = parsed_args.mode
+        params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
 
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
@@ -33,6 +42,8 @@ class INeuralNet:
         self.params["channels_first"] = True
         path = f"benchmarker.modules.problems.{params['problem']['name']}.{params['framework']}"
         kernel_module = importlib.import_module(path)
+        if parsed_args.random_seed is not None:
+            self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(kernel_module, remaining_args)
 
     def get_kernel(self, module, remaining_args):
@@ -60,6 +71,17 @@ class INeuralNet:
         params["problem"]["bytes_x_train"] = data[0].nbytes
         params["problem"]["size_sample"] = data[0][0].shape
         return data
+
+    def set_random_seed(self, seed):
+        """Default function to set random seeds which sets numpy and random
+        modules seed.  This function should be overridden in the
+        derived classes where this function should be called trough
+        `super()` and also set the random seed of the framework.
+
+        """
+        # os.environ['PYTHONHASHSEED'] = '0' # this seems like too much
+        numpy.random.seed(seed)
+        random.seed(seed)
 
     def run(self):
         results = self.run_internal()
