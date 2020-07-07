@@ -1,11 +1,11 @@
-from pathlib import Path
-from protonn.vis import df_from_dir, PivotTable, filter_by
-from matplotlib import pyplot as plt
-from benchmarker.util.cute_device import get_cute_device_str
-import pandas as pd
 import sys
-import matplotlib as mpl
+from pathlib import Path
+
+import pandas as pd
 from matplotlib import pyplot as plt
+
+from benchmarker.util.cute_device import get_cute_device_str
+from protonn.vis import PivotTable, df_from_dir, filter_by
 
 plt.rcParams["figure.figsize"] = [10, 5]
 # mpl.style.use("dark_background")
@@ -15,9 +15,9 @@ if len(sys.argv) < 2:
     exit(-1)
 
 df_original = df_from_dir(Path(sys.argv[1]))
-#pd.set_option("display.max_rows", None, "display.max_columns", None)
+# pd.set_option("display.max_rows", None, "display.max_columns", None)
 df_original["device"] = df_original["device"].apply(get_cute_device_str)
-#print(df_original["device"])
+# print(df_original["device"])
 df_original.drop("time", axis="columns", inplace=True)
 df_original.drop("path_out", axis="columns", inplace=True)
 # df_original.drop("GFLOP", axis="columns", inplace=True)
@@ -27,12 +27,12 @@ for c in df_original.columns:
         df_original.drop(c, axis="columns", inplace=True)
 
 
-df_original["device/backend"] = df_original.apply(lambda x: (
-        (f"{x['device']}"
-         f"/{x['backend']}")), axis=1)
+df_original["device/backend"] = df_original.apply(
+    lambda x: ((f"{x['device']}" f"/{x['backend']}")), axis=1
+)
 
-#Dataframe to plot relative performance of each device/backend
-df_plot= pd.DataFrame()
+# Dataframe to plot relative performance of each device/backend
+df_plot = pd.DataFrame()
 for problem in df_original["problem.name"].unique():
     filters = {"problem.name": problem}
     df_new = filter_by(df_original, filters)
@@ -50,19 +50,21 @@ for problem in df_original["problem.name"].unique():
 
 print(df_plot)
 key_target = "perf_relative"
-pt = PivotTable(key_target=key_target,
-                key_primary="device",
-                key_secondary="problem.name",
-                keys_maximize=[])
+pt = PivotTable(
+    key_target=key_target,
+    key_primary="device",
+    key_secondary="problem.name",
+    keys_maximize=[],
+)
 
 df_mean_conv, df_max_conv, df_std_conv = pt.pivot_dataframe(df_plot)
 # fig = plt.figure(figsize=(30, 9)) # dunno why this is not working
 df_mean_conv.plot.bar(yerr=df_std_conv)
 plt.ylabel("relative perofmance to Xeon 2650")
-#figname = "batch" + str(batchsize) + "_" + conv_type
-#plt.title(conv_type)
-#name_file_out = key_target + "_" + ",".join([f"{k}_{filters[k]}" for k in filters]) + "_bars.pdf"
-name_file_out= key_target + "_" + "mlperf" + "_bars.pdf"
+# figname = "batch" + str(batchsize) + "_" + conv_type
+# plt.title(conv_type)
+# name_file_out = key_target + "_" + ",".join([f"{k}_{filters[k]}" for k in filters]) + "_bars.pdf"
+name_file_out = key_target + "_" + "mlperf" + "_bars.pdf"
 plt.savefig(name_file_out, bbox_inches="tight", transparent=False)
 
 plt.close()
