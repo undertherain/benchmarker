@@ -104,7 +104,7 @@ class Benchmark(INeuralNet):
                 from apex import amp
                 assert len(self.params["gpus"]) == 1
                 # TODO: use distributed trainer from apex for multy-gpu\
-                model, optimizer = amp.initialize(model, optimizer, opt_level="01")
+                model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.train(model, device, optimizer, epoch)
