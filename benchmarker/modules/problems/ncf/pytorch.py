@@ -73,6 +73,8 @@ def get_kernel(params, unparsed_args=None):
                         help='number of predictive factors')
     parser.add_argument('--layers', nargs='+', type=int,default=[64, 32, 16, 8],
                         help='size of hidden layers for MLP')
+    parser.add_argument("--nb_users", type=int, default=128, help="number of users")
+    parser.add_argument("--nb_items", type=int, default=128, help="number of items")
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
     Net = NeuMF(nb_users=params["problem"]["size"][1], 
