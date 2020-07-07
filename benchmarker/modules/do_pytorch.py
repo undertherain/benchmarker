@@ -58,7 +58,6 @@ class Benchmark(INeuralNet):
                     data = data.to_mkldnn()
                 # TODO: add option to keep data on GPU
                 # data, target = data.to(device), target.to(device)
-                # print(data.shape)
                 output = model(data)
                 # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
                 # TODO: get back softmax for ResNet-like models
