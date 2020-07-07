@@ -22,7 +22,7 @@ class Net4Train(nn.Module):
 
     def __call__(self, x, t):
         outs = self.net(x)
-        # TODO: figure this out. there's a reason why backward
+        # TODO(alex): figure this out. there's a reason why backward
         # finction is returned precompiled? is it correct to ignore
         # it?
         if isinstance(outs, OrderedDict):
