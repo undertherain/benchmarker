@@ -30,7 +30,6 @@ for c in df_original.columns:
 df_original["device/backend"] = df_original.apply(
     lambda x: ((f"{x['device']}" f"/{x['backend']}")), axis=1
 )
-
 # Dataframe to plot relative performance of each device/backend
 df_plot = pd.DataFrame()
 for problem in df_original["problem.name"].unique():
@@ -44,11 +43,19 @@ for problem in df_original["problem.name"].unique():
     df_new = df_new.groupby(["device"]).max()
     df_new.reset_index(inplace=True)
     #   print(df_new)
-    perf_baseline = df_new[df_new["device"] == dev_baseline]["samples_per_second"].max()
-    df_new["perf_relative"] = df_new["samples_per_second"] / perf_baseline
+    if problem == "gemm":
+        perf_baseline = df_new[df_new["device"] == dev_baseline]["GFLOP/sec"].max()
+        df_new["perf_relative"] = df_new["GFLOP/sec"] / perf_baseline
+    else:
+        perf_baseline = df_new[df_new["device"] == dev_baseline][
+            "samples_per_second"
+        ].max()
+        df_new["perf_relative"] = df_new["samples_per_second"] / perf_baseline
     df_plot = df_plot.append(df_new)
 
+df_plot.reset_index(inplace=True)
 print(df_plot)
+# exit(0)
 key_target = "perf_relative"
 pt = PivotTable(
     key_target=key_target,
