@@ -1,5 +1,5 @@
 """Module contains the interface for all deep learning modules"""
-# import argparse
+import argparse
 import os
 
 
@@ -8,12 +8,12 @@ class IGEMM():
 
     def __init__(self, params, remaining_args=None):
         self.params = params
+        parser = argparse.ArgumentParser(description="gemm extra args")
+        parser.add_argument("--precision", default="FP32")
+        # args, remaining_args = parser.parse_known_args(remaining_args)
         # parser = argparse.ArgumentParser(description='Benchmark GEMM operations')
-        # parser.add_argument('--mode', default=None)
-        # args = parser.parse_args(remaining_args)
-        # TODO: read size from args
-        # TODO: add float type as arg
-        params["problem"]["precision"] = "FP32"
+        args = parser.parse_args(remaining_args)
+        params["problem"]["precision"] = args.precision
         params["path_out"] = os.path.join(params["path_out"],
                                           params["problem"]["precision"])
         if isinstance(params["problem"]["size"], int):
