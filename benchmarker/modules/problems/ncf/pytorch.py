@@ -53,7 +53,7 @@ class NeuMF(nn.Module):
             golorot_uniform(layer)
         lecunn_uniform(self.final)
 
-    def forward(self, data, sigmoid=False):
+    def forward(self, data):
         user, item = data
         # torch.reshape(data, (-1,))
         xmfu = self.mf_user_embed(user)
@@ -69,8 +69,11 @@ class NeuMF(nn.Module):
 
         x = torch.cat((xmf, xmlp), dim=1)
         x = self.final(x)
-        if sigmoid:
-            x = torch.sigmoid(x)
+        # Moved this block and an optional sigmaid=False argument to
+        # helpers_torch.py::RecommenderInference()
+        #
+        # if sigmoid:
+        #     x = torch.sigmoid(x)
         return x
 
 
