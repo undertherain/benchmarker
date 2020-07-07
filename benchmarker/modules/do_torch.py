@@ -14,9 +14,8 @@ class Benchmark(IGEMM):
 
     def run(self):
         M, N, K = self.matrix_size
-        types = {"mixed": np.float32,
-                 "FP32": np.float32,
-                 "FP16": np.float16}
+        types = {"FP16": np.float16,
+                 "FP32": np.float32}
         dtype = types[self.params["problem"]["precision"]]
         a = torch.tensor(np.random.random((M, N)).astype(dtype))
         b = torch.tensor(np.random.random((N, K)).astype(dtype))

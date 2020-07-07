@@ -16,7 +16,9 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] != 1:
                 raise Exception("1 GPU is needed for CuPy")
         M, N, K = self.matrix_size
-        dtype = cupy.float32
+        types = {"FP16": cupy.float16,
+                 "FP32": cupy.float32}
+        dtype = types[self.params["problem"]["precision"]]
         device = cupy.cuda.Device(device=0)
         device.use()
         a = cupy.random.random((M, N)).astype(dtype)
