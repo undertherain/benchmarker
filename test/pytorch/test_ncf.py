@@ -12,11 +12,12 @@ class PytorchNcfTest(unittest.TestCase):
             "--problem=ncf",
             "--framework=pytorch",
             "--problem_size=2",
+            "--nb_epoch=1",
             "--batch_size=2",
         ]
 
-    # def test_ncf(self):
-    #     run([*self.args, "--mode=training"])
+    def test_ncf(self):
+        run(self.args + ["--mode=training"])
 
     def test_ncf_inference(self):
-        run([*self.args, "--mode=inference"])
+        run(self.args + ["--mode=inference"])
