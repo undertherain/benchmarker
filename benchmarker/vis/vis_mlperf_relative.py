@@ -4,16 +4,16 @@ from pathlib import Path
 
 import pandas as pd
 from matplotlib import pyplot as plt
-
-from benchmarker.util.cute_device import get_cute_device_str
 from protonn.vis import PivotTable, df_from_dir, filter_by
 
-plt.rcParams["figure.figsize"] = [10, 5]
-# mpl.style.use("dark_background")
+from benchmarker.util.cute_device import get_cute_device_str
 
 if len(sys.argv) < 2:
     print(f"run {sys.argv[0]} path_to_logs")
     exit(-1)
+
+plt.rcParams["figure.figsize"] = [10, 5]
+# mpl.style.use("dark_background")
 
 df_original = df_from_dir(Path(sys.argv[1]))
 # pd.set_option("display.max_rows", None, "display.max_columns", None)
