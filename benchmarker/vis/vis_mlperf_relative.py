@@ -31,6 +31,10 @@ for c in df_original.columns:
 df_original["device/backend"] = df_original.apply(
     lambda x: ((f"{x['device']}" f"/{x['backend']}")), axis=1
 )
+gemms = df_original["problem.name"] == "gemm"
+df_original[gemms]["problem.name"] = df_original[gemms].apply(
+    lambda x: f"{x['problem.name']} {x['problem.precision']}", axis=1
+)
 # Dataframe to plot relative performance of each device/backend
 df_plot = pd.DataFrame()
 for problem in df_original["problem.name"].unique():
