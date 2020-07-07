@@ -53,3 +53,21 @@ class ClassifierTraining(Net4Train):
 def Classifier(params, net):
     """Returns an inference or training classifier."""
     return Net4Both(params, net, ClassifierInference, ClassifierTraining)
+
+
+class RecommenderInference(Net4Inference):
+    def __call__(self, x):
+        outs = self.net(x)
+        if isinstance(outs, OrderedDict):
+            outs = outs["out"]
+        return torch.sigmoid(outs)
+
+
+class RecommenderTraining(Net4Train):
+    def __init__(self, net):
+        super().__init__(net, nn.BCEWithLogitsLoss())
+
+
+def Recommender(params, net):
+    """Returns an inference or training recommender."""
+    return Net4Both(params, net, RecommenderInference, RecommenderTraining)
