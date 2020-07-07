@@ -5,6 +5,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from ..helpers_torch import Recommender
+
 
 class NeuMF(nn.Module):
     def __init__(
@@ -73,7 +75,6 @@ class NeuMF(nn.Module):
 
 
 def get_kernel(params, unparsed_args=None):
-    assert params["mode"] == "inference"
     parser = argparse.ArgumentParser(
         description="Benchmark mlperf recommendation model"
     )
@@ -91,7 +92,7 @@ def get_kernel(params, unparsed_args=None):
     )
     args = parser.parse_args(unparsed_args)
     params["problem"].update(vars(args))
-    Net = NeuMF(
+    net = NeuMF(
         nb_users=args.nb_users,
         nb_items=args.nb_items,
         mf_dim=args.factors,
@@ -99,4 +100,4 @@ def get_kernel(params, unparsed_args=None):
         mlp_layer_sizes=args.layers,
         mlp_layer_regs=[0.0 for i in args.layers],
     )
-    return Net
+    return Recommender(params, net)
