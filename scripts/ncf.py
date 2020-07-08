@@ -9,6 +9,7 @@ def main():
     params["framework"] = "pytorch"
     for batch_size in fast_batches:
         params["batch_size"] = batch_size
+        params["problem_size"] = 4 * batch_size
         print(batch_size)
         run(params)
 
