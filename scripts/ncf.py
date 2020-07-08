@@ -4,7 +4,7 @@ from run import fast_batches, run
 
 def main():
     params = {}
-    params["problem"] = "bert"
+    params["problem"] = "ncf"
     params["mode"] = "training"
     params["framework"] = "pytorch"
     for batch_size in fast_batches:
