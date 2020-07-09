@@ -7,6 +7,9 @@ def main():
     params["problem"] = "ncf"
     params["mode"] = "training"
     params["framework"] = "pytorch"
+    params["nb_users"] = "138000"
+    params["nb_items"] = "27000"
+    params["gpus"] = "0"
     for batch_size in fast_batches:
         params["batch_size"] = batch_size
         params["problem_size"] = 4 * batch_size
