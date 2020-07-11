@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
-import tempfile
 import multiprocessing
-
+import subprocess
 
 fast_batches = set()
 fast_batches.update(range(1, 10))
@@ -17,21 +15,15 @@ fast_batches = sorted(list(fast_batches))
 
 
 def run(params):
-    out_file = tempfile.TemporaryFile()
-    err_file = tempfile.TemporaryFile()
     command = ["python3", "-m", "benchmarker"]
     for key in params:
         command.append(f"--{key}")
         command.append(str(params[key]))
     # print(command)
-    proc = subprocess.Popen(command, stdout=out_file, stderr=err_file)
+    proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     proc.wait()
-    out_file.seek(0)
-    out = out_file.read().decode()
-    err_file.seek(0)
-    err = err_file.read().decode()
-    out_file.close()
-    err_file.close()
+    out = proc.stdout.read().decode()
+    err = proc.stderr.read().decode()
     result = {"returncode": proc.returncode, "out": out, "err": err}
     # print(result)
     if result["returncode"] != 0:
