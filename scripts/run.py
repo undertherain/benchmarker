@@ -19,9 +19,8 @@ slow_batches = sorted(list(set(slow_batches)))
 
 def run(params, argv=["benchmarker"]):
     command = ["python3", "-m"] + argv
-    for key in params:
-        command.append(f"--{key}")
-        command.append(str(params[key]))
+    for key, val in params.items():
+        command.append(f"--{key}={val}")
     # print(command)
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     proc.wait()
