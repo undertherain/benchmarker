@@ -14,8 +14,8 @@ fast_batches.update([16, 32, 64, 128, 256])
 fast_batches = sorted(list(fast_batches))
 
 
-def run(params):
-    command = ["python3", "-m", "benchmarker"]
+def run(params, argv=["benchmarker"]):
+    command = ["python3", "-m"] + argv
     for key in params:
         command.append(f"--{key}")
         command.append(str(params[key]))
