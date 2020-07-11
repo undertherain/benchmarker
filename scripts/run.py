@@ -26,10 +26,9 @@ def run(params, argv=["benchmarker"]):
     proc.wait()
     out = proc.stdout.read().decode()
     err = proc.stderr.read().decode()
-    result = {"returncode": proc.returncode, "out": out, "err": err}
-    # print(result)
-    if result["returncode"] != 0:
-        print(result["err"])
+    if proc.returncode != 0:
+        print(out)
+        print(err)
 
 
 def run_on_all_backends(params):
