@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+
+"""This file can be used to run benchmarker with multiple batch sizes
+by specifying --batch_size=fast or --batch_size=slow.  In this case
+the --problem_size is automatically generated (see
+`prob_size_multiplier`) and the rest of the arguments (--problem,
+--framework etc) are passed to benchmarker.
+
+"""
+
 import argparse
 import multiprocessing
 import subprocess
