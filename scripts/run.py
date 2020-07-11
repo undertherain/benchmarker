@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import multiprocessing
 import subprocess
 
@@ -52,3 +53,19 @@ def run_batch_size(batch_size, argv):
         "problem_size": 4 * batch_size,
     }
     run(params, ["benchmarker"] + argv)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--batch_size")
+    args, unknown_args = parser.parse_known_args()
+    no_prob_size = not any(map(lambda t: t.startswith("--problem_size"), unknown_args))
+
+    assert no_prob_size, "--problem_size should NOT be specified"
+    assert args.batch_size is not None, "--batch_size required"
+
+    if args.batch_size.isnumeric():
+        run_batch_size(args.batch_size, unknown_args)
+    else:
+        for batch_size in eval("{}_batches".format(args.batch_size)):
+            run_batch_size(batch_size, unknown_args)
