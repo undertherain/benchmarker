@@ -3,6 +3,8 @@ import argparse
 import multiprocessing
 import subprocess
 
+prob_size_multiplier = 4
+
 fast_batches = set()
 fast_batches.update(range(1, 10))
 fast_batches.add(multiprocessing.cpu_count())
@@ -33,7 +35,7 @@ def run(params, argv=["benchmarker"]):
 
 
 def run_on_all_backends(params):
-    params["problem_size"] = params["batch_size"] * 4
+    params["problem_size"] = params["batch_size"] * prob_size_multiplier
     params["framework"] = "tensorflow"
     run(params)
     params["gpus"] = "0"
@@ -50,7 +52,7 @@ def run_on_all_backends(params):
 def run_batch_size(batch_size, argv):
     params = {
         "batch_size": batch_size,
-        "problem_size": 4 * batch_size,
+        "problem_size": batch_size * prob_size_multiplier,
     }
     run(params, ["benchmarker"] + argv)
 
