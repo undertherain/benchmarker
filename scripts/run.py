@@ -7,11 +7,14 @@ fast_batches.update(range(1, 10))
 fast_batches.add(multiprocessing.cpu_count())
 fast_batches.add(multiprocessing.cpu_count() // 2)
 fast_batches.update([16, 32, 64, 128, 256])
-#fast_batches.update(range(10, 32, 2))
-#fast_batches.update(range(32, 64, 4))
-#fast_batches.update(range(64, 128, 8))
-#fast_batches.update(range(128, 256, 16))
 fast_batches = sorted(list(fast_batches))
+
+slow_batches = list(fast_batches)
+slow_batches += list(range(10, 32, 2))
+slow_batches += list(range(32, 64, 4))
+slow_batches += list(range(64, 128, 8))
+slow_batches += list(range(128, 256, 16))
+slow_batches = sorted(list(set(slow_batches)))
 
 
 def run(params, argv=["benchmarker"]):
