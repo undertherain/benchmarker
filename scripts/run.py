@@ -44,3 +44,11 @@ def run_on_all_backends(params):
     run(params)
     params["backend"] = "DNNL"
     run(params)
+
+
+def run_batch_size(batch_size, argv):
+    params = {
+        "batch_size": batch_size,
+        "problem_size": 4 * batch_size,
+    }
+    run(params, ["benchmarker"] + argv)
