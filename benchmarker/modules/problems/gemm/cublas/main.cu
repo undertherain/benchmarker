@@ -22,8 +22,9 @@ int main(int argc, char * argv[]) {
     size_t m, n, k;
     float *A, *B, *C;
     double dtime;
-    std::string precision(argv[1]);
-    args_to_matrices<float>(argc - 1, argv + 1, m, n, k, A, B, C);
+    std::string precision;
+    parse_args(argc, argv, precision, m, n, k);
+    get_matrices<float>(m, n, k, A, B, C);
     float *d_A, *d_B, *d_C;
     cudaMalloc(&d_A, m * k * sizeof(float));
     cudaMalloc(&d_B, k * n * sizeof(float));
