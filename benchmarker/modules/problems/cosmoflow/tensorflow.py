@@ -36,14 +36,7 @@ def proc_params(params, unparsed_args):
     assert unparsed == []
 
 
-def get_kernel(params, unparsed_args):
-    """Construct the CosmoFlow 3D CNN model"""
-
-    proc_params(params, unparsed_args)
-    input_shape = params["input_shape"]
-    target_size = params["target_size"]
-    dropout = params["dropout"]
-
+def build_model(input_shape, target_size, dropout=0):
     conv_args = dict(kernel_size=2, padding="valid")
 
     model = tf.keras.models.Sequential(
@@ -84,5 +77,13 @@ def get_kernel(params, unparsed_args):
         ]
     )
 
+    return model
+
+
+def get_kernel(params, unparsed_args):
+    """Construct the CosmoFlow 3D CNN model"""
+
+    proc_params(params, unparsed_args)
+    model = build_model(params["input_shape"], params["target_size"], params["dropout"])
     model.compile(optimizer=SGD())
     return model
