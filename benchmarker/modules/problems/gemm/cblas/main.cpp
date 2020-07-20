@@ -22,7 +22,10 @@ int main(int argc, char * argv[]) {
         cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, alpha, A, m, B, k, beta, C, m);
         //cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
     else
-        throw "madamada";
+	{
+        fprintf(stderr, "not implemented yet");
+	throw "madamada";
+	}
 	//cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
         //             alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb, beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
         //             CUBLAS_GEMM_DEFAULT_TENSOR_OP);
