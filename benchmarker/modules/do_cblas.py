@@ -11,10 +11,10 @@ class Benchmark(IGEMM):
     def run(self):
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] > 0:
-                raise Exception("cblas does not work on GPUs")
+                raise Exception("cblas does not work on GPU")
         size = " ".join(map(str, self.params['problem']['size']))
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   "problems/gemm/cublas/main")
+                                   "problems/gemm/cblas/main")
         if not os.path.isfile(path_binary):
             raise(RuntimeError(f"{path_binary} not found, run make manually"))
         command = [path_binary,
