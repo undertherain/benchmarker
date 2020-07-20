@@ -3,7 +3,7 @@
 #include <cublas_v2.h>
 #include <cublasLt.h>
 #include <chrono>
-#include "args.hpp"
+#include "../args.hpp"
 
 using namespace std::chrono; 
 

@@ -14,8 +14,8 @@ void args_to_matrices(int argc, char *argv[], size_t &m, size_t &n, size_t &k,
         }
         else
         {
-            std::cerr << "provide m, n, k as command line parameters\n";
-            throw "provide m, n, k as command line parameters";
+            std::cerr << "provide precision, m, n, k as command line parameters\n";
+            throw "provide precision, m, n, k as command line parameters";
         }
     size_t i;
     A = (precision*) malloc(sizeof(precision) * m * n);
