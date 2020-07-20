@@ -1,3 +1,8 @@
+// traditional BLAS API:
+// M - Number of rows in matrices A and C.
+// N - Number of columns in matrices B and C.
+// K - Number of columns in matrix A; number of rows in matrix B.
+
 void parse_args(const int argc,
                 char *argv[],
                 std::string &precision,
