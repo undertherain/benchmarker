@@ -6,7 +6,6 @@
 using namespace std::chrono; 
 
 
-
 int main(int argc, char * argv[]) {
     size_t m, n, k;
     float *A, *B, *C;
