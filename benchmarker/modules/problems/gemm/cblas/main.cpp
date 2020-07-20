@@ -12,15 +12,26 @@ int main(int argc, char * argv[]) {
     float *A, *B, *C;
     double dtime;
     std::string precision;
-    parse_args(argc, argv, precision, m, n, k);
-    get_matrices<float>(m, n, k, A, B, C);
+    parse_args(argc, argv, precision, m, k, n);
+    get_matrices<float>(m, k, n, A, B, C);
     const float alpha = 1;
     const float beta = 0;
-    // int lda=m, ldb=k, ldc=m;
+    const size_t lda=k;
+    const size_t ldb=n; 
+    const size_t ldc=n;
     auto start = high_resolution_clock::now(); 
-    // TODO: this m n k ordering is a mess, rename them intuitively ><
     if (precision == "FP32")
-        cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, m, k, n, alpha, A, m, B, k, beta, C, m);
+        cblas_sgemm(CblasRowMajor,
+                    CblasNoTrans,
+                    CblasNoTrans,
+                    m,
+                    n,
+                    k,
+                    alpha,
+                    A, lda,
+                    B, ldb,
+                    beta,
+                    C, ldc);
     else
 	{
         fprintf(stderr, "not implemented yet");
