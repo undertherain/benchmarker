@@ -23,8 +23,8 @@ int main(int argc, char * argv[]) {
     float *A, *B, *C;
     double dtime;
     std::string precision;
-    parse_args(argc, argv, precision, m, n, k);
-    get_matrices<float>(m, n, k, A, B, C);
+    parse_args(argc, argv, precision, m, k, n);
+    get_matrices<float>(m, k, n, A, B, C);
     float *d_A, *d_B, *d_C;
     cudaMalloc(&d_A, m * k * sizeof(float));
     cudaMalloc(&d_B, k * n * sizeof(float));
@@ -42,8 +42,10 @@ int main(int argc, char * argv[]) {
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
     // TODO: this m n k ordering is a mess, rename them intuitively ><
+    // cublas only does column-major order
     if (precision == "FP32")
-        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
+            (handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k,
+                     alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
     else
         cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
                      alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb, beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,

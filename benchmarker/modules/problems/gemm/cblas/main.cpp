@@ -16,12 +16,12 @@ int main(int argc, char * argv[]) {
     get_matrices<float>(m, k, n, A, B, C);
     const float alpha = 1;
     const float beta = 0;
-    const size_t lda=k;
-    const size_t ldb=n; 
-    const size_t ldc=n;
+    const size_t lda=m; // k for row major;
+    const size_t ldb=k; //n; 
+    const size_t ldc=m; //n;
     auto start = high_resolution_clock::now(); 
     if (precision == "FP32")
-        cblas_sgemm(CblasRowMajor,
+        cblas_sgemm(CblasColMajor,
                     CblasNoTrans,
                     CblasNoTrans,
                     m,
