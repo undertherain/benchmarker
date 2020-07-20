@@ -74,8 +74,6 @@ class Benchmark(INeuralNet):
         x_train = x_train.reshape((-1,) + x_train.shape[2:])
         y_train = y_train.reshape((-1,) + y_train.shape[2:])
 
-        y_train = tf.keras.utils.to_categorical(y_train, num_classes=1000)
-
         if len(y_train.shape) > 1:
             cnt_classes = y_train.shape[1]
         else:
