@@ -12,7 +12,6 @@ import ast
 
 import tensorflow as tf
 import tensorflow.keras.layers as layers
-from tensorflow.keras.optimizers import SGD
 
 
 def scale_1p2(x):
@@ -85,5 +84,5 @@ def get_kernel(params, unparsed_args):
 
     proc_params(params, unparsed_args)
     model = build_model(params["input_shape"], params["target_size"], params["dropout"])
-    model.compile(optimizer=SGD())
+    model.compile(loss="mse", optimizer="sgd")
     return model
