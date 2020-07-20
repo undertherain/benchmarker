@@ -26,8 +26,8 @@ int main(int argc, char * argv[]) {
     parse_args(argc, argv, precision, m, k, n);
     get_matrices<float>(m, k, n, A, B, C);
     float *d_A, *d_B, *d_C;
-    cudaMalloc(&d_A, m * n * sizeof(float));
-    cudaMalloc(&d_B, n * k * sizeof(float));
+    cudaMalloc(&d_A, m * k * sizeof(float));
+    cudaMalloc(&d_B, k * n * sizeof(float));
     cudaMalloc(&d_C, m * n * sizeof(float));
     cudaMemcpy(d_A, A, m * k * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, B, k * n * sizeof(float), cudaMemcpyHostToDevice);
