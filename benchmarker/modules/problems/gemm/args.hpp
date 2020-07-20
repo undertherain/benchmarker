@@ -1,22 +1,36 @@
-template<typename precision>
-void args_to_matrices(int argc, char *argv[], size_t &m, size_t &n, size_t &k,
-                      precision * & A, precision *& B, precision * & C) {
-    if (argc==2) {
-        m = atoi(argv[1]);
+void parse_args(const int argc,
+                char *argv[],
+                std::string &precision,
+                size_t &m,
+                size_t &n,
+                size_t &k
+                ) {
+    if ((argc != 3) && (argc != 5))
+    {
+        std::cerr << "provide precision, m, n, k as command line parameters\n";
+        throw "provide precision, m, n, k as command line parameters";
+    }
+    precision = std::string(argv[1]);
+    if (argc==3) {
+        m = atoi(argv[2]);
         n = m;
         k = m;
     }
     else
-        if (argc==4) {
-            m = atoi(argv[1]);
-            n = atoi(argv[2]);
-            k = atoi(argv[3]);
-        }
-        else
-        {
-            std::cerr << "provide precision, m, n, k as command line parameters\n";
-            throw "provide precision, m, n, k as command line parameters";
-        }
+    {
+        m = atoi(argv[2]);
+        n = atoi(argv[3]);
+        k = atoi(argv[4]);
+    }
+}
+
+template<typename precision>
+void get_matrices(size_t &m,
+                  size_t &n,
+                  size_t &k,
+                  precision * & A,
+                  precision * & B,
+                  precision * & C) {
     size_t i;
     A = (precision*) malloc(sizeof(precision) * m * n);
     B = (precision*) malloc(sizeof(precision) * n * k);
