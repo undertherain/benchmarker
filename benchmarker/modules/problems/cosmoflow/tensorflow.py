@@ -7,6 +7,8 @@ defined in cosmoflow.py.
 
 """
 
+import argparse
+
 import tensorflow as tf
 import tensorflow.keras.layers as layers
 
@@ -20,15 +22,24 @@ def scale_1p2(x):
     return x * 1.2
 
 
+def proc_params(params, unparsed_args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input_shape", default=(128, 128, 128, 4))
+    parser.add_argument("--target_size", default=4)
+    parser.add_argument("--dropout", default=0)
+    args = parser.parse_known_args(unparsed_args)
+    params["input_shape"] = args.input_shape
+    params["target_size"] = args.target_size
+    params["dropout"] = args.dropout
+
+
 def get_kernel(params, unparsed_args):
     """Construct the CosmoFlow 3D CNN model"""
 
-    ### !!! STUB INPUTS/VARIABLES!!! ###
-    input_shape = 0  # default: [128, 128, 128, 4]
-    ### !!! STUB INPUTS/VARIABLES!!! ###
-    target_size = 0  # default: 4
-    ### !!! STUB INPUTS/VARIABLES!!! ###
-    dropout = 0  # default 0
+    proc_params(params, unparsed_args)
+    input_shape = params["input_shape"]
+    target_size = params["target_size"]
+    dropout = params["dropout"]
 
     conv_args = dict(kernel_size=2, padding="valid")
 
