@@ -34,6 +34,7 @@ int main(int argc, char * argv[]) {
     else
 	{
         // TODO  (Alex): implement FP16
+        // ugly throw here to make sure benchmarker chrashes alright
         fprintf(stderr, "not implemented yet");
 	    throw "madamada";
 	}
