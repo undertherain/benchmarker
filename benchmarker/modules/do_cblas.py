@@ -13,6 +13,7 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] > 0:
                 raise Exception("cblas does not work on GPU")
         size = " ".join(map(str, self.params['problem']['size']))
+        # TODO: this does not work inless the binaries are copied to site_packages
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    "problems/gemm/cblas/main")
         if not os.path.isfile(path_binary):
