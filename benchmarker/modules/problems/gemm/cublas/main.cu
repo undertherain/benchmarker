@@ -3,7 +3,7 @@
 #include <cublas_v2.h>
 #include <cublasLt.h>
 #include <chrono>
-#include "args.hpp"
+#include "../args.hpp"
 
 using namespace std::chrono; 
 
@@ -22,27 +22,29 @@ int main(int argc, char * argv[]) {
     size_t m, n, k;
     float *A, *B, *C;
     double dtime;
-    std::string precision(argv[1]);
-    args_to_matrices<float>(argc - 1, argv + 1, m, n, k, A, B, C);
+    std::string precision;
+    parse_args(argc, argv, precision, m, k, n);
+    get_matrices<float>(m, k, n, A, B, C);
     float *d_A, *d_B, *d_C;
     cudaMalloc(&d_A, m * k * sizeof(float));
     cudaMalloc(&d_B, k * n * sizeof(float));
-    cudaMalloc(&d_C, m * k * sizeof(float));
-    cudaMemcpy(d_A, A, m * n * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, B, n * k * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMalloc(&d_C, m * n * sizeof(float));
+    cudaMemcpy(d_A, A, m * k * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, B, k * n * sizeof(float), cudaMemcpyHostToDevice);
     cublasHandle_t handle;
     const float alf = 1;
     const float bet = 0;
     const float *alpha = &alf;
     const float *beta = &bet;
     int lda=m, ldb=k, ldc=m;
-    int gpu_id = 0; // TODO: get from command line
+    int gpu_id = 0; // this is actually OK if calle from Benchmarker bec. visible devices
     cudaSetDevice(gpu_id);
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
-    // TODO: this m n k ordering is a mess, rename them intuitively ><
+    // cublas only does column-major order
     if (precision == "FP32")
-        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
+        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k,
+                     alpha, d_A, lda, d_B, ldb, beta, d_C, ldc);
     else
         cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, 
                      alpha, d_A, CUDA_R_16F, lda, d_B, CUDA_R_16F, ldb, beta, d_C, CUDA_R_32F, ldc, CUDA_R_32F,
