@@ -33,6 +33,7 @@ int main(int argc, char * argv[]) {
                     C, ldc);
     else
 	{
+        // TODO  (Alex): implement FP16
         fprintf(stderr, "not implemented yet");
 	    throw "madamada";
 	}
