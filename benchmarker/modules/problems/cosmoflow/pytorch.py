@@ -4,15 +4,6 @@ import torch.nn as nn
 from .params import proc_params
 
 
-class CosmoFlow(nn.Module):
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, x):
-        y = x
-        return y
-
-
 class scale_1p2(nn.Module):
     def forward(self, input):
         return 1.2 * input
