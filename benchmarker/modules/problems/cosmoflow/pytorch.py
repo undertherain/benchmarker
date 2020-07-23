@@ -1,6 +1,7 @@
 import numpy as np
 import torch.nn as nn
 
+from ..helpers_torch import Regression
 from .params import proc_params
 
 
@@ -59,5 +60,5 @@ def get_kernel(params, unparsed_args):
     """Construct the CosmoFlow 3D CNN model"""
 
     proc_params(params, unparsed_args)
-    model = build_model(params["input_shape"], params["target_size"], params["dropout"])
-    return model
+    net = build_model(params["input_shape"], params["target_size"], params["dropout"])
+    return Regression(params, net)
