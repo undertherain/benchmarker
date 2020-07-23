@@ -26,7 +26,7 @@ def build_model(input_shape, target_size, dropout=0):
     ]
     shape = (shape - 1) // 2
 
-    conv_args["in_channels"] = 16
+    conv_args["in_channels"] = conv_args["out_channels"]
     for _ in range(4):
         layers += [
             nn.Conv3d(**conv_args),
@@ -35,18 +35,18 @@ def build_model(input_shape, target_size, dropout=0):
         ]
         shape = (shape - 1) // 2
 
-    flat_shape = np.prod(shape) * 16
+    flat_shape = np.prod(shape) * conv_args["out_channels"]
     layers += [
         nn.Flatten(),
         nn.Dropout(dropout),
         #
         nn.Linear(flat_shape, 128),
         nn.LeakyReLU(),
-        nn.Dropout(),
+        nn.Dropout(dropout),
         #
         nn.Linear(128, 64),
         nn.LeakyReLU(),
-        nn.Dropout(),
+        nn.Dropout(dropout),
         #
         nn.Linear(64, target_size),
         nn.Tanh(),
