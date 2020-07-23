@@ -72,3 +72,13 @@ class RecommenderTraining(Net4Train):
 def Recommender(params, net):
     """Returns an inference or training recommender."""
     return Net4Both(params, net, RecommenderInference, RecommenderTraining)
+
+
+class RegressionTraining(Net4Train):
+    def __init__(self, net_and_loss):
+        super().__init__(*net_and_loss)
+
+
+def Regression(params, net, loss=nn.MSELoss()):
+    """Returns an inference or training recommender."""
+    return Net4Both(params, (net, loss), lambda t: t[0], RegressionTraining)
