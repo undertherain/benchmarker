@@ -47,7 +47,6 @@ def build_model(input_shape, target_size, dropout=0):
         nn.Linear(128, 64),
         nn.LeakyReLU(),
         nn.Dropout(dropout),
-        #
         nn.Linear(64, target_size),
         nn.Tanh(),
         scale_1p2(),
