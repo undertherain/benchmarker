@@ -73,6 +73,7 @@ class Benchmark(INeuralNet):
 
     def run_internal(self):
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
+        torch.backends.cudnn.benchmark=True
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
         else:
