@@ -25,6 +25,7 @@ class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
         parser = argparse.ArgumentParser(description="pytorch extra args")
         parser.add_argument("--backend", default="native")
+        parser.add_argument("--cudnn_benchmark", type=bool, default=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
@@ -73,7 +74,7 @@ class Benchmark(INeuralNet):
 
     def run_internal(self):
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
-        torch.backends.cudnn.benchmark=True
+        torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
         else:
@@ -102,6 +103,7 @@ class Benchmark(INeuralNet):
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
                 from apex import amp
+
                 assert len(self.params["gpus"]) == 1
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
