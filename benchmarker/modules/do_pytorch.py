@@ -29,6 +29,7 @@ class Benchmark(INeuralNet):
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
+        self.params["cudnn_benchmark"] = args.cudnn_benchmark
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
