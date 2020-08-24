@@ -86,7 +86,6 @@ class INeuralNet:
 
     def run(self):
         results = self.run_internal()
-        results["time_epoch"] = results["time"]
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         )
