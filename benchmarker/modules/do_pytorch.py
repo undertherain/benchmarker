@@ -124,6 +124,7 @@ class Benchmark(INeuralNet):
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, device)
         end = timer()
-        self.params["time"] = (end - start) / self.params["nb_epoch"]
+        self.params["time_total"] = (end - start)
+        self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
         return self.params
