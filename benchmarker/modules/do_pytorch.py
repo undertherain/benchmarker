@@ -33,7 +33,9 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-
+            assert self.params["problem"]["precision"] in {"FP32", "mixed"}
+        else:
+            assert self.params["problem"]["precision"] == "FP32"
         self.params["channels_first"] = True
 
     def train(self, model, device, optimizer, epoch):
@@ -122,6 +124,7 @@ class Benchmark(INeuralNet):
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, device)
         end = timer()
-        self.params["time"] = (end - start) / self.params["nb_epoch"]
+        self.params["time_total"] = (end - start)
+        self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
         return self.params
