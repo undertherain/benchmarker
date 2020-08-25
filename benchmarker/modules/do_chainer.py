@@ -128,6 +128,7 @@ class Benchmark(INeuralNet):
             self.do_inference(model, x_train, y_train)
         end = timer()
 
-        params["time"] = (end - start) / self.params["nb_epoch"]
+        params["time_total"] = (end - start)
+        params["time_epoch"] = params["time_total"] / params["nb_epoch"]
         params["framework_full"] = "Chainer-" + chainer.__version__
         return params

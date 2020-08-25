@@ -94,7 +94,8 @@ class Benchmark(INeuralNet):
             start = timer()
             model.predict(x_train, bs, verbose=1)
         end = timer()
-        self.params["time"] = (end - start) / nb_epoch
+        self.params["time_total"] = (end - start)
+        self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         version_backend = tf.__version__
         # TODO: make this a nested dict
         # params["framework_full"] = "Keras-" + keras.__version__ + "/" + keras.backend.backend() + "_" + version_backend
