@@ -64,7 +64,7 @@ class Benchmark(INeuralNet):
                 eval_metric='acc',
                 num_epoch=params["nb_epoch"])
         end = timer()
-        self.params["time"] = (end - start) / params["nb_epoch"]
-        self.params["time_epoch"] = (end - start) / params["nb_epoch"]
-        self.params["framework_full"] = "MXNet-" + mx.__version__
+        params["time_total"] = (end - start)
+        params["time_epoch"] = params["time_total"] / params["nb_epoch"]
+        params["framework_full"] = "MXNet-" + mx.__version__
         return self.params
