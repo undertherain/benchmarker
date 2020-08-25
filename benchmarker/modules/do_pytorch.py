@@ -25,11 +25,13 @@ class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
         parser = argparse.ArgumentParser(description="pytorch extra args")
         parser.add_argument("--backend", default="native")
-        parser.add_argument("--cudnn_benchmark", type=bool, default=True)
+        parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
+        parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
+        parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
-        self.params["cudnn_benchmark"] = args.cudnn_benchmark
+        self.params["cudnn_benchmark"] = args.cbm
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
@@ -124,7 +126,7 @@ class Benchmark(INeuralNet):
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, device)
         end = timer()
-        self.params["time_total"] = (end - start)
+        self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
         return self.params
