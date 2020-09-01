@@ -41,7 +41,9 @@ class INeuralNet:
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]
             )
         self.params["channels_first"] = True
-        path = f"benchmarker.modules.problems.{params['problem']['name']}.{params['framework']}"
+        # todo(vatai): combine tflite and tensorflow
+        framework = params["framework"].replace("tflite", "tensorflow")
+        path = f"benchmarker.modules.problems.{params['problem']['name']}.{framework}"
         kernel_module = importlib.import_module(path)
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))

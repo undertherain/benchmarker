@@ -39,6 +39,10 @@ class Benchmark(INeuralNet):
         available. https://www.tensorflow.org/guide/tpu
         """
         super().get_kernel(module, remaining_args)
+        # todo(vatai): figure a nicer way to get input shape
+        x_train, _ = self.load_data()
+        x_train = x_train.reshape((-1,) + x_train.shape[2:])
+        self.net.build(x_train.shape)
         converter = tf.lite.TFLiteConverter.from_keras_model(self.net)
         self.net = converter.convert()
 
@@ -52,10 +56,10 @@ class Benchmark(INeuralNet):
             "Darwin": "libedgetpu.1.dylib",
             "Windows": "edgetpu.dll",
         }[platform.system()]
-        dev_dict = {"device": device[0]} if device else {}
+        delegate = tf.lite.experimental.load_delegate(shared_lib, {})
         return tf.lite.Interpreter(
             model_content=self.net,
-            experimental_delegates=[tflite.load_delegate(shared_lib, dev_dict)],
+            experimental_delegates=[delegate],
         )
 
     def run_internal(self):
@@ -73,9 +77,7 @@ class Benchmark(INeuralNet):
         interpreter.allocate_tensors()
         # set input
         tensor_index = interpreter.get_input_details()[0]["index"]
-        input_tensor = interpreter.tensor(tensor_index)()[0]
-        input_tensor[:, :] = x_train
-        model.predict(x_train, bs)
+        interpreter.tensor(tensor_index)()[:] = x_train
         start = timer()
         interpreter.invoke()
         end = timer()
