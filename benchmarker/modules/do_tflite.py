@@ -69,17 +69,19 @@ class Benchmark(INeuralNet):
         assert self.params["mode"] == "inference", "Only inference supported ATM"
 
         x_train, y_train = self.load_data()
-        x_train = x_train.reshape((-1,) + x_train.shape[2:])
-        y_train = y_train.reshape((-1,) + y_train.shape[2:])
 
         # preheat
         interpreter = self._make_interpreter()
         interpreter.allocate_tensors()
         # set input
         tensor_index = interpreter.get_input_details()[0]["index"]
-        interpreter.set_tensor(tensor_index, x_train)
         start = timer()
-        interpreter.invoke()
+        print("cnt_batches_per_epoch", self.params["problem"]["cnt_batches_per_epoch"])
+        print("batch_size", self.params["batch_size"])
+
+        for batch in range(self.params["problem"]["cnt_batches_per_epoch"]):
+            interpreter.set_tensor(tensor_index, x_train[batch])
+            interpreter.invoke()
         end = timer()
         # optionally get output?
         self.params["time_total"] = end - start
