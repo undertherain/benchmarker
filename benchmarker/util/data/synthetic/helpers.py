@@ -12,7 +12,7 @@ def set_image_size(params, height, width):
         else:
             shape = (height, width, 3)
 
-    params["problem"]["size"] = (params["problem"]["size"],) + shape
+        params["problem"]["size"] = (params["problem"]["size"],) + shape
 
 
 def gen_classification_data(params, num_cls, height, width=None):

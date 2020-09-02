@@ -28,7 +28,6 @@ class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
     def __init__(self, params, remaining_args=None):
-        gpus = params["gpus"]
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
         os.environ["KERAS_BACKEND"] = "tensorflow"
@@ -69,15 +68,12 @@ class Benchmark(INeuralNet):
         x_train = x_train.reshape((-1,) + x_train.shape[2:])
         y_train = y_train.reshape((-1,) + y_train.shape[2:])
 
-        model = self.net
-        bs = self.params["batch_size"]
         # preheat
-
         interpreter = self._make_interpreter()
         interpreter.allocate_tensors()
         # set input
         tensor_index = interpreter.get_input_details()[0]["index"]
-        interpreter.tensor(tensor_index)()[:] = x_train
+        interpreter.set_tensor(tensor_index, x_train.reshape(1, 224, 224, 3))
         start = timer()
         interpreter.invoke()
         end = timer()
