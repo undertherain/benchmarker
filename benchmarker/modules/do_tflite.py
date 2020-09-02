@@ -29,7 +29,10 @@ class Benchmark(INeuralNet):
 
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
-        self.params["channels_first"] = False
+        # todo(vatai): set channels should be here but it is moved to
+        # `get_kernel()`
+        #
+        # self.params["channels_first"] = False
         os.environ["KERAS_BACKEND"] = "tensorflow"
 
     def get_kernel(self, module, remaining_args):
@@ -37,6 +40,7 @@ class Benchmark(INeuralNet):
         Custom TF `get_kernel` method to handle TPU if
         available. https://www.tensorflow.org/guide/tpu
         """
+        self.params["channels_first"] = False
         super().get_kernel(module, remaining_args)
         # todo(vatai): figure a nicer way to get input shape
         x_train, _ = self.load_data()
@@ -73,7 +77,7 @@ class Benchmark(INeuralNet):
         interpreter.allocate_tensors()
         # set input
         tensor_index = interpreter.get_input_details()[0]["index"]
-        interpreter.set_tensor(tensor_index, x_train.reshape(1, 224, 224, 3))
+        interpreter.set_tensor(tensor_index, x_train)
         start = timer()
         interpreter.invoke()
         end = timer()
