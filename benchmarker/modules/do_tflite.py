@@ -44,8 +44,8 @@ class Benchmark(INeuralNet):
         super().get_kernel(module, remaining_args)
         # todo(vatai): figure a nicer way to get input shape
         x_train, _ = self.load_data()
-        x_train = x_train.reshape((-1,) + x_train.shape[2:])
-        self.net.build(x_train.shape)
+        # x_train = x_train.reshape((-1,) + x_train.shape[2:])
+        self.net.build(x_train.shape[1:])
         converter = tf.lite.TFLiteConverter.from_keras_model(self.net)
         self.net = converter.convert()
 
@@ -75,14 +75,13 @@ class Benchmark(INeuralNet):
         interpreter.allocate_tensors()
         # set input
         tensor_index = interpreter.get_input_details()[0]["index"]
-        start = timer()
-        print("cnt_batches_per_epoch", self.params["problem"]["cnt_batches_per_epoch"])
-        print("batch_size", self.params["batch_size"])
 
+        start = timer()
         for batch in range(self.params["problem"]["cnt_batches_per_epoch"]):
             interpreter.set_tensor(tensor_index, x_train[batch])
             interpreter.invoke()
         end = timer()
+
         # optionally get output?
         self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
