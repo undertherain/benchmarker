@@ -2,7 +2,11 @@
 """'Framework' for edge-tpu devices.
 
 TL;DR: install the `libedgetpu-max` library and add yourself to the
-`plugdev`
+`plugdev`. Something like
+
+  sudo apt-get install libedgetpu1-max
+
+  sudo usermod -aG plugdev $(whoami) # don't forget to login/logout
 
 Started from example in
 
