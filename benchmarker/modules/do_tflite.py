@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """'Framework' for edge-tpu devices.
 
-TL;DR: install the `libedgetpu` library and add yourself to the
-`plugdev` 
+TL;DR: install the `libedgetpu-max` library and add yourself to the
+`plugdev`
 
 Started from example in
 
