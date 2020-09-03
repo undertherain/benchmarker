@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 """'Framework' for edge-tpu devices.
 
-Started from 
+TL;DR: install the `libedgetpu` library and add yourself to the
+`plugdev` 
 
-  https://coral.ai/docs/accelerator/get-started/, 
+Started from example in
+
+  https://coral.ai/docs/accelerator/get-started/
 
 which uses code from
 
   https://github.com/google-coral/tflite/python/examples/classification
 
-Installed tflite_runtime following these instructions
+If your install `tflite_runtime` following these instructions
 
   https://www.tensorflow.org/lite/guide/python
+
+you can test the `/python/examples/classification` examples if it works.
 
 """
 
