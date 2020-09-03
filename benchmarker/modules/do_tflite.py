@@ -6,7 +6,10 @@ TL;DR: install the `libedgetpu-max` library and add yourself to the
 
   sudo apt-get install libedgetpu1-max
 
-  sudo usermod -aG plugdev $(whoami) # don't forget to login/logout
+  sudo usermod -aG plugdev $(whoami)
+
+Don't forget to login/logout and plug-out/plug-in the egde-tpu device
+(or restart the computer).
 
 Started from example in
 
