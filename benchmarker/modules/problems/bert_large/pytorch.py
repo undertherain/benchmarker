@@ -1,17 +1,5 @@
-from transformers import AutoModelForSequenceClassification, AutoConfig
-from benchmarker.modules.problems.helpers_torch_bert import BertInference, BertTraining
-
-
-config = AutoConfig.from_pretrained(
-    "bert-large-uncased",
-    num_labels=3)
+from benchmarker.modules.problems.helpers_torch_bert import get_kernel_by_name
 
 
 def get_kernel(params, unparsed_args=None):
-    assert unparsed_args == []
-    net = AutoModelForSequenceClassification.from_pretrained("bert-large-uncased", config=config)
-    if params["mode"] == "inference":
-        return BertInference(net)
-    else:
-        return BertTraining(net)
-    return net
+    return get_kernel_by_name(params, unparsed_args, "bert-large-uncased")
