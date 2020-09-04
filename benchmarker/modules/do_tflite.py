@@ -71,7 +71,11 @@ class Benchmark(INeuralNet):
             "Darwin": "libedgetpu.1.dylib",
             "Windows": "edgetpu.dll",
         }[platform.system()]
-        delegate = tf.lite.experimental.load_delegate(shared_lib, {})
+        try:
+            delegate = tf.lite.experimental.load_delegate(shared_lib, {})
+        except ValueError as err:
+            print(f"ValueError: {err}\nTPU probably not plugged in.")
+            exit(1)
         return tf.lite.Interpreter(
             model_content=self.net,
             experimental_delegates=[delegate],
