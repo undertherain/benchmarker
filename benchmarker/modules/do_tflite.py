@@ -76,6 +76,7 @@ class Benchmark(INeuralNet):
         except ValueError as err:
             print(f"ValueError: {err}\nTPU probably not plugged in.")
             exit(1)
+        self.params["device"] = "Edge TPU"
         return tf.lite.Interpreter(
             model_content=self.net,
             experimental_delegates=[delegate],
