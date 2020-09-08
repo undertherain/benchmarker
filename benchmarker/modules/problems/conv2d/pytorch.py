@@ -1,19 +1,12 @@
-import argparse
 import torch.nn as nn
-
+from .params import set_extra_params
 # TODO: the CLI interface becoming too clumsy
 # TODO: migrade to json configs
 
 
 def get_kernel(params, unparsed_args=None):
     assert params["mode"] == "inference"
-    parser = argparse.ArgumentParser(description='Benchmark conv kernel')
-    parser.add_argument('--size_kernel', type=int, default=3)
-    parser.add_argument('--cnt_filters', type=int, default=64)
-    parser.add_argument('--stride', type=int, default=1)
-    parser.add_argument('--dilation', type=int, default=1)
-    parser.add_argument('--padding', type=int, default=1)
-    args = parser.parse_args(unparsed_args)
+    args = set_extra_params(unparsed_args)
     params["problem"].update(vars(args))
     print(params["problem"])
     Net = nn.Conv2d(in_channels=params["problem"]["size"][1],
