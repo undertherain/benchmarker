@@ -16,7 +16,6 @@ class INeuralNet:
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
-        parser.add_argument("--precision", default="FP32")
 
         #
         parser.add_argument("--random_seed", default=None)
@@ -26,7 +25,6 @@ class INeuralNet:
         params["mode"] = parsed_args.mode
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
-        params["problem"]["precision"] = parsed_args.precision
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
         if "batch_size_per_device" not in params:
             self.params["batch_size_per_device"] = 32
