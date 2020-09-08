@@ -3,7 +3,7 @@ from tensorflow.keras.layers import Conv1D
 from tensorflow.keras.optimizers import SGD
 
 
-def get_kernel(params, unparsed_args):
+def get_kernel(params):
     assert params["mode"] == "inference"
     conv1d = Conv1D(
         filters=params["problem"]["cnt_filters"],
