@@ -13,7 +13,6 @@ for comparison between different framworks.
 Hopefully this should be fixed when we start importing models from ONNX
 """
 
-import argparse
 import math
 import torch
 import torch.nn as nn

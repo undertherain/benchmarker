@@ -2,10 +2,8 @@ import argparse
 import ast
 
 
-def proc_params(params, unparsed_args):
-    """Process args for CosmoFlow in (D1, D2, D3, Channels) tuple."""
-
-    parser = argparse.ArgumentParser()
+def set_extra_params(params, unparsed_args):
+    parser = argparse.ArgumentParser(description='Benchmark kernel')
     parser.add_argument("--input_shape", default="128, 128, 128, 4")
     parser.add_argument("--target_size", default=4)
     parser.add_argument("--dropout", default=0)
