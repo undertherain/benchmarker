@@ -6,11 +6,9 @@ import torch
 # https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
 import torch.backends.mkldnn
 import torch.nn as nn
-# import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 
-# from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
 
 
