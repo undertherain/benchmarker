@@ -56,7 +56,7 @@ int main(int argc, const char *argv[]) {
   bool with_sigmoid = (argc > 4) ? std::atoi(argv[4]) : 0;
   std::cerr << "With sigmoid: " << std::boolalpha << with_sigmoid << std::endl;
 
-  cv::Mat image = load_image(argv[1]);
+  cv::Mat image = load_image("tensorflow.png");
 
   cudaSetDevice(gpu_id);
 
