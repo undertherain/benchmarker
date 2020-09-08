@@ -53,11 +53,12 @@ class INeuralNet:
         path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
         path_kernel = (f"benchmarker.modules.problems.{params['problem']['name']}."
                        f"{params['framework']}")
-        module_params = importlib.import_module(path_params)
         module_kernel = importlib.import_module(path_kernel)
-        print("WE ARE HERE")
-        print(remaining_args)
-        module_params.set_extra_params(params, remaining_args)
+        try:
+            module_params = importlib.import_module(path_params)
+            module_params.set_extra_params(params, remaining_args)
+        except ImportError:
+            assert remaining_args == []
         self.net = module_kernel.get_kernel(self.params)
 
     def load_data(self):
