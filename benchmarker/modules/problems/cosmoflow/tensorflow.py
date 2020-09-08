@@ -10,8 +10,6 @@ defined in cosmoflow.py.
 import tensorflow as tf
 import tensorflow.keras.layers as layers
 
-from .params import proc_params
-
 
 def scale_1p2(x):
     """Simple scaling function for Lambda layers.
