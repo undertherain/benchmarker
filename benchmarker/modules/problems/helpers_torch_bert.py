@@ -23,7 +23,7 @@ class BertInference(nn.Module):
         return logits
 
 
-def get_kernel_by_name(params, unparsed_args, name_model):
+def get_kernel_by_name(params, name_model):
     config = AutoConfig.from_pretrained(name_model, num_labels=3)
     net = AutoModelForSequenceClassification.from_pretrained(name_model, config=config)
     if params["mode"] == "inference":

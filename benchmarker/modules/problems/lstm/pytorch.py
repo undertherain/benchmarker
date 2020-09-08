@@ -7,7 +7,7 @@ import torch.nn as nn
 # TODO: allow override forward pass in models, e.g. add softmax
 
 
-def get_kernel(params, unparsed_args=None):
+def get_kernel(params):
     assert params["mode"] == "inference"
     parser = argparse.ArgumentParser(description='Benchmark lstm kernel')
     parser.add_argument('--cnt_units', type=int, default=512)
