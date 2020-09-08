@@ -66,10 +66,9 @@ def build_model(input_shape, target_size, dropout=0):
     return model
 
 
-def get_kernel(params, unparsed_args):
+def get_kernel(params):
     """Construct the CosmoFlow 3D CNN model"""
 
-    proc_params(params, unparsed_args)
     model = build_model(params["input_shape"], params["target_size"], params["dropout"])
     model.compile(loss="mse", optimizer="sgd")
     return model
