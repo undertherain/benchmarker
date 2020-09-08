@@ -6,15 +6,15 @@ from .params import set_extra_params
 
 def get_kernel(params, unparsed_args=None):
     assert params["mode"] == "inference"
-    args = set_extra_params(unparsed_args)
-    params["problem"].update(vars(args))
+    set_extra_params(params, unparsed_args)
     print(params["problem"])
-    Net = nn.Conv2d(in_channels=params["problem"]["size"][1],
-                    out_channels=args.cnt_filters,
-                    kernel_size=args.size_kernel,
-                    stride=args.stride,
-                    padding=args.padding,
-                    dilation=args.dilation,
+    problem_params = params["problem"]
+    Net = nn.Conv2d(in_channels=problem_params["size"][1],
+                    out_channels=problem_params["cnt_filters"],
+                    kernel_size=problem_params["size_kernel"],
+                    stride=problem_params["stride"],
+                    padding=problem_params["padding"],
+                    dilation=problem_params["dilation"],
                     groups=1,
                     bias=True,
                     padding_mode='zeros')
