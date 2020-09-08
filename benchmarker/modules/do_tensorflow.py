@@ -101,7 +101,8 @@ class Benchmark(INeuralNet):
             # preheat
             model.predict(x_train, bs)
             start = timer()
-            model.predict(x_train, bs, verbose=1)
+            for i in range(nb_epoch):
+                model.predict(x_train, bs, verbose=1)
         end = timer()
         self.params["time_total"] = (end - start)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
