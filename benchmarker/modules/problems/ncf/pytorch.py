@@ -77,13 +77,13 @@ class NeuMF(nn.Module):
         return x
 
 
-def get_kernel(params, unparsed_args=None):
+def get_kernel(params):
     net = NeuMF(
-        nb_users=args.nb_users,
-        nb_items=args.nb_items,
-        mf_dim=args.factors,
+        nb_users=params["problem"]["nb_users"],
+        nb_items=params["problem"]["nb_items"],
+        mf_dim=params["problem"]["factors"],
         mf_reg=0.0,
-        mlp_layer_sizes=args.layers,
-        mlp_layer_regs=[0.0 for i in args.layers],
+        mlp_layer_sizes=params["problem"]["layers"],
+        mlp_layer_regs=[0.0 for i in params["problem"]["layers"]],
     )
     return Recommender(params, net)
