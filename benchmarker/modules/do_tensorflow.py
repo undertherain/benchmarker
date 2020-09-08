@@ -7,6 +7,7 @@ from timeit import default_timer as timer
 import argparse
 
 import tensorflow as tf
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 
 from .i_neural_net import INeuralNet
 
@@ -18,7 +19,6 @@ class Benchmark(INeuralNet):
         parser = argparse.ArgumentParser(description="cf extra args")
         parser.add_argument("--precision", default="FP32")
         args, remaining_args = parser.parse_known_args(extra_args)
-        super().__init__(params, remaining_args)
         params["problem"]["precision"] = args.precision
         assert params["problem"]["precision"] in ["FP32", "mixed"]
         super().__init__(params, remaining_args)
@@ -60,6 +60,9 @@ class Benchmark(INeuralNet):
         Custom TF `get_kernel` method to handle TPU if
         available. https://www.tensorflow.org/guide/tpu
         """
+        if self.params["problem"]["precision"] == "mixed":
+            policy = mixed_precision.Policy('mixed_float16')
+            mixed_precision.set_policy(policy)
         with self.get_strategy().scope():
             super().get_kernel(module, remaining_args)
 
