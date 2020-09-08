@@ -5,6 +5,8 @@ from tensorflow.keras.optimizers import SGD
 
 def get_kernel(params):
     assert params["mode"] == "inference"
+    if params["problem"]["padding"] == 1:
+        params["problem"]["padding"] = "valid"
     conv1d = Conv2D(
         filters=params["problem"]["cnt_filters"],
         kernel_size=params["problem"]["size_kernel"],
