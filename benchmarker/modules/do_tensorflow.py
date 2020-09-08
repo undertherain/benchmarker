@@ -4,6 +4,7 @@
 
 import os
 from timeit import default_timer as timer
+import argparse
 
 import tensorflow as tf
 
@@ -13,8 +14,13 @@ from .i_neural_net import INeuralNet
 class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
-    def __init__(self, params, remaining_args=None):
-        gpus = params["gpus"]
+    def __init__(self, params, extra_args=None):
+        parser = argparse.ArgumentParser(description="cf extra args")
+        parser.add_argument("--precision", default="FP32")
+        args, remaining_args = parser.parse_known_args(extra_args)
+        super().__init__(params, remaining_args)
+        params["problem"]["precision"] = args.precision
+        assert params["problem"]["precision"] in ["FP32", "mixed"]
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
         os.environ["KERAS_BACKEND"] = "tensorflow"
