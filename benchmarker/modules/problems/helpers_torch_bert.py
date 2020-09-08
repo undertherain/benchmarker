@@ -24,7 +24,6 @@ class BertInference(nn.Module):
 
 
 def get_kernel_by_name(params, unparsed_args, name_model):
-    assert unparsed_args == []
     config = AutoConfig.from_pretrained(name_model, num_labels=3)
     net = AutoModelForSequenceClassification.from_pretrained(name_model, config=config)
     if params["mode"] == "inference":
