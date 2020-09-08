@@ -3,8 +3,7 @@ import torch.nn as nn
 # TODO: migrade to json configs
 
 
-def get_kernel(params, unparsed_args=None):
-    assert unparsed_args is None
+def get_kernel(params):
     assert params["mode"] == "inference"
     print(params["problem"])
     problem_params = params["problem"]
