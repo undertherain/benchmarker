@@ -1,12 +1,11 @@
 import torch.nn as nn
-from .params import set_extra_params
 # TODO: the CLI interface becoming too clumsy
 # TODO: migrade to json configs
 
 
 def get_kernel(params, unparsed_args=None):
+    assert unparsed_args is None
     assert params["mode"] == "inference"
-    set_extra_params(params, unparsed_args)
     print(params["problem"])
     problem_params = params["problem"]
     Net = nn.Conv2d(in_channels=problem_params["size"][1],
