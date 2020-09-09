@@ -16,7 +16,6 @@ class INeuralNet:
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
-        parser.add_argument("--precision", default="FP32")
 
         #
         parser.add_argument("--random_seed", default=None)
@@ -26,7 +25,6 @@ class INeuralNet:
         params["mode"] = parsed_args.mode
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
-        params["problem"]["precision"] = parsed_args.precision
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
         if "batch_size_per_device" not in params:
             self.params["batch_size_per_device"] = 32
@@ -41,23 +39,25 @@ class INeuralNet:
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]
             )
         self.params["channels_first"] = True
-        path = f"benchmarker.modules.problems.{params['problem']['name']}.{params['framework']}"
-        kernel_module = importlib.import_module(path)
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
-        self.get_kernel(kernel_module, remaining_args)
+        self.get_kernel(params, remaining_args)
 
-    def get_kernel(self, module, remaining_args):
+    def get_kernel(self, params, remaining_args):
         """Default function to set `self.net`.  The derived do_* classes can
         override this function if there is some framework specific
         logic involved (e.g. GPU/TPU management etc).
-
-        :param module: module which implements the framework specific
-        `get_kernel` method.
-        :param remaining_args: (Sub)problem dependent arguments.
-
         """
-        self.net = module.get_kernel(self.params, remaining_args)
+        path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
+        path_kernel = (f"benchmarker.modules.problems.{params['problem']['name']}."
+                       f"{params['framework']}")
+        module_kernel = importlib.import_module(path_kernel)
+        try:
+            module_params = importlib.import_module(path_params)
+            module_params.set_extra_params(params, remaining_args)
+        except ImportError:
+            assert remaining_args == []
+        self.net = module_kernel.get_kernel(self.params)
 
     def load_data(self):
         params = self.params
