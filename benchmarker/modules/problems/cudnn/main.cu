@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <cudnn.h>
+#include <cudnn_cnn_infer.h>
 #include <cudnn_ops_infer.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -60,16 +61,23 @@ int main(int argc, const char *argv[]) {
 
   int n = 1; // (input) batch size
   cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
-  cudnnDataType_t input_data_type = CUDNN_DATA_FLOAT;
+  cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
   int in_channels = 3;
   int input_height = image.rows;
   int input_width = image.cols;
 
   cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
-  cudnnDataType_t input_data_type = CUDNN_DATA_FLOAT;
   int out_channels = 3;
-  int kernel_height = image.rows;
-  int kernel_width = image.cols;
+  int kernel_height = 3;
+  int kernel_width = 3;
+
+  int pad_height = 1;
+  int pad_width = 1;
+  int vertical_stride = 1;
+  int horizontal_stride = 1;
+  int dilation_height = 1;
+  int dilation_width = 1;
+  cudnnConvolutionMode_t mode = CUDNN_CROSS_CORRELATION;
 
   cudaSetDevice(gpu_id);
 
@@ -79,30 +87,20 @@ int main(int argc, const char *argv[]) {
   cudnnTensorDescriptor_t input_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
   checkCUDNN(cudnnSetTensor4dDescriptor(input_descriptor, input_format,
-                                        input_data_type, n, in_channels,
-                                        input_height, input_width));
+                                        data_type, n, in_channels, input_height,
+                                        input_width));
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
-  checkCUDNN(cudnnSetFilter4dDescriptor(kernel_descriptor,
-                                        /*dataType=*/CUDNN_DATA_FLOAT,
-                                        /*format=*/CUDNN_TENSOR_NCHW,
-                                        /*out_channels=*/3,
-                                        /*in_channels=*/3,
-                                        /*kernel_height=*/3,
-                                        /*kernel_width=*/3));
+  checkCUDNN(cudnnSetFilter4dDescriptor(
+      kernel_descriptor, data_type, kernel_format, out_channels, in_channels,
+      kernel_height, kernel_width));
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
-  checkCUDNN(cudnnSetConvolution2dDescriptor(convolution_descriptor,
-                                             /*pad_height=*/1,
-                                             /*pad_width=*/1,
-                                             /*vertical_stride=*/1,
-                                             /*horizontal_stride=*/1,
-                                             /*dilation_height=*/1,
-                                             /*dilation_width=*/1,
-                                             /*mode=*/CUDNN_CROSS_CORRELATION,
-                                             /*computeType=*/CUDNN_DATA_FLOAT));
+  checkCUDNN(cudnnSetConvolution2dDescriptor(
+      convolution_descriptor, pad_height, pad_width, vertical_stride,
+      horizontal_stride, dilation_height, dilation_width, mode, data_type));
 
   int batch_size{0}, channels{0}, height{0}, width{0};
   checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
