@@ -58,6 +58,19 @@ int main(int argc, const char *argv[]) {
 
   cv::Mat image = load_image("tensorflow.png");
 
+  int n = 1; // (input) batch size
+  cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
+  cudnnDataType_t input_data_type = CUDNN_DATA_FLOAT;
+  int in_channels = 3;
+  int input_height = image.rows;
+  int input_width = image.cols;
+
+  cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
+  cudnnDataType_t input_data_type = CUDNN_DATA_FLOAT;
+  int out_channels = 3;
+  int kernel_height = image.rows;
+  int kernel_width = image.cols;
+
   cudaSetDevice(gpu_id);
 
   cudnnHandle_t cudnn;
@@ -65,13 +78,9 @@ int main(int argc, const char *argv[]) {
 
   cudnnTensorDescriptor_t input_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
-  checkCUDNN(cudnnSetTensor4dDescriptor(input_descriptor,
-                                        /*format=*/CUDNN_TENSOR_NHWC,
-                                        /*dataType=*/CUDNN_DATA_FLOAT,
-                                        /*batch_size=*/1,
-                                        /*channels=*/3,
-                                        /*image_height=*/image.rows,
-                                        /*image_width=*/image.cols));
+  checkCUDNN(cudnnSetTensor4dDescriptor(input_descriptor, input_format,
+                                        input_data_type, n, in_channels,
+                                        input_height, input_width));
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
