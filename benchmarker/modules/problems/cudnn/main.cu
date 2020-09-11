@@ -137,16 +137,18 @@ int main(int argc, const char *argv[]) {
   void *d_workspace{nullptr};
   cudaMalloc(&d_workspace, workspace_bytes);
 
-  int image_bytes =
+  int input_bytes =
+      n * in_channels * input_height * input_width * sizeof(float);
+  int output_bytes =
       n * out_channels * output_height * output_width * sizeof(float);
 
   float *d_input{nullptr};
-  cudaMalloc(&d_input, image_bytes);
-  cudaMemcpy(d_input, image.ptr<float>(0), image_bytes, cudaMemcpyHostToDevice);
+  cudaMalloc(&d_input, input_bytes);
+  cudaMemcpy(d_input, image.ptr<float>(0), input_bytes, cudaMemcpyHostToDevice);
 
   float *d_output{nullptr};
-  cudaMalloc(&d_output, image_bytes);
-  cudaMemset(d_output, 0, image_bytes);
+  cudaMalloc(&d_output, output_bytes);
+  cudaMemset(d_output, 0, output_bytes);
 
   // clang-format off
   const float kernel_template[3][3] = {
@@ -190,8 +192,8 @@ int main(int argc, const char *argv[]) {
     cudnnDestroyActivationDescriptor(activation_descriptor);
   }
 
-  float *h_output = new float[image_bytes];
-  cudaMemcpy(h_output, d_output, image_bytes, cudaMemcpyDeviceToHost);
+  float *h_output = new float[output_bytes];
+  cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
 
   save_image("cudnn-out.png", h_output, output_height, output_width);
 
