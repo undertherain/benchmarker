@@ -1,6 +1,5 @@
-begins
 py-cpuinfo==5.0.0
-pydataset
+# pydataset
 system_query[cpu, hdd, ram, swap]
-python_papi
+# python_papi
 # install system_query[all] for GPU systems
