@@ -103,17 +103,16 @@ class Benchmark(INeuralNet):
         model.to(device)
         # TODO: args for training hyperparameters
         start = timer()
+        if self.params["problem"]["precision"] == "FP16":
+            if self.x_train.dtype == torch.float32:
+                self.x_train = self.x_train.half()
+                model.half()
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
-            if self.params["problem"]["precision"] == "FP16":
-                if self.x_train.dtype == torch.float32:
-                    self.x_train = self.x_train.half()
-                model.half()
             if self.params["problem"]["precision"] == "mixed":
-                from apex import amp
-
                 assert len(self.params["gpus"]) == 1
+                from apex import amp
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
@@ -122,7 +121,7 @@ class Benchmark(INeuralNet):
                 self.train(model, device, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
-            assert self.params["problem"]["precision"] == "FP32"
+            assert self.params["problem"]["precision"] in ["FP32", "FP16"]
             # TODO: add mixed/FP16 precision for inference
             model.eval()
             if self.params["backend"] == "DNNL":
