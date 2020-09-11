@@ -60,14 +60,19 @@ int main(int argc, const char *argv[]) {
   cv::Mat image = load_image("tensorflow.png");
 
   int n = 1; // (input) batch size
-  cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
   cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
+
+  cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
   int in_channels = 3;
   int input_height = image.rows;
   int input_width = image.cols;
 
-  cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
+  cudnnTensorFormat_t output_format = CUDNN_TENSOR_NHWC;
   int out_channels = 3;
+  int output_height = image.rows;
+  int output_width = image.cols;
+
+  cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
   int kernel_height = 3;
   int kernel_width = 3;
 
@@ -112,13 +117,9 @@ int main(int argc, const char *argv[]) {
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
-  checkCUDNN(cudnnSetTensor4dDescriptor(output_descriptor,
-                                        /*format=*/CUDNN_TENSOR_NHWC,
-                                        /*dataType=*/CUDNN_DATA_FLOAT,
-                                        /*batch_size=*/1,
-                                        /*channels=*/3,
-                                        /*image_height=*/image.rows,
-                                        /*image_width=*/image.cols));
+  checkCUDNN(cudnnSetTensor4dDescriptor(output_descriptor, output_format,
+                                        data_type, n, out_channels,
+                                        output_height, output_width));
 
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(algo);
