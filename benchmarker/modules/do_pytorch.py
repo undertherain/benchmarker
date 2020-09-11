@@ -35,7 +35,7 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-            assert self.params["problem"]["precision"] in {"FP32", "mixed"}
+            assert self.params["problem"]["precision"] in {"FP32", "FP16", "mixed"}
         else:
             assert self.params["problem"]["precision"] == "FP32"
         self.params["channels_first"] = True
@@ -106,6 +106,9 @@ class Benchmark(INeuralNet):
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
+            if self.params["problem"]["precision"] == "FP16":
+                self.x_train = self.x_train.half()
+                model.half()
             if self.params["problem"]["precision"] == "mixed":
                 from apex import amp
 
