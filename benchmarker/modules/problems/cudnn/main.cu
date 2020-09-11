@@ -107,14 +107,6 @@ int main(int argc, const char *argv[]) {
       convolution_descriptor, pad_height, pad_width, vertical_stride,
       horizontal_stride, dilation_height, dilation_width, mode, data_type));
 
-  int batch_size{0}, channels{0}, height{0}, width{0};
-  checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
-      convolution_descriptor, input_descriptor, kernel_descriptor, &batch_size,
-      &channels, &height, &width));
-
-  std::cerr << "Output Image: " << height << " x " << width << " x " << channels
-            << std::endl;
-
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
   checkCUDNN(cudnnSetTensor4dDescriptor(output_descriptor, output_format,
@@ -145,7 +137,8 @@ int main(int argc, const char *argv[]) {
   void *d_workspace{nullptr};
   cudaMalloc(&d_workspace, workspace_bytes);
 
-  int image_bytes = batch_size * channels * height * width * sizeof(float);
+  int image_bytes =
+      n * out_channels * output_height * output_width * sizeof(float);
 
   float *d_input{nullptr};
   cudaMalloc(&d_input, image_bytes);
@@ -200,7 +193,7 @@ int main(int argc, const char *argv[]) {
   float *h_output = new float[image_bytes];
   cudaMemcpy(h_output, d_output, image_bytes, cudaMemcpyDeviceToHost);
 
-  save_image("cudnn-out.png", h_output, height, width);
+  save_image("cudnn-out.png", h_output, output_height, output_width);
 
   delete[] h_output;
   cudaFree(d_kernel);
