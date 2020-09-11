@@ -106,7 +106,9 @@ class Benchmark(INeuralNet):
         if self.params["problem"]["precision"] == "FP16":
             if self.x_train.dtype == torch.float32:
                 self.x_train = self.x_train.half()
-                model.half()
+            if self.y_train.dtype == torch.float32:
+                self.y_train = self.y_train.half()
+            model.half()
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
