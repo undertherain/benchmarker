@@ -41,13 +41,24 @@ void save_image(const char *output_filename, float *buffer, int height,
   std::cerr << "Wrote output to " << output_filename << std::endl;
 }
 
-int main(int argc, const char *argv[]) {
+class Args {
+public:
+  Args(const int argc, const char *argv[]);
+
+private:
+  Args();
+};
+
+Args::Args(const int argc, const char *argv[]) {
   if (argc < 2) {
     std::cerr << "usage: conv <image> [algo=0] [gpu=0] [sigmoid=0]"
               << std::endl;
     std::exit(EXIT_FAILURE);
   }
+}
 
+int main(int argc, const char *argv[]) {
+  Args args(argc, argv);
   int algo = (argc > 2) ? std::atoi(argv[2]) : CUDNN_CONVOLUTION_FWD_ALGO_GEMM;
   std::cerr << "Algorighm: " << algo << std::endl;
 
