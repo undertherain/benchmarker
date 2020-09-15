@@ -69,8 +69,8 @@ int main(int argc, const char *argv[]) {
 
   cudnnTensorFormat_t output_format = CUDNN_TENSOR_NHWC;
   int out_channels = 3;
-  int output_height = image.rows;
-  int output_width = image.cols;
+  int output_height;
+  int output_width;
 
   cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
   int kernel_height = 3;
@@ -106,6 +106,11 @@ int main(int argc, const char *argv[]) {
   checkCUDNN(cudnnSetConvolution2dDescriptor(
       convolution_descriptor, pad_height, pad_width, vertical_stride,
       horizontal_stride, dilation_height, dilation_width, mode, data_type));
+
+  checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
+      convolution_descriptor, input_descriptor, kernel_descriptor, &n,
+      &out_channels, &output_height, &output_width));
+
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
