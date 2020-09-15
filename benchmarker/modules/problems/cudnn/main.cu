@@ -90,10 +90,11 @@ int main(int argc, const char *argv[]) {
   cudnnCreate(&cudnn);
 
   cudnnTensorDescriptor_t input_descriptor;
+  int nbDims = 4;
+  int in_dimA[] = {n, in_channels, input_height, input_width};
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
-  checkCUDNN(cudnnSetTensor4dDescriptor(input_descriptor, input_format,
-                                        data_type, n, in_channels, input_height,
-                                        input_width));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, input_format,
+                                          data_type, nbDims, in_dimA));
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
@@ -111,12 +112,11 @@ int main(int argc, const char *argv[]) {
       convolution_descriptor, input_descriptor, kernel_descriptor, &n,
       &out_channels, &output_height, &output_width));
 
-
   cudnnTensorDescriptor_t output_descriptor;
+  int out_dimA[] = {n, out_channels, output_height, output_width};
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
-  checkCUDNN(cudnnSetTensor4dDescriptor(output_descriptor, output_format,
-                                        data_type, n, out_channels,
-                                        output_height, output_width));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, output_format,
+                                          data_type, nbDims, out_dimA));
 
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(algo);
