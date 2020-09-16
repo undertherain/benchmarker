@@ -91,8 +91,6 @@ int main(int argc, const char *argv[]) {
 
   cudnnTensorFormat_t output_format = CUDNN_TENSOR_NHWC;
   int out_channels = 3;
-  int output_height;
-  int output_width;
 
   // Note: if kernel_format is NHWC (i.e. not NCHW) then the
   // support is limited.
@@ -127,9 +125,7 @@ int main(int argc, const char *argv[]) {
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
-  // checkCUDNN(cudnnSetConvolution2dDescriptor(
-  //     convolution_descriptor, pad_height, pad_width, vertical_stride,
-  //     horizontal_stride, dilation_height, dilation_width, mode, data_type));
+
   int ker_len = nbDims-2;
   int ker_pad[] = {pad_height, pad_width};
   int ker_stride[] = {vertical_stride, horizontal_stride};
@@ -137,17 +133,11 @@ int main(int argc, const char *argv[]) {
   checkCUDNN(cudnnSetConvolutionNdDescriptor(
       convolution_descriptor, ker_len, ker_pad, ker_stride, ker_dilation, mode, data_type));
 
-  // checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
-  //     convolution_descriptor, input_descriptor, kernel_descriptor, &n,
-  //     &out_channels, &output_height, &output_width));
-  // int out_dimA[] = {n, out_channels, output_height, output_width};
   const int MAX_DIM = 8;
   int out_dimA[MAX_DIM];
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor,
       nbDims, out_dimA));
-  output_height = out_dimA[2];
-  output_width = out_dimA[3];
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
@@ -180,8 +170,7 @@ int main(int argc, const char *argv[]) {
 
   int input_bytes =
       n * in_channels * input_height * input_width * sizeof(float);
-  int output_bytes =
-      n * out_channels * output_height * output_width * sizeof(float);
+  int output_bytes = input_bytes;
 
   float *d_input{nullptr};
   cudaMalloc(&d_input, input_bytes);
@@ -236,7 +225,7 @@ int main(int argc, const char *argv[]) {
   float *h_output = new float[output_bytes];
   cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
 
-  save_image("cudnn-out.png", h_output, output_height, output_width);
+  save_image("cudnn-out.png", h_output, input_height, input_width);
 
   delete[] h_output;
   cudaFree(d_kernel);
