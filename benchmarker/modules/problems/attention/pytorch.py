@@ -8,8 +8,13 @@ class Net(nn.MultiheadAttention):
 
 def get_kernel(params):
     assert params["mode"] == "inference"
+    cnt_samples = params["problem"]["size"][0]
+    len_seq = params["problem"]["size"][1]
+    embed_dim = params["problem"]["size"][2]
+    params["problem"]["ops_estimated"] = \
+        embed_dim * embed_dim * len_seq * len_seq * cnt_samples * params["nb_epoch"]
     # expected sizes: cnt_itmes, len_seq, dims
-    net = Net(embed_dim=params["problem"]["size"][2],
+    net = Net(embed_dim=embed_dim,
               num_heads=params["problem"]["cnt_heads"],
               dropout=0.0,
               bias=True,
