@@ -1,6 +1,14 @@
 // http://www.goldsborough.me/cuda/ml/cudnn/c++/2017/10/01/14-37-23-convolutions_with_cudnn/
 //
 // Download input image from the website.
+//
+// The docs here
+// https://docs.nvidia.com/deeplearning/cudnn/api/index.html#cudnnSetFilterNdDescriptor
+// say that: "The tensor format CUDNN_TENSOR_NHWC has limited support
+// in cudnnConvolutionForward(), cudnnConvolutionBackwardData(), and
+// cudnnConvolutionBackwardFilter()." so for now let's stick to NCHW!
+
+
 
 #include <cassert>
 #include <cstdlib>
@@ -10,14 +18,14 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-#define checkCUDNN(expression)                                                 \
-  {                                                                            \
-    cudnnStatus_t status = (expression);                                       \
-    if (status != CUDNN_STATUS_SUCCESS) {                                      \
-      std::cerr << "Error on line " << __LINE__ << ": "                        \
-                << cudnnGetErrorString(status) << std::endl;                   \
-      std::exit(EXIT_FAILURE);                                                 \
-    }                                                                          \
+#define checkCUDNN(expression)                                  \
+  {                                                             \
+    cudnnStatus_t status = (expression);                        \
+    if (status != CUDNN_STATUS_SUCCESS) {                       \
+      std::cerr << "Error on line " << __LINE__ << ": "         \
+                << cudnnGetErrorString(status) << std::endl;    \
+      std::exit(EXIT_FAILURE);                                  \
+    }                                                           \
   }
 
 cv::Mat load_image(const char *image_path) {
@@ -42,16 +50,19 @@ void save_image(const char *output_filename, float *buffer, int height,
 }
 
 class Args {
-public:
+ public:
   Args(const int argc, const char *argv[]);
 
-private:
+ private:
   Args();
 };
 
 Args::Args(const int argc, const char *argv[]) {
   if (argc < 2) {
-    std::cerr << "usage: conv <image> [algo=0] [gpu=0] [sigmoid=0]"
+    // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
+    // 3d bs in_ch d0 d1 d2
+    std::cerr << "usage: " << argv[0] << " "
+        "gpu"
               << std::endl;
     std::exit(EXIT_FAILURE);
   }
@@ -83,10 +94,11 @@ int main(int argc, const char *argv[]) {
   int output_height;
   int output_width;
 
+  // Note: if kernel_format is NHWC (i.e. not NCHW) then the
+  // support is limited.
   cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
   int kernel_height = 3;
   int kernel_width = 3;
-
   int pad_height = 1;
   int pad_width = 1;
   int vertical_stride = 1;
@@ -109,9 +121,9 @@ int main(int argc, const char *argv[]) {
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
-  checkCUDNN(cudnnSetFilter4dDescriptor(
-      kernel_descriptor, data_type, kernel_format, out_channels, in_channels,
-      kernel_height, kernel_width));
+  int ker_dim[] = {out_channels, in_channels, kernel_height, kernel_width};
+  checkCUDNN(cudnnSetFilterNdDescriptor(
+      kernel_descriptor, data_type, kernel_format, nbDims, ker_dim));
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
