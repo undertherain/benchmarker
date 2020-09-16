@@ -137,12 +137,19 @@ int main(int argc, const char *argv[]) {
   checkCUDNN(cudnnSetConvolutionNdDescriptor(
       convolution_descriptor, ker_len, ker_pad, ker_stride, ker_dilation, mode, data_type));
 
-  checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
-      convolution_descriptor, input_descriptor, kernel_descriptor, &n,
-      &out_channels, &output_height, &output_width));
+  // checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
+  //     convolution_descriptor, input_descriptor, kernel_descriptor, &n,
+  //     &out_channels, &output_height, &output_width));
+  // int out_dimA[] = {n, out_channels, output_height, output_width};
+  const int MAX_DIM = 8;
+  int out_dimA[MAX_DIM];
+  checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
+      convolution_descriptor, input_descriptor, kernel_descriptor,
+      nbDims, out_dimA));
+  output_height = out_dimA[2];
+  output_width = out_dimA[3];
 
   cudnnTensorDescriptor_t output_descriptor;
-  int out_dimA[] = {n, out_channels, output_height, output_width};
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, output_format,
                                           data_type, nbDims, out_dimA));
