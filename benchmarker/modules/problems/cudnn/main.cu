@@ -127,9 +127,15 @@ int main(int argc, const char *argv[]) {
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
-  checkCUDNN(cudnnSetConvolution2dDescriptor(
-      convolution_descriptor, pad_height, pad_width, vertical_stride,
-      horizontal_stride, dilation_height, dilation_width, mode, data_type));
+  // checkCUDNN(cudnnSetConvolution2dDescriptor(
+  //     convolution_descriptor, pad_height, pad_width, vertical_stride,
+  //     horizontal_stride, dilation_height, dilation_width, mode, data_type));
+  int ker_len = nbDims-2;
+  int ker_pad[] = {pad_height, pad_width};
+  int ker_stride[] = {vertical_stride, horizontal_stride};
+  int ker_dilation[] = {dilation_height, dilation_width};
+  checkCUDNN(cudnnSetConvolutionNdDescriptor(
+      convolution_descriptor, ker_len, ker_pad, ker_stride, ker_dilation, mode, data_type));
 
   checkCUDNN(cudnnGetConvolution2dForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor, &n,
