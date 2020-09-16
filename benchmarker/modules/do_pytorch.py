@@ -2,9 +2,6 @@ import argparse
 from timeit import default_timer as timer
 
 import torch
-# TODO: should we expect an import error here?
-# https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
-import torch.backends.mkldnn
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
@@ -81,6 +78,7 @@ class Benchmark(INeuralNet):
         # use_cuda = not args.no_cuda and torch.cuda.is_available()
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         if self.params["backend"] == "DNNL":
+            import torch.backends.mkldnn
             torch.backends.mkldnn.enabled = True
         else:
             if self.params["backend"] == "native":
