@@ -53,7 +53,9 @@ const int MAX_DIM = 8;
 class Args {
  public:
   Args(const int argc, const char *argv[]);
-
+  int nbDims = 4;
+  // {n, in_channels, input_height, input_width}
+  int in_dimA[MAX_DIM];
  private:
   Args();
 };
@@ -67,6 +69,10 @@ Args::Args(const int argc, const char *argv[]) {
               << std::endl;
     std::exit(EXIT_FAILURE);
   }
+  in_dimA[0] = 1;
+  in_dimA[1] = 3;
+  in_dimA[2] = 578;
+  in_dimA[3] = 549;
 }
 
 int main(int argc, const char *argv[]) {
@@ -112,22 +118,20 @@ int main(int argc, const char *argv[]) {
   cudnnCreate(&cudnn);
 
   cudnnTensorDescriptor_t input_descriptor;
-  int nbDims = 4;
-  int in_dimA[] = {n, in_channels, input_height, input_width};
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, input_format,
-                                          data_type, nbDims, in_dimA));
+                                          data_type, args.nbDims, args.in_dimA));
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
   int ker_dim[] = {out_channels, in_channels, kernel_height, kernel_width};
   checkCUDNN(cudnnSetFilterNdDescriptor(
-      kernel_descriptor, data_type, kernel_format, nbDims, ker_dim));
+      kernel_descriptor, data_type, kernel_format, args.nbDims, ker_dim));
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
 
-  int ker_len = nbDims-2;
+  int ker_len = args.nbDims-2;
   int ker_pad[] = {pad_height, pad_width};
   int ker_stride[] = {vertical_stride, horizontal_stride};
   int ker_dilation[] = {dilation_height, dilation_width};
@@ -136,12 +140,12 @@ int main(int argc, const char *argv[]) {
 
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor,
-      nbDims, in_dimA));
+      args.nbDims, args.in_dimA));
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, output_format,
-                                          data_type, nbDims, in_dimA));
+                                          data_type, args.nbDims, args.in_dimA));
 
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(algo);
