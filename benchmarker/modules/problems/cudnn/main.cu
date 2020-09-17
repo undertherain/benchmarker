@@ -179,6 +179,7 @@ int main(int argc, const char *argv[]) {
 
   int input_bytes = args.getInputBytes();
   int output_bytes = args.getOutputBytes();
+  int kernel_bytes = args.getKernelBytes();
 
   float *d_input{nullptr};
   cudaMalloc(&d_input, input_bytes);
@@ -196,18 +197,16 @@ int main(int argc, const char *argv[]) {
   };
   // clang-format on
 
-  int kernel_bytes = args.getKernelBytes();
-  std::cout << "kernel_bytes: " << kernel_bytes << std::endl;
-  std::cout << "3^4: " << 3 * 3 * 3 * 3 << std::endl;
-  float h_kernel[3 * 3 * 3 * 3];
+  float *h_kernel = new float[3 * 3 * 3 * 3];
   for (int kernel = 0; kernel < 3; ++kernel) {
     for (int channel = 0; channel < 3; ++channel) {
       for (int row = 0; row < 3; ++row) {
         for (int column = 0; column < 3; ++column) {
-          h_kernel[((args.ker_dim[1] * kernel + channel) * args.ker_dim[2] +
-                    row) *
-                       args.ker_dim[3] +
-                   column] = kernel_template[row][column];
+          int idx = kernel;
+          idx = idx * args.ker_dim[1] + channel;
+          idx = idx * args.ker_dim[2] + row;
+          idx = idx * args.ker_dim[3] + column;
+          h_kernel[idx] = kernel_template[row][column];
         }
       }
     }
@@ -215,7 +214,7 @@ int main(int argc, const char *argv[]) {
 
   float *d_kernel{nullptr};
   cudaMalloc(&d_kernel, kernel_bytes);
-  cudaMemcpy(d_kernel, h_kernel, sizeof(h_kernel), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_kernel, h_kernel, kernel_bytes, cudaMemcpyHostToDevice);
 
   const float alpha = 1.0f, beta = 0.0f;
 
@@ -241,6 +240,7 @@ int main(int argc, const char *argv[]) {
 
   save_image("cudnn-out.png", h_output, args.out_dimA[2], args.out_dimA[3]);
 
+  delete[] h_kernel;
   delete[] h_output;
   cudaFree(d_kernel);
   cudaFree(d_input);
