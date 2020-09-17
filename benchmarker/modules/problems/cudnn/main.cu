@@ -58,13 +58,24 @@ public:
   int getInputBytes();
   int getOutputBytes();
 
+  // {out_channels, in_channels, kernel_height, kernel_width}
+  int ker_dim[MAX_DIM];
+  int ker_len;
+  int ker_pad[MAX_DIM];
+  int ker_stride[MAX_DIM];
+  int ker_dilation[MAX_DIM];
+
+  int kernel_height = 3;
+  int kernel_width = 3;
+
 private:
   Args();
   int prod(int *arr);
 };
 
 Args::Args(const int argc, const char *argv[])
-    : nbDims{4}, in_dimA{1, 3, 578, 549} {
+    : nbDims{4}, in_dimA{1, 3, 578, 549}, ker_dim{3, 3, 3, 3},
+      ker_len{nbDims - 2}, ker_pad{1, 1}, ker_stride{1, 1}, ker_dilation{1, 1} {
   if (argc < 2) {
     // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
     // 3d bs in_ch d0 d1 d2
@@ -113,14 +124,6 @@ int main(int argc, const char *argv[]) {
   // Note: if kernel_format is NHWC (i.e. not NCHW) then the
   // support is limited.
   cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
-  int kernel_height = 3;
-  int kernel_width = 3;
-  int pad_height = 1;
-  int pad_width = 1;
-  int vertical_stride = 1;
-  int horizontal_stride = 1;
-  int dilation_height = 1;
-  int dilation_width = 1;
   cudnnConvolutionMode_t mode = CUDNN_CROSS_CORRELATION;
 
   cudaSetDevice(gpu_id);
@@ -135,20 +138,15 @@ int main(int argc, const char *argv[]) {
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
-  int ker_dim[] = {out_channels, in_channels, kernel_height, kernel_width};
-  checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, data_type,
-                                        kernel_format, args.nbDims, ker_dim));
+  checkCUDNN(cudnnSetFilterNdDescriptor(
+      kernel_descriptor, data_type, kernel_format, args.nbDims, args.ker_dim));
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
 
-  int ker_len = args.nbDims - 2;
-  int ker_pad[] = {pad_height, pad_width};
-  int ker_stride[] = {vertical_stride, horizontal_stride};
-  int ker_dilation[] = {dilation_height, dilation_width};
-  checkCUDNN(cudnnSetConvolutionNdDescriptor(convolution_descriptor, ker_len,
-                                             ker_pad, ker_stride, ker_dilation,
-                                             mode, data_type));
+  checkCUDNN(cudnnSetConvolutionNdDescriptor(
+      convolution_descriptor, args.ker_len, args.ker_pad, args.ker_stride,
+      args.ker_dilation, mode, data_type));
 
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor, args.nbDims,
