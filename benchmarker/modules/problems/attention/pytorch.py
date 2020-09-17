@@ -13,7 +13,7 @@ def get_kernel(params):
     embed_dim = params["problem"]["size"][2]
     ops_proj = len_seq * cnt_samples * 8 * embed_dim
     ops_attn = 2 * embed_dim * len_seq * len_seq * cnt_samples
-    params["problem"]["ops_estimated"] = (ops_proj + ops_attn) * params["nb_epoch"]
+    params["problem"]["ops_estimated"] = (ops_proj + 2 * ops_attn) * params["nb_epoch"]
 
     # expected sizes: cnt_itmes, len_seq, dims
     net = Net(embed_dim=embed_dim,
