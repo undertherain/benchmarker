@@ -51,6 +51,10 @@ const int MAX_DIM = 8;
 class Args {
 public:
   Args(const int argc, const char *argv[]);
+  int algo; // @todo(vatai): change to cudnn enum type
+  int gpu_id;
+  bool with_sigmoid;
+
   int nbDims;
   // {n, in_channels, input_height, input_width}
   int in_dimA[MAX_DIM];
@@ -68,14 +72,27 @@ public:
   int kernel_height = 3;
   int kernel_width = 3;
 
+  // kinda fixed values
+  cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
+  cudnnTensorFormat_t input_format;
+  cudnnTensorFormat_t output_format;
+  // Note: if kernel_format is NHWC (i.e. not NCHW) then the
+  // support is limited.
+  cudnnTensorFormat_t kernel_format;
+  cudnnConvolutionMode_t mode;
+
 private:
   Args();
   int prod(int *arr);
 };
 
 Args::Args(const int argc, const char *argv[])
-    : nbDims{4}, in_dimA{1, 3, 578, 549}, ker_dim{3, 3, 3, 3},
-      ker_len{nbDims - 2}, ker_pad{1, 1}, ker_stride{1, 1}, ker_dilation{1, 1} {
+    : algo{2}, gpu_id{0}, with_sigmoid{false}, nbDims{4}, in_dimA{1, 3, 578,
+                                                                  549},
+      ker_dim{3, 3, 3, 3}, ker_len{nbDims - 2}, ker_pad{1, 1}, ker_stride{1, 1},
+      ker_dilation{1, 1}, data_type{CUDNN_DATA_FLOAT},
+      input_format{CUDNN_TENSOR_NHWC}, output_format{CUDNN_TENSOR_NHWC},
+      kernel_format{CUDNN_TENSOR_NCHW}, mode{CUDNN_CROSS_CORRELATION} {
   if (argc < 2) {
     // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
     // 3d bs in_ch d0 d1 d2
@@ -100,47 +117,31 @@ int Args::prod(int *arr) {
 
 int main(int argc, const char *argv[]) {
   Args args(argc, argv);
-  int algo = (argc > 2) ? std::atoi(argv[2]) : CUDNN_CONVOLUTION_FWD_ALGO_GEMM;
-  std::cerr << "Algorighm: " << algo << std::endl;
-
-  int gpu_id = (argc > 3) ? std::atoi(argv[3]) : 0;
-  std::cerr << "GPU: " << gpu_id << std::endl;
-
-  bool with_sigmoid = (argc > 4) ? std::atoi(argv[4]) : 0;
-  std::cerr << "With sigmoid: " << std::boolalpha << with_sigmoid << std::endl;
-
   cv::Mat image = load_image("tensorflow.png");
 
-  cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
-  cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
-  cudnnTensorFormat_t output_format = CUDNN_TENSOR_NHWC;
-
-  // Note: if kernel_format is NHWC (i.e. not NCHW) then the
-  // support is limited.
-  cudnnTensorFormat_t kernel_format = CUDNN_TENSOR_NCHW;
-  cudnnConvolutionMode_t mode = CUDNN_CROSS_CORRELATION;
-
-  cudaSetDevice(gpu_id);
+  cudaSetDevice(args.gpu_id);
 
   cudnnHandle_t cudnn;
   cudnnCreate(&cudnn);
 
   cudnnTensorDescriptor_t input_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
-  checkCUDNN(cudnnSetTensorNdDescriptorEx(
-      input_descriptor, input_format, data_type, args.nbDims, args.in_dimA));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, args.input_format,
+                                          args.data_type, args.nbDims,
+                                          args.in_dimA));
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
-  checkCUDNN(cudnnSetFilterNdDescriptor(
-      kernel_descriptor, data_type, kernel_format, args.nbDims, args.ker_dim));
+  checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, args.data_type,
+                                        args.kernel_format, args.nbDims,
+                                        args.ker_dim));
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
 
   checkCUDNN(cudnnSetConvolutionNdDescriptor(
       convolution_descriptor, args.ker_len, args.ker_pad, args.ker_stride,
-      args.ker_dilation, mode, data_type));
+      args.ker_dilation, args.mode, args.data_type));
 
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor, args.nbDims,
@@ -148,11 +149,12 @@ int main(int argc, const char *argv[]) {
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
-  checkCUDNN(cudnnSetTensorNdDescriptorEx(
-      output_descriptor, output_format, data_type, args.nbDims, args.in_dimA));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, args.output_format,
+                                          args.data_type, args.nbDims,
+                                          args.in_dimA));
 
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
-      cudnnConvolutionFwdAlgo_t(algo);
+      cudnnConvolutionFwdAlgo_t(args.algo);
   // CUDNN_CONVOLUTION_FWD_ALGO_GEMM;
   // checkCUDNN(
   //     cudnnGetConvolutionForwardAlgorithm(cudnn,
@@ -216,7 +218,7 @@ int main(int argc, const char *argv[]) {
       convolution_descriptor, convolution_algorithm, d_workspace,
       workspace_bytes, &beta, output_descriptor, d_output));
 
-  if (with_sigmoid) {
+  if (args.with_sigmoid) {
     cudnnActivationDescriptor_t activation_descriptor;
     checkCUDNN(cudnnCreateActivationDescriptor(&activation_descriptor));
     checkCUDNN(cudnnSetActivationDescriptor(
