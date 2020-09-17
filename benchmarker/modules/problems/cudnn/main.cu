@@ -112,14 +112,8 @@ int main(int argc, const char *argv[]) {
   cv::Mat image = load_image("tensorflow.png");
 
   cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
-
   cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
-  int in_channels = 3;
-  int input_height = image.rows;
-  int input_width = image.cols;
-
   cudnnTensorFormat_t output_format = CUDNN_TENSOR_NHWC;
-  int out_channels = 3;
 
   // Note: if kernel_format is NHWC (i.e. not NCHW) then the
   // support is limited.
@@ -237,7 +231,7 @@ int main(int argc, const char *argv[]) {
   float *h_output = new float[output_bytes];
   cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
 
-  save_image("cudnn-out.png", h_output, input_height, input_width);
+  save_image("cudnn-out.png", h_output, args.out_dimA[2], args.out_dimA[3]);
 
   delete[] h_output;
   cudaFree(d_kernel);
