@@ -49,6 +49,7 @@ void save_image(const char *output_filename, float *buffer, int height,
   std::cerr << "Wrote output to " << output_filename << std::endl;
 }
 
+const int MAX_DIM = 8;
 class Args {
  public:
   Args(const int argc, const char *argv[]);
@@ -133,16 +134,14 @@ int main(int argc, const char *argv[]) {
   checkCUDNN(cudnnSetConvolutionNdDescriptor(
       convolution_descriptor, ker_len, ker_pad, ker_stride, ker_dilation, mode, data_type));
 
-  const int MAX_DIM = 8;
-  int out_dimA[MAX_DIM];
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor,
-      nbDims, out_dimA));
+      nbDims, in_dimA));
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, output_format,
-                                          data_type, nbDims, out_dimA));
+                                          data_type, nbDims, in_dimA));
 
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(algo);
