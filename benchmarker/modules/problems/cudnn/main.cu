@@ -51,7 +51,7 @@ const int MAX_DIM = 8;
 class Args {
 public:
   Args(const int argc, const char *argv[]);
-  int nbDims = 4;
+  int nbDims;
   // {n, in_channels, input_height, input_width}
   int in_dimA[MAX_DIM];
   int out_dimA[MAX_DIM];
@@ -63,18 +63,8 @@ private:
   int prod(int *arr);
 };
 
-int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
-
-int Args::getOutputBytes() { return prod(out_dimA) * sizeof(float); }
-
-int Args::prod(int *arr) {
-  int result = 1;
-  for (int i = 0; i < nbDims; i++)
-    result *= arr[i];
-  return result;
-}
-
-Args::Args(const int argc, const char *argv[]) {
+Args::Args(const int argc, const char *argv[])
+    : nbDims{4}, in_dimA{1, 3, 578, 549} {
   if (argc < 2) {
     // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
     // 3d bs in_ch d0 d1 d2
@@ -84,10 +74,17 @@ Args::Args(const int argc, const char *argv[]) {
               << std::endl;
     std::exit(EXIT_FAILURE);
   }
-  in_dimA[0] = 1;
-  in_dimA[1] = 3;
-  in_dimA[2] = 578;
-  in_dimA[3] = 549;
+}
+
+int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
+
+int Args::getOutputBytes() { return prod(out_dimA) * sizeof(float); }
+
+int Args::prod(int *arr) {
+  int result = 1;
+  for (int i = 0; i < nbDims; i++)
+    result *= arr[i];
+  return result;
 }
 
 int main(int argc, const char *argv[]) {
