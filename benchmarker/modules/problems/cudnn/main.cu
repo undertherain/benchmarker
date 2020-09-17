@@ -61,6 +61,7 @@ public:
   int out_dimA[MAX_DIM];
   int getInputBytes();
   int getOutputBytes();
+  int getKernelBytes();
 
   // {out_channels, in_channels, kernel_height, kernel_width}
   int ker_dim[MAX_DIM];
@@ -107,6 +108,8 @@ Args::Args(const int argc, const char *argv[])
 int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
 
 int Args::getOutputBytes() { return prod(out_dimA) * sizeof(float); }
+
+int Args::getKernelBytes() { return prod(ker_dim) * sizeof(float); }
 
 int Args::prod(int *arr) {
   int result = 1;
@@ -170,9 +173,6 @@ int main(int argc, const char *argv[]) {
   checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(
       cudnn, input_descriptor, kernel_descriptor, convolution_descriptor,
       output_descriptor, convolution_algorithm, &workspace_bytes));
-  std::cerr << "Workspace size: " << (workspace_bytes / 1048576.0) << "MB"
-            << std::endl;
-  // assert(workspace_bytes > 0);
 
   void *d_workspace{nullptr};
   cudaMalloc(&d_workspace, workspace_bytes);
@@ -207,8 +207,9 @@ int main(int argc, const char *argv[]) {
     }
   }
 
+  int kernel_bytes = args.getKernelBytes();
   float *d_kernel{nullptr};
-  cudaMalloc(&d_kernel, sizeof(h_kernel));
+  cudaMalloc(&d_kernel, kernel_bytes);
   cudaMemcpy(d_kernel, h_kernel, sizeof(h_kernel), cudaMemcpyHostToDevice);
 
   const float alpha = 1.0f, beta = 0.0f;
