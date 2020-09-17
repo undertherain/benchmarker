@@ -8,8 +8,6 @@
 // in cudnnConvolutionForward(), cudnnConvolutionBackwardData(), and
 // cudnnConvolutionBackwardFilter()." so for now let's stick to NCHW!
 
-
-
 #include <cassert>
 #include <cstdlib>
 #include <cudnn.h>
@@ -18,14 +16,14 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-#define checkCUDNN(expression)                                  \
-  {                                                             \
-    cudnnStatus_t status = (expression);                        \
-    if (status != CUDNN_STATUS_SUCCESS) {                       \
-      std::cerr << "Error on line " << __LINE__ << ": "         \
-                << cudnnGetErrorString(status) << std::endl;    \
-      std::exit(EXIT_FAILURE);                                  \
-    }                                                           \
+#define checkCUDNN(expression)                                                 \
+  {                                                                            \
+    cudnnStatus_t status = (expression);                                       \
+    if (status != CUDNN_STATUS_SUCCESS) {                                      \
+      std::cerr << "Error on line " << __LINE__ << ": "                        \
+                << cudnnGetErrorString(status) << std::endl;                   \
+      std::exit(EXIT_FAILURE);                                                 \
+    }                                                                          \
   }
 
 cv::Mat load_image(const char *image_path) {
@@ -51,21 +49,38 @@ void save_image(const char *output_filename, float *buffer, int height,
 
 const int MAX_DIM = 8;
 class Args {
- public:
+public:
   Args(const int argc, const char *argv[]);
   int nbDims = 4;
   // {n, in_channels, input_height, input_width}
   int in_dimA[MAX_DIM];
- private:
+  int out_dimA[MAX_DIM];
+  int getInputBytes();
+  int getOutputBytes();
+
+private:
   Args();
+  int prod(int *arr);
 };
+
+int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
+
+int Args::getOutputBytes() { return prod(out_dimA) * sizeof(float); }
+
+int Args::prod(int *arr) {
+  int result = 1;
+  for (int i = 0; i < nbDims; i++)
+    result *= arr[i];
+  return result;
+}
 
 Args::Args(const int argc, const char *argv[]) {
   if (argc < 2) {
     // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
     // 3d bs in_ch d0 d1 d2
-    std::cerr << "usage: " << argv[0] << " "
-        "gpu"
+    std::cerr << "usage: " << argv[0]
+              << " "
+                 "gpu"
               << std::endl;
     std::exit(EXIT_FAILURE);
   }
@@ -88,7 +103,6 @@ int main(int argc, const char *argv[]) {
 
   cv::Mat image = load_image("tensorflow.png");
 
-  int n = 1; // (input) batch size
   cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
 
   cudnnTensorFormat_t input_format = CUDNN_TENSOR_NHWC;
@@ -119,33 +133,34 @@ int main(int argc, const char *argv[]) {
 
   cudnnTensorDescriptor_t input_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
-  checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, input_format,
-                                          data_type, args.nbDims, args.in_dimA));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(
+      input_descriptor, input_format, data_type, args.nbDims, args.in_dimA));
 
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
   int ker_dim[] = {out_channels, in_channels, kernel_height, kernel_width};
-  checkCUDNN(cudnnSetFilterNdDescriptor(
-      kernel_descriptor, data_type, kernel_format, args.nbDims, ker_dim));
+  checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, data_type,
+                                        kernel_format, args.nbDims, ker_dim));
 
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
 
-  int ker_len = args.nbDims-2;
+  int ker_len = args.nbDims - 2;
   int ker_pad[] = {pad_height, pad_width};
   int ker_stride[] = {vertical_stride, horizontal_stride};
   int ker_dilation[] = {dilation_height, dilation_width};
-  checkCUDNN(cudnnSetConvolutionNdDescriptor(
-      convolution_descriptor, ker_len, ker_pad, ker_stride, ker_dilation, mode, data_type));
+  checkCUDNN(cudnnSetConvolutionNdDescriptor(convolution_descriptor, ker_len,
+                                             ker_pad, ker_stride, ker_dilation,
+                                             mode, data_type));
 
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
-      convolution_descriptor, input_descriptor, kernel_descriptor,
-      args.nbDims, args.in_dimA));
+      convolution_descriptor, input_descriptor, kernel_descriptor, args.nbDims,
+      args.out_dimA));
 
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
-  checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, output_format,
-                                          data_type, args.nbDims, args.in_dimA));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(
+      output_descriptor, output_format, data_type, args.nbDims, args.in_dimA));
 
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(algo);
@@ -171,9 +186,8 @@ int main(int argc, const char *argv[]) {
   void *d_workspace{nullptr};
   cudaMalloc(&d_workspace, workspace_bytes);
 
-  int input_bytes =
-      n * in_channels * input_height * input_width * sizeof(float);
-  int output_bytes = input_bytes;
+  int input_bytes = args.getInputBytes();
+  int output_bytes = args.getOutputBytes();
 
   float *d_input{nullptr};
   cudaMalloc(&d_input, input_bytes);
