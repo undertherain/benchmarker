@@ -194,21 +194,19 @@ int main(int argc, const char *argv[]) {
   //                                         /*memoryLimitInBytes=*/0,
   //                                         &convolution_algorithm));
 
+  int input_bytes = args.getInputBytes();
+  int output_bytes = args.getOutputBytes();
+  int kernel_bytes = args.getKernelBytes();
   size_t workspace_bytes{0};
   checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(
       cudnn, input_descriptor, kernel_descriptor, convolution_descriptor,
       output_descriptor, convolution_algorithm, &workspace_bytes));
 
   void *d_workspace{nullptr};
-  cudaMalloc(&d_workspace, workspace_bytes);
-
-  int input_bytes = args.getInputBytes();
-  int output_bytes = args.getOutputBytes();
-  int kernel_bytes = args.getKernelBytes();
-
   float *d_input{nullptr};
   float *d_output{nullptr};
   float *d_kernel{nullptr};
+  cudaMalloc(&d_workspace, workspace_bytes);
   cudaMalloc(&d_input, input_bytes);
   cudaMalloc(&d_output, output_bytes);
   cudaMalloc(&d_kernel, kernel_bytes);
