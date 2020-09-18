@@ -118,6 +118,42 @@ int Args::prod(int *arr) {
   return result;
 }
 
+cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
+  cudnnTensorDescriptor_t input_descriptor;
+  checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, args.input_format,
+                                          args.data_type, args.nbDims,
+                                          args.in_dimA));
+  return input_descriptor;
+}
+
+cudnnFilterDescriptor_t getKernelDescriptor(const Args &args) {
+  cudnnFilterDescriptor_t kernel_descriptor;
+  checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
+  checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, args.data_type,
+                                        args.kernel_format, args.nbDims,
+                                        args.ker_dim));
+  return kernel_descriptor;
+}
+
+cudnnConvolutionDescriptor_t getConvDescriptor(const Args &args) {
+  cudnnConvolutionDescriptor_t convolution_descriptor;
+  checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
+  checkCUDNN(cudnnSetConvolutionNdDescriptor(
+      convolution_descriptor, args.ker_len, args.ker_pad, args.ker_stride,
+      args.ker_dilation, args.mode, args.data_type));
+  return convolution_descriptor;
+}
+
+cudnnTensorDescriptor_t getOutputDescriptor(const Args &args) {
+  cudnnTensorDescriptor_t output_descriptor;
+  checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
+  checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, args.output_format,
+                                          args.data_type, args.nbDims,
+                                          args.in_dimA));
+  return output_descriptor;
+}
+
 int main(int argc, const char *argv[]) {
   Args args(argc, argv);
   cv::Mat image = load_image("tensorflow.png");
@@ -127,37 +163,18 @@ int main(int argc, const char *argv[]) {
   cudnnHandle_t cudnn;
   cudnnCreate(&cudnn);
 
-  cudnnTensorDescriptor_t input_descriptor;
-  checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
-  checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, args.input_format,
-                                          args.data_type, args.nbDims,
-                                          args.in_dimA));
-
-  cudnnFilterDescriptor_t kernel_descriptor;
-  checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
-  checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, args.data_type,
-                                        args.kernel_format, args.nbDims,
-                                        args.ker_dim));
-
-  cudnnConvolutionDescriptor_t convolution_descriptor;
-  checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
-
-  checkCUDNN(cudnnSetConvolutionNdDescriptor(
-      convolution_descriptor, args.ker_len, args.ker_pad, args.ker_stride,
-      args.ker_dilation, args.mode, args.data_type));
+  cudnnTensorDescriptor_t input_descriptor = getInputDescriptor(args);
+  cudnnFilterDescriptor_t kernel_descriptor = getKernelDescriptor(args);
+  cudnnConvolutionDescriptor_t convolution_descriptor = getConvDescriptor(args);
 
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor, args.nbDims,
       args.out_dimA));
 
-  cudnnTensorDescriptor_t output_descriptor;
-  checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
-  checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, args.output_format,
-                                          args.data_type, args.nbDims,
-                                          args.in_dimA));
-
+  cudnnTensorDescriptor_t output_descriptor = getOutputDescriptor(args);
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(args.algo);
+
   // CUDNN_CONVOLUTION_FWD_ALGO_GEMM;
   // checkCUDNN(
   //     cudnnGetConvolutionForwardAlgorithm(cudnn,
@@ -180,6 +197,7 @@ int main(int argc, const char *argv[]) {
   int input_bytes = args.getInputBytes();
   int output_bytes = args.getOutputBytes();
   int kernel_bytes = args.getKernelBytes();
+  int kernel_elems = kernel_bytes / sizeof(float);
 
   float *d_input{nullptr};
   cudaMalloc(&d_input, input_bytes);
@@ -190,26 +208,16 @@ int main(int argc, const char *argv[]) {
   cudaMemset(d_output, 0, output_bytes);
 
   // clang-format off
-  const float kernel_template[3][3] = {
-    {1, 1, 1},
-    {1, -8, 1},
-    {1, 1, 1}
+  const float kernel_template[] = {
+    1, 1, 1,
+    1, -8, 1,
+    1, 1, 1
   };
   // clang-format on
 
-  float *h_kernel = new float[3 * 3 * 3 * 3];
-  for (int kernel = 0; kernel < 3; ++kernel) {
-    for (int channel = 0; channel < 3; ++channel) {
-      for (int row = 0; row < 3; ++row) {
-        for (int column = 0; column < 3; ++column) {
-          int idx = kernel;
-          idx = idx * args.ker_dim[1] + channel;
-          idx = idx * args.ker_dim[2] + row;
-          idx = idx * args.ker_dim[3] + column;
-          h_kernel[idx] = kernel_template[row][column];
-        }
-      }
-    }
+  float *h_kernel = new float[kernel_elems];
+  for (int idx = 0; idx < kernel_elems; ++idx) {
+    h_kernel[idx] = kernel_template[idx % 9];
   }
 
   float *d_kernel{nullptr};
