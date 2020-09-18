@@ -8,6 +8,7 @@ import torch.backends.mkldnn
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
+from pypapi import events, papi_high as high
 
 from .i_neural_net import INeuralNet
 
@@ -123,10 +124,14 @@ class Benchmark(INeuralNet):
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
+            papi_sp_ops = 0
             for epoch in range(1, self.params["nb_epoch"] + 1):
+                high.start_counters([events.PAPI_SP_OPS,])
                 self.inference(model, device)
+                papi_sp_ops += high.stop_counters()[0]
         end = timer()
         self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
+        self.params["ops_papi"] = papi_sp_ops
         return self.params
