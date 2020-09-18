@@ -62,6 +62,9 @@ public:
   int getInputBytes();
   int getOutputBytes();
   int getKernelBytes();
+  void setOutDims(const cudnnConvolutionDescriptor_t &convolution_descriptor,
+                  const cudnnTensorDescriptor_t &input_descriptor,
+                  const cudnnFilterDescriptor_t &kernel_descriptor);
 
   // {out_channels, in_channels, kernel_height, kernel_width}
   int ker_dim[MAX_DIM];
@@ -110,6 +113,15 @@ int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
 int Args::getOutputBytes() { return prod(out_dimA) * sizeof(float); }
 
 int Args::getKernelBytes() { return prod(ker_dim) * sizeof(float); }
+
+void Args::setOutDims(
+    const cudnnConvolutionDescriptor_t &convolution_descriptor,
+    const cudnnTensorDescriptor_t &input_descriptor,
+    const cudnnFilterDescriptor_t &kernel_descriptor) {
+  checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
+      convolution_descriptor, input_descriptor, kernel_descriptor, nbDims,
+      out_dimA));
+}
 
 int Args::prod(int *arr) {
   int result = 1;
@@ -166,11 +178,7 @@ int main(int argc, const char *argv[]) {
   cudnnTensorDescriptor_t input_descriptor = getInputDescriptor(args);
   cudnnFilterDescriptor_t kernel_descriptor = getKernelDescriptor(args);
   cudnnConvolutionDescriptor_t convolution_descriptor = getConvDescriptor(args);
-
-  checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
-      convolution_descriptor, input_descriptor, kernel_descriptor, args.nbDims,
-      args.out_dimA));
-
+  args.setOutDims(convolution_descriptor, input_descriptor, kernel_descriptor);
   cudnnTensorDescriptor_t output_descriptor = getOutputDescriptor(args);
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(args.algo);
