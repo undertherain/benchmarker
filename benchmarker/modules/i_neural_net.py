@@ -93,4 +93,7 @@ class INeuralNet:
         results["samples_per_second"] = (
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
+        if "flop_estimated" in results["problem"]:
+            results["flop_per_second_estimated"] = results["problem"]['flop_estimated'] / results["time_total"]
+            results["gflop_per_second_estimated"] = results["flop_per_second_estimated"] / (1000 * 1000 * 1000)
         return results
