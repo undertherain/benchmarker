@@ -51,21 +51,12 @@ const int MAX_DIM = 8;
 class Args {
 public:
   Args(const int argc, const char *argv[]);
-  cudnnConvolutionFwdAlgo_t convolution_algorithm;
   int gpu_id;
-  bool with_sigmoid;
-
   int nbDims;
+  cudnnConvolutionFwdAlgo_t convolution_algorithm;
+
   // {n, in_channels, input_height, input_width}
   int in_dimA[MAX_DIM];
-  int out_dimA[MAX_DIM];
-  int getInputBytes();
-  int getOutputBytes();
-  int getKernelBytes();
-  void setOutDims(const cudnnConvolutionDescriptor_t &convolution_descriptor,
-                  const cudnnTensorDescriptor_t &input_descriptor,
-                  const cudnnFilterDescriptor_t &kernel_descriptor);
-
   // {out_channels, in_channels, kernel_height, kernel_width}
   int ker_dim[MAX_DIM];
   int ker_len;
@@ -73,38 +64,47 @@ public:
   int ker_stride[MAX_DIM];
   int ker_dilation[MAX_DIM];
 
-  int kernel_height = 3;
-  int kernel_width = 3;
-
   // kinda fixed values
-  cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
   cudnnTensorFormat_t input_format;
   cudnnTensorFormat_t output_format;
   // Note: if kernel_format is NHWC (i.e. not NCHW) then the
   // support is limited.
   cudnnTensorFormat_t kernel_format;
   cudnnConvolutionMode_t mode;
+  cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
+  bool with_sigmoid;
+
+  // {n, in_channels, input_height, input_width}
+  int out_dimA[MAX_DIM]; // filled later
+
+  int getInputBytes();
+  int getOutputBytes();
+  int getKernelBytes();
+  void setOutDims(const cudnnConvolutionDescriptor_t &convolution_descriptor,
+                  const cudnnTensorDescriptor_t &input_descriptor,
+                  const cudnnFilterDescriptor_t &kernel_descriptor);
 
 private:
   Args();
   int prod(int *arr);
+  void usage();
+  int argc;
+  const char **argv;
+  int cur_arg;
 };
 
 Args::Args(const int argc, const char *argv[])
-    : convolution_algorithm{CUDNN_CONVOLUTION_FWD_ALGO_GEMM}, gpu_id{0},
-      with_sigmoid{false}, nbDims{4}, in_dimA{1, 3, 578, 549},
+    : gpu_id{0}, nbDims{4},
+      convolution_algorithm{CUDNN_CONVOLUTION_FWD_ALGO_GEMM}, in_dimA{1, 3, 578,
+                                                                      549},
       ker_dim{3, 3, 3, 3}, ker_len{nbDims - 2}, ker_pad{1, 1}, ker_stride{1, 1},
-      ker_dilation{1, 1}, data_type{CUDNN_DATA_FLOAT},
-      input_format{CUDNN_TENSOR_NHWC}, output_format{CUDNN_TENSOR_NHWC},
-      kernel_format{CUDNN_TENSOR_NCHW}, mode{CUDNN_CROSS_CORRELATION} {
-  if (argc < 2) {
-    // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
-    // 3d bs in_ch d0 d1 d2
-    std::cerr << "usage: " << argv[0]
-              << " "
-                 "gpu"
-              << std::endl;
-    std::exit(EXIT_FAILURE);
+      ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
+      output_format{CUDNN_TENSOR_NHWC}, kernel_format{CUDNN_TENSOR_NCHW},
+      mode{CUDNN_CROSS_CORRELATION}, data_type{CUDNN_DATA_FLOAT},
+      with_sigmoid{false}, argc{argc}, argv{argv}, cur_arg{1} {
+  // this->argv = argv;
+  if (argc < 3) {
+    usage();
   }
 }
 
@@ -128,6 +128,19 @@ int Args::prod(int *arr) {
   for (int i = 0; i < nbDims; i++)
     result *= arr[i];
   return result;
+}
+
+void Args::usage() {
+  // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
+  // 3d bs in_ch d0 d1 d2
+  std::cerr << "Usage: " << argv[0] << "  <gpu_id> <nbDims> <conv_algo> \\\n"
+            << "  <batch_size> <in_ch> <out_ch> \\\n"
+            << "  <inDim_1> .. <inDim_nbDims> \\\n"
+            << "  <kerDim_1> .. <kerDim_nbDims> \\\n"
+            << "  <pad_1> .. <pad_nbDims> \\\n"
+            << "  <stride_1> .. <stride_nbDims> \\\n"
+            << "  <dilation_1> .. <dilation_nbDims>" << std::endl;
+  std::exit(EXIT_FAILURE);
 }
 
 cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
