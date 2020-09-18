@@ -75,7 +75,7 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        # use_cuda = not args.no_cuda and torch.cuda.is_available()
+        global torch  # THIS IS BEYOUND RIDICULOUS THAT IT FAILS W/O THIS LINE!
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         if self.params["backend"] == "DNNL":
             import torch.backends.mkldnn
