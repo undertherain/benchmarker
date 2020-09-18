@@ -197,35 +197,26 @@ int main(int argc, const char *argv[]) {
   int input_bytes = args.getInputBytes();
   int output_bytes = args.getOutputBytes();
   int kernel_bytes = args.getKernelBytes();
-  int kernel_elems = kernel_bytes / sizeof(float);
 
   float *d_input{nullptr};
-  cudaMalloc(&d_input, input_bytes);
-  cudaMemcpy(d_input, image.ptr<float>(0), input_bytes, cudaMemcpyHostToDevice);
-
   float *d_output{nullptr};
+  float *d_kernel{nullptr};
+  cudaMalloc(&d_input, input_bytes);
   cudaMalloc(&d_output, output_bytes);
-  cudaMemset(d_output, 0, output_bytes);
+  cudaMalloc(&d_kernel, kernel_bytes);
 
-  // clang-format off
-  const float kernel_template[] = {
-    1, 1, 1,
-    1, -8, 1,
-    1, 1, 1
-  };
-  // clang-format on
+  int kernel_elems = kernel_bytes / sizeof(float);
+  const float kernel_template[] = {1, 1, 1, 1, -8, 1, 1, 1, 1};
 
   float *h_kernel = new float[kernel_elems];
-  for (int idx = 0; idx < kernel_elems; ++idx) {
+  for (int idx = 0; idx < kernel_elems; ++idx)
     h_kernel[idx] = kernel_template[idx % 9];
-  }
 
-  float *d_kernel{nullptr};
-  cudaMalloc(&d_kernel, kernel_bytes);
+  cudaMemcpy(d_input, image.ptr<float>(0), input_bytes, cudaMemcpyHostToDevice);
+  cudaMemset(d_output, 0, output_bytes);
   cudaMemcpy(d_kernel, h_kernel, kernel_bytes, cudaMemcpyHostToDevice);
 
   const float alpha = 1.0f, beta = 0.0f;
-
   checkCUDNN(cudnnConvolutionForward(
       cudnn, &alpha, input_descriptor, d_input, kernel_descriptor, d_kernel,
       convolution_descriptor, convolution_algorithm, d_workspace,
