@@ -52,14 +52,13 @@ class Args {
 public:
   Args(const int argc, const char *argv[]);
   int gpu_id;
-  int tensor_dims;
+  int nbDims;
   cudnnConvolutionFwdAlgo_t convolution_algorithm;
 
   // {n, in_channels, input_height, input_width}
   int in_dimA[MAX_DIM];
   // {out_channels, in_channels, kernel_height, kernel_width}
   int ker_dim[MAX_DIM];
-  int nbDims;
   int ker_pad[MAX_DIM];
   int ker_stride[MAX_DIM];
   int ker_dilation[MAX_DIM];
@@ -74,8 +73,12 @@ public:
   cudnnDataType_t data_type = CUDNN_DATA_FLOAT;
   bool with_sigmoid;
 
+  // Calculated and/or filled values:
+  int tensor_dims;
   // {n, in_channels, input_height, input_width}
   int out_dimA[MAX_DIM]; // filled later
+
+  const int nb_fixed_args = 7; // +!
 
   int getInputBytes();
   int getOutputBytes();
@@ -88,24 +91,42 @@ private:
   Args();
   int prod(int *arr);
   void usage();
+  void loadArgs(int *arr, int arg_batch);
   int argc;
   const char **argv;
   int cur_arg;
 };
 
 Args::Args(const int argc, const char *argv[])
-    : gpu_id{0}, tensor_dims{4},
-      convolution_algorithm{CUDNN_CONVOLUTION_FWD_ALGO_GEMM}, in_dimA{1, 3, 578,
-                                                                      549},
-      ker_dim{3, 3, 3, 3}, nbDims{tensor_dims - 2}, ker_pad{1, 1},
+    : in_dimA{1, 3, 578, 549}, ker_dim{3, 3, 3, 3}, ker_pad{1, 1},
       ker_stride{1, 1}, ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
       output_format{CUDNN_TENSOR_NHWC}, kernel_format{CUDNN_TENSOR_NCHW},
       mode{CUDNN_CROSS_CORRELATION}, data_type{CUDNN_DATA_FLOAT},
       with_sigmoid{false}, argc{argc}, argv{argv}, cur_arg{1} {
-  // this->argv = argv;
-  if (argc < 3) {
+  if (argc < nb_fixed_args)
     usage();
-  }
+
+  gpu_id = std::atoi(argv[1]);
+  convolution_algorithm = cudnnConvolutionFwdAlgo_t(std::atoi(argv[2]));
+  nbDims = std::atoi(argv[3]);
+  int batch_size = std::atoi(argv[4]);
+  int in_channels = std::atoi(argv[5]);
+  int out_channels = std::atoi(argv[6]);
+
+  tensor_dims = nbDims + 2;
+  in_dimA[0] = batch_size;
+  in_dimA[1] = in_channels;
+
+  ker_dim[0] = out_channels;
+  ker_dim[1] = in_channels;
+
+  loadArgs(in_dimA + 2, 0);
+  loadArgs(ker_dim + 2, 1);
+  loadArgs(ker_pad, 2);
+  loadArgs(ker_stride, 3);
+  loadArgs(ker_dilation, 4);
+  std::cout << "ker[]: " << ker_dim[0] << ", " << ker_dim[1] << ", "
+            << ker_dim[2] << ", " << ker_dim[3] << ", " << std::endl;
 }
 
 int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
@@ -141,6 +162,15 @@ void Args::usage() {
             << "  <stride_1> .. <stride_nbDims> \\\n"
             << "  <dilation_1> .. <dilation_nbDims>" << std::endl;
   std::exit(EXIT_FAILURE);
+}
+
+void Args::loadArgs(int *arr, int arg_batch) {
+  if (argc < nb_fixed_args + (arg_batch + 1) * nbDims) {
+    return;
+  }
+  for (int i = 0; i < nbDims; i++) {
+    arr[i] = std::atoi(argv[nb_fixed_args + arg_batch * nbDims + i]);
+  }
 }
 
 cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
