@@ -52,14 +52,14 @@ class Args {
 public:
   Args(const int argc, const char *argv[]);
   int gpu_id;
-  int nbDims;
+  int tensor_dims;
   cudnnConvolutionFwdAlgo_t convolution_algorithm;
 
   // {n, in_channels, input_height, input_width}
   int in_dimA[MAX_DIM];
   // {out_channels, in_channels, kernel_height, kernel_width}
   int ker_dim[MAX_DIM];
-  int ker_len;
+  int nbDims;
   int ker_pad[MAX_DIM];
   int ker_stride[MAX_DIM];
   int ker_dilation[MAX_DIM];
@@ -94,11 +94,11 @@ private:
 };
 
 Args::Args(const int argc, const char *argv[])
-    : gpu_id{0}, nbDims{4},
+    : gpu_id{0}, tensor_dims{4},
       convolution_algorithm{CUDNN_CONVOLUTION_FWD_ALGO_GEMM}, in_dimA{1, 3, 578,
                                                                       549},
-      ker_dim{3, 3, 3, 3}, ker_len{nbDims - 2}, ker_pad{1, 1}, ker_stride{1, 1},
-      ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
+      ker_dim{3, 3, 3, 3}, nbDims{tensor_dims - 2}, ker_pad{1, 1},
+      ker_stride{1, 1}, ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
       output_format{CUDNN_TENSOR_NHWC}, kernel_format{CUDNN_TENSOR_NCHW},
       mode{CUDNN_CROSS_CORRELATION}, data_type{CUDNN_DATA_FLOAT},
       with_sigmoid{false}, argc{argc}, argv{argv}, cur_arg{1} {
@@ -119,13 +119,13 @@ void Args::setOutDims(
     const cudnnTensorDescriptor_t &input_descriptor,
     const cudnnFilterDescriptor_t &kernel_descriptor) {
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
-      convolution_descriptor, input_descriptor, kernel_descriptor, nbDims,
+      convolution_descriptor, input_descriptor, kernel_descriptor, tensor_dims,
       out_dimA));
 }
 
 int Args::prod(int *arr) {
   int result = 1;
-  for (int i = 0; i < nbDims; i++)
+  for (int i = 0; i < tensor_dims; i++)
     result *= arr[i];
   return result;
 }
@@ -147,7 +147,7 @@ cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
   cudnnTensorDescriptor_t input_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, args.input_format,
-                                          args.data_type, args.nbDims,
+                                          args.data_type, args.tensor_dims,
                                           args.in_dimA));
   return input_descriptor;
 }
@@ -156,7 +156,7 @@ cudnnFilterDescriptor_t getKernelDescriptor(const Args &args) {
   cudnnFilterDescriptor_t kernel_descriptor;
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
   checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, args.data_type,
-                                        args.kernel_format, args.nbDims,
+                                        args.kernel_format, args.tensor_dims,
                                         args.ker_dim));
   return kernel_descriptor;
 }
@@ -165,7 +165,7 @@ cudnnConvolutionDescriptor_t getConvDescriptor(const Args &args) {
   cudnnConvolutionDescriptor_t convolution_descriptor;
   checkCUDNN(cudnnCreateConvolutionDescriptor(&convolution_descriptor));
   checkCUDNN(cudnnSetConvolutionNdDescriptor(
-      convolution_descriptor, args.ker_len, args.ker_pad, args.ker_stride,
+      convolution_descriptor, args.nbDims, args.ker_pad, args.ker_stride,
       args.ker_dilation, args.mode, args.data_type));
   return convolution_descriptor;
 }
@@ -174,7 +174,7 @@ cudnnTensorDescriptor_t getOutputDescriptor(const Args &args) {
   cudnnTensorDescriptor_t output_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, args.output_format,
-                                          args.data_type, args.nbDims,
+                                          args.data_type, args.tensor_dims,
                                           args.in_dimA));
   return output_descriptor;
 }
