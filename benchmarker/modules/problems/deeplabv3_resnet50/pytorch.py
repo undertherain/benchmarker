@@ -4,7 +4,7 @@ from torchvision.models.segmentation import deeplabv3_resnet50
 from ..helpers_torch import Classifier
 
 
-def get_kernel(params, unparsed_args):
+def get_kernel(params):
     assert unparsed_args == []
     # TODO: cnt classes as parameter
     params["problem"]["cnt_classes"] = 21
