@@ -166,6 +166,12 @@ cudnnTensorDescriptor_t getOutputDescriptor(const Args &args) {
   return output_descriptor;
 }
 
+void fillKernel(float *h_kernel, const size_t &kernel_elems) {
+  const float kernel_template[] = {1, 1, 1, 1, -8, 1, 1, 1, 1};
+  for (int idx = 0; idx < kernel_elems; ++idx)
+    h_kernel[idx] = kernel_template[idx % 9];
+}
+
 int main(int argc, const char *argv[]) {
   Args args(argc, argv);
   cv::Mat image = load_image("tensorflow.png");
@@ -183,24 +189,23 @@ int main(int argc, const char *argv[]) {
   cudnnConvolutionFwdAlgo_t convolution_algorithm =
       cudnnConvolutionFwdAlgo_t(args.algo);
 
-  // CUDNN_CONVOLUTION_FWD_ALGO_GEMM;
-  // checkCUDNN(
-  //     cudnnGetConvolutionForwardAlgorithm(cudnn,
-  //                                         input_descriptor,
-  //                                         kernel_descriptor,
-  //                                         convolution_descriptor,
-  //                                         output_descriptor,
-  //                                         CUDNN_CONVOLUTION_FWD_PREFER_FASTEST,
-  //                                         /*memoryLimitInBytes=*/0,
-  //                                         &convolution_algorithm));
+  // CUDNN_CONVOLUTION_FWD_ALGO_GEMM; checkCUDNN(
+  // cudnnGetConvolutionForwardAlgorithm(cudnn, input_descriptor,
+  // kernel_descriptor, convolution_descriptor, output_descriptor,
+  // CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, /*memoryLimitInBytes=*/0,
+  // &convolution_algorithm));
 
-  int input_bytes = args.getInputBytes();
-  int output_bytes = args.getOutputBytes();
-  int kernel_bytes = args.getKernelBytes();
+  size_t input_bytes = args.getInputBytes();
+  size_t output_bytes = args.getOutputBytes();
+  size_t kernel_bytes = args.getKernelBytes();
+  size_t kernel_elems = args.getKernelBytes() / sizeof(float);
   size_t workspace_bytes{0};
   checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(
       cudnn, input_descriptor, kernel_descriptor, convolution_descriptor,
       output_descriptor, convolution_algorithm, &workspace_bytes));
+
+  float *h_kernel = new float[kernel_elems];
+  fillKernel(h_kernel, kernel_elems);
 
   void *d_workspace{nullptr};
   float *d_input{nullptr};
@@ -210,13 +215,6 @@ int main(int argc, const char *argv[]) {
   cudaMalloc(&d_input, input_bytes);
   cudaMalloc(&d_output, output_bytes);
   cudaMalloc(&d_kernel, kernel_bytes);
-
-  int kernel_elems = kernel_bytes / sizeof(float);
-  const float kernel_template[] = {1, 1, 1, 1, -8, 1, 1, 1, 1};
-
-  float *h_kernel = new float[kernel_elems];
-  for (int idx = 0; idx < kernel_elems; ++idx)
-    h_kernel[idx] = kernel_template[idx % 9];
 
   cudaMemcpy(d_input, image.ptr<float>(0), input_bytes, cudaMemcpyHostToDevice);
   cudaMemset(d_output, 0, output_bytes);
