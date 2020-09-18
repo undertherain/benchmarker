@@ -119,6 +119,8 @@ Args::Args(const int argc, const char *argv[])
 
   ker_dim[0] = out_channels;
   ker_dim[1] = in_channels;
+  // ker_dim[2] = 7;
+  // ker_dim[3] = 7;
 
   loadArgs(in_dimA + 2, 0);
   loadArgs(ker_dim + 2, 1);
@@ -127,6 +129,11 @@ Args::Args(const int argc, const char *argv[])
   loadArgs(ker_dilation, 4);
   std::cout << "ker[]: " << ker_dim[0] << ", " << ker_dim[1] << ", "
             << ker_dim[2] << ", " << ker_dim[3] << ", " << std::endl;
+  std::cout << "pad[]: " << ker_pad[0] << ", " << ker_pad[1] << std::endl;
+  std::cout << "stride[]: " << ker_stride[0] << ", " << ker_stride[1]
+            << std::endl;
+  std::cout << "dilation[]: " << ker_dilation[0] << ", " << ker_dilation[1]
+            << std::endl;
 }
 
 int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
@@ -169,7 +176,9 @@ void Args::loadArgs(int *arr, int arg_batch) {
     return;
   }
   for (int i = 0; i < nbDims; i++) {
-    arr[i] = std::atoi(argv[nb_fixed_args + arg_batch * nbDims + i]);
+    const int idx = nb_fixed_args + arg_batch * nbDims + i;
+    arr[i] = std::atoi(argv[idx]);
+    std::cout << "Read: " << arr[i] << std::endl;
   }
 }
 
@@ -211,8 +220,10 @@ cudnnTensorDescriptor_t getOutputDescriptor(const Args &args) {
 
 void fillKernel(float *h_kernel, const size_t &kernel_elems) {
   const float kernel_template[] = {1, 1, 1, 1, -8, 1, 1, 1, 1};
+  int mod = (9 > kernel_elems ? kernel_elems : 9);
+  std::cout << "mod: " << mod << std::endl;
   for (int idx = 0; idx < kernel_elems; ++idx)
-    h_kernel[idx] = kernel_template[idx % 9];
+    h_kernel[idx] = kernel_template[idx % mod];
 }
 
 void fillInput(float *h_input, const size_t &input_elems) {
