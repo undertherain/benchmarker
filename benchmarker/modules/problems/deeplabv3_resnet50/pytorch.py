@@ -5,7 +5,6 @@ from ..helpers_torch import Classifier
 
 
 def get_kernel(params):
-    assert unparsed_args == []
     # TODO: cnt classes as parameter
     params["problem"]["cnt_classes"] = 21
     net = deeplabv3_resnet50(num_classes=params["problem"]["cnt_classes"])
