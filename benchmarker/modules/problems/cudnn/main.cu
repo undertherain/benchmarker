@@ -51,7 +51,7 @@ const int MAX_DIM = 8;
 class Args {
 public:
   Args(const int argc, const char *argv[]);
-  int algo; // @todo(vatai): change to cudnn enum type
+  cudnnConvolutionFwdAlgo_t convolution_algorithm;
   int gpu_id;
   bool with_sigmoid;
 
@@ -91,8 +91,8 @@ private:
 };
 
 Args::Args(const int argc, const char *argv[])
-    : algo{2}, gpu_id{0}, with_sigmoid{false}, nbDims{4}, in_dimA{1, 3, 578,
-                                                                  549},
+    : convolution_algorithm{CUDNN_CONVOLUTION_FWD_ALGO_GEMM}, gpu_id{0},
+      with_sigmoid{false}, nbDims{4}, in_dimA{1, 3, 578, 549},
       ker_dim{3, 3, 3, 3}, ker_len{nbDims - 2}, ker_pad{1, 1}, ker_stride{1, 1},
       ker_dilation{1, 1}, data_type{CUDNN_DATA_FLOAT},
       input_format{CUDNN_TENSOR_NHWC}, output_format{CUDNN_TENSOR_NHWC},
@@ -192,8 +192,6 @@ int main(int argc, const char *argv[]) {
   cudnnConvolutionDescriptor_t convolution_descriptor = getConvDescriptor(args);
   args.setOutDims(convolution_descriptor, input_descriptor, kernel_descriptor);
   cudnnTensorDescriptor_t output_descriptor = getOutputDescriptor(args);
-  cudnnConvolutionFwdAlgo_t convolution_algorithm =
-      cudnnConvolutionFwdAlgo_t(args.algo);
 
   // CUDNN_CONVOLUTION_FWD_ALGO_GEMM; checkCUDNN(
   // cudnnGetConvolutionForwardAlgorithm(cudnn, input_descriptor,
@@ -210,7 +208,7 @@ int main(int argc, const char *argv[]) {
   size_t workspace_bytes{0};
   checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(
       cudnn, input_descriptor, kernel_descriptor, convolution_descriptor,
-      output_descriptor, convolution_algorithm, &workspace_bytes));
+      output_descriptor, args.convolution_algorithm, &workspace_bytes));
 
   float *h_kernel = new float[kernel_elems];
   float *h_input = new float[input_elems];
@@ -237,7 +235,7 @@ int main(int argc, const char *argv[]) {
   const float alpha = 1.0f, beta = 0.0f;
   checkCUDNN(cudnnConvolutionForward(
       cudnn, &alpha, input_descriptor, d_input, kernel_descriptor, d_kernel,
-      convolution_descriptor, convolution_algorithm, d_workspace,
+      convolution_descriptor, args.convolution_algorithm, d_workspace,
       workspace_bytes, &beta, output_descriptor, d_output));
 
   if (args.with_sigmoid) {
