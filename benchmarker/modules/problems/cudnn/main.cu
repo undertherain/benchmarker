@@ -172,6 +172,12 @@ void fillKernel(float *h_kernel, const size_t &kernel_elems) {
     h_kernel[idx] = kernel_template[idx % 9];
 }
 
+void fillInput(float *h_input, const size_t &input_elems) {
+  const float kernel_template[] = {1, 1, 1, 1, -8, 1, 1, 1, 1};
+  for (int idx = 0; idx < input_elems; ++idx)
+    h_input[idx] = kernel_template[idx % 9];
+}
+
 int main(int argc, const char *argv[]) {
   Args args(argc, argv);
   cv::Mat image = load_image("tensorflow.png");
@@ -195,30 +201,38 @@ int main(int argc, const char *argv[]) {
   // CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, /*memoryLimitInBytes=*/0,
   // &convolution_algorithm));
 
-  size_t input_bytes = args.getInputBytes();
-  size_t output_bytes = args.getOutputBytes();
   size_t kernel_bytes = args.getKernelBytes();
   size_t kernel_elems = args.getKernelBytes() / sizeof(float);
+  size_t input_bytes = args.getInputBytes();
+  size_t input_elems = input_bytes / sizeof(float);
+  size_t output_bytes = args.getOutputBytes();
+
   size_t workspace_bytes{0};
   checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(
       cudnn, input_descriptor, kernel_descriptor, convolution_descriptor,
       output_descriptor, convolution_algorithm, &workspace_bytes));
 
   float *h_kernel = new float[kernel_elems];
-  fillKernel(h_kernel, kernel_elems);
+  float *h_input = new float[input_elems];
 
   void *d_workspace{nullptr};
+  float *d_kernel{nullptr};
   float *d_input{nullptr};
   float *d_output{nullptr};
-  float *d_kernel{nullptr};
   cudaMalloc(&d_workspace, workspace_bytes);
+  cudaMalloc(&d_kernel, kernel_bytes);
   cudaMalloc(&d_input, input_bytes);
   cudaMalloc(&d_output, output_bytes);
-  cudaMalloc(&d_kernel, kernel_bytes);
 
-  cudaMemcpy(d_input, image.ptr<float>(0), input_bytes, cudaMemcpyHostToDevice);
-  cudaMemset(d_output, 0, output_bytes);
+  fillKernel(h_kernel, kernel_elems);
+  fillInput(h_input, input_elems);
+  float *old = h_input;
+  h_input = image.ptr<float>(0);
+
   cudaMemcpy(d_kernel, h_kernel, kernel_bytes, cudaMemcpyHostToDevice);
+  cudaMemcpy(d_input, h_input, input_bytes, cudaMemcpyHostToDevice);
+  cudaMemset(d_output, 0, output_bytes);
+  h_input = old;
 
   const float alpha = 1.0f, beta = 0.0f;
   checkCUDNN(cudnnConvolutionForward(
@@ -240,15 +254,15 @@ int main(int argc, const char *argv[]) {
 
   float *h_output = new float[output_bytes];
   cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
-
   save_image("cudnn-out.png", h_output, args.out_dimA[2], args.out_dimA[3]);
+  delete[] h_output;
 
   delete[] h_kernel;
-  delete[] h_output;
+  delete[] h_input;
+  cudaFree(d_workspace);
   cudaFree(d_kernel);
   cudaFree(d_input);
   cudaFree(d_output);
-  cudaFree(d_workspace);
 
   cudnnDestroyTensorDescriptor(input_descriptor);
   cudnnDestroyTensorDescriptor(output_descriptor);
