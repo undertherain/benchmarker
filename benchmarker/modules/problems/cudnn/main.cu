@@ -238,7 +238,7 @@ cudnnTensorDescriptor_t getOutputDescriptor(const Args &args) {
   checkCUDNN(cudnnCreateTensorDescriptor(&output_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(output_descriptor, args.output_format,
                                           args.data_type, args.tensor_dims,
-                                          args.in_dimA));
+                                          args.out_dimA));
   return output_descriptor;
 }
 
