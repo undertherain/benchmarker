@@ -86,6 +86,7 @@ public:
   void setOutDims(const cudnnConvolutionDescriptor_t &convolution_descriptor,
                   const cudnnTensorDescriptor_t &input_descriptor,
                   const cudnnFilterDescriptor_t &kernel_descriptor);
+  friend std::ostream &operator<<(std::ostream &os, const Args &args);
 
 private:
   Args();
@@ -127,13 +128,6 @@ Args::Args(const int argc, const char *argv[])
   loadArgs(ker_pad, 2);
   loadArgs(ker_stride, 3);
   loadArgs(ker_dilation, 4);
-  std::cout << "ker[]: " << ker_dim[0] << ", " << ker_dim[1] << ", "
-            << ker_dim[2] << ", " << ker_dim[3] << ", " << std::endl;
-  std::cout << "pad[]: " << ker_pad[0] << ", " << ker_pad[1] << std::endl;
-  std::cout << "stride[]: " << ker_stride[0] << ", " << ker_stride[1]
-            << std::endl;
-  std::cout << "dilation[]: " << ker_dilation[0] << ", " << ker_dilation[1]
-            << std::endl;
 }
 
 int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
@@ -159,8 +153,6 @@ int Args::prod(int *arr) {
 }
 
 void Args::usage() {
-  // 2d bs in_ch d0 d1 f0 f1 s0 s1 d0 d1 p0 p1
-  // 3d bs in_ch d0 d1 d2
   std::cerr << "Usage: " << argv[0] << "  <gpu_id> <nbDims> <conv_algo> \\\n"
             << "  <batch_size> <in_ch> <out_ch> \\\n"
             << "  <inDim_1> .. <inDim_nbDims> \\\n"
@@ -178,8 +170,52 @@ void Args::loadArgs(int *arr, int arg_batch) {
   for (int i = 0; i < nbDims; i++) {
     const int idx = nb_fixed_args + arg_batch * nbDims + i;
     arr[i] = std::atoi(argv[idx]);
-    std::cout << "Read: " << arr[i] << std::endl;
   }
+}
+
+std::ostream &operator<<(std::ostream &os, const Args &args) {
+  os << "gpu_id: " << args.gpu_id << std::endl;
+  os << "nbDims: " << args.nbDims << std::endl;
+  os << "algo: " << int(args.convolution_algorithm) << std::endl;
+  os << "in_dim: ";
+  for (int i = 0; i < MAX_DIM; i++) {
+    os << args.in_dimA[i] << ", ";
+  }
+  os << std::endl;
+  os << "ker_dim: ";
+  for (int i = 0; i < MAX_DIM; i++) {
+    os << args.ker_dim[i] << ", ";
+  }
+  os << std::endl;
+  os << "ker_pad: ";
+  for (int i = 0; i < MAX_DIM; i++) {
+    os << args.ker_pad[i] << ", ";
+  }
+  os << std::endl;
+  os << "ker_stride: ";
+  for (int i = 0; i < MAX_DIM; i++) {
+    os << args.ker_stride[i] << ", ";
+  }
+  os << std::endl;
+  os << "ker_dilation: ";
+  for (int i = 0; i < MAX_DIM; i++) {
+    os << args.ker_dilation[i] << ", ";
+  }
+  os << std::endl;
+  os << "input_format: " << args.input_format << std::endl;
+  os << "output_format: " << args.output_format << std::endl;
+  os << "kernel_format: " << args.kernel_format << std::endl;
+  os << "mode: " << args.mode << std::endl;
+  os << "data_type: " << args.data_type << std::endl;
+  os << "with_sigmoid: " << args.with_sigmoid << std::endl;
+  os << "tensor_dims;: " << args.tensor_dims << std::endl;
+
+  os << "out_dimA[]: ";
+  for (int i = 0; i < MAX_DIM; i++) {
+    os << args.out_dimA[i] << ", ";
+  }
+  os << std::endl;
+  return os;
 }
 
 cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
@@ -234,6 +270,7 @@ void fillInput(float *h_input, const size_t &input_elems) {
 
 int main(int argc, const char *argv[]) {
   Args args(argc, argv);
+  std::cout << args << std::endl;
   cv::Mat image = load_image("tensorflow.png");
 
   cudaSetDevice(args.gpu_id);
@@ -245,6 +282,7 @@ int main(int argc, const char *argv[]) {
   cudnnFilterDescriptor_t kernel_descriptor = getKernelDescriptor(args);
   cudnnConvolutionDescriptor_t convolution_descriptor = getConvDescriptor(args);
   args.setOutDims(convolution_descriptor, input_descriptor, kernel_descriptor);
+  std::cout << args << std::endl;
   cudnnTensorDescriptor_t output_descriptor = getOutputDescriptor(args);
 
   // CUDNN_CONVOLUTION_FWD_ALGO_GEMM; checkCUDNN(
