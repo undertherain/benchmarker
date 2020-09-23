@@ -15,6 +15,7 @@
 #include <cudnn_ops_infer.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <random>
 
 #define checkCUDNN(expression)                                                 \
   {                                                                            \
@@ -25,27 +26,6 @@
       std::exit(EXIT_FAILURE);                                                 \
     }                                                                          \
   }
-
-cv::Mat load_image(const char *image_path) {
-  cv::Mat image = cv::imread(image_path);
-  image.convertTo(image, CV_32FC3);
-  cv::normalize(image, image, 0, 1, cv::NORM_MINMAX);
-  std::cerr << "Input Image: " << image.rows << " x " << image.cols << " x "
-            << image.channels() << std::endl;
-  return image;
-}
-
-void save_image(const char *output_filename, float *buffer, int height,
-                int width) {
-  cv::Mat output_image(height, width, CV_32FC3, buffer);
-  cv::threshold(output_image, output_image,
-                /*threshold=*/0,
-                /*maxval=*/0, cv::THRESH_TOZERO);
-  cv::normalize(output_image, output_image, 0.0, 255.0, cv::NORM_MINMAX);
-  output_image.convertTo(output_image, CV_8UC3);
-  cv::imwrite(output_filename, output_image);
-  std::cerr << "Wrote output to " << output_filename << std::endl;
-}
 
 const int MAX_DIM = 8;
 class Args {
@@ -206,6 +186,15 @@ std::ostream &operator<<(std::ostream &os, const Args &args) {
   return os;
 }
 
+void genInput(float *h_input, const size_t &input_elems) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dis(0.0, 1.0);
+  for (size_t i = 0; i < input_elems; i++) {
+    h_input[i] = dis(gen);
+  }
+}
+
 cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
   cudnnTensorDescriptor_t input_descriptor;
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
@@ -245,7 +234,6 @@ cudnnTensorDescriptor_t getOutputDescriptor(const Args &args) {
 void fillKernel(float *h_kernel, const size_t &kernel_elems) {
   const float kernel_template[] = {1, 1, 1, 1, -8, 1, 1, 1, 1};
   int mod = (9 > kernel_elems ? kernel_elems : 9);
-  std::cout << "mod: " << mod << std::endl;
   for (int idx = 0; idx < kernel_elems; ++idx)
     h_kernel[idx] = kernel_template[idx % mod];
 }
@@ -258,8 +246,6 @@ void fillInput(float *h_input, const size_t &input_elems) {
 
 int main(int argc, const char *argv[]) {
   Args args(argc, argv);
-  std::cout << args << std::endl;
-  cv::Mat image = load_image("tensorflow.png");
 
   cudaSetDevice(args.gpu_id);
 
@@ -272,7 +258,6 @@ int main(int argc, const char *argv[]) {
   checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(
       convolution_descriptor, input_descriptor, kernel_descriptor,
       args.tensor_dims, args.out_dimA));
-  std::cout << args << std::endl;
   cudnnTensorDescriptor_t output_descriptor = getOutputDescriptor(args);
 
   // CUDNN_CONVOLUTION_FWD_ALGO_GEMM; checkCUDNN(
@@ -306,13 +291,11 @@ int main(int argc, const char *argv[]) {
 
   fillKernel(h_kernel, kernel_elems);
   fillInput(h_input, input_elems);
-  float *old = h_input;
-  h_input = image.ptr<float>(0);
+  genInput(h_input, input_elems);
 
   cudaMemcpy(d_kernel, h_kernel, kernel_bytes, cudaMemcpyHostToDevice);
   cudaMemcpy(d_input, h_input, input_bytes, cudaMemcpyHostToDevice);
   cudaMemset(d_output, 0, output_bytes);
-  h_input = old;
 
   const float alpha = 1.0f, beta = 0.0f;
   checkCUDNN(cudnnConvolutionForward(
@@ -332,10 +315,9 @@ int main(int argc, const char *argv[]) {
     cudnnDestroyActivationDescriptor(activation_descriptor);
   }
 
-  float *h_output = new float[output_bytes];
-  cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
-  save_image("cudnn-out.png", h_output, args.out_dimA[2], args.out_dimA[3]);
-  delete[] h_output;
+  // float *h_output = new float[output_bytes];
+  // cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
+  // delete[] h_output;
 
   delete[] h_kernel;
   delete[] h_input;
