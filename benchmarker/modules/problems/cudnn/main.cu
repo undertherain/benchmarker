@@ -80,14 +80,14 @@ public:
 
   const int nb_fixed_args = 7; // +!
 
-  int getInputBytes();
-  int getOutputBytes();
-  int getKernelBytes();
+  int getInputBytes() const;
+  int getOutputBytes() const;
+  int getKernelBytes() const;
   friend std::ostream &operator<<(std::ostream &os, const Args &args);
 
 private:
   Args();
-  int prod(int *arr);
+  int prod(const int *arr) const;
   void usage();
   void loadArgs(int *arr, int arg_batch);
   int argc;
@@ -127,13 +127,13 @@ Args::Args(const int argc, const char *argv[])
   loadArgs(ker_dilation, 4);
 }
 
-int Args::getInputBytes() { return prod(in_dimA) * sizeof(float); }
+int Args::getInputBytes() const { return prod(in_dimA) * sizeof(float); }
 
-int Args::getOutputBytes() { return prod(out_dimA) * sizeof(float); }
+int Args::getOutputBytes() const { return prod(out_dimA) * sizeof(float); }
 
-int Args::getKernelBytes() { return prod(ker_dim) * sizeof(float); }
+int Args::getKernelBytes() const { return prod(ker_dim) * sizeof(float); }
 
-int Args::prod(int *arr) {
+int Args::prod(const int *arr) const {
   int result = 1;
   for (int i = 0; i < tensor_dims; i++)
     result *= arr[i];
