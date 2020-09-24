@@ -58,7 +58,7 @@ public:
   // {n, in_channels, input_height, input_width}
   int out_dimA[MAX_DIM]; // filled later
 
-  const int nb_fixed_args = 7; // +!
+  const int nb_fixed_args = 7; // including scrip name!
 
   int getInputBytes() const;
   int getOutputBytes() const;
