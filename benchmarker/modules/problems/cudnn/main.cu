@@ -9,6 +9,7 @@
 // cudnnConvolutionBackwardFilter()." so for now let's stick to NCHW!
 
 #include <cassert>
+#include <chrono>
 #include <cstdlib>
 #include <cudnn.h>
 #include <cudnn_cnn_infer.h>
@@ -290,11 +291,16 @@ int main(int argc, const char *argv[]) {
   cudaMemcpy(d_input, h_input, input_bytes, cudaMemcpyHostToDevice);
   cudaMemset(d_output, 0, output_bytes);
 
+  auto start = std::chrono::high_resolution_clock::now();
   const float alpha = 1.0f, beta = 0.0f;
   checkCUDNN(cudnnConvolutionForward(
       cudnn, &alpha, input_descriptor, d_input, kernel_descriptor, d_kernel,
       convolution_descriptor, args.convolution_algorithm, d_workspace,
       workspace_bytes, &beta, output_descriptor, d_output));
+  cudaDeviceSynchronize();
+  auto stop = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> seconds = (stop - start);
+  std::cout << "'time': " << seconds.count() << std::endl;
 
   if (args.with_sigmoid) {
     cudnnActivationDescriptor_t activation_descriptor;
