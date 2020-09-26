@@ -38,7 +38,7 @@ class INeuralNet:
             self.params["batch_size"] = (
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]
             )
-        self.params["channels_first"] = True
+        # self.params["channels_first"] = True
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(params, remaining_args)

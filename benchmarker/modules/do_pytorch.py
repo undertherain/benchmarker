@@ -29,6 +29,7 @@ class Benchmark(INeuralNet):
         parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.params["channels_first"] = True
         params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
         self.params["cudnn_benchmark"] = args.cbm
@@ -38,7 +39,14 @@ class Benchmark(INeuralNet):
             assert self.params["problem"]["precision"] in {"FP32", "mixed"}
         else:
             assert self.params["problem"]["precision"] == "FP32"
-        self.params["channels_first"] = True
+        torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
+        if self.params["backend"] == "DNNL":
+            torch.backends.mkldnn.enabled = True
+        else:
+            if self.params["backend"] == "native":
+                torch.backends.mkldnn.enabled = False
+            else:
+                raise RuntimeError("Unknown backend")
 
     def train(self, model, device, optimizer, epoch):
         model.train()
@@ -78,15 +86,6 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        # use_cuda = not args.no_cuda and torch.cuda.is_available()
-        torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
-        if self.params["backend"] == "DNNL":
-            torch.backends.mkldnn.enabled = True
-        else:
-            if self.params["backend"] == "native":
-                torch.backends.mkldnn.enabled = False
-            else:
-                raise RuntimeError("Unknown backend")
         device = torch.device("cuda" if self.params["gpus"] else "cpu")
 
         x_train, y_train = self.load_data()
