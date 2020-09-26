@@ -110,6 +110,7 @@ class INeuralNet:
         power_gpu = []
         # TODO: move this to init
         # TODO: query multiple GPUs
+        # TODO: don't do this if GPU is not used
         from py3nvml.py3nvml import nvmlInit, nvmlShutdown
         from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
         nvmlInit()
@@ -122,7 +123,7 @@ class INeuralNet:
             powDraw = (nvmlDeviceGetPowerUsage(handle) / 1000.0)
             power_gpu.append(powDraw)
             # TODO: measurement interval to config
-            sleep(0.5)
+            sleep(0.1)
         nvmlShutdown()
         self.params["power"] = {}
         self.params["power"]["GPU"] = np.mean(power_gpu)
