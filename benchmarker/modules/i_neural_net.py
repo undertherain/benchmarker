@@ -7,6 +7,7 @@ import random
 import numpy
 import threading
 from time import sleep
+import numpy as np
 
 
 class INeuralNet:
@@ -106,7 +107,22 @@ class INeuralNet:
         return results
 
     def monitor(self):
+        power_gpu = []
+        # TODO: move this to init
+        # TODO: query multiple GPUs
+        from py3nvml.py3nvml import nvmlInit, nvmlShutdown
+        from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
+        nvmlInit()
+        # deviceCount = nvmlDeviceGetCount()
+        # for i in range(deviceCount):
+        handle = nvmlDeviceGetHandleByIndex(0)
+
         while self.keep_monitor:
-            print("MONITOR")
-            # TODO: measurement intercal to config
+            # print("MONITOR")
+            powDraw = (nvmlDeviceGetPowerUsage(handle) / 1000.0)
+            power_gpu.append(powDraw)
+            # TODO: measurement interval to config
             sleep(0.5)
+        nvmlShutdown()
+        self.params["power"] = {}
+        self.params["power"]["GPU"] = np.mean(power_gpu)
