@@ -90,7 +90,6 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-
         # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
         # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
 

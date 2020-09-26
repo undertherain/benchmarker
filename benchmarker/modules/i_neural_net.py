@@ -5,6 +5,8 @@ import os
 import random
 
 import numpy
+import threading
+from time import sleep
 
 
 class INeuralNet:
@@ -42,6 +44,7 @@ class INeuralNet:
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(params, remaining_args)
+        self.keep_monitor = True
 
     def get_kernel(self, params, remaining_args):
         """Default function to set `self.net`.  The derived do_* classes can
@@ -85,7 +88,11 @@ class INeuralNet:
         random.seed(seed)
 
     def run(self):
+        thread_monitor = threading.Thread(target=self.monitor, args=())
+        thread_monitor.start()                                  # S
         results = self.run_internal()
+        self.keep_monitor = False
+        thread_monitor.join()
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         )
@@ -97,3 +104,9 @@ class INeuralNet:
             results["flop_per_second_estimated"] = results["problem"]['flop_estimated'] / results["time_total"]
             results["gflop_per_second_estimated"] = results["flop_per_second_estimated"] / (1000 * 1000 * 1000)
         return results
+
+    def monitor(self):
+        while self.keep_monitor:
+            print("MONITOR")
+            # TODO: measurement intercal to config
+            sleep(0.5)
