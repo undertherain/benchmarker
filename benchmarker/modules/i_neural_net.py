@@ -107,7 +107,7 @@ class INeuralNet:
         self.keep_monitor = False
         if self.rapl_enabled:
             meter_rapl.end()
-            self.params["power"]["joules_CPU_RAM"] = meter_rapl.result
+            self.params["power"]["joules_CPU_RAM"] = meter_rapl.result.pkg
         thread_monitor.join()
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
