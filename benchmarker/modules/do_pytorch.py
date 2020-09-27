@@ -2,9 +2,6 @@ import argparse
 from timeit import default_timer as timer
 
 import torch
-# TODO: should we expect an import error here?
-# https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
-import torch.backends.mkldnn
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
@@ -36,7 +33,7 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-            assert self.params["problem"]["precision"] in {"FP32", "mixed"}
+            assert self.params["problem"]["precision"] in {"FP32", "FP16", "mixed"}
         else:
             assert self.params["problem"]["precision"] == "FP32"
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
@@ -90,9 +87,6 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
-        # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
-
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
@@ -101,13 +95,18 @@ class Benchmark(INeuralNet):
         model.to(self.device)
         # TODO: args for training hyperparameters
         start = timer()
+        if self.params["problem"]["precision"] == "FP16":
+            if self.x_train.dtype == torch.float32:
+                self.x_train = self.x_train.half()
+            if self.y_train.dtype == torch.float32:
+                self.y_train = self.y_train.half()
+            model.half()
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
-                from apex import amp
-
                 assert len(self.params["gpus"]) == 1
+                from apex import amp
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
@@ -116,7 +115,7 @@ class Benchmark(INeuralNet):
                 self.train(model, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
-            assert self.params["problem"]["precision"] == "FP32"
+            assert self.params["problem"]["precision"] in ["FP32", "FP16"]
             # TODO: add mixed/FP16 precision for inference
             model.eval()
             if self.params["backend"] == "DNNL":
