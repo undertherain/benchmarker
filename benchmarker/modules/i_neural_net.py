@@ -8,6 +8,7 @@ import numpy
 import threading
 from time import sleep
 import numpy as np
+import pyRAPL
 
 
 class INeuralNet:
@@ -49,6 +50,11 @@ class INeuralNet:
             self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(params, remaining_args)
         self.keep_monitor = True
+        try:
+            pyRAPL.setup()
+            self.rapl_enabled = True
+        except:
+            self.rapl_enabled = False
 
     def get_kernel(self, params, remaining_args):
         """Default function to set `self.net`.  The derived do_* classes can
@@ -94,8 +100,14 @@ class INeuralNet:
     def run(self):
         thread_monitor = threading.Thread(target=self.monitor, args=())
         thread_monitor.start()                                  # S
+        if self.rapl_enabled:
+            meter_rapl = pyRAPL.Measurement('bar')
+            meter_rapl.begin()
         results = self.run_internal()
         self.keep_monitor = False
+        if self.rapl_enabled:
+            meter_rapl.end()
+            self.params["power"]["joules_CPU_RAM"] = meter_rapl.result
         thread_monitor.join()
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
@@ -110,20 +122,22 @@ class INeuralNet:
         return results
 
     def monitor(self):
-        power_gpu = []
+        lst_power_gpu = []
         # TODO: move this to init
         # TODO: query multiple GPUs
         # TODO: don't do this if GPU is not used
-        from py3nvml.py3nvml import nvmlInit, nvmlShutdown
+        from py3nvml.py3nvml import nvmlInit, nvmlShutdown, nvmlDeviceGetCount
         from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
         nvmlInit()
-        # deviceCount = nvmlDeviceGetCount()
+        cnt_gpu = nvmlDeviceGetCount()
+        print(f"##CNT GPU: {cnt_gpu}")
         # for i in range(deviceCount):
         handle = nvmlDeviceGetHandleByIndex(0)
 
         while self.keep_monitor:
-            powDraw = (nvmlDeviceGetPowerUsage(handle) / 1000.0)
-            power_gpu.append(powDraw)
+            power_gpu = (nvmlDeviceGetPowerUsage(handle) / 1000.0)
+            lst_power_gpu.append(power_gpu)
             sleep(self.params["power"]["sampling_ms"] / 1000.0)
         nvmlShutdown()
-        self.params["power"]["GPU"] = np.mean(power_gpu)
+        self.params["power"]["avg_watt_GPU"] = np.mean(lst_power_gpu)
+        self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
