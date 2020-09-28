@@ -118,7 +118,8 @@ class INeuralNet:
         results["samples_per_second"] = (
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
-        results["samples_per_joule_GPU"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_GPU"]
+        if "joules_GPU" in results["power"]: 
+            results["samples_per_joule_GPU"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_GPU"]
         if results["power"]["joules_total"] > 0:
             results["samples_per_joule"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
         if "flop_estimated" in results["problem"]:
