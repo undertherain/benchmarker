@@ -106,6 +106,7 @@ class INeuralNet:
         if self.rapl_enabled:
             meter_rapl.end()
             self.params["power"]["joules_CPU"] = sum(meter_rapl.result.pkg) / 1000000.0
+            self.params["power"]["avg_watt_CPU"] = self.params["power"]["joules_CPU"] / self.params["time_total"]
             self.params["power"]["joules_RAM"] = sum(meter_rapl.result.dram) / 1000000.0
         thread_monitor.join()
         if self.rapl_enabled:
