@@ -2,15 +2,10 @@ import argparse
 from timeit import default_timer as timer
 
 import torch
-# TODO: should we expect an import error here?
-# https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
-import torch.backends.mkldnn
 import torch.nn as nn
-# import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 
-# from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
 
 
@@ -27,15 +22,17 @@ class Benchmark(INeuralNet):
         parser.add_argument("--backend", default="native")
         parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
+        parser.add_argument("--precision", default="FP32")
         parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
         self.params["cudnn_benchmark"] = args.cbm
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-            assert self.params["problem"]["precision"] in {"FP32", "mixed"}
+            assert self.params["problem"]["precision"] in {"FP32", "FP16", "mixed"}
         else:
             assert self.params["problem"]["precision"] == "FP32"
         self.params["channels_first"] = True
@@ -78,9 +75,10 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        # use_cuda = not args.no_cuda and torch.cuda.is_available()
+        global torch  # THIS IS BEYOUND RIDICULOUS THAT IT FAILS W/O THIS LINE!
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         if self.params["backend"] == "DNNL":
+            import torch.backends.mkldnn
             torch.backends.mkldnn.enabled = True
         else:
             if self.params["backend"] == "native":
@@ -103,13 +101,18 @@ class Benchmark(INeuralNet):
         model.to(device)
         # TODO: args for training hyperparameters
         start = timer()
+        if self.params["problem"]["precision"] == "FP16":
+            if self.x_train.dtype == torch.float32:
+                self.x_train = self.x_train.half()
+            if self.y_train.dtype == torch.float32:
+                self.y_train = self.y_train.half()
+            model.half()
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
-                from apex import amp
-
                 assert len(self.params["gpus"]) == 1
+                from apex import amp
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
@@ -118,7 +121,7 @@ class Benchmark(INeuralNet):
                 self.train(model, device, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
-            assert self.params["problem"]["precision"] == "FP32"
+            assert self.params["problem"]["precision"] in ["FP32", "FP16"]
             # TODO: add mixed/FP16 precision for inference
             model.eval()
             if self.params["backend"] == "DNNL":
