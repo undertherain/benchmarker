@@ -300,7 +300,7 @@ int main(int argc, const char *argv[]) {
   cudaDeviceSynchronize();
   auto stop = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> seconds = (stop - start);
-  std::cout << "'time': " << seconds.count() << std::endl;
+  std::cout << seconds.count() << std::endl;
 
   if (args.with_sigmoid) {
     cudnnActivationDescriptor_t activation_descriptor;
