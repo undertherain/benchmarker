@@ -132,17 +132,14 @@ class INeuralNet:
         # TODO: move this to init
         # TODO: query multiple GPUs
         # TODO: don't do this if GPU is not used
-        from py3nvml.py3nvml import nvmlInit, nvmlShutdown, nvmlDeviceGetCount
+        from py3nvml.py3nvml import nvmlInit, nvmlShutdown  # nvmlDeviceGetCount
         from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
         nvmlInit()
-        cnt_gpu = nvmlDeviceGetCount()
-        print(f"##CNT GPU: {cnt_gpu}")
-        # for i in range(deviceCount):
-        handle = nvmlDeviceGetHandleByIndex(0)
-
+        # cnt_gpu = nvmlDeviceGetCount()
+        handles = [nvmlDeviceGetHandleByIndex(i) for i in self.params["gpus"]]
         while self.keep_monitor:
-            power_gpu = (nvmlDeviceGetPowerUsage(handle) / 1000.0)
-            lst_power_gpu.append(power_gpu)
+            power_gpu = [nvmlDeviceGetPowerUsage(handle) / 1000.0 for handle in handles]
+            lst_power_gpu.append(sum(power_gpu))
             sleep(self.params["power"]["sampling_ms"] / 1000.0)
         nvmlShutdown()
         self.params["power"]["avg_watt_GPU"] = np.mean(lst_power_gpu)
