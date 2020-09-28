@@ -96,6 +96,7 @@ class INeuralNet:
 
     def run(self):
         self.params["power"]["joules_total"] = 0
+        self.params["power"]["avg_watt_total"] = 0
         thread_monitor = threading.Thread(target=self.monitor, args=())
         thread_monitor.start()                                  # S
         if self.rapl_enabled:
@@ -106,12 +107,15 @@ class INeuralNet:
         if self.rapl_enabled:
             meter_rapl.end()
             self.params["power"]["joules_CPU"] = sum(meter_rapl.result.pkg) / 1000000.0
-            self.params["power"]["avg_watt_CPU"] = self.params["power"]["joules_CPU"] / self.params["time_total"]
             self.params["power"]["joules_RAM"] = sum(meter_rapl.result.dram) / 1000000.0
+            self.params["power"]["avg_watt_CPU"] = self.params["power"]["joules_CPU"] / self.params["time_total"]
+            self.params["power"]["avg_watt_RAM"] = self.params["power"]["joules_RAM"] / self.params["time_total"]
         thread_monitor.join()
         if self.rapl_enabled:
             self.params["power"]["joules_total"] += self.params["power"]["joules_CPU"]
             self.params["power"]["joules_total"] += self.params["power"]["joules_RAM"]
+            self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_CPU"]
+            self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_RAM"]
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         )
@@ -146,3 +150,4 @@ class INeuralNet:
         self.params["power"]["avg_watt_GPU"] = np.mean(lst_power_gpu)
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
+        self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_GPU"]
