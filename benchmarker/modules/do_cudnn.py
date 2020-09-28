@@ -42,19 +42,23 @@ class Benchmark:
         command.append(self.params["gpus"][0])
         command.append(problem["cudnn_conv_algo"])
         command.append(problem["nb_dims"])
-        command += [batch_size, in_chan, out_chan]
-        command += in_dims
-        command += ker_dims
-        command += ker_pads
-        command += ker_stride
-        command += ker_dilation
+        command.append(problem["cnt_samples"])
+        command.append(problem["input_channels"])
+        command.append(problem["cnt_filters"])
+        command += problem["input_size"]
+        command += problem["size_kernel"]
+        command += problem["stride"]
+        command += problem["dilation"]
+        command += problem["padding"]
         command = list(map(str, command))
 
-        print(self.params)
         process = Process(command=command)
         result = process.get_output()
-        std_out = result["out"]
-        print(std_out.strip())
-        elapsed_time = float(std_out.strip())
+        print(result)
+        assert result["returncode"] == 0 and result["err"] == "", (
+            "Error from binary!\n"
+            f"retcode: {result['returncode']}\nstderr: {result['err']}"
+        )
+        elapsed_time = float(result["out"].strip())
         self.params["time"] = elapsed_time
         # self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
