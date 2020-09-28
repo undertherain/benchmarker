@@ -2,7 +2,7 @@ import argparse
 from ast import literal_eval
 
 
-def __proc_dims(args, key):
+def __make_nb_dims(args, key):
     d = vars(args)
     if isinstance(d[key], str):
         d[key] = literal_eval(d[key])
@@ -30,10 +30,10 @@ def set_extra_params(params, unparsed_args):
     parser.add_argument("--padding", default=1)  # nbDims
     args = parser.parse_args(unparsed_args)
 
-    __proc_dims(args, "input_size")
-    __proc_dims(args, "size_kernel")
-    __proc_dims(args, "stride")
-    __proc_dims(args, "dilation")
-    __proc_dims(args, "padding")
+    __make_nb_dims(args, "input_size")
+    __make_nb_dims(args, "size_kernel")
+    __make_nb_dims(args, "stride")
+    __make_nb_dims(args, "dilation")
+    __make_nb_dims(args, "padding")
 
     params["problem"].update(vars(args))
