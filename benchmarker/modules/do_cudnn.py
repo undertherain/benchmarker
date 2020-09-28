@@ -37,9 +37,25 @@ class Benchmark:
         )
         if not os.path.isfile(path_binary):
             raise (RuntimeError(f"{path_binary} not found, run make manually"))
-        command = [path_binary, "tf.png", "1"]
+        gpu_id, nb_dim, algo = 0, 2, 1
+        batch_size, in_chan, out_chan = 1, 3, 3
+        in_dims = [578, 549]
+        ker_dims = [3, 3]
+        ker_pads = [1, 1]
+        ker_stride = [1, 1]
+        ker_dilation = [1, 1]
+        command = [path_binary, gpu_id, algo, nb_dim]
+        command += [batch_size, in_chan, out_chan]
+        command += in_dims
+        command += ker_dims
+        command += ker_pads
+        command += ker_stride
+        command += ker_dilation
+        command = list(map(str, command))
+        print(f"command[] = {command}")
         process = Process(command=command)
         result = process.get_output()
+        print(result)
         std_out = result["out"]
         print(std_out.strip())
         elapsed_time = float(std_out.strip())
