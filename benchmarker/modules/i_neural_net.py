@@ -16,13 +16,10 @@ class INeuralNet:
 
     def __init__(self, params, extra_args=None):
         self.params = params
-
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
         parser.add_argument("--power_sampling_ms", type=int, default=100)
-
-        #
         parser.add_argument("--random_seed", default=None)
 
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
@@ -98,6 +95,7 @@ class INeuralNet:
         random.seed(seed)
 
     def run(self):
+        self.params["power"]["joules_total"] = 0
         thread_monitor = threading.Thread(target=self.monitor, args=())
         thread_monitor.start()                                  # S
         if self.rapl_enabled:
@@ -110,6 +108,9 @@ class INeuralNet:
             self.params["power"]["joules_CPU"] = sum(meter_rapl.result.pkg) / 1000000.0
             self.params["power"]["joules_RAM"] = sum(meter_rapl.result.dram) / 1000000.0
         thread_monitor.join()
+        if self.rapl_enabled:
+            self.params["power"]["joules_total"] += self.params["power"]["joules_CPU"]
+            self.params["power"]["joules_total"] += self.params["power"]["joules_RAM"]
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         )
@@ -117,6 +118,7 @@ class INeuralNet:
         results["samples_per_second"] = (
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
+        results["samples_per_joule_GPU"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_GPU"]
         if "flop_estimated" in results["problem"]:
             results["flop_per_second_estimated"] = results["problem"]['flop_estimated'] / results["time_total"]
             results["gflop_per_second_estimated"] = results["flop_per_second_estimated"] / (1000 * 1000 * 1000)
@@ -142,3 +144,4 @@ class INeuralNet:
         nvmlShutdown()
         self.params["power"]["avg_watt_GPU"] = np.mean(lst_power_gpu)
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
+        self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
