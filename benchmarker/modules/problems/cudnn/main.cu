@@ -122,7 +122,7 @@ int Args::prod(const int *arr) const {
 }
 
 void Args::usage() {
-  std::cerr << "Usage: " << argv[0] << "  <gpu_id> <nbDims> <conv_algo> \\\n"
+  std::cerr << "Usage: " << argv[0] << "  <gpu_id> <conv_algo> <nbDims> \\\n"
             << "  <batch_size> <in_ch> <out_ch> \\\n"
             << "  <inDim_1> .. <inDim_nbDims> \\\n"
             << "  <kerDim_1> .. <kerDim_nbDims> \\\n"
