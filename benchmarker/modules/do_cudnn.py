@@ -33,7 +33,7 @@ class Benchmark:
                 raise Exception("cudnn requires at least one GPU")
         # size = " ".join(map(str, self.params["problem"]["size"]))
         path_binary = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), "problems/cudnn/main"
+            os.path.dirname(os.path.realpath(__file__)), "problems/conv/main"
         )
         if not os.path.isfile(path_binary):
             raise (RuntimeError(f"{path_binary} not found, run make manually"))
