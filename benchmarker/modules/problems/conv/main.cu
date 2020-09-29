@@ -38,9 +38,9 @@ public:
   cudnnConvolutionFwdAlgo_t convolution_algorithm;
 
   // {n, in_channels, input_height, input_width}
-  int in_dimA[MAX_DIM];
+  int input_dims[MAX_DIM];
   // {out_channels, in_channels, kernel_height, kernel_width}
-  int ker_dim[MAX_DIM];
+  int ker_dims[MAX_DIM];
   int ker_pad[MAX_DIM];
   int ker_stride[MAX_DIM];
   int ker_dilation[MAX_DIM];
@@ -78,7 +78,7 @@ private:
 };
 
 Args::Args(const int argc, const char *argv[])
-    : in_dimA{1, 3, 578, 549}, ker_dim{3, 3, 3, 3}, ker_pad{1, 1},
+    : input_dims{1, 3, 578, 549}, ker_dims{3, 3, 3, 3}, ker_pad{1, 1},
       ker_stride{1, 1}, ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
       output_format{CUDNN_TENSOR_NHWC}, kernel_format{CUDNN_TENSOR_NCHW},
       mode{CUDNN_CROSS_CORRELATION}, data_type{CUDNN_DATA_FLOAT},
@@ -94,26 +94,25 @@ Args::Args(const int argc, const char *argv[])
   int out_channels = std::atoi(argv[6]);
 
   tensor_dims = nbDims + 2;
-  in_dimA[0] = batch_size;
-  in_dimA[1] = in_channels;
 
-  ker_dim[0] = out_channels;
-  ker_dim[1] = in_channels;
-  // ker_dim[2] = 7;
-  // ker_dim[3] = 7;
+  input_dims[0] = batch_size;
+  input_dims[1] = in_channels;
+  parseTupleFromArgv(input_dims + 2, 0);
 
-  parseTupleFromArgv(in_dimA + 2, 0);
-  parseTupleFromArgv(ker_dim + 2, 1);
+  ker_dims[0] = out_channels;
+  ker_dims[1] = in_channels;
+  parseTupleFromArgv(ker_dims + 2, 1);
+
   parseTupleFromArgv(ker_pad, 2);
   parseTupleFromArgv(ker_stride, 3);
   parseTupleFromArgv(ker_dilation, 4);
 }
 
-int Args::getInputBytes() const { return prod(in_dimA) * sizeof(float); }
+int Args::getInputBytes() const { return prod(input_dims) * sizeof(float); }
 
 int Args::getOutputBytes() const { return prod(out_dimA) * sizeof(float); }
 
-int Args::getKernelBytes() const { return prod(ker_dim) * sizeof(float); }
+int Args::getKernelBytes() const { return prod(ker_dims) * sizeof(float); }
 
 int Args::prod(const int *arr) const {
   int result = 1;
@@ -149,12 +148,12 @@ std::ostream &operator<<(std::ostream &os, const Args &args) {
   os << "algo: " << int(args.convolution_algorithm) << std::endl;
   os << "in_dim: ";
   for (int i = 0; i < MAX_DIM; i++) {
-    os << args.in_dimA[i] << ", ";
+    os << args.input_dims[i] << ", ";
   }
   os << std::endl;
-  os << "ker_dim: ";
+  os << "ker_dims: ";
   for (int i = 0; i < MAX_DIM; i++) {
-    os << args.ker_dim[i] << ", ";
+    os << args.ker_dims[i] << ", ";
   }
   os << std::endl;
   os << "ker_pad: ";
@@ -193,7 +192,7 @@ cudnnTensorDescriptor_t getInputDescriptor(const Args &args) {
   checkCUDNN(cudnnCreateTensorDescriptor(&input_descriptor));
   checkCUDNN(cudnnSetTensorNdDescriptorEx(input_descriptor, args.input_format,
                                           args.data_type, args.tensor_dims,
-                                          args.in_dimA));
+                                          args.input_dims));
   return input_descriptor;
 }
 
@@ -202,7 +201,7 @@ cudnnFilterDescriptor_t getKernelDescriptor(const Args &args) {
   checkCUDNN(cudnnCreateFilterDescriptor(&kernel_descriptor));
   checkCUDNN(cudnnSetFilterNdDescriptor(kernel_descriptor, args.data_type,
                                         args.kernel_format, args.tensor_dims,
-                                        args.ker_dim));
+                                        args.ker_dims));
   return kernel_descriptor;
 }
 
