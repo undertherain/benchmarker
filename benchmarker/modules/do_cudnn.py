@@ -30,13 +30,6 @@ class Benchmark:
         if not cmd_binary.is_file():
             raise (RuntimeError(f"{cmd_binary} not found, run make manually"))
 
-        batch_size, in_chan, out_chan = 1, 3, 3
-        in_dims = [578, 549]
-        ker_dims = [3, 3]
-        ker_pads = [1, 1]
-        ker_stride = [1, 1]
-        ker_dilation = [1, 1]
-
         problem = self.params["problem"]
         command = [cmd_binary]
         command.append(self.params["gpus"][0])
