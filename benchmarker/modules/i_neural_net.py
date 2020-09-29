@@ -9,6 +9,8 @@ import threading
 from time import sleep
 import numpy as np
 import pyRAPL
+from py3nvml.py3nvml import nvmlInit, nvmlShutdown
+from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
 
 
 class INeuralNet:
@@ -99,7 +101,7 @@ class INeuralNet:
         if self.rapl_enabled:
             meter_rapl = pyRAPL.Measurement('bar')
             meter_rapl.begin()
-        power_monitor_gpu = power_monitor_GPU()
+        power_monitor_gpu = power_monitor_GPU(self.params)
         power_monitor_gpu.start()
         results = self.run_internal()
         if self.rapl_enabled:
@@ -133,29 +135,27 @@ class power_monitor_GPU:
 
     def __init__(self, params):
         # TODO: don't do this if GPU is not used
-        from py3nvml.py3nvml import nvmlInit, nvmlShutdown
-        from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
         nvmlInit()
         self.params = params
         self.keep_monitor = True
 
-    def thread_moninor(self):
-        lst_power_gpu = []
+    def monitor(self):
+        self.lst_power_gpu = []
         handles = [nvmlDeviceGetHandleByIndex(i) for i in self.params["gpus"]]
         while self.keep_monitor:
             power_gpu = [nvmlDeviceGetPowerUsage(handle) / 1000.0 for handle in handles]
-            lst_power_gpu.append(sum(power_gpu))
+            self.lst_power_gpu.append(sum(power_gpu))
             sleep(self.params["power"]["sampling_ms"] / 1000.0)
 
     def start(self):
-        thread_monitor = threading.Thread(target=self.monitor, args=())
-        thread_monitor.start()
+        self.thread_monitor = threading.Thread(target=self.monitor, args=())
+        self.thread_monitor.start()
 
     def stop(self):
         self.keep_monitor = False
-        thread_monitor.join()
+        self.thread_monitor.join()
         nvmlShutdown()
-        self.params["power"]["avg_watt_GPU"] = np.mean(lst_power_gpu)
+        self.params["power"]["avg_watt_GPU"] = np.mean(self.lst_power_gpu)
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
         self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_GPU"]
