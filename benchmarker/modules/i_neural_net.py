@@ -87,12 +87,14 @@ class INeuralNet:
     def run(self):
         self.params["power"]["joules_total"] = 0
         self.params["power"]["avg_watt_total"] = 0
-        power_monitor_gpu = power_monitor_GPU(self.params)
-        power_monitor_gpu.start()
+        if self.params["nb_gpus"] > 0:
+            power_monitor_gpu = power_monitor_GPU(self.params)
+            power_monitor_gpu.start()
         power_monitor_cpu = power_monitor_RAPL(self.params)
         power_monitor_cpu.start()
         results = self.run_internal()
-        power_monitor_gpu.stop()
+        if self.params["nb_gpus"] > 0:
+            power_monitor_gpu.stop()
         power_monitor_cpu.stop()
         results["time_batch"] = results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         results["time_sample"] = results["time_batch"] / results["batch_size"]
