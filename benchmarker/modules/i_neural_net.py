@@ -48,11 +48,6 @@ class INeuralNet:
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(params, remaining_args)
-        try:
-            pyRAPL.setup()
-            self.rapl_enabled = True
-        except:
-            self.rapl_enabled = False
 
     def get_kernel(self, params, remaining_args):
         """Default function to set `self.net`.  The derived do_* classes can
@@ -98,31 +93,16 @@ class INeuralNet:
     def run(self):
         self.params["power"]["joules_total"] = 0
         self.params["power"]["avg_watt_total"] = 0
-        if self.rapl_enabled:
-            meter_rapl = pyRAPL.Measurement('bar')
-            meter_rapl.begin()
         power_monitor_gpu = power_monitor_GPU(self.params)
         power_monitor_gpu.start()
+        power_monitor_cpu = power_monitor_RAPL(self.params)
+        power_monitor_cpu.start()
         results = self.run_internal()
-        if self.rapl_enabled:
-            meter_rapl.end()
-            self.params["power"]["joules_CPU"] = sum(meter_rapl.result.pkg) / 1000000.0
-            self.params["power"]["joules_RAM"] = sum(meter_rapl.result.dram) / 1000000.0
-            self.params["power"]["avg_watt_CPU"] = self.params["power"]["joules_CPU"] / self.params["time_total"]
-            self.params["power"]["avg_watt_RAM"] = self.params["power"]["joules_RAM"] / self.params["time_total"]
         power_monitor_gpu.stop()
-        if self.rapl_enabled:
-            self.params["power"]["joules_total"] += self.params["power"]["joules_CPU"]
-            self.params["power"]["joules_total"] += self.params["power"]["joules_RAM"]
-            self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_CPU"]
-            self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_RAM"]
-        results["time_batch"] = (
-            results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
-        )
+        power_monitor_cpu.stop()
+        results["time_batch"] = results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         results["time_sample"] = results["time_batch"] / results["batch_size"]
-        results["samples_per_second"] = (
-            results["problem"]["cnt_samples"] / results["time_epoch"]
-        )
+        results["samples_per_second"] = results["problem"]["cnt_samples"] / results["time_epoch"]
         if results["power"]["joules_total"] > 0:
             results["samples_per_joule"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
         if "flop_estimated" in results["problem"]:
@@ -165,3 +145,25 @@ class power_monitor_GPU:
 class power_monitor_RAPL:
     def __init__(self, params):
         self.params = params
+        try:
+            pyRAPL.setup()
+            self.rapl_enabled = True
+        except:
+            self.rapl_enabled = False
+
+    def start(self):
+        if self.rapl_enabled:
+            meter_rapl = pyRAPL.Measurement('bar')
+            meter_rapl.begin()
+
+    def stop(self):
+        if self.rapl_enabled:
+            self.meter_rapl.end()
+            self.params["power"]["joules_CPU"] = sum(meter_rapl.result.pkg) / 1000000.0
+            self.params["power"]["joules_RAM"] = sum(meter_rapl.result.dram) / 1000000.0
+            self.params["power"]["avg_watt_CPU"] = self.params["power"]["joules_CPU"] / self.params["time_total"]
+            self.params["power"]["avg_watt_RAM"] = self.params["power"]["joules_RAM"] / self.params["time_total"]
+            self.params["power"]["joules_total"] += self.params["power"]["joules_CPU"]
+            self.params["power"]["joules_total"] += self.params["power"]["joules_RAM"]
+            self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_CPU"]
+            self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_RAM"]
