@@ -13,10 +13,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <cudnn.h>
-#include <cudnn_cnn_infer.h>
-#include <cudnn_ops_infer.h>
 #include <iostream>
-#include <opencv2/opencv.hpp>
 #include <random>
 
 #define checkCUDNN(expression)                                                 \

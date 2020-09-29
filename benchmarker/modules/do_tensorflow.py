@@ -24,6 +24,12 @@ class Benchmark(INeuralNet):
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
         os.environ["KERAS_BACKEND"] = "tensorflow"
+        x_train, y_train = self.load_data()
+        # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
+        self.x_train = x_train.reshape((-1,) + x_train.shape[2:])
+        self.y_train = y_train.reshape((-1,) + y_train.shape[2:])
+        # preheat
+        self.net.predict(self.x_train, self.params["batch_size"])
 
     def get_strategy(self):
         gpu_count_same = self.params["nb_gpus"] == len(
@@ -71,38 +77,18 @@ class Benchmark(INeuralNet):
         tf.random.set_seed(seed)
 
     def run_internal(self):
-
-        # if params["channels_first"]:
-        #     keras.backend.set_image_data_format("channels_first")
-        # else:
-        #     keras.backend.set_image_data_format("channels_last")
-
-        # todo set image format
-        x_train, y_train = self.load_data()
-        # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
-        x_train = x_train.reshape((-1,) + x_train.shape[2:])
-        y_train = y_train.reshape((-1,) + y_train.shape[2:])
-
-        if len(y_train.shape) > 1:
-            cnt_classes = y_train.shape[1]
-        else:
-            cnt_classes = 1
-        self.params["cnt_classes"] = cnt_classes
         model = self.net
         nb_epoch = self.params["nb_epoch"]
-        bs = self.params["batch_size"]
         if self.params["mode"] == "training":
-            print("preheat")
-            model.fit(x_train, y_train, batch_size=bs, epochs=1)
-            print("train")
             start = timer()
-            model.fit(x_train, y_train, batch_size=bs, epochs=nb_epoch, verbose=1)
+            model.fit(self.x_train,
+                      self.y_train,
+                      batch_size=self.params["batch_size"],
+                      epochs=nb_epoch, verbose=1)
         else:
-            # preheat
-            model.predict(x_train, bs)
             start = timer()
             for i in range(nb_epoch):
-                model.predict(x_train, bs, verbose=1)
+                model.predict(self.x_train, self.params["batch_size"], verbose=1)
         end = timer()
         self.params["time_total"] = (end - start)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]

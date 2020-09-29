@@ -26,6 +26,7 @@ class Benchmark(INeuralNet):
         parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.params["channels_first"] = True
         params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
         self.params["cudnn_benchmark"] = args.cbm
@@ -35,9 +36,20 @@ class Benchmark(INeuralNet):
             assert self.params["problem"]["precision"] in {"FP32", "FP16", "mixed"}
         else:
             assert self.params["problem"]["precision"] == "FP32"
-        self.params["channels_first"] = True
+        torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
+        if self.params["backend"] == "DNNL":
+            torch.backends.mkldnn.enabled = True
+        else:
+            if self.params["backend"] == "native":
+                torch.backends.mkldnn.enabled = False
+            else:
+                raise RuntimeError("Unknown backend")
+        x_train, y_train = self.load_data()
+        self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
+        self.x_train = torch.from_numpy(x_train).to(self.device)
+        self.y_train = torch.from_numpy(y_train).to(self.device)
 
-    def train(self, model, device, optimizer, epoch):
+    def train(self, model, optimizer, epoch):
         model.train()
         for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
@@ -45,7 +57,7 @@ class Benchmark(INeuralNet):
             loss.mean().backward()
             optimizer.step()
             progress(epoch, batch_idx, len(self.x_train), loss.mean().item())
-        if device.type == "cuda":
+        if self.device.type == "cuda":
             torch.cuda.synchronize()
 
     def set_random_seed(self, seed):
@@ -75,30 +87,12 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        global torch  # THIS IS BEYOUND RIDICULOUS THAT IT FAILS W/O THIS LINE!
-        torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
-        if self.params["backend"] == "DNNL":
-            import torch.backends.mkldnn
-            torch.backends.mkldnn.enabled = True
-        else:
-            if self.params["backend"] == "native":
-                torch.backends.mkldnn.enabled = False
-            else:
-                raise RuntimeError("Unknown backend")
-        device = torch.device("cuda" if self.params["gpus"] else "cpu")
-
-        x_train, y_train = self.load_data()
-
-        # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
-        # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
-
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
         # TODO: make of/on-core optional
-        self.x_train = torch.from_numpy(x_train).to(device)
-        self.y_train = torch.from_numpy(y_train).to(device)
-        model.to(device)
+
+        model.to(self.device)
         # TODO: args for training hyperparameters
         start = timer()
         if self.params["problem"]["precision"] == "FP16":
@@ -118,7 +112,7 @@ class Benchmark(INeuralNet):
                 # TODO: make opt level a parameter
                 # TODO: convert inputs to FP16 for more agressive opt levels
             for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.train(model, device, optimizer, epoch)
+                self.train(model, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
             assert self.params["problem"]["precision"] in ["FP32", "FP16"]
@@ -127,7 +121,7 @@ class Benchmark(INeuralNet):
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
             for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.inference(model, device)
+                self.inference(model, self.device)
         end = timer()
         self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
