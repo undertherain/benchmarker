@@ -55,8 +55,8 @@ class Benchmark(INeuralNet):
         """
         super().get_kernel(module, remaining_args)
         # todo(vatai): figure a nicer way to get input shape
-        x_train, _ = self.load_data()
-        shape = x_train[0].shape
+        self.x_train, _ = self.load_data()
+        shape = self.x_train[0].shape
         self.net.build(shape)
         converter = tf.lite.TFLiteConverter.from_keras_model(self.net)
         self.net = converter.convert()
@@ -85,8 +85,6 @@ class Benchmark(INeuralNet):
     def run_internal(self):
         assert self.params["mode"] == "inference", "Only inference supported ATM"
 
-        x_train, y_train = self.load_data()
-
         # preheat
         interpreter = self._make_interpreter()
         interpreter.allocate_tensors()
@@ -95,7 +93,7 @@ class Benchmark(INeuralNet):
 
         start = timer()
         for batch in range(self.params["problem"]["cnt_batches_per_epoch"]):
-            interpreter.set_tensor(tensor_index, x_train[batch])
+            interpreter.set_tensor(tensor_index, self.x_train[batch])
             interpreter.invoke()
         end = timer()
 
