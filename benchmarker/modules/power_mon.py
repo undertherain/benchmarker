@@ -2,22 +2,23 @@ import threading
 from time import sleep
 import pyRAPL
 import numpy as np
-from py3nvml.py3nvml import nvmlInit, nvmlShutdown
-from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
 
 class power_monitor_GPU:
 
     def __init__(self, params):
-        # TODO: don't do this if GPU is not used
-        nvmlInit()
+        import py3nvml.py3nvml as nvml
+        self.nvml = nvml
+        # from py3nvml.py3nvml import nvmlInit, nvmlShutdown
+        # from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
+        nvml.nvmlInit()
         self.params = params
         self.keep_monitor = True
 
     def monitor(self):
         self.lst_power_gpu = []
-        handles = [nvmlDeviceGetHandleByIndex(i) for i in self.params["gpus"]]
+        handles = [self.nvml.nvmlDeviceGetHandleByIndex(i) for i in self.params["gpus"]]
         while self.keep_monitor:
-            power_gpu = [nvmlDeviceGetPowerUsage(handle) / 1000.0 for handle in handles]
+            power_gpu = [self.nvml.nvmlDeviceGetPowerUsage(handle) / 1000.0 for handle in handles]
             self.lst_power_gpu.append(sum(power_gpu))
             sleep(self.params["power"]["sampling_ms"] / 1000.0)
 
@@ -28,7 +29,7 @@ class power_monitor_GPU:
     def stop(self):
         self.keep_monitor = False
         self.thread_monitor.join()
-        nvmlShutdown()
+        self.nvml.nvmlShutdown()
         self.params["power"]["avg_watt_GPU"] = np.mean(self.lst_power_gpu)
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
