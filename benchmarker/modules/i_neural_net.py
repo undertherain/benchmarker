@@ -6,27 +6,27 @@ import random
 
 import numpy
 
+from .power_mon import power_monitor_GPU, power_monitor_RAPL
+
 
 class INeuralNet:
     """Interface for all deep learning modules"""
 
     def __init__(self, params, extra_args=None):
         self.params = params
-
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
-        parser.add_argument("--precision", default="FP32")
-
-        #
+        parser.add_argument("--power_sampling_ms", type=int, default=100)
         parser.add_argument("--random_seed", default=None)
 
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
 
         params["mode"] = parsed_args.mode
+        params["power"] = {}
+        params["power"]["sampling_ms"] = parsed_args.power_sampling_ms
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
-        params["problem"]["precision"] = parsed_args.precision
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
         if "batch_size_per_device" not in params:
             self.params["batch_size_per_device"] = 32
@@ -40,26 +40,29 @@ class INeuralNet:
             self.params["batch_size"] = (
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]
             )
-        self.params["channels_first"] = True
-        # todo(vatai): combine tflite and tensorflow
-        framework = params["framework"].replace("tflite", "tensorflow")
-        path = f"benchmarker.modules.problems.{params['problem']['name']}.{framework}"
-        kernel_module = importlib.import_module(path)
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
-        self.get_kernel(kernel_module, remaining_args)
+        self.get_kernel(params, remaining_args)
 
-    def get_kernel(self, module, remaining_args):
+    def get_kernel(self, params, remaining_args):
         """Default function to set `self.net`.  The derived do_* classes can
         override this function if there is some framework specific
         logic involved (e.g. GPU/TPU management etc).
-
-        :param module: module which implements the framework specific
-        `get_kernel` method.
-        :param remaining_args: (Sub)problem dependent arguments.
-
         """
-        self.net = module.get_kernel(self.params, remaining_args)
+        path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
+        path_kernel = (
+            f"benchmarker.modules.problems.{params['problem']['name']}."
+            f"{params['framework']}"
+        )
+        # todo(vatai): combine tflite and tensorflow
+        path_kernel = path_kernel.replace("tflite", "tensorflow")
+        module_kernel = importlib.import_module(path_kernel)
+        try:
+            module_params = importlib.import_module(path_params)
+            module_params.set_extra_params(params, remaining_args)
+        except ImportError:
+            assert remaining_args == []
+        self.net = module_kernel.get_kernel(self.params)
 
     def load_data(self):
         params = self.params
@@ -87,7 +90,17 @@ class INeuralNet:
         random.seed(seed)
 
     def run(self):
+        self.params["power"]["joules_total"] = 0
+        self.params["power"]["avg_watt_total"] = 0
+        if self.params["nb_gpus"] > 0:
+            power_monitor_gpu = power_monitor_GPU(self.params)
+            power_monitor_gpu.start()
+        power_monitor_cpu = power_monitor_RAPL(self.params)
+        power_monitor_cpu.start()
         results = self.run_internal()
+        if self.params["nb_gpus"] > 0:
+            power_monitor_gpu.stop()
+        power_monitor_cpu.stop()
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         )
@@ -95,4 +108,17 @@ class INeuralNet:
         results["samples_per_second"] = (
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
+        if results["power"]["joules_total"] > 0:
+            results["samples_per_joule"] = (
+                results["problem"]["cnt_samples"]
+                * results["nb_epoch"]
+                / self.params["power"]["joules_total"]
+            )
+        if "flop_estimated" in results["problem"]:
+            results["flop_per_second_estimated"] = (
+                results["problem"]["flop_estimated"] / results["time_total"]
+            )
+            results["gflop_per_second_estimated"] = results[
+                "flop_per_second_estimated"
+            ] / (1000 * 1000 * 1000)
         return results

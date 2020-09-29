@@ -40,6 +40,7 @@ class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
     def __init__(self, params, remaining_args=None):
+        params["channels_first"] = False
         super().__init__(params, remaining_args)
         # todo(vatai): set channels should be here but it is moved to
         # `get_kernel()`
@@ -52,12 +53,11 @@ class Benchmark(INeuralNet):
         Custom TF `get_kernel` method to handle TPU if
         available. https://www.tensorflow.org/guide/tpu
         """
-        self.params["channels_first"] = False
         super().get_kernel(module, remaining_args)
         # todo(vatai): figure a nicer way to get input shape
         x_train, _ = self.load_data()
-        # x_train = x_train.reshape((-1,) + x_train.shape[2:])
-        self.net.build(x_train.shape[1:])
+        shape = x_train[0].shape
+        self.net.build(shape)
         converter = tf.lite.TFLiteConverter.from_keras_model(self.net)
         self.net = converter.convert()
 

@@ -37,7 +37,7 @@ def unwrap_distributed(state_dict):
     return new_state_dict
 
 
-def get_kernel(params, unparsed_args=None):
+def get_kernel(params):
     ssd_cpu = SSD300()
     CACHE = Path("~/.cache/benchmarker/models/").expanduser()
     FNAME = "nvidia_ssdpyt_fp32_20190225.pt"
