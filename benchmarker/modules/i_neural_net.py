@@ -46,7 +46,6 @@ class INeuralNet:
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(params, remaining_args)
-        self.keep_monitor = True
         try:
             pyRAPL.setup()
             self.rapl_enabled = True
@@ -97,20 +96,19 @@ class INeuralNet:
     def run(self):
         self.params["power"]["joules_total"] = 0
         self.params["power"]["avg_watt_total"] = 0
-        thread_monitor = threading.Thread(target=self.monitor, args=())
-        thread_monitor.start()                                  # S
         if self.rapl_enabled:
             meter_rapl = pyRAPL.Measurement('bar')
             meter_rapl.begin()
+        power_monitor_gpu = power_monitor_GPU()
+        power_monitor_gpu.start()
         results = self.run_internal()
-        self.keep_monitor = False
         if self.rapl_enabled:
             meter_rapl.end()
             self.params["power"]["joules_CPU"] = sum(meter_rapl.result.pkg) / 1000000.0
             self.params["power"]["joules_RAM"] = sum(meter_rapl.result.dram) / 1000000.0
             self.params["power"]["avg_watt_CPU"] = self.params["power"]["joules_CPU"] / self.params["time_total"]
             self.params["power"]["avg_watt_RAM"] = self.params["power"]["joules_RAM"] / self.params["time_total"]
-        thread_monitor.join()
+        power_monitor_gpu.stop()
         if self.rapl_enabled:
             self.params["power"]["joules_total"] += self.params["power"]["joules_CPU"]
             self.params["power"]["joules_total"] += self.params["power"]["joules_RAM"]
@@ -123,8 +121,6 @@ class INeuralNet:
         results["samples_per_second"] = (
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
-        if "joules_GPU" in results["power"]: 
-            results["samples_per_joule_GPU"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_GPU"]
         if results["power"]["joules_total"] > 0:
             results["samples_per_joule"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
         if "flop_estimated" in results["problem"]:
@@ -132,22 +128,40 @@ class INeuralNet:
             results["gflop_per_second_estimated"] = results["flop_per_second_estimated"] / (1000 * 1000 * 1000)
         return results
 
-    def monitor(self):
-        lst_power_gpu = []
-        # TODO: move this to init
-        # TODO: query multiple GPUs
+
+class power_monitor_GPU:
+
+    def __init__(self, params):
         # TODO: don't do this if GPU is not used
-        from py3nvml.py3nvml import nvmlInit, nvmlShutdown  # nvmlDeviceGetCount
+        from py3nvml.py3nvml import nvmlInit, nvmlShutdown
         from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
         nvmlInit()
-        # cnt_gpu = nvmlDeviceGetCount()
+        self.params = params
+        self.keep_monitor = True
+
+    def thread_moninor(self):
+        lst_power_gpu = []
         handles = [nvmlDeviceGetHandleByIndex(i) for i in self.params["gpus"]]
         while self.keep_monitor:
             power_gpu = [nvmlDeviceGetPowerUsage(handle) / 1000.0 for handle in handles]
             lst_power_gpu.append(sum(power_gpu))
             sleep(self.params["power"]["sampling_ms"] / 1000.0)
+
+    def start(self):
+        thread_monitor = threading.Thread(target=self.monitor, args=())
+        thread_monitor.start()
+
+    def stop(self):
+        self.keep_monitor = False
+        thread_monitor.join()
         nvmlShutdown()
         self.params["power"]["avg_watt_GPU"] = np.mean(lst_power_gpu)
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
         self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_GPU"]
+        self.params["samples_per_joule_GPU"] = self.params["problem"]["cnt_samples"] * self.params["nb_epoch"] / self.params["power"]["joules_GPU"]
+
+
+class power_monitor_RAPL:
+    def __init__(self, params):
+        self.params = params
