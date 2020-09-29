@@ -71,7 +71,7 @@ private:
   Args();
   int prod(const int *arr) const;
   void usage();
-  void loadArgs(int *arr, int arg_batch);
+  void parseTupleFromArgv(int *dst_parsed_args, const int &idx_tuple);
   int argc;
   const char **argv;
   int cur_arg;
@@ -102,11 +102,11 @@ Args::Args(const int argc, const char *argv[])
   // ker_dim[2] = 7;
   // ker_dim[3] = 7;
 
-  loadArgs(in_dimA + 2, 0);
-  loadArgs(ker_dim + 2, 1);
-  loadArgs(ker_pad, 2);
-  loadArgs(ker_stride, 3);
-  loadArgs(ker_dilation, 4);
+  parseTupleFromArgv(in_dimA + 2, 0);
+  parseTupleFromArgv(ker_dim + 2, 1);
+  parseTupleFromArgv(ker_pad, 2);
+  parseTupleFromArgv(ker_stride, 3);
+  parseTupleFromArgv(ker_dilation, 4);
 }
 
 int Args::getInputBytes() const { return prod(in_dimA) * sizeof(float); }
@@ -133,13 +133,13 @@ void Args::usage() {
   std::exit(EXIT_FAILURE);
 }
 
-void Args::loadArgs(int *arr, int arg_batch) {
-  if (argc < nb_fixed_args + (arg_batch + 1) * nbDims) {
+void Args::parseTupleFromArgv(int *dst_parsed_args, const int &idx_tuple) {
+  if (argc < nb_fixed_args + (idx_tuple + 1) * nbDims) {
     return;
   }
   for (int i = 0; i < nbDims; i++) {
-    const int idx = nb_fixed_args + arg_batch * nbDims + i;
-    arr[i] = std::atoi(argv[idx]);
+    const int idx = nb_fixed_args + idx_tuple * nbDims + i;
+    dst_parsed_args[i] = std::atoi(argv[idx]);
   }
 }
 
