@@ -5,6 +5,7 @@ import os
 import random
 
 import numpy
+
 from .power_mon import power_monitor_GPU, power_monitor_RAPL
 
 
@@ -49,8 +50,12 @@ class INeuralNet:
         logic involved (e.g. GPU/TPU management etc).
         """
         path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
-        path_kernel = (f"benchmarker.modules.problems.{params['problem']['name']}."
-                       f"{params['framework']}")
+        path_kernel = (
+            f"benchmarker.modules.problems.{params['problem']['name']}."
+            f"{params['framework']}"
+        )
+        # todo(vatai): combine tflite and tensorflow
+        path_kernel = path_kernel.replace("tflite", "tensorflow")
         module_kernel = importlib.import_module(path_kernel)
         try:
             module_params = importlib.import_module(path_params)
@@ -96,12 +101,24 @@ class INeuralNet:
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu.stop()
         power_monitor_cpu.stop()
-        results["time_batch"] = results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
+        results["time_batch"] = (
+            results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
+        )
         results["time_sample"] = results["time_batch"] / results["batch_size"]
-        results["samples_per_second"] = results["problem"]["cnt_samples"] / results["time_epoch"]
+        results["samples_per_second"] = (
+            results["problem"]["cnt_samples"] / results["time_epoch"]
+        )
         if results["power"]["joules_total"] > 0:
-            results["samples_per_joule"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
+            results["samples_per_joule"] = (
+                results["problem"]["cnt_samples"]
+                * results["nb_epoch"]
+                / self.params["power"]["joules_total"]
+            )
         if "flop_estimated" in results["problem"]:
-            results["flop_per_second_estimated"] = results["problem"]['flop_estimated'] / results["time_total"]
-            results["gflop_per_second_estimated"] = results["flop_per_second_estimated"] / (1000 * 1000 * 1000)
+            results["flop_per_second_estimated"] = (
+                results["problem"]["flop_estimated"] / results["time_total"]
+            )
+            results["gflop_per_second_estimated"] = results[
+                "flop_per_second_estimated"
+            ] / (1000 * 1000 * 1000)
         return results
