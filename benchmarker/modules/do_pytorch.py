@@ -2,15 +2,10 @@ import argparse
 from timeit import default_timer as timer
 
 import torch
-# TODO: should we expect an import error here?
-# https://stackoverflow.com/questions/3496592/conditional-import-of-modules-in-python
-import torch.backends.mkldnn
 import torch.nn as nn
-# import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 
-# from torchvision import datasets, transforms
 from .i_neural_net import INeuralNet
 
 
@@ -25,16 +20,36 @@ class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
         parser = argparse.ArgumentParser(description="pytorch extra args")
         parser.add_argument("--backend", default="native")
+        parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
+        parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
+        parser.add_argument("--precision", default="FP32")
+        parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.params["channels_first"] = True
+        params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
+        self.params["cudnn_benchmark"] = args.cbm
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
+            assert self.params["problem"]["precision"] in {"FP32", "FP16", "mixed"}
+        else:
+            assert self.params["problem"]["precision"] == "FP32"
+        torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
+        if self.params["backend"] == "DNNL":
+            torch.backends.mkldnn.enabled = True
+        else:
+            if self.params["backend"] == "native":
+                torch.backends.mkldnn.enabled = False
+            else:
+                raise RuntimeError("Unknown backend")
+        x_train, y_train = self.load_data()
+        self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
+        self.x_train = torch.from_numpy(x_train).to(self.device)
+        self.y_train = torch.from_numpy(y_train).to(self.device)
 
-        self.params["channels_first"] = True
-
-    def train(self, model, device, optimizer, epoch):
+    def train(self, model, optimizer, epoch):
         model.train()
         for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
@@ -42,7 +57,7 @@ class Benchmark(INeuralNet):
             loss.mean().backward()
             optimizer.step()
             progress(epoch, batch_idx, len(self.x_train), loss.mean().item())
-        if device.type == "cuda":
+        if self.device.type == "cuda":
             torch.cuda.synchronize()
 
     def set_random_seed(self, seed):
@@ -72,52 +87,43 @@ class Benchmark(INeuralNet):
         #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
-        # use_cuda = not args.no_cuda and torch.cuda.is_available()
-        if self.params["backend"] == "DNNL":
-            torch.backends.mkldnn.enabled = True
-        else:
-            if self.params["backend"] == "native":
-                torch.backends.mkldnn.enabled = False
-            else:
-                raise RuntimeError("Unknown backend")
-        device = torch.device("cuda" if self.params["gpus"] else "cpu")
-
-        x_train, y_train = self.load_data()
-
-        # train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
-        # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.params["batch_size"], shuffle=False)
-
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
         # TODO: make of/on-core optional
-        self.x_train = torch.from_numpy(x_train).to(device)
-        self.y_train = torch.from_numpy(y_train).to(device)
-        model.to(device)
+
+        model.to(self.device)
         # TODO: args for training hyperparameters
         start = timer()
+        if self.params["problem"]["precision"] == "FP16":
+            if self.x_train.dtype == torch.float32:
+                self.x_train = self.x_train.half()
+            if self.y_train.dtype == torch.float32:
+                self.y_train = self.y_train.half()
+            model.half()
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
-                from apex import amp
                 assert len(self.params["gpus"]) == 1
+                from apex import amp
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
                 # TODO: convert inputs to FP16 for more agressive opt levels
             for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.train(model, device, optimizer, epoch)
+                self.train(model, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
-            assert self.params["problem"]["precision"] == "FP32"
+            assert self.params["problem"]["precision"] in ["FP32", "FP16"]
             # TODO: add mixed/FP16 precision for inference
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
             for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.inference(model, device)
+                self.inference(model, self.device)
         end = timer()
-        self.params["time"] = (end - start) / self.params["nb_epoch"]
+        self.params["time_total"] = end - start
+        self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
         return self.params

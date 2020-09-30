@@ -1,0 +1,14 @@
+conv_type,in_channels,in_depth,in_width,in_height,cnt_filters,depth_kernel,width_kernel,height_kernel,stride,dilation,padding
+conv2d,3, ,224,224,64, ,7,7,2,1,3
+conv2d,64, ,56,56,64, ,1,1,1,1,0
+conv2d,64, ,56,56,64, ,3,3,1,1,1
+conv2d,256, ,56,56,64, ,1,1,1,1,0
+conv2d,256, ,56,56,64, ,1,1,2,1,0
+conv2d,128, ,28,28,64, ,1,1,1,1,0
+conv2d,512, ,28,28,64, ,1,1,1,1,0
+conv2d,256, ,14,14,64, ,1,1,1,1,0
+conv2d,1024, ,14,14,64, ,1,1,1,1,0
+conv2d,1024, ,14,14,64, ,1,1,2,1,0
+conv2d,512, ,7,7,64, ,3,3,1,1,1
+conv2d,512, ,7,7,64, ,1,1,1,1,0
+

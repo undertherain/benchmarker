@@ -14,7 +14,7 @@ class Benchmark(IGEMM):
                 raise Exception("cublas requires one GPU")
         size = " ".join(map(str, self.params['problem']['size']))
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   "problems/cublas/main")
+                                   "problems/gemm/cublas/main")
         if not os.path.isfile(path_binary):
             raise(RuntimeError(f"{path_binary} not found, run make manually"))
         command = [path_binary,

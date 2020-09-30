@@ -4,8 +4,10 @@
 
 import os
 from timeit import default_timer as timer
+import argparse
 
 import tensorflow as tf
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 
 from .i_neural_net import INeuralNet
 
@@ -13,11 +15,21 @@ from .i_neural_net import INeuralNet
 class Benchmark(INeuralNet):
     """docstring for ClassName"""
 
-    def __init__(self, params, remaining_args=None):
-        gpus = params["gpus"]
+    def __init__(self, params, extra_args=None):
+        parser = argparse.ArgumentParser(description="cf extra args")
+        parser.add_argument("--precision", default="FP32")
+        args, remaining_args = parser.parse_known_args(extra_args)
+        params["problem"]["precision"] = args.precision
+        assert params["problem"]["precision"] in ["FP32", "mixed"]
         super().__init__(params, remaining_args)
         self.params["channels_first"] = False
         os.environ["KERAS_BACKEND"] = "tensorflow"
+        x_train, y_train = self.load_data()
+        # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
+        self.x_train = x_train.reshape((-1,) + x_train.shape[2:])
+        self.y_train = y_train.reshape((-1,) + y_train.shape[2:])
+        # preheat
+        self.net.predict(self.x_train, self.params["batch_size"])
 
     def get_strategy(self):
         gpu_count_same = self.params["nb_gpus"] == len(
@@ -54,6 +66,9 @@ class Benchmark(INeuralNet):
         Custom TF `get_kernel` method to handle TPU if
         available. https://www.tensorflow.org/guide/tpu
         """
+        if self.params["problem"]["precision"] == "mixed":
+            policy = mixed_precision.Policy('mixed_float16')
+            mixed_precision.set_policy(policy)
         with self.get_strategy().scope():
             super().get_kernel(module, remaining_args)
 
@@ -62,41 +77,21 @@ class Benchmark(INeuralNet):
         tf.random.set_seed(seed)
 
     def run_internal(self):
-
-        # if params["channels_first"]:
-        #     keras.backend.set_image_data_format("channels_first")
-        # else:
-        #     keras.backend.set_image_data_format("channels_last")
-
-        # todo set image format
-        x_train, y_train = self.load_data()
-        # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
-        x_train = x_train.reshape((-1,) + x_train.shape[2:])
-        y_train = y_train.reshape((-1,) + y_train.shape[2:])
-
-        y_train = tf.keras.utils.to_categorical(y_train, num_classes=1000)
-
-        if len(y_train.shape) > 1:
-            cnt_classes = y_train.shape[1]
-        else:
-            cnt_classes = 1
-        self.params["cnt_classes"] = cnt_classes
         model = self.net
         nb_epoch = self.params["nb_epoch"]
-        bs = self.params["batch_size"]
         if self.params["mode"] == "training":
-            print("preheat")
-            model.fit(x_train, y_train, batch_size=bs, epochs=1)
-            print("train")
             start = timer()
-            model.fit(x_train, y_train, batch_size=bs, epochs=nb_epoch, verbose=1)
+            model.fit(self.x_train,
+                      self.y_train,
+                      batch_size=self.params["batch_size"],
+                      epochs=nb_epoch, verbose=1)
         else:
-            # preheat
-            model.predict(x_train, bs)
             start = timer()
-            model.predict(x_train, bs, verbose=1)
+            for i in range(nb_epoch):
+                model.predict(self.x_train, self.params["batch_size"], verbose=1)
         end = timer()
-        self.params["time"] = (end - start) / nb_epoch
+        self.params["time_total"] = (end - start)
+        self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         version_backend = tf.__version__
         # TODO: make this a nested dict
         # params["framework_full"] = "Keras-" + keras.__version__ + "/" + keras.backend.backend() + "_" + version_backend

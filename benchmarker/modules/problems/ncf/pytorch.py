@@ -1,6 +1,5 @@
 # This class is from https://github.com/mlperf.
 # https://github.com/mlperf/training/blob/master/recommendation/pytorch/ncf.py
-import argparse
 
 import numpy as np
 import torch
@@ -78,30 +77,13 @@ class NeuMF(nn.Module):
         return x
 
 
-def get_kernel(params, unparsed_args=None):
-    parser = argparse.ArgumentParser(
-        description="Benchmark mlperf recommendation model"
-    )
-    parser.add_argument("--nb_users", type=int, default=128, help="number of users")
-    parser.add_argument("--nb_items", type=int, default=128, help="number of items")
-    parser.add_argument(
-        "--factors", type=int, default=8, help="number of predictive factors"
-    )
-    parser.add_argument(
-        "--layers",
-        nargs="+",
-        type=int,
-        default=[64, 32, 16, 8],
-        help="size of hidden layers for MLP",
-    )
-    args = parser.parse_args(unparsed_args)
-    params["problem"].update(vars(args))
+def get_kernel(params):
     net = NeuMF(
-        nb_users=args.nb_users,
-        nb_items=args.nb_items,
-        mf_dim=args.factors,
+        nb_users=params["problem"]["nb_users"],
+        nb_items=params["problem"]["nb_items"],
+        mf_dim=params["problem"]["factors"],
         mf_reg=0.0,
-        mlp_layer_sizes=args.layers,
-        mlp_layer_regs=[0.0 for i in args.layers],
+        mlp_layer_sizes=params["problem"]["layers"],
+        mlp_layer_regs=[0.0 for i in params["problem"]["layers"]],
     )
     return Recommender(params, net)
