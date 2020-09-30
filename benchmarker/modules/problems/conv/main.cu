@@ -79,7 +79,7 @@ Args::Args(const int argc, const char *argv[])
     : input_dims{1, 3, 578, 549}, ker_dims{3, 3, 3, 3}, ker_pad{1, 1},
       ker_stride{1, 1}, ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
       output_format{CUDNN_TENSOR_NHWC}, kernel_format{CUDNN_TENSOR_NCHW},
-      mode{CUDNN_CROSS_CORRELATION}, data_type{CUDNN_DATA_FLOAT},
+      mode{CUDNN_CONVOLUTION}, data_type{CUDNN_DATA_FLOAT},
       with_sigmoid{false}, argc{argc}, argv{argv}, cur_arg{1} {
   if (argc < nb_fixed_args)
     usage();
