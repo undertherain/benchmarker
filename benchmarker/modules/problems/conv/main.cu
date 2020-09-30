@@ -88,13 +88,13 @@ Args::Args(const int argc, const char *argv[])
   convolution_algorithm = cudnnConvolutionFwdAlgo_t(std::atoi(argv[2]));
   nbDims = std::atoi(argv[3]);
   nb_epoch = std::atoi(argv[4]);
-  int batch_size = std::atoi(argv[5]);
+  int cnt_samples = std::atoi(argv[5]);
   int in_channels = std::atoi(argv[6]);
   int out_channels = std::atoi(argv[7]);
 
   tensor_dims = nbDims + 2;
 
-  input_dims[0] = batch_size;
+  input_dims[0] = cnt_samples;
   input_dims[1] = in_channels;
   parseTupleFromArgv(input_dims + 2, 0);
 
@@ -122,7 +122,7 @@ int Args::prod(const int *arr) const {
 
 void Args::usage() {
   std::cerr << "Usage: " << argv[0] << "  <gpu_id> <conv_algo> <nbDims> \\\n"
-            << "  <nb_epoch> <batch_size> <in_ch> <out_ch> \\\n"
+            << "  <nb_epoch> <cnt_samples> <in_ch> <out_ch> \\\n"
             << "  <inDim_1> .. <inDim_nbDims> \\\n"
             << "  <kerDim_1> .. <kerDim_nbDims> \\\n"
             << "  <pad_1> .. <pad_nbDims> \\\n"
