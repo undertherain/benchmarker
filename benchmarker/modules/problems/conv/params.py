@@ -21,6 +21,7 @@ def set_extra_params(params, unparsed_args):
     parser = argparse.ArgumentParser(description="Benchmark cuDNN conv kernel")
     parser.add_argument("--cudnn_conv_algo", type=int, default=1)
     parser.add_argument("--nb_dims", type=int, default=2)
+    parser.add_argument("--nb_epoch", type=int, default=10)
     parser.add_argument("--cnt_samples", type=int, default=8)
     parser.add_argument("--input_size", default=50)  # nbDims
     parser.add_argument("--input_channels", type=int, default=3)
