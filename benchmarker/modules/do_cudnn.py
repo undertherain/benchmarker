@@ -32,14 +32,14 @@ class Benchmark:
 
         problem = self.params["problem"]
         nb_epoch = problem["nb_epoch"]
-        cnt_samples = problem["cnt_samples"]
+        batch_size = problem["batch_size"]
 
         command = [cmd_binary]
         command.append(self.params["gpus"][0])
         command.append(problem["cudnn_conv_algo"])
         command.append(problem["nb_dims"])
         command.append(nb_epoch)
-        command.append(cnt_samples)
+        command.append(batch_size)
         command.append(problem["input_channels"])
         command.append(problem["cnt_filters"])
         command += problem["input_size"]
@@ -57,8 +57,9 @@ class Benchmark:
             f"retcode: {result['returncode']}\nstderr: {result['err']}"
         )
         elapsed_time = float(result["out"].strip())
-        samples = float(cnt_samples * nb_epoch)
+        samples = float(batch_size * nb_epoch)
         self.params["samples_per_second"] = samples / elapsed_time
         self.params["time_total"] = elapsed_time
         self.params["time_epoch"] = elapsed_time / float(nb_epoch)
+        self.params["time_batch"] = elapsed_time / float(nb_epoch)
         self.params["time_sample"] = elapsed_time / samples
