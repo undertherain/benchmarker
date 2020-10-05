@@ -64,7 +64,17 @@ def main():
             command = []
             params["backend"] = "DNNL"
             run(params, command, output_file)
-            command = ["perf", "stat", "-e", "r5301c7", "-e", "r5302c7", "-e", "r5304c7", "-e", "r5308c7", "-e", "r5310c7", "-e", "r5320c7"] 
+
+            #Count FP_ARITH:SCALAR_SINGLE
+            command = ["perf", "stat","-e", "r5302c7"]
+            run(params, command, output_file)
+
+            #Count FP_ARITH:128B_PACKED_SINGLE   
+            command = ["perf", "stat","-e", "r5308c7"]
+            run(params, command, output_file)
+
+            #Count FP_ARITH:256B_PACKED_SINGLE
+            command = ["perf", "stat","-e", "r5320c7"]
             run(params, command, output_file)
 
 
