@@ -19,7 +19,7 @@ def get_kernel(params):
     horizontal_stride = vertical_stride = problem_params["stride"]
     out_width = 1 + math.floor((input_width - filter_width + 2 * padding_width)/horizontal_stride) 
     out_height = 1 + math.floor((input_height - filter_height + 2 * padding_height)/vertical_stride)
-    params["problem"]["flop_estimated"] = 2 * out_width * out_height * num_channels * cnt_samples * cnt_filters * filter_width * filter_height
+    params["problem"]["flop_estimated"] = 2 * out_width * out_height * num_channels * cnt_samples * cnt_filters * filter_width * filter_height * params["nb_epoch"]
 
     Net = nn.Conv2d(in_channels=num_channels,
                     out_channels=cnt_filters,
