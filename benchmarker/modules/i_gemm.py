@@ -10,13 +10,10 @@ class IGEMM():
         self.params = params
         parser = argparse.ArgumentParser(description="gemm extra args")
         parser.add_argument("--precision", default="FP32")
-        # TODO: don't repeat this with i_neural_net
-        parser.add_argument("--power_sampling_ms", type=int, default=100)
         # args, remaining_args = parser.parse_known_args(remaining_args)
         # parser = argparse.ArgumentParser(description='Benchmark GEMM operations')
         args = parser.parse_args(remaining_args)
         params["problem"]["precision"] = args.precision
-        params["power"]["sampling_ms"] = args.power_sampling_ms
         params["path_out"] = os.path.join(params["path_out"],
                                           params["problem"]["precision"])
         if isinstance(params["problem"]["size"], int):

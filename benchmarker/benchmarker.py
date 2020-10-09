@@ -29,6 +29,7 @@ def parse_basic_args(argv):
     parser.add_argument('--gpus', default="")
     parser.add_argument('--problem_size', default=None)
     parser.add_argument('--batch_size', default=None)
+    parser.add_argument("--power_sampling_ms", type=int, default=100)
     # parser.add_argument('--misc')
     return parser.parse_known_args(argv)
 
@@ -83,8 +84,9 @@ def run(argv):
             # TODO: add arch when it becomes available thougg sys query
             params["device"] = "unknown CPU"
     params["power"] = {}
+    params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
-    params["power"]["avg_watt_total"] = 0    
+    params["power"]["avg_watt_total"] = 0
     params["path_out"] = os.path.join(params["path_out"], params["problem"]["name"])
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
