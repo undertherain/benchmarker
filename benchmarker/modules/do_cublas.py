@@ -23,6 +23,11 @@ class Benchmark(IGEMM):
         process = Process(command=command)
         result = process.get_output()
         std_out = result["out"]
-        elapsed_time = float(std_out.strip())
+        try:
+            elapsed_time = float(std_out.strip())
+        except:
+            print("something wend wrong")
+            print(std_out)
+            print(result["err"])
         self.params["time"] = elapsed_time
         self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time

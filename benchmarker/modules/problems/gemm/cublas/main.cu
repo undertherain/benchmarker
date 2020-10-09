@@ -87,6 +87,7 @@ double call_blas_and_measure_seconds(
     type_numerics *A, *B, *C;
     type_numerics *d_A, *d_B, *d_C;
     get_matrices<type_numerics>(m, k, n, A, B, C);
+    std::cerr << "done init get_matrices\n";
     cudaMalloc(&d_A, m * k * sizeof(type_numerics));
     cudaMalloc(&d_B, k * n * sizeof(type_numerics));
     cudaMalloc(&d_C, m * n * sizeof(type_numerics));
@@ -122,6 +123,7 @@ int main(int argc, char * argv[]) {
     double dtime;
     std::string precision;
     parse_args(argc, argv, precision, m, k, n);
+    std::cerr << "done parsing args\n";
     if (precision == "FP32")
         dtime = call_blas_and_measure_seconds<float>(m, n, k, precision);
     if (precision == "FP16")

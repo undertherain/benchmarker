@@ -41,8 +41,9 @@ void get_matrices(size_t &cnt_rows_A_rows_C,
     A = (precision*) malloc(sizeof(precision) * cnt_rows_A_rows_C * cnt_cols_A_rows_B);
     B = (precision*) malloc(sizeof(precision) * cnt_cols_A_rows_B * cnt_cols_B_cols_C);
     C = (precision*) malloc(sizeof(precision) * cnt_rows_A_rows_C * cnt_cols_B_cols_C);
-    for(i=0; i < cnt_rows_A_rows_C * cnt_cols_A_rows_B; i++) { A[i] = rand()/RAND_MAX;}
-    for(i=0; i < cnt_cols_A_rows_B * cnt_cols_B_cols_C; i++) { B[i] = rand()/RAND_MAX;}
-    for(i=0; i < cnt_rows_A_rows_C * cnt_cols_B_cols_C; i++) { C[i] = rand()/RAND_MAX;}
+    fprintf(stderr, "done malloc\n");
+    for(i=0; i < cnt_rows_A_rows_C * cnt_cols_A_rows_B; i++) { A[i] = static_cast<float>(rand())/RAND_MAX;}
+    for(i=0; i < cnt_cols_A_rows_B * cnt_cols_B_cols_C; i++) { B[i] = static_cast<float>(rand())/RAND_MAX;}
+    for(i=0; i < cnt_rows_A_rows_C * cnt_cols_B_cols_C; i++) { C[i] = static_cast<float>(rand())/RAND_MAX;}
     fprintf(stderr, "done random init\n");
 }
