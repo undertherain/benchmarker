@@ -6,7 +6,7 @@ from benchmarker.util.abstractprocess import Process
 class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
-        assert self.params["problem"]["precision"] in ["FP32", "mixed"]
+        assert self.params["problem"]["precision"] in ["FP32", "FP16", "mixed"]
 
     def run(self):
         if "nb_gpus" in self.params:
