@@ -84,7 +84,7 @@ double call_blas_and_measure_seconds(
     size_t k,
     std::string precision) 
 {
-    int nb_epoch = 10
+    int nb_epoch = 10;
     type_numerics *A, *B, *C;
     type_numerics *d_A, *d_B, *d_C;
     get_matrices<type_numerics>(m, k, n, A, B, C);
