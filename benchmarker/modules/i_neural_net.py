@@ -17,14 +17,11 @@ class INeuralNet:
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
-        parser.add_argument("--power_sampling_ms", type=int, default=100)
         parser.add_argument("--random_seed", default=None)
 
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
 
         params["mode"] = parsed_args.mode
-        params["power"] = {}
-        params["power"]["sampling_ms"] = parsed_args.power_sampling_ms
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
@@ -90,8 +87,6 @@ class INeuralNet:
         random.seed(seed)
 
     def run(self):
-        self.params["power"]["joules_total"] = 0
-        self.params["power"]["avg_watt_total"] = 0
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu = power_monitor_GPU(self.params)
             power_monitor_gpu.start()
