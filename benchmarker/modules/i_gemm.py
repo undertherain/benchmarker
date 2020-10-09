@@ -16,6 +16,7 @@ class IGEMM():
         # parser = argparse.ArgumentParser(description='Benchmark GEMM operations')
         args = parser.parse_args(remaining_args)
         params["problem"]["precision"] = args.precision
+        params["power"]["sampling_ms"] = args.power_sampling_ms
         params["path_out"] = os.path.join(params["path_out"],
                                           params["problem"]["precision"])
         if isinstance(params["problem"]["size"], int):

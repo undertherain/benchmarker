@@ -31,4 +31,6 @@ class Benchmark(IGEMM):
         self.params["time_total"] = elapsed_time
         power_monitor_gpu.stop()
         # TODO: add multiple iterations
+        # TODO: unify flops per sec name with neural nets
         self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
+        self.params["gops_per_joule"] = self.params["GFLOP"] / self.params["power"]["joules_total"]
