@@ -34,7 +34,8 @@ class power_monitor_GPU:
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
         self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_GPU"]
-        self.params["samples_per_joule_GPU"] = self.params["problem"]["cnt_samples"] * self.params["nb_epoch"] / self.params["power"]["joules_GPU"]
+        if "cnt_samples" in self.params["problem"]:
+            self.params["samples_per_joule_GPU"] = self.params["problem"]["cnt_samples"] * self.params["nb_epoch"] / self.params["power"]["joules_GPU"]
 
 
 class power_monitor_RAPL:

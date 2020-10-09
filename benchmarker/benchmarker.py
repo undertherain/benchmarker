@@ -82,7 +82,9 @@ def run(argv):
         else:
             # TODO: add arch when it becomes available thougg sys query
             params["device"] = "unknown CPU"
-
+    params["power"] = {}
+    params["power"]["joules_total"] = 0
+    params["power"]["avg_watt_total"] = 0    
     params["path_out"] = os.path.join(params["path_out"], params["problem"]["name"])
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
