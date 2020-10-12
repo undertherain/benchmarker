@@ -6,7 +6,7 @@ import math
 
 def get_kernel(params):
     assert params["mode"] == "inference"
-    print(params["problem"])
+    #print(params["problem"])
     problem_params = params["problem"]
 
     cnt_samples = problem_params["size"][0]
