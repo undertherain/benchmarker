@@ -26,11 +26,11 @@ def run(params, command):
         return [out, err]
 
 
-def get_counters(params, output_dict):
+def get_counters(params, output_dict, command):
     output_dict["problem"]["flop_measured"] = 0
     for counter in perf_counters_multipliers:
-        perf_command = ["perf", "stat" , "-e", counter, "python3", "-m", "benchmarker", "--no_cudnn_benchmark"]
-        output_string, error_string = run(params, perf_command)
+        perf_command = ["perf", "stat" , "-e", counter]
+        output_string, error_string = run(params, perf_command + command)
         print(error_string)
         if error_string:
             match_exp = re.compile('[\d|\,]+\s+' + counter).search(error_string)
