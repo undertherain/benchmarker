@@ -10,7 +10,7 @@ basedir = '../flops'
 models = ['conv2d']
 
 #Include devices (perf for cpu, nvidia for gpu)
-devices = ['perf']
+devices = ['P100','perf']
 
 #Counters recorded by perf utility:
 ##SCALAR_SINGLE: Number of scalar single precision floating-point arithmetic instructions (multiply by 1 to get flops)
@@ -77,10 +77,12 @@ for model in models:
 					nvidia_fp = True
 
 			runfile.close()
-			gflop_measured = (perf_events['r5302c7'] + 4*perf_events['r5308c7'] + 8*perf_events['r5320c7'])/10**9
+			#gflop_measured = (perf_events['r5302c7'] + 4*perf_events['r5308c7'] + 8*perf_events['r5320c7'])/10**9
 			if nvidia_fp:
-				print(model, device, tail, run_time, flop_estimated, nvprof_fp)
+				print(tail, gflop_estimated, nvprof_fp/10 **9)
 			else:
+				gflop_measured = (perf_events['r5302c7'] + 4*perf_events['r5308c7'] + 8*perf_events['r5320c7'])/10**9
 				#print(model, device, tail, run_time, gflop_estimated, gflop_measured)
-				print(device, tail, gflop_estimated, gflop_measured)
+				#print(device, tail, gflop_estimated, gflop_measured)
+				print(tail, gflop_estimated, gflop_measured)
                             
