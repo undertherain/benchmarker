@@ -5,6 +5,7 @@ import os
 import random
 
 import numpy
+
 from .power_mon import power_monitor_GPU, power_monitor_RAPL
 
 
@@ -16,14 +17,11 @@ class INeuralNet:
         parser = argparse.ArgumentParser(description="Benchmark deep learning models")
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
-        parser.add_argument("--power_sampling_ms", type=int, default=100)
         parser.add_argument("--random_seed", default=None)
 
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
 
         params["mode"] = parsed_args.mode
-        params["power"] = {}
-        params["power"]["sampling_ms"] = parsed_args.power_sampling_ms
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
         params["path_out"] = os.path.join(params["path_out"], params["mode"])
@@ -49,8 +47,12 @@ class INeuralNet:
         logic involved (e.g. GPU/TPU management etc).
         """
         path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
-        path_kernel = (f"benchmarker.modules.problems.{params['problem']['name']}."
-                       f"{params['framework']}")
+        path_kernel = (
+            f"benchmarker.modules.problems.{params['problem']['name']}."
+            f"{params['framework']}"
+        )
+        # todo(vatai): combine tflite and tensorflow
+        path_kernel = path_kernel.replace("tflite", "tensorflow")
         module_kernel = importlib.import_module(path_kernel)
         try:
             module_params = importlib.import_module(path_params)
@@ -85,8 +87,6 @@ class INeuralNet:
         random.seed(seed)
 
     def run(self):
-        self.params["power"]["joules_total"] = 0
-        self.params["power"]["avg_watt_total"] = 0
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu = power_monitor_GPU(self.params)
             power_monitor_gpu.start()
@@ -96,12 +96,24 @@ class INeuralNet:
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu.stop()
         power_monitor_cpu.stop()
-        results["time_batch"] = results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
+        results["time_batch"] = (
+            results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
+        )
         results["time_sample"] = results["time_batch"] / results["batch_size"]
-        results["samples_per_second"] = results["problem"]["cnt_samples"] / results["time_epoch"]
+        results["samples_per_second"] = (
+            results["problem"]["cnt_samples"] / results["time_epoch"]
+        )
         if results["power"]["joules_total"] > 0:
-            results["samples_per_joule"] = results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
+            results["samples_per_joule"] = (
+                results["problem"]["cnt_samples"]
+                * results["nb_epoch"]
+                / self.params["power"]["joules_total"]
+            )
         if "flop_estimated" in results["problem"]:
-            results["flop_per_second_estimated"] = results["problem"]['flop_estimated'] / results["time_total"]
-            results["gflop_per_second_estimated"] = results["flop_per_second_estimated"] / (1000 * 1000 * 1000)
+            results["flop_per_second_estimated"] = (
+                results["problem"]["flop_estimated"] / results["time_total"]
+            )
+            results["gflop_per_second_estimated"] = results[
+                "flop_per_second_estimated"
+            ] / (1000 * 1000 * 1000)
         return results

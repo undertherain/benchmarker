@@ -31,8 +31,9 @@ class Args {
 public:
   Args(const int argc, const char *argv[]);
   int gpu_id;
-  int nbDims;
   cudnnConvolutionFwdAlgo_t convolution_algorithm;
+  int nbDims;
+  int nb_epoch;
 
   // {n, in_channels, input_height, input_width}
   int input_dims[MAX_DIM];
@@ -57,7 +58,7 @@ public:
   // {n, in_channels, input_height, input_width}
   int out_dimA[MAX_DIM]; // filled later
 
-  const int nb_fixed_args = 7; // including scrip name!
+  const int nb_fixed_args = 8; // including scrip name!
 
   int getInputBytes() const;
   int getOutputBytes() const;
@@ -78,7 +79,7 @@ Args::Args(const int argc, const char *argv[])
     : input_dims{1, 3, 578, 549}, ker_dims{3, 3, 3, 3}, ker_pad{1, 1},
       ker_stride{1, 1}, ker_dilation{1, 1}, input_format{CUDNN_TENSOR_NHWC},
       output_format{CUDNN_TENSOR_NHWC}, kernel_format{CUDNN_TENSOR_NCHW},
-      mode{CUDNN_CROSS_CORRELATION}, data_type{CUDNN_DATA_FLOAT},
+      mode{CUDNN_CONVOLUTION}, data_type{CUDNN_DATA_FLOAT},
       with_sigmoid{false}, argc{argc}, argv{argv}, cur_arg{1} {
   if (argc < nb_fixed_args)
     usage();
@@ -86,9 +87,10 @@ Args::Args(const int argc, const char *argv[])
   gpu_id = std::atoi(argv[1]);
   convolution_algorithm = cudnnConvolutionFwdAlgo_t(std::atoi(argv[2]));
   nbDims = std::atoi(argv[3]);
-  int batch_size = std::atoi(argv[4]);
-  int in_channels = std::atoi(argv[5]);
-  int out_channels = std::atoi(argv[6]);
+  nb_epoch = std::atoi(argv[4]);
+  int batch_size = std::atoi(argv[5]);
+  int in_channels = std::atoi(argv[6]);
+  int out_channels = std::atoi(argv[7]);
 
   tensor_dims = nbDims + 2;
 
@@ -120,7 +122,7 @@ int Args::prod(const int *arr) const {
 
 void Args::usage() {
   std::cerr << "Usage: " << argv[0] << "  <gpu_id> <conv_algo> <nbDims> \\\n"
-            << "  <batch_size> <in_ch> <out_ch> \\\n"
+            << "  <nb_epoch> <batch_size> <in_ch> <out_ch> \\\n"
             << "  <inDim_1> .. <inDim_nbDims> \\\n"
             << "  <kerDim_1> .. <kerDim_nbDims> \\\n"
             << "  <pad_1> .. <pad_nbDims> \\\n"
@@ -290,26 +292,27 @@ int main(int argc, const char *argv[]) {
 
   auto start = std::chrono::high_resolution_clock::now();
   const float alpha = 1.0f, beta = 0.0f;
-  checkCUDNN(cudnnConvolutionForward(
-      cudnn, &alpha, input_descriptor, d_input, kernel_descriptor, d_kernel,
-      convolution_descriptor, args.convolution_algorithm, d_workspace,
-      workspace_bytes, &beta, output_descriptor, d_output));
-  cudaDeviceSynchronize();
+  for (int i = 0; i < args.nb_epoch; i++) {
+    checkCUDNN(cudnnConvolutionForward(
+        cudnn, &alpha, input_descriptor, d_input, kernel_descriptor, d_kernel,
+        convolution_descriptor, args.convolution_algorithm, d_workspace,
+        workspace_bytes, &beta, output_descriptor, d_output));
+    cudaDeviceSynchronize();
+    if (args.with_sigmoid) {
+      cudnnActivationDescriptor_t activation_descriptor;
+      checkCUDNN(cudnnCreateActivationDescriptor(&activation_descriptor));
+      checkCUDNN(cudnnSetActivationDescriptor(
+          activation_descriptor, CUDNN_ACTIVATION_SIGMOID, CUDNN_PROPAGATE_NAN,
+          /*relu_coef=*/0));
+      checkCUDNN(cudnnActivationForward(cudnn, activation_descriptor, &alpha,
+                                        output_descriptor, d_output, &beta,
+                                        output_descriptor, d_output));
+      cudnnDestroyActivationDescriptor(activation_descriptor);
+    }
+  }
   auto stop = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> seconds = (stop - start);
   std::cout << seconds.count() << std::endl;
-
-  if (args.with_sigmoid) {
-    cudnnActivationDescriptor_t activation_descriptor;
-    checkCUDNN(cudnnCreateActivationDescriptor(&activation_descriptor));
-    checkCUDNN(cudnnSetActivationDescriptor(
-        activation_descriptor, CUDNN_ACTIVATION_SIGMOID, CUDNN_PROPAGATE_NAN,
-        /*relu_coef=*/0));
-    checkCUDNN(cudnnActivationForward(cudnn, activation_descriptor, &alpha,
-                                      output_descriptor, d_output, &beta,
-                                      output_descriptor, d_output));
-    cudnnDestroyActivationDescriptor(activation_descriptor);
-  }
 
   // float *h_output = new float[output_bytes];
   // cudaMemcpy(h_output, d_output, output_bytes, cudaMemcpyDeviceToHost);
