@@ -13,6 +13,7 @@ perf_counters_multipliers = {'r5302c7': 1,
                              'r5308c7': 4,
                              'r5320c7': 8}
 
+
 def run(params, command):
     for key, val in params.items():
         command.append(f"--{key}={val}")
@@ -22,36 +23,22 @@ def run(params, command):
     out = proc.stdout.read().decode()
     err = proc.stderr.read().decode()
     if proc.returncode == 0:
-        output_dict = json.loads(out)
-        return output_dict
-    else:
-        print(out)
-        print(err)
+        return [out, err]
 
 
 def get_counters(params, output_dict):
-    output_dict["flop_measured"] = 0
+    output_dict["problem"]["flop_measured"] = 0
     for counter in perf_counters_multipliers:
         perf_command = ["perf", "stat" , "-e", counter, "python3", "-m", "benchmarker", "--no_cudnn_benchmark"]
-        for key, val in params.items():
-            perf_command.append(f"--{key}={val}")
-        print(perf_command)
-        proc = subprocess.Popen(perf_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        proc.wait()
-        out = proc.stdout.read().decode()
-        err = proc.stderr.read().decode()
-        print(err)
-        #if proc.returncode != 0:
-        #print(out)
-        #print(err)
-        if err:
-            match_exp = re.compile('[\d|\,]+\s+' + counter).search(err)
+        output_string, error_string = run(params, perf_command)
+        print(error_string)
+        if error_string:
+            match_exp = re.compile('[\d|\,]+\s+' + counter).search(error_string)
             if match_exp:
                 match_list = match_exp.group().split()
                 cntr_value = int(match_list[0].replace(',',''))
-                output_dict["flop_measured"] += perf_counters_multipliers[counter]*cntr_value
-    print(output_dict)
-
+                output_dict["problem"]["flop_measured"] += perf_counters_multipliers[counter]*cntr_value
+    return output_dict
             
 
 def main():
@@ -84,11 +71,13 @@ def main():
             command = ["python3", "-m", "benchmarker", "--no_cudnn_benchmark"] 
 
             #Run benchmarker with params and get output as dict
-            output_dict = run(params, command)
+            output_string, error_string = run(params, command)
+            output_dict = json.loads(output_string)
             print(output_dict)
 
             #Collect counters, add to the dict
-            get_counters(params, output_dict)
+            dict_with_ops = get_counters(params, output_dict)
+            print(dict_with_ops)
 
 if __name__ == "__main__":
     main()
