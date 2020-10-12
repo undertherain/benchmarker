@@ -5,6 +5,7 @@ import os
 import time
 import json
 import re
+import sys 
 
 batchsize = [32]
 epoch = 10 
@@ -42,11 +43,13 @@ def get_counters(params, output_dict, command):
             
 
 def main():
+    if len(sys.argv) != 2:
+        sys.exit("Enter csv file!!!")
     params = {}
     params["framework"] = "pytorch"
     params["mode"] = "inference"
 
-    specs = pandas.read_csv("./conv2d.csv")
+    specs = pandas.read_csv(sys.argv[1])
     for size in batchsize: 
         params["batch_size"] = size
         for row in specs.iterrows():
