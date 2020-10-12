@@ -76,7 +76,7 @@ def main():
             print(output_dict)
 
             #Collect counters, add to the dict
-            dict_with_ops = get_counters(params, output_dict)
+            dict_with_ops = get_counters(params, output_dict, command)
             print(dict_with_ops)
 
 if __name__ == "__main__":
