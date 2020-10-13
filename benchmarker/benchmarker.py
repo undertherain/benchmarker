@@ -10,10 +10,7 @@ import importlib
 import pkgutil
 # import logging
 import os
-import sys
-from .util import sysinfo
 from .util.io import print_json
-from benchmarker.util.cute_device import get_cute_device_str
 
 
 def get_modules():
@@ -38,7 +35,6 @@ def parse_basic_args():
 def run():
     args, unknown_args = parse_basic_args()
     params = {}
-    params["platform"] = sysinfo.get_sys_info()
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
@@ -76,24 +72,14 @@ def run():
 
     params["nb_gpus"] = len(params["gpus"])
 
-    if params["nb_gpus"] > 0:
-        params["device"] = params["platform"]["gpus"][0]["brand"]
-    else:
-        if params["platform"]["cpu"]["brand"] is not None:
-            params["device"] = params["platform"]["cpu"]["brand"]
-        else:
-            # TODO: add arch when it becomes available thougg sys query
-            params["device"] = "unknown CPU"
+
     params["power"] = {}
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
     params["power"]["avg_watt_total"] = 0
-    params["path_out"] = os.path.join(params["path_out"], params["problem"]["name"])
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
     benchmark.run()
-    cute_device = get_cute_device_str(params["device"]).replace(" ", "_")
-    params["path_out"] = os.path.join(params["path_out"], cute_device)
     # save_json(params)
     print("benchmarkmagic#!%")
     print_json(params)
