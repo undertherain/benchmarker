@@ -12,7 +12,7 @@ import pkgutil
 import os
 import sys
 from .util import sysinfo
-from .util.io import save_json
+from .util.io import print_json
 from benchmarker.util.cute_device import get_cute_device_str
 
 
@@ -95,6 +95,8 @@ def run():
     cute_device = get_cute_device_str(params["device"]).replace(" ", "_")
     params["path_out"] = os.path.join(params["path_out"], cute_device)
     # save_json(params)
+    print("benchmarkmagic#!%")
+    print_json(params)
 
 
 if __name__ == "__main__":

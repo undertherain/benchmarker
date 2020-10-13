@@ -37,7 +37,7 @@ def main():
             params["stride"] = spec["stride"]
             params["dilation"] = spec["dilation"]
             params["padding"] = spec["padding"]
-            params["nb_epoch"] = epoch 
+            params["nb_epoch"] = epoch
             #print(params)
          
             command = ["python3", "-m", "benchmarker", "--no_cudnn_benchmark"] 
