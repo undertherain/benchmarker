@@ -5,10 +5,9 @@ perf_counters_multipliers = {'r5302c7': 1,
                              'r5308c7': 4,
                              'r5320c7': 8}
 
+
 # TODO: reuse abstract process
-def run(params, command):
-    for key, val in params.items():
-        command.append(f"--{key}={val}")
+def run(command):
     print(command)
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     proc.wait()
@@ -16,13 +15,15 @@ def run(params, command):
     err = proc.stderr.read().decode()
     if proc.returncode == 0:
         return [out, err]
+    else:
+        raise RuntimeError(f"could not run perf: {err}")
 
 
-def get_counters(params, output_dict, command):
+def get_counters(output_dict, command):
     output_dict["problem"]["flop_measured"] = 0
     for counter in perf_counters_multipliers:
         perf_command = ["perf", "stat", "-e", counter]
-        output_string, error_string = run(params, perf_command + command)
+        output_string, error_string = run(perf_command + command)
         print(error_string)
         if error_string:
             match_exp = re.compile('[\d|\,]+\s+' + counter).search(error_string)
