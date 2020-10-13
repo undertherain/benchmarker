@@ -50,18 +50,7 @@ def main():
     result_with_ops = get_counters(result, command)
 
     save_json(result_with_ops)
-
-    #Run benchmarker with params and get output as dict
-    # TODO: don't measure power when we are collecting perf
-    #output_string, error_string = run(params, command)
-    #output_dict = json.loads(output_string)
-    #print(output_dict)
-
-    #Collect counters, add to the dict, save as json
-    #cute_device = get_cute_device_str(dict_with_ops["device"]).replace(" ", "_")
-    #dict_with_ops["path_out"] = os.path.join("./flops",dict_with_ops["problem"]["name"],dict_with_ops["mode"], cute_device)
-    #print(dict_with_ops)
-    #save_json(dict_with_ops)
+    # TODO: don't measure power when measureing flops
 
 
 if __name__ == "__main__":
