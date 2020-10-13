@@ -11,7 +11,7 @@ from benchmarker.util import abstractprocess
 from benchmarker.util.cute_device import get_cute_device_str
 from .util.io import save_json
 from benchmarker.perf import get_counters
-
+from benchmarker.nvprof import get_nvprof_counters
 
 def filter_json_from_output(lines):
     parts = lines.split("benchmarkmagic#!%")
@@ -47,8 +47,10 @@ def main():
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    result_with_ops = get_counters(result, command)
-
+    if result["nb_gpus"] > 0:
+        result_with_ops = get_nvprof_counters(result, command)
+    else:
+        result_with_ops = get_counters(result, command)
     save_json(result_with_ops)
     # TODO: don't measure power when measureing flops
 
