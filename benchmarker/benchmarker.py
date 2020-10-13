@@ -10,6 +10,7 @@ import importlib
 import pkgutil
 # import logging
 import os
+import sys
 from .util import sysinfo
 from .util.io import save_json
 from benchmarker.util.cute_device import get_cute_device_str
@@ -21,7 +22,7 @@ def get_modules():
             if not is_pkg and name.startswith('do_')]
 
 
-def parse_basic_args(argv):
+def parse_basic_args():
     parser = argparse.ArgumentParser(description='Benchmark me up, Scotty!')
     parser.add_argument("--framework")
     parser.add_argument("--problem")
@@ -31,11 +32,11 @@ def parse_basic_args(argv):
     parser.add_argument('--batch_size', default=None)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
     # parser.add_argument('--misc')
-    return parser.parse_known_args(argv)
+    return parser.parse_known_args()
 
 
-def run(argv):
-    args, unknown_args = parse_basic_args(argv)
+def run():
+    args, unknown_args = parse_basic_args()
     params = {}
     params["platform"] = sysinfo.get_sys_info()
     if args.framework is None:
@@ -93,4 +94,8 @@ def run(argv):
     benchmark.run()
     cute_device = get_cute_device_str(params["device"]).replace(" ", "_")
     params["path_out"] = os.path.join(params["path_out"], cute_device)
-    save_json(params)
+    # save_json(params)
+
+
+if __name__ == "__main__":
+    run()
