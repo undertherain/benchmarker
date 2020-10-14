@@ -7,33 +7,38 @@ This is where all magic is happening
 import argparse
 import ast
 import importlib
-import pkgutil
 # import logging
 import os
+import pkgutil
+import sys
+
 from .util.io import print_json
 
 
 def get_modules():
     path_modules = "benchmarker/modules"
-    return [name for _, name, is_pkg in pkgutil.iter_modules([path_modules])
-            if not is_pkg and name.startswith('do_')]
+    return [
+        name
+        for _, name, is_pkg in pkgutil.iter_modules([path_modules])
+        if not is_pkg and name.startswith("do_")
+    ]
 
 
-def parse_basic_args():
-    parser = argparse.ArgumentParser(description='Benchmark me up, Scotty!')
+def parse_basic_args(argv):
+    parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--framework")
     parser.add_argument("--problem")
-    parser.add_argument('--path_out', type=str, default="./logs")
-    parser.add_argument('--gpus', default="")
-    parser.add_argument('--problem_size', default=None)
-    parser.add_argument('--batch_size', default=None)
+    parser.add_argument("--path_out", type=str, default="./logs")
+    parser.add_argument("--gpus", default="")
+    parser.add_argument("--problem_size", default=None)
+    parser.add_argument("--batch_size", default=None)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
     # parser.add_argument('--misc')
-    return parser.parse_known_args()
+    return parser.parse_known_args(argv)
 
 
-def run():
-    args, unknown_args = parse_basic_args()
+def run(argv):
+    args, unknown_args = parse_basic_args(argv)
     params = {}
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
@@ -72,13 +77,12 @@ def run():
 
     params["nb_gpus"] = len(params["gpus"])
 
-
     params["power"] = {}
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
     params["power"]["avg_watt_total"] = 0
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
-    benchmark = getattr(mod, 'Benchmark')(params, unknown_args)
+    benchmark = getattr(mod, "Benchmark")(params, unknown_args)
     benchmark.run()
     # save_json(params)
     print("benchmarkmagic#!%")
@@ -86,4 +90,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    run(sys.argv[1:])
