@@ -2,7 +2,7 @@ import argparse
 
 
 def set_extra_params(params, unparsed_args):
-    print("inside set_extra_params", unparsed_args)
+    #print("inside set_extra_params", unparsed_args)
     parser = argparse.ArgumentParser(description='Benchmark conv kernel')
     parser.add_argument('--size_kernel', type=int, default=3)
     parser.add_argument('--cnt_filters', type=int, default=64)

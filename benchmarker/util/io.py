@@ -28,3 +28,8 @@ def save_json(params):
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as file_out:
         file_out.write(str_result)
+
+
+def print_json(params):
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(',', ': '))
+    print(str_result)

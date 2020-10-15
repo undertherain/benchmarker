@@ -58,7 +58,7 @@ class INeuralNet:
             module_params = importlib.import_module(path_params)
             module_params.set_extra_params(params, remaining_args)
         except ImportError:
-            assert remaining_args == []
+            assert remaining_args == [], f"unexpected args: {remaining_args}"
         self.net = module_kernel.get_kernel(self.params)
 
     def load_data(self):
