@@ -103,7 +103,6 @@ double call_blas_and_measure_seconds(const Options &options)
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
     // cublas only does column-major order
-    // TODO: make this a parameter
     for (size_t i=0; i<options.nb_epoch; i++)
       call_blas<type_numerics> (handle, m, n, k,
                                 alpha, d_A, lda, 
@@ -119,7 +118,7 @@ double call_blas_and_measure_seconds(const Options &options)
     cublasDestroy(handle);
     checkCudaErrors(cudaGetLastError());
     std::chrono::duration<double> seconds = (stop - start); 
-    return seconds.count();
+    return seconds.count() / nb_epoch;
 }
 
 int main(int argc, char * argv[]) {
