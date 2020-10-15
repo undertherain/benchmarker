@@ -25,7 +25,7 @@ class Benchmark(IGEMM):
         c = np.random.random((M, K)).astype(dtype)
         papi_availalbe = True
         try:
-            high.start_counters([events.PAPI_SP_OPS,])
+            high.start_counters([events.PAPI_SP_OPS])
         except:
             papi_availalbe = False
         time_start = timer()
