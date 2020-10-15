@@ -33,7 +33,7 @@ class Benchmark(INeuralNet):
             predictions = self.net.forward()
             assert predictions is not None
         end = timer()
-        params["time"] = (end - start) / self.params["nb_epoch"]
+        params["time_total"] = end - start
         params["time_epoch"] = (end - start) / self.params["nb_epoch"]
         params["framework_full"] = "opencv-" + cv2.__version__
         return self.params
