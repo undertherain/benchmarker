@@ -13,14 +13,14 @@ class Benchmark(IGEMM):
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] != 1:
                 raise Exception("cublas requires one GPU")
-        size = " ".join(map(str, self.params['problem']['size']))
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    "problems/gemm/cublas/main")
         if not os.path.isfile(path_binary):
             raise(RuntimeError(f"{path_binary} not found, run make manually"))
         command = [path_binary,
                    self.params["problem"]["precision"],
-                   size]
+                   * map(str, self.params['problem']['size']),
+                   str(self.params["nb_epoch"])]
         # TODO(Alex): think of how to reuse this across all problems
         power_monitor_gpu = power_monitor_GPU(self.params)
         power_monitor_gpu.start()
@@ -30,7 +30,4 @@ class Benchmark(IGEMM):
         elapsed_time = float(std_out.strip())
         self.params["time_total"] = elapsed_time
         power_monitor_gpu.stop()
-        # TODO: add multiple iterations
-        # TODO: unify flops per sec name with neural nets
-        self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
-        self.params["gops_per_joule"] = self.params["GFLOP"] / self.params["power"]["joules_total"]
+        self.post_process()

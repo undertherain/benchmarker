@@ -23,19 +23,18 @@ class Benchmark(IGEMM):
         a = np.random.random((M, N)).astype(dtype)
         b = np.random.random((N, K)).astype(dtype)
         c = np.random.random((M, K)).astype(dtype)
-        nb_epoch = 2
         papi_availalbe = True
         try:
-            high.start_counters([events.PAPI_SP_OPS,])
+            high.start_counters([events.PAPI_SP_OPS])
         except:
             papi_availalbe = False
         time_start = timer()
-        for _ in range(nb_epoch):
-            c = a @ b # + c
+        for _ in range(self.params["nb_epoch"]):
+            c = a @ b  # + c
         time_end = timer()
         if papi_availalbe:
             gflop_papi = high.stop_counters()[0] / (1024 ** 3)
             self.params["GFLOP_papi"] = gflop_papi
-        elapsed_time = (time_end - time_start) / nb_epoch
-        self.params["time"] = elapsed_time
-        self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
+        elapsed_time = (time_end - time_start)
+        self.params["time_total"] = elapsed_time
+        self.post_process()
