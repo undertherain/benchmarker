@@ -37,11 +37,11 @@ def main():
     result["platform"] = sysinfo.get_sys_info()
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
-        result["problem"]["flop_measured"] = get_nvprof_counters(command)
+        result["problem"]["gflop_measured"] = get_nvprof_counters(command)
     else:
         if result["platform"]["cpu"]["brand"] is not None:
             result["device"] = result["platform"]["cpu"]["brand"]
-            result["problem"]["flop_measured"] = get_counters(command)
+            result["problem"]["gflop_measured"] = get_counters(command)
         else:
             # TODO: add arch when it becomes available thougg sys query
             result["device"] = "unknown CPU"

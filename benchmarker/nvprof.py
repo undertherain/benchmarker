@@ -19,6 +19,6 @@ def get_nvprof_counters(command):
     output_exp2 = [int(x) * int(float(y)) for x, y in match_exp2]
     output = output_exp1 + output_exp2
     #print(output)
-    flop_measured = sum(output)
-    return flop_measured
+    gflop_measured = sum(output) / 10 ** 9
+    return gflop_measured
 

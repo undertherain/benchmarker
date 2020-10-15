@@ -17,4 +17,5 @@ def get_counters(command):
         match_list = match_exp.group().split()
         cntr_value = int(match_list[0].replace(',',''))
         flop_measured += perf_counters_multipliers[counter] * cntr_value
-    return flop_measured
+    gflop_measured = flop_measured / 10 ** 9
+    return gflop_measured
