@@ -31,7 +31,14 @@ def main():
     command = ["python3", "-m", "benchmarker.benchmarker"]
     command += sys.argv[1:]
     proc = abstractprocess.Process("local", command=command)
-    process_out = proc.get_output()["out"]
+    proc_output = proc.get_output()
+    returncode = proc_output["returncode"]
+
+    if returncode != 0:
+        process_err = proc_output["err"]
+        sys.exit(process_err)
+        
+    process_out = proc_output["out"]
     result = filter_json_from_output(process_out)
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
@@ -51,7 +58,6 @@ def main():
     result["path_out"] = os.path.join(result["path_out"], cute_device)
     save_json(result)
     # TODO: don't measure power when measureing flops
-
 
 if __name__ == "__main__":
     main()
