@@ -78,12 +78,11 @@ void call_blas<__half>(cublasHandle_t handle,
 
 
 template<typename type_numerics>
-double call_blas_and_measure_seconds(
-    size_t m, 
-    size_t n,
-    size_t k,
-    std::string precision) 
+double call_blas_and_measure_seconds(const Options &options) 
 {
+    size_t m = options.cnt_rows_A_rows_C; 
+    size_t n = options.cnt_cols_A_rows_B;
+    size_t k = options.cnt_cols_B_cols_C;
     type_numerics *A, *B, *C;
     type_numerics *d_A, *d_B, *d_C;
     get_matrices<type_numerics>(m, k, n, A, B, C);
@@ -104,8 +103,13 @@ double call_blas_and_measure_seconds(
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
     // cublas only does column-major order
-    call_blas<type_numerics> (handle, m, n, k,
-                     alpha, d_A, lda, d_B, ldb, beta, d_C, ldc, precision);
+    // TODO: make this a parameter
+    for (size_t i=0; i<options.nb_epoch; i++)
+      call_blas<type_numerics> (handle, m, n, k,
+                                alpha, d_A, lda, 
+                                d_B, ldb,
+                                beta, d_C, ldc,
+                                options.precision);
 
     cudaDeviceSynchronize();
     auto stop = high_resolution_clock::now();
@@ -119,19 +123,19 @@ double call_blas_and_measure_seconds(
 }
 
 int main(int argc, char * argv[]) {
-    size_t m, n, k;
     double dtime;
-    std::string precision;
-    parse_args(argc, argv, precision, m, k, n);
+    Options options = parse_args(argc, argv);
     std::cerr << "done parsing args\n";
-    if (precision == "FP32")
-        dtime = call_blas_and_measure_seconds<float>(m, n, k, precision);
-    if (precision == "FP16")
-        dtime = call_blas_and_measure_seconds<__half>(m, n, k, precision);
-    if (precision == "mixed")
-        dtime = call_blas_and_measure_seconds<float>(m, n, k, precision);
+    std::cerr << options.precision;
+    if (options.precision == "FP32")
+        dtime = call_blas_and_measure_seconds<float>(options);
+    if (options.precision == "FP16")
+        dtime = call_blas_and_measure_seconds<__half>(options);
+    if (options.precision == "mixed")
+        dtime = call_blas_and_measure_seconds<float>(options);
 
-    double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
+    double gflop = (2.0 * options.cnt_rows_A_rows_C * options.cnt_cols_A_rows_B * options.cnt_cols_B_cols_C) / (1024 * 1024 * 1024);
+    gflop *= static_cast<double>(options.nb_epoch);
     double gflops = gflop / dtime;
     printf("%f\n", dtime);
     fprintf(stderr, "gflops: \t%f\n", gflop);
