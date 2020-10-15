@@ -12,7 +12,8 @@ def get_kernel(params):
     len_seq = params["problem"]["size"][1]
     embed_dim = params["problem"]["size"][2]
     cnt_projections = 4
-    ops_proj = 2 * cnt_samples * len_seq * embed_dim * cnt_projections
+    #ops_proj = 2 * cnt_samples * len_seq * embed_dim * cnt_projections
+    ops_proj = 2 * cnt_samples * len_seq * embed_dim * embed_dim * cnt_projections
     ops_Q_K = 2 * cnt_samples * len_seq * len_seq * embed_dim
     ops_Q_Kt_V = ops_Q_K
     params["problem"]["gflop_estimated"] = ((ops_proj + ops_Q_K + ops_Q_Kt_V) * params["nb_epoch"]) / (10 ** 9)
