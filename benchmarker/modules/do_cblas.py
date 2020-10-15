@@ -12,7 +12,6 @@ class Benchmark(IGEMM):
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] > 0:
                 raise Exception("cblas does not work on GPU")
-        size = " ".join(map(str, self.params['problem']['size']))
         # TODO(Alex): this does not work inless the binaries are copied to site_packages
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    "problems/gemm/cblas/main")
@@ -20,7 +19,8 @@ class Benchmark(IGEMM):
             raise(RuntimeError(f"{path_binary} not found, run make manually"))
         command = [path_binary,
                    self.params["problem"]["precision"],
-                   size]
+                   * map(str, self.params['problem']['size']),
+                   str(self.params["nb_epoch"])]
         process = Process(command=command)
         result = process.get_output()
         std_out = result["out"]
