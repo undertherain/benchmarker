@@ -118,7 +118,7 @@ double call_blas_and_measure_seconds(const Options &options)
     cublasDestroy(handle);
     checkCudaErrors(cudaGetLastError());
     std::chrono::duration<double> seconds = (stop - start); 
-    return seconds.count() / nb_epoch;
+    return seconds.count();
 }
 
 int main(int argc, char * argv[]) {
