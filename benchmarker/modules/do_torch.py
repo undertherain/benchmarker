@@ -30,16 +30,13 @@ class Benchmark(IGEMM):
                 a = a.to(device)
                 b = b.to(device)
                 c = c.to(device)
-                # pre-heat
-                c = a @ b
+                c = a @ b  # this is preheat
                 torch.cuda.synchronize()
-        nb_epoch = 2
         time_start = timer()
-        for _ in range(nb_epoch):
+        for _ in range(self.params["nb_epoch"]):
             c = a @ b  # + c
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
         time_end = timer()
-        elapsed_time = (time_end - time_start) / nb_epoch
-        self.params["time"] = elapsed_time
-        self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
+        self.params["time_total"] = (time_end - time_start)
+        self.post_process()

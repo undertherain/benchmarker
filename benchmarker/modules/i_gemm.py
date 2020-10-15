@@ -27,3 +27,10 @@ class IGEMM():
         params["GFLOP"] = gflop * self.params["nb_epoch"]
         if params["problem"]["name"] != "gemm":
             raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")
+
+
+    def post_process(self):
+        self.params["gops_per_second"] = self.params["GFLOP"] / self.params["time_total"]
+        if self.params["power"]["joules_total"] > 0:
+            self.params["gops_per_joule"] = self.params["GFLOP"] / self.params["power"]["joules_total"]
+        self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
