@@ -84,6 +84,7 @@ double call_blas_and_measure_seconds(
     size_t k,
     std::string precision) 
 {
+    int nb_epoch = 10;
     type_numerics *A, *B, *C;
     type_numerics *d_A, *d_B, *d_C;
     get_matrices<type_numerics>(m, k, n, A, B, C);
@@ -104,8 +105,11 @@ double call_blas_and_measure_seconds(
     cublasCreate(&handle);
     auto start = high_resolution_clock::now(); 
     // cublas only does column-major order
-    call_blas<type_numerics> (handle, m, n, k,
-                     alpha, d_A, lda, d_B, ldb, beta, d_C, ldc, precision);
+    for(size_t i=0; i<nb_epoch; i++)
+      call_blas<type_numerics> (handle, m, n, k,
+                                alpha, d_A, lda, 
+                                d_B, ldb, beta, 
+                                d_C, ldc, precision);
 
     cudaDeviceSynchronize();
     auto stop = high_resolution_clock::now();
@@ -115,7 +119,7 @@ double call_blas_and_measure_seconds(
     cublasDestroy(handle);
     checkCudaErrors(cudaGetLastError());
     std::chrono::duration<double> seconds = (stop - start); 
-    return seconds.count();
+    return seconds.count() / nb_epoch;
 }
 
 int main(int argc, char * argv[]) {
