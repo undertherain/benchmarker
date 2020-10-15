@@ -30,3 +30,4 @@ class Benchmark(IGEMM):
         elapsed_time = float(std_out.strip())
         self.params["time_total"] = elapsed_time
         power_monitor_gpu.stop()
+        self.post_process()

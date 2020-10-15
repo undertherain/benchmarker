@@ -25,5 +25,5 @@ class Benchmark(IGEMM):
         result = process.get_output()
         std_out = result["out"]
         elapsed_time = float(std_out.strip())
-        self.params["time"] = elapsed_time
-        self.params["GFLOP/sec"] = self.params["GFLOP"] / elapsed_time
+        self.params["time_total"] = elapsed_time
+        self.post_process()
