@@ -26,7 +26,7 @@ class IGEMM():
         params["problem"]["size"] = self.matrix_size
         flop = (2.0 * M * N * K)
         params["problem"]["flop_estimated"] = flop * self.params["nb_epoch"]
-        params["problem"]["gflop_estimated"] = params["problem"]["flop_estimated"] / (1024 ** 3)
+        params["problem"]["gflop_estimated"] = params["problem"]["flop_estimated"] / (1000 ** 3)
         if params["problem"]["name"] != "gemm":
             raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")
 
