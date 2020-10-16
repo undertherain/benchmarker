@@ -109,11 +109,8 @@ class INeuralNet:
                 * results["nb_epoch"]
                 / self.params["power"]["joules_total"]
             )
-        if "flop_estimated" in results["problem"]:
-            results["flop_per_second_estimated"] = (
-                results["problem"]["flop_estimated"] / results["time_total"]
+        if "gflop_estimated" in results["problem"]:
+            results["gflop_per_second"] = (
+                results["problem"]["gflop_estimated"] / results["time_total"]
             )
-            results["gflop_per_second_estimated"] = results[
-                "flop_per_second_estimated"
-            ] / (1000 * 1000 * 1000)
-        return results
+            return results
