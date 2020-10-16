@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
+from torch.cuda import amp
 
 from .i_neural_net import INeuralNet
 
@@ -53,7 +54,12 @@ class Benchmark(INeuralNet):
         model.train()
         for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
             optimizer.zero_grad()
-            loss = model(data, target)
+            if self.params["problem"]["precision"] == "mixed":
+                with amp.autocast():
+                    loss = model(data, target)
+            else:
+                loss = model(data, target)
+
             loss.mean().backward()
             optimizer.step()
             progress(epoch, batch_idx, len(self.x_train), loss.mean().item())
@@ -80,11 +86,6 @@ class Benchmark(INeuralNet):
                 # correct += pred.eq(target.view_as(pred)).sum().item()
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
-        # test_loss /= len(test_loader.dataset)
-
-        # print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        #    test_loss, correct, len(test_loader.dataset),
-        #    100. * correct / len(test_loader.dataset)))
 
     def run_internal(self):
         model = self.net
@@ -106,17 +107,10 @@ class Benchmark(INeuralNet):
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
                 assert len(self.params["gpus"]) == 1
-                from apex import amp
-                # TODO: use distributed trainer from apex for multy-gpu\
-                model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
-                # TODO: make opt level a parameter
-                # TODO: convert inputs to FP16 for more agressive opt levels
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.train(model, optimizer, epoch)
-            # test(args, model, device, test_loader)
         else:
-            assert self.params["problem"]["precision"] in ["FP32", "FP16"]
-            # TODO: add mixed/FP16 precision for inference
+            assert self.params["problem"]["precision"] in ["FP16", "FP32"]
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
