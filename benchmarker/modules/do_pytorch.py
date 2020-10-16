@@ -115,11 +115,13 @@ class Benchmark(INeuralNet):
                 self.train(model, optimizer, epoch)
             # test(args, model, device, test_loader)
         else:
-            assert self.params["problem"]["precision"] in ["FP32", "FP16"]
-            # TODO: add mixed/FP16 precision for inference
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
+            if self.params["problem"]["precision"] == "mixed":
+                assert len(self.params["gpus"]) == 1
+                from apex import amp
+                model = amp.initialize(model, opt_level="O1")
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, self.device)
         end = timer()
