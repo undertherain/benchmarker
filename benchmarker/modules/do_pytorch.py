@@ -106,7 +106,7 @@ class Benchmark(INeuralNet):
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
                 assert len(self.params["gpus"]) == 1
-                from apex import amp
+                from torch.cuda import amp
                 # TODO: use distributed trainer from apex for multy-gpu\
                 model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
                 # TODO: make opt level a parameter
@@ -120,7 +120,7 @@ class Benchmark(INeuralNet):
                 model = mkldnn_utils.to_mkldnn(model)
             if self.params["problem"]["precision"] == "mixed":
                 assert len(self.params["gpus"]) == 1
-                from apex import amp
+                from torch.cuda import amp
                 model = amp.initialize(model, opt_level="O1")
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, self.device)
