@@ -110,10 +110,10 @@ class Benchmark(INeuralNet):
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.train(model, optimizer, epoch)
         else:
+            assert self.params["problem"]["precision"] in ["FP16", "FP32"]
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
-            assert self.params["problem"]["precision"] in ["FP16", "FP32"]
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, self.device)
         end = timer()
