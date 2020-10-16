@@ -112,5 +112,3 @@ class INeuralNet:
             )
 
             return results
-
-
