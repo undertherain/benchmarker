@@ -1,6 +1,7 @@
 """Module contains the interface for all deep learning modules"""
 import argparse
 import os
+from .ops import detalize_ops_results
 
 
 class IGEMM():
@@ -23,14 +24,12 @@ class IGEMM():
         M, N, K = params["problem"]["size"]
         self.matrix_size = M, N, K
         params["problem"]["size"] = self.matrix_size
-        gflop = (2.0 * M * N * K) / (1024 ** 3)
-        params["GFLOP"] = gflop * self.params["nb_epoch"]
+        flop = (2.0 * M * N * K)
+        params["problem"]["flop_estimated"] = flop * self.params["nb_epoch"]
+        params["problem"]["gflop_estimated"] = params["problem"]["flop_estimated"] / (1000 ** 3)
         if params["problem"]["name"] != "gemm":
             raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")
 
-
     def post_process(self):
-        self.params["gops_per_second"] = self.params["GFLOP"] / self.params["time_total"]
-        if self.params["power"]["joules_total"] > 0:
-            self.params["gops_per_joule"] = self.params["GFLOP"] / self.params["power"]["joules_total"]
+        detalize_ops_results(self.params)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]

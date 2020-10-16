@@ -44,15 +44,17 @@ def main():
     result["platform"] = sysinfo.get_sys_info()
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
-        result["problem"]["gflop_measured"] = get_nvprof_counters(command)
+        # TODO: maje this optional - and so for CPU
+        # result["problem"]["gflop_measured"] = get_nvprof_counters(command)
     else:
         if result["platform"]["cpu"]["brand"] is not None:
             result["device"] = result["platform"]["cpu"]["brand"]
-            result["problem"]["gflop_measured"] = get_counters(command)
+            # TODO: make this optional
+            # result["problem"]["gflop_measured"] = get_counters(command)
         else:
             # TODO: add arch when it becomes available thougg sys query
             result["device"] = "unknown CPU"
-            result["path_out"] = args.path_out
+    result["path_out"] = args.path_out
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)

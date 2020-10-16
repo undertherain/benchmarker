@@ -7,6 +7,7 @@ import random
 import numpy
 
 from .power_mon import power_monitor_GPU, power_monitor_RAPL
+from .ops import detalize_ops_results
 
 
 class INeuralNet:
@@ -103,17 +104,11 @@ class INeuralNet:
         results["samples_per_second"] = (
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
+        detalize_ops_results(results)
+        # TODO: make this agnostic to wheter we have cnt_samples or ops or both
         if results["power"]["joules_total"] > 0:
             results["samples_per_joule"] = (
-                results["problem"]["cnt_samples"]
-                * results["nb_epoch"]
-                / self.params["power"]["joules_total"]
+                results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
             )
-        if "flop_estimated" in results["problem"]:
-            results["flop_per_second_estimated"] = (
-                results["problem"]["flop_estimated"] / results["time_total"]
-            )
-            results["gflop_per_second_estimated"] = results[
-                "flop_per_second_estimated"
-            ] / (1000 * 1000 * 1000)
-        return results
+
+            return results
