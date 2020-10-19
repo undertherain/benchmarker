@@ -6,6 +6,7 @@ from timeit import default_timer as timer
 import torch
 import numpy as np
 from .i_gemm import IGEMM
+from .power_mon import power_monitor_GPU
 
 
 class Benchmark(IGEMM):
@@ -33,6 +34,8 @@ class Benchmark(IGEMM):
                 c = c.to(device)
                 c = a @ b  # this is preheat
                 torch.cuda.synchronize()
+        power_monitor_gpu = power_monitor_GPU(self.params)
+        power_monitor_gpu.start()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
             c = a @ b  # + c
@@ -40,4 +43,5 @@ class Benchmark(IGEMM):
             torch.cuda.synchronize()
         time_end = timer()
         self.params["time_total"] = (time_end - time_start)
+        power_monitor_gpu.stop()
         self.post_process()

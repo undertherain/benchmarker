@@ -30,7 +30,10 @@ class power_monitor_GPU:
         self.keep_monitor = False
         self.thread_monitor.join()
         self.nvml.nvmlShutdown()
-        self.params["power"]["avg_watt_GPU"] = np.mean(self.lst_power_gpu)
+        # a small hack to remove pre-heat time measurement
+        cnt_cut_measurements = min(len(self.lst_power_gpu), 100)
+        measurements_trimmed = self.lst_power_gpu[:cnt_cut_measurements]
+        self.params["power"]["avg_watt_GPU"] = np.mean(measurements_trimmed)
         self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
         self.params["power"]["avg_watt_total"] += self.params["power"]["avg_watt_GPU"]
