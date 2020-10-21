@@ -26,6 +26,7 @@ def main():
     parser = argparse.ArgumentParser(description='Benchmark me up, Scotty!')
     parser.add_argument('--path_out', type=str, default="./logs")
     parser.add_argument("--problem")
+    parser.add_argument("--flops", action="store_true")
     args, unknown_args = parser.parse_known_args()
 
     command = ["python3", "-m", "benchmarker.benchmarker"]
@@ -44,13 +45,13 @@ def main():
     result["platform"] = sysinfo.get_sys_info()
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
-        # TODO: maje this optional - and so for CPU
-        # result["problem"]["gflop_measured"] = get_nvprof_counters(command)
+        if args.flops:
+            result["problem"]["gflop_measured"] = get_nvprof_counters(command)
     else:
         if result["platform"]["cpu"]["brand"] is not None:
             result["device"] = result["platform"]["cpu"]["brand"]
-            # TODO: make this optional
-            # result["problem"]["gflop_measured"] = get_counters(command)
+            if args.flops:
+                result["problem"]["gflop_measured"] = get_counters(command)
         else:
             # TODO: add arch when it becomes available thougg sys query
             result["device"] = "unknown CPU"
