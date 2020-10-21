@@ -33,7 +33,8 @@ def parse_basic_args(argv):
     parser.add_argument("--problem_size", default=None)
     parser.add_argument("--batch_size", default=None)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
-    # parser.add_argument('--misc')
+    parser.add_argument("--flops", action="store_true")
+    #parser.add_argument('--misc')
     return parser.parse_known_args(argv)
 
 
