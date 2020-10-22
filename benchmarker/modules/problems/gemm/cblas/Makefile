@@ -1,3 +1,4 @@
+# FCC -SSL2BLAMP -Kopenmp blas_cblas.cpp -o cblas
 .PHONY: run
 
 CXXFLAGS=-Wall -O3  -fopenmp --std=c++14 -msse3  -ftree-vectorize -ftree-vectorizer-verbose=3 -fopt-info-vec
