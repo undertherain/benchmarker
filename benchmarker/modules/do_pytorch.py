@@ -7,7 +7,7 @@ import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 from torch.cuda import amp
 import torch.autograd.profiler as profiler
-import torchprof
+from .torchprof import Profile
 
 from .i_neural_net import INeuralNet
 
@@ -96,13 +96,11 @@ class Benchmark(INeuralNet):
                 #print(prof.total_average())
                 #print(prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=10))
                 profile_cuda = False
-                if len(self.params["gpus"]) >= 1:
+                if self.device.type == "cuda":
                     profile_cuda = True
-                with torchprof.Profile(model, use_cuda=profile_cuda) as prof:
+                with Profile(model, use_cuda=profile_cuda) as prof:
                     model(data)
                 print(prof.display(show_events=True))
-                #trace, event_lists_dict = prof.raw()
-                #print(event_lists_dict[trace[2].path][0])
 
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
