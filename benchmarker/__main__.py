@@ -54,14 +54,14 @@ def main():
     else:
         if result["platform"]["cpu"]["brand"] is not None:
             result["device"] = result["platform"]["cpu"]["brand"]
-            if args.flops:
-                result["problem"]["gflop_measured"] = get_counters(command)
-            if args.fapp_power:
-                total, details = fapp.get_power_total_and_detail(command)
-                result["problem"]["power"] = {"total": total, "details": details}
         else:
             # TODO: add arch when it becomes available thougg sys query
             result["device"] = "unknown CPU"
+        if args.flops:
+            result["problem"]["gflop_measured"] = get_counters(command)
+        if args.fapp_power:
+            total, details = fapp.get_power_total_and_detail(command)
+            result["problem"]["power"] = {"total": total, "details": details}
     result["path_out"] = args.path_out
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
