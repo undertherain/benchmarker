@@ -1,17 +1,19 @@
 """CLI entry point module"""
 
-import sys
-import json
 import argparse
+import json
 import os
-from .util import sysinfo
+import sys
 
+from benchmarker.nvprof import get_nvprof_counters
+from benchmarker.perf import get_counters
 # from .benchmarker import run
 from benchmarker.util import abstractprocess
 from benchmarker.util.cute_device import get_cute_device_str
+
+from .util import sysinfo
 from .util.io import save_json
-from benchmarker.perf import get_counters
-from benchmarker.nvprof import get_nvprof_counters
+
 
 def filter_json_from_output(lines):
     parts = lines.split("benchmarkmagic#!%")
@@ -23,8 +25,8 @@ def filter_json_from_output(lines):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Benchmark me up, Scotty!')
-    parser.add_argument('--path_out', type=str, default="./logs")
+    parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
+    parser.add_argument("--path_out", type=str, default="./logs")
     parser.add_argument("--problem")
     parser.add_argument("--flops", action="store_true")
     args, unknown_args = parser.parse_known_args()
@@ -38,7 +40,7 @@ def main():
     if returncode != 0:
         process_err = proc_output["err"]
         sys.exit(process_err)
-        
+
     process_out = proc_output["out"]
     result = filter_json_from_output(process_out)
     # TODO: don't parse path_out in the innder loop
@@ -61,6 +63,7 @@ def main():
     result["path_out"] = os.path.join(result["path_out"], cute_device)
     save_json(result)
     # TODO: don't measure power when measureing flops
+
 
 if __name__ == "__main__":
     main()
