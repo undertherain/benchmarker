@@ -52,11 +52,14 @@ def main():
         if args.flops:
             result["problem"]["gflop_measured"] = get_nvprof_counters(command)
     else:
-        if result["platform"]["cpu"]["brand"] is not None:
-            result["device"] = result["platform"]["cpu"]["brand"]
-        else:
+        if (
+            "brand" not in result["platform"]["cpu"]
+            or result["platform"]["cpu"]["brand"] is None
+        ):
             # TODO: add arch when it becomes available thougg sys query
             result["device"] = "unknown CPU"
+        else:
+            result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops:
             result["problem"]["gflop_measured"] = get_counters(command)
         if args.fapp_power:
