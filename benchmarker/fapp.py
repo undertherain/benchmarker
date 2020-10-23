@@ -19,7 +19,7 @@ def gen_fapp_csv(fapp_dir, csv_file):
     abstractprocess.Process("local", command=fapp_gen_csv_cmd)
 
 
-def get_counters(command):
+def get_power_total_and_detail(command):
     csv_dir = Path("csvs")
     for rep in [1, 8]:
         with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
@@ -28,8 +28,8 @@ def get_counters(command):
             gen_fapp_csv(fapp_dir, csv_file)
         # delete fapp_dir
 
-    power = get_power(csv_dir)
-    total_power = get_total_power(power)
+    power_details = get_power(csv_dir)
+    power_total = get_total_power(power_details)
     csv_dir.rmdir()
 
-    return gflop_measured
+    return power_total, power_details

@@ -5,6 +5,7 @@ import json
 import os
 import sys
 
+from benchmarker import fapp
 from benchmarker.nvprof import get_nvprof_counters
 from benchmarker.perf import get_counters
 # from .benchmarker import run
@@ -29,6 +30,7 @@ def main():
     parser.add_argument("--path_out", type=str, default="./logs")
     parser.add_argument("--problem")
     parser.add_argument("--flops", action="store_true")
+    parser.add_argument("--fapp_power", action="store_true")
     args, unknown_args = parser.parse_known_args()
 
     command = ["python3", "-m", "benchmarker.benchmarker"]
@@ -54,6 +56,9 @@ def main():
             result["device"] = result["platform"]["cpu"]["brand"]
             if args.flops:
                 result["problem"]["gflop_measured"] = get_counters(command)
+            if args.fapp_power:
+                total, details = fapp.get_power_total_and_detail(command)
+                result["problem"]["power"] = {"total": total, "details": details}
         else:
             # TODO: add arch when it becomes available thougg sys query
             result["device"] = "unknown CPU"
