@@ -1,8 +1,8 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from benchmarker.fapp_power import get_power, get_total_power
 from benchmarker.util import abstractprocess
-from fapp_power import get_power, get_total_power
 
 
 def run_fapp_profiler(fapp_dir, command):
