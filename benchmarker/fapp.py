@@ -3,16 +3,24 @@ import subprocess
 
 from benchmarker.util import abstractprocess
 
-perf_counters_multipliers = {"r5302c7": 1, "r5308c7": 4, "r5320c7": 8}
-
 
 def get_counters(command):
     flop_measured = 0
     for counter in perf_counters_multipliers:
-        perf_command = ["perf", "stat", "-e", counter]
-        proc = abstractprocess.Process("local", command=perf_command + command)
-        process_err = proc.get_output()["err"]
-        # print(process_err)
+        for rep in [1, 8]:
+            fapp_output = "./prof"
+            csv_output = "./csvs/"
+            # fmt: off
+            # fapp -C -d ./prof_${APP}_rep${REP} -Hevent=pa${REP} ./${APP}
+            fapp_measure_cmd = ["fapp", "-C", "-d", f"./prof_rep{rep} -Hevent=pa{rep}"]
+            # fapp -A -tcsv -o ${APP}_reps/pa$REP.csv -d ./prof_${APP}_rep${REP} -Icpupa
+            fapp_gen_csv_cmd = ["fapp", "-A", "-tcsv", "-o", "reps/pa{rep}.csv", "-d", "./prof_rep{rep}", "-Icpupa",]
+            # fmt: on
+            proc = abstractprocess.Process("local", command=fapp_measure_cmd + command)
+
+            # process_err = proc.get_output()["err"]
+            # print(process_err)
+        # delete tmp files
         match_exp = re.compile("[\d|\,]+\s+" + counter).search(process_err)
         match_list = match_exp.group().split()
         cntr_value = int(match_list[0].replace(",", ""))
