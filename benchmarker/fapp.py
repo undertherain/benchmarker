@@ -27,7 +27,7 @@ def get_power_total_and_detail(command):
     csv_dir.mkdir()
     for rep in [1, 8]:
         with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
-            csv_file = csv_dir.joinpath(f"pa{rep}.csv")
+            csv_file = str(csv_dir.joinpath(f"pa{rep}.csv"))
             run_fapp_profiler(fapp_dir, command)
             gen_fapp_csv(fapp_dir, csv_file)
         # delete fapp_dir
