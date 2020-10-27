@@ -7,7 +7,7 @@ from benchmarker.util import abstractprocess
 def run_fapp_profiler(fapp_dir, command):
     # fapp -C -d ./prof_${APP}_rep${REP} -Hevent=pa${REP} ./${APP}
     fapp_measure_cmd = ["fapp", "-C", "-d"]
-    fapp_measure_cmd += [fapp_dir, "-Hevent=pa{rep}"]
+    fapp_measure_cmd += [fapp_dir, f"-Hevent=pa{rep}"]
     cmd = fapp_measure_cmd + command
     print(cmd)
     proc = abstractprocess.Process("local", command=cmd)
@@ -30,7 +30,6 @@ def get_power_total_and_detail(command):
                 csv_file = f"{csv_dir}/pa{rep}.csv"
                 run_fapp_profiler(fapp_dir, command)
                 gen_fapp_csv(fapp_dir, csv_file)
-
         power_details = get_power(csv_dir)
         power_total = get_total_power(power_details)
 
