@@ -1,4 +1,3 @@
-from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from benchmarker.fapp_power import get_power, get_total_power
@@ -23,7 +22,6 @@ def gen_fapp_csv(fapp_dir, csv_file):
 
 
 def get_power_total_and_detail(command):
-    csv_dir = Path("csvs")
     with TemporaryDirectory() as csv_dir:
         for rep in [1, 8]:
             with TemporaryDirectory(suffix=str(rep)) as fapp_dir:

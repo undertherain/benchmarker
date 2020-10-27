@@ -1,4 +1,5 @@
 import csv
+from pathlib import Path
 
 import pandas as pd
 
@@ -63,6 +64,7 @@ def get_mem_power(mem_counter, freq, cntvct):
 
 
 def get_cmg_power(csv_dir, cmg_id, region="all"):
+    csv_dir = Path(csv_dir)
     pa1 = split_csv(csv_dir.joinpath("pa1.csv"))
     pa8 = split_csv(csv_dir.joinpath("pa8.csv"))
 
