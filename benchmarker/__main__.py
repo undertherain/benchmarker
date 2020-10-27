@@ -27,14 +27,12 @@ def filter_json_from_output(lines):
 
 def main():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--path_out", type=str, default="./logs")
-    parser.add_argument("--problem")
     parser.add_argument("--flops", action="store_true")
     parser.add_argument("--fapp_power", action="store_true")
     args, unknown_args = parser.parse_known_args()
 
     command = ["python3", "-m", "benchmarker.benchmarker"]
-    command += sys.argv[1:]
+    command += unknown_args
     proc = abstractprocess.Process("local", command=command)
     proc_output = proc.get_output()
     returncode = proc_output["returncode"]
@@ -62,10 +60,9 @@ def main():
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops:
             result["problem"]["gflop_measured"] = get_counters(command)
-        if args.fapp_power:
+        elif args.fapp_power:
             total, details = fapp.get_power_total_and_detail(command)
             result["problem"]["power"] = {"total": total, "details": details}
-    result["path_out"] = args.path_out
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
