@@ -7,7 +7,6 @@ This is where all magic is happening
 import argparse
 import ast
 import importlib
-# import logging
 import os
 import pkgutil
 import sys
@@ -27,18 +26,12 @@ def get_modules():
 def parse_basic_args(argv):
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--framework")
-    ### What to do? (probably better here!)
     parser.add_argument("--problem")
-    ### What to do? (probably better here!)
     parser.add_argument("--path_out", type=str, default="./logs")
     parser.add_argument("--gpus", default="")
     parser.add_argument("--problem_size", default=None)
     parser.add_argument("--batch_size", default=None)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
-    ### REMOVE!
-    parser.add_argument("--flops", action="store_true")
-    ### REMOVE!
-    parser.add_argument("--fapp_power", action="store_true")
     # parser.add_argument('--misc')
     return parser.parse_known_args(argv)
 
