@@ -24,16 +24,14 @@ def gen_fapp_csv(fapp_dir, csv_file):
 
 def get_power_total_and_detail(command):
     csv_dir = Path("csvs")
-    csv_dir.mkdir()
-    for rep in [1, 8]:
-        with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
-            csv_file = str(csv_dir.joinpath(f"pa{rep}.csv"))
-            run_fapp_profiler(fapp_dir, command)
-            gen_fapp_csv(fapp_dir, csv_file)
-        # delete fapp_dir
+    with TemporaryDirectory() as csv_dir:
+        for rep in [1, 8]:
+            with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
+                csv_file = f"{csv_dir}/pa{rep}.csv"
+                run_fapp_profiler(fapp_dir, command)
+                gen_fapp_csv(fapp_dir, csv_file)
 
-    power_details = get_power(csv_dir)
-    power_total = get_total_power(power_details)
-    csv_dir.rmdir()
+        power_details = get_power(csv_dir)
+        power_total = get_total_power(power_details)
 
     return power_total, power_details
