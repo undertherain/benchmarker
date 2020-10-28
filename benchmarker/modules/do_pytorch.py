@@ -6,7 +6,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 from torch.cuda import amp
-import torch.autograd.profiler as profiler
 from .torchprof import Profile
 
 from .i_neural_net import INeuralNet
@@ -88,15 +87,8 @@ class Benchmark(INeuralNet):
                 # TODO: get back softmax for ResNet-like models
                 # pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
                 # correct += pred.eq(target.view_as(pred)).sum().item()
-                #with profiler.profile(record_shapes=True) as prof:
-                #    print("profiling!!!!")
-                #    model(data)
-                #print("finish profiling")
-                #print(type(prof), dir(prof))
-                #print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=20))
-                #print(prof.key_averages(group_by_input_shape=True).table(sort_by="cpu_time_total", row_limit=10))
-                #print(prof.total_average())
-                #print(prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=10))
+
+                # Profile using torchprof
                 if self.params["profile_pytorch"]:
                     profile_cuda = False
                     if self.device.type == "cuda":
