@@ -26,9 +26,11 @@ class Benchmark(INeuralNet):
         parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
         parser.add_argument("--precision", default="FP32")
+        parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
         parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.params["profile_pytorch"] = args.profile
         self.params["channels_first"] = True
         params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
@@ -95,12 +97,13 @@ class Benchmark(INeuralNet):
                 #print(prof.key_averages(group_by_input_shape=True).table(sort_by="cpu_time_total", row_limit=10))
                 #print(prof.total_average())
                 #print(prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=10))
-                profile_cuda = False
-                if self.device.type == "cuda":
-                    profile_cuda = True
-                with Profile(model, use_cuda=profile_cuda) as prof:
-                    model(data)
-                print(prof.display(show_events=True))
+                if self.params["profile_pytorch"]:
+                    profile_cuda = False
+                    if self.device.type == "cuda":
+                        profile_cuda = True
+                    with Profile(model, use_cuda=profile_cuda) as prof:
+                        model(data)
+                    print(prof.display(show_events=True))
 
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
