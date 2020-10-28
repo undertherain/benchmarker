@@ -152,14 +152,15 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                         sum([e.self_cpu_time_total for e in events]),
                         sum([e.cpu_time_total for e in events]),
                         sum([e.cuda_time_total for e in events]),
-                        len(trace_events[path])
+                        len(trace_events[path]),
+                        [e.input_shapes for e in events],
                     )
             current_tree = current_tree[name]
     print(tree)
     profile_str = json.dumps(tree,indent=1)
     #result = json.loads(profile_str)
-    print("Printing Json")
-    print(profile_str)
+    #print("Printing Json")
+    #print(profile_str)
     tree_lines = flatten_tree(tree)
 
     # dt = ('|', '|-- ', '+-- ', ' ') # ascii
@@ -195,8 +196,8 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
             depth -= 1
             current = False
         format_lines.append([pre + name, self_cpu_time, cpu_time, cuda_time, occurrences, input_shapes])
-    """
-    print(format_lines)
+   
+    #print(format_lines)
     
     # construct the table
     heading = ("Module", "Self CPU total", "CPU total", "CUDA total", "Occurrences")
@@ -207,7 +208,7 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
     disp += "{:>{}s}".format(heading[1], max_lens[1]) + " | "
     disp += "{:>{}s}".format(heading[2], max_lens[2]) + " | "
     disp += "{:>{}s}".format(heading[3], max_lens[3]) + " | "
-    disp += "{:>{}s}".format(heading[4], max_lens[4]) + " \n "
+    disp += "{:>{}s}".format(heading[4], max_lens[4]) + " | "
     #disp += "{:>{}s}".format(heading[5], max_lens[5]) + " \n "
     disp += "-|-".join(["-" * mlen for mlen in max_lens]) + "\n"
     for line in format_lines:
@@ -220,4 +221,4 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
         #disp += "{:>{}s}".format(input_shapes, max_lens[5]) + "\n"
 
     return disp
-    """
+   
