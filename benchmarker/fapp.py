@@ -9,14 +9,14 @@ def run_fapp_profiler(fapp_dir, rep, command):
     fapp_measure_cmd = ["fapp", "-C", "-d"]
     fapp_measure_cmd += [fapp_dir, f"-Hevent=pa{rep}"]
     cmd = fapp_measure_cmd + command
-    abstractprocess.Process("local", command=cmd)
+    abstractprocess.Process("local", command=cmd).get_output()
 
 
 def gen_fapp_csv(fapp_dir, csv_file):
     # fapp -A -tcsv -o $APP_reps/pa$REP.csv -d ./prof_$APP_rep$REP -Icpupa
     fapp_gen_csv_cmd = ["fapp", "-A", "-tcsv"]
     fapp_gen_csv_cmd += ["-o", csv_file] + ["-d", fapp_dir, "-Icpupa"]
-    abstractprocess.Process("local", command=fapp_gen_csv_cmd)
+    abstractprocess.Process("local", command=fapp_gen_csv_cmd).get_output()
 
 
 def get_power_total_and_detail(command):
