@@ -93,9 +93,10 @@ class Benchmark(INeuralNet):
                     profile_cuda = False
                     if self.device.type == "cuda":
                         profile_cuda = True
-                    with Profile(model, use_cuda=profile_cuda) as prof:
+                    with Profile(model, use_cuda=profile_cuda, depth=2) as prof:
                         model(data)
-                    print(prof.display(show_events=True))
+                    #print(prof.display(show_events=False))
+                    print(prof.display())
 
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
