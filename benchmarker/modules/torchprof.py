@@ -1,35 +1,38 @@
-# Code from https://github.com/awwong1/torchprof 
+# Code from https://github.com/jiashenC/torchprof
 
 import functools
+import json
 import torch.autograd.profiler as tprofiler
 from collections import namedtuple, defaultdict, OrderedDict
-import json, collections
 
 Trace = namedtuple("Trace", ["path", "leaf", "module"])
-Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences", "input_shapes"])
+Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences"])
 
 
-def walk_modules(module, name="", path=()):
+def walk_modules(module, name="", path=(), depth=-1):
     """Generator. Walks through a PyTorch Module and outputs Trace tuples"""
     if not name:
         name = module.__class__.__name__
     named_children = list(module.named_children())
     path = path + (name,)
-    yield Trace(path, len(named_children) == 0, module)
-    # recursively walk into all submodules
-    for name, child_module in named_children:
-        yield from walk_modules(child_module, name=name, path=path)
+    yield Trace(path, len(named_children) == 0 or (len(path) > depth and depth != -1), module)
+
+    if len(path) <= depth or depth == -1:
+        # recursively walk into all submodules
+        for name, child_module in named_children:
+            yield from walk_modules(child_module, name=name, path=path, depth=depth)
 
 
 class Profile(object):
     """Layer by layer profiling of Pytorch models, using the Pytorch autograd profiler.
     """
 
-    def __init__(self, model, enabled=True, use_cuda=False, paths=None):
+    def __init__(self, model, enabled=True, use_cuda=False, paths=None, depth=-1):
         self._model = model
         self.enabled = enabled
         self.use_cuda = use_cuda
         self.paths = paths
+        self.depth = depth
 
         self.entered = False
         self.exited = False
@@ -43,7 +46,7 @@ class Profile(object):
             raise RuntimeError("torchprof profiler is not reentrant")
         self.entered = True
         self._forwards = {}  # store the original forward functions
-        self.traces = tuple(map(self._hook_trace, walk_modules(self._model)))
+        self.traces = tuple(map(self._hook_trace, walk_modules(self._model, depth=self.depth)))
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -73,18 +76,15 @@ class Profile(object):
 
             @functools.wraps(_forward)
             def wrap_forward(*args, **kwargs):
-                with tprofiler.profile(use_cuda=self.use_cuda,record_shapes=True) as prof:
+                with tprofiler.profile(use_cuda=self.use_cuda) as prof:
                     res = _forward(*args, **kwargs)
                 event_list = prof.function_events
-                #print(event_list)
                 event_list.populate_cpu_children()
-                print(event_list)
                 # each profile call should be contained in its own list
                 self.trace_profile_events[path].append(event_list)
                 return res
 
             module.forward = wrap_forward
-        #print(trace)
         return trace
 
     def _remove_hook_trace(self, trace):
@@ -142,9 +142,7 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                                 sum([e.self_cpu_time_total for e in events if e.name == event.name]),
                                 sum([e.cpu_time_total for e in events if e.name == event.name]),
                                 sum([e.cuda_time_total for e in events if e.name == event.name]),
-                                #sum([e.input_shapes for e in events if e.name == event.name]),
-                                len([e for e in events if e.name == event.name]),
-                                [e.input_shapes for e in events if e.name == event.name]
+                                len([e for e in events if e.name == event.name])
                             )
                         }
                 else:
@@ -152,15 +150,15 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                         sum([e.self_cpu_time_total for e in events]),
                         sum([e.cpu_time_total for e in events]),
                         sum([e.cuda_time_total for e in events]),
-                        len(trace_events[path]),
-                        [e.input_shapes for e in events],
+                        len(trace_events[path])
                     )
             current_tree = current_tree[name]
-    print(tree)
-    profile_str = json.dumps(tree,indent=1)
-    #result = json.loads(profile_str)
-    #print("Printing Json")
-    #print(profile_str)
+    
+    #Save tree as json
+    profile_str = json.dumps(tree,indent=4)
+    print("Printing Json")
+    print(profile_str)
+
     tree_lines = flatten_tree(tree)
 
     # dt = ('|', '|-- ', '+-- ', ' ') # ascii
@@ -172,13 +170,11 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
         cpu_time = ""
         cuda_time = ""
         occurrences = ""
-        input_shapes = ""
         if measures:
             self_cpu_time = tprofiler.format_time(measures.self_cpu_total)
             cpu_time = tprofiler.format_time(measures.cpu_total)
             cuda_time = tprofiler.format_time(measures.cuda_total)
             occurrences = str(measures.occurrences)
-            input_shapes = str(measures.input_shapes)
         pre = ""
         next_depths = [pl[0] for pl in tree_lines[idx + 1 :]]
         current = True
@@ -195,30 +191,24 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                     pre = dt[3] + pre
             depth -= 1
             current = False
-        format_lines.append([pre + name, self_cpu_time, cpu_time, cuda_time, occurrences, input_shapes])
-   
-    #print(format_lines)
-    
+        format_lines.append([pre + name, self_cpu_time, cpu_time, cuda_time, occurrences])
+
     # construct the table
     heading = ("Module", "Self CPU total", "CPU total", "CUDA total", "Occurrences")
-    #heading = ("Module", "Self CPU total", "CPU total", "CUDA total", "Occurrences", "Input Shapes")
     max_lens = [max(map(len, col)) for col in zip(*([heading] + format_lines))]
     # create the heading
     disp = "{:<{}s}".format(heading[0], max_lens[0]) + " | "
     disp += "{:>{}s}".format(heading[1], max_lens[1]) + " | "
     disp += "{:>{}s}".format(heading[2], max_lens[2]) + " | "
     disp += "{:>{}s}".format(heading[3], max_lens[3]) + " | "
-    disp += "{:>{}s}".format(heading[4], max_lens[4]) + " | "
-    #disp += "{:>{}s}".format(heading[5], max_lens[5]) + " \n "
+    disp += "{:>{}s}".format(heading[4], max_lens[4]) + "\n"
     disp += "-|-".join(["-" * mlen for mlen in max_lens]) + "\n"
     for line in format_lines:
-        label, self_cpu_time, cpu_time, cuda_time, occurrences, input_shapes = line
+        label, self_cpu_time, cpu_time, cuda_time, occurrences = line
         disp += "{:<{}s}".format(label, max_lens[0]) + " | "
         disp += "{:>{}s}".format(self_cpu_time, max_lens[1]) + " | "
         disp += "{:>{}s}".format(cpu_time, max_lens[2]) + " | "
         disp += "{:>{}s}".format(cuda_time, max_lens[3]) + " | "
-        disp += "{:>{}s}".format(occurrences, max_lens[4]) + " \n "
-        #disp += "{:>{}s}".format(input_shapes, max_lens[5]) + "\n"
+        disp += "{:>{}s}".format(occurrences, max_lens[4]) + "\n"
 
     return disp
-   
