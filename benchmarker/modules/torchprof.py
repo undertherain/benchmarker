@@ -156,8 +156,8 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
     
     #Save tree as json
     profile_str = json.dumps(tree,indent=4)
-    print("Printing Json")
-    print(profile_str)
+    # print("Printing Json")
+    # print(profile_str)
 
     tree_lines = flatten_tree(tree)
 
@@ -211,4 +211,4 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
         disp += "{:>{}s}".format(cuda_time, max_lens[3]) + " | "
         disp += "{:>{}s}".format(occurrences, max_lens[4]) + "\n"
 
-    return disp
+    return profile_str
