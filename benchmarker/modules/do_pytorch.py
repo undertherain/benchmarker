@@ -1,6 +1,7 @@
 import argparse
 from timeit import default_timer as timer
 
+import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -98,7 +99,10 @@ class Benchmark(INeuralNet):
                     with Profile(model, use_cuda=profile_cuda, depth=self.params["profile_depth"]) as prof:
                         model(data)
                     #print(prof.display(show_events=False))
-                    print(prof.display())
+                    profile_output_as_json = prof.display()
+                    print(profile_output_as_json)
+                    profile_output = json.loads(profile_output_as_json)
+                    self.params["profile_summary"] = profile_output["ClassifierInference"]
 
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
