@@ -32,7 +32,8 @@ class Benchmark(INeuralNet):
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["profile_pytorch"] = args.profile
-        self.params["profile_depth"] = args.profile_depth
+        if args.profile:
+            self.params["profile_depth"] = args.profile_depth
         self.params["channels_first"] = True
         params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
