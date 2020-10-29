@@ -26,10 +26,12 @@ class Benchmark(INeuralNet):
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
         parser.add_argument("--precision", default="FP32")
         parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
+        parser.add_argument("--profile_depth", type=int, default=2)
         parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["profile_pytorch"] = args.profile
+        self.params["profile_depth"] = args.profile_depth
         self.params["channels_first"] = True
         params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
@@ -93,7 +95,7 @@ class Benchmark(INeuralNet):
                     profile_cuda = False
                     if self.device.type == "cuda":
                         profile_cuda = True
-                    with Profile(model, use_cuda=profile_cuda, depth=2) as prof:
+                    with Profile(model, use_cuda=profile_cuda, depth=self.params["profile_depth"]) as prof:
                         model(data)
                     #print(prof.display(show_events=False))
                     print(prof.display())
