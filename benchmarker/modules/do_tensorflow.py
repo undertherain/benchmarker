@@ -76,7 +76,7 @@ class Benchmark(INeuralNet):
         super().set_random_seed(seed)
         tf.random.set_seed(seed)
 
-    def run_internal(self):
+    def run(self):
         model = self.net
         nb_epoch = self.params["nb_epoch"]
         if self.params["mode"] == "training":

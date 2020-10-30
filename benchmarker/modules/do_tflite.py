@@ -82,7 +82,7 @@ class Benchmark(INeuralNet):
             experimental_delegates=[delegate],
         )
 
-    def run_internal(self):
+    def run(self):
         assert self.params["mode"] == "inference", "Only inference supported ATM"
 
         # preheat

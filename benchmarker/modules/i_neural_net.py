@@ -6,11 +6,11 @@ import random
 
 import numpy
 
-from .power_mon import power_monitor_GPU, power_monitor_RAPL
 from .ops import detalize_ops_results
+from .i_benchmark import IBenchmark
 
 
-class INeuralNet:
+class INeuralNet(IBenchmark):
     """Interface for all deep learning modules"""
 
     def __init__(self, params, extra_args=None):
@@ -102,16 +102,3 @@ class INeuralNet:
             results["samples_per_joule"] = (
                 results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
             )
-
-    def run(self):
-        if self.params["nb_gpus"] > 0:
-            power_monitor_gpu = power_monitor_GPU(self.params)
-            power_monitor_gpu.start()
-        power_monitor_cpu = power_monitor_RAPL(self.params)
-        power_monitor_cpu.start()
-        results = self.run_internal()
-        if self.params["nb_gpus"] > 0:
-            power_monitor_gpu.stop()
-        power_monitor_cpu.stop()
-        self.post_process()
-        return results
