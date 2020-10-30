@@ -87,16 +87,8 @@ class INeuralNet:
         numpy.random.seed(seed)
         random.seed(seed)
 
-    def run(self):
-        if self.params["nb_gpus"] > 0:
-            power_monitor_gpu = power_monitor_GPU(self.params)
-            power_monitor_gpu.start()
-        power_monitor_cpu = power_monitor_RAPL(self.params)
-        power_monitor_cpu.start()
-        results = self.run_internal()
-        if self.params["nb_gpus"] > 0:
-            power_monitor_gpu.stop()
-        power_monitor_cpu.stop()
+    def post_process(self):
+        results = self.params
         results["time_batch"] = (
             results["time_epoch"] / results["problem"]["cnt_batches_per_epoch"]
         )
@@ -111,4 +103,15 @@ class INeuralNet:
                 results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
             )
 
-            return results
+    def run(self):
+        if self.params["nb_gpus"] > 0:
+            power_monitor_gpu = power_monitor_GPU(self.params)
+            power_monitor_gpu.start()
+        power_monitor_cpu = power_monitor_RAPL(self.params)
+        power_monitor_cpu.start()
+        results = self.run_internal()
+        if self.params["nb_gpus"] > 0:
+            power_monitor_gpu.stop()
+        power_monitor_cpu.stop()
+        self.post_process()
+        return results
