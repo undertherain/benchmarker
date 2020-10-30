@@ -82,8 +82,8 @@ def run(argv):
     params["power"]["avg_watt_total"] = 0
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, "Benchmark")(params, unknown_args)
-    benchmark.run()
-    # save_json(params)
+    # TODO: make this optional
+    benchmark.measure_power_and_run()
     print("benchmarkmagic#!%")
     print_json(params)
 

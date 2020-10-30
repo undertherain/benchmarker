@@ -90,7 +90,7 @@ class Benchmark(INeuralNet):
         trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy', "elapsed_time"]))
         trainer.run()
 
-    def run_internal(self):
+    def run(self):
         # TODO set a config option to use ChainerX or other backend
         use_chainer_x = False
         params = self.params

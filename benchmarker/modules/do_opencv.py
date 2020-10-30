@@ -14,7 +14,7 @@ class Benchmark(INeuralNet):
         if self.params["batch_size"] != 1:
             raise RuntimeError("opencv only supports batch size of 1")
 
-    def run_internal(self):
+    def run(self):
         params = self.params
         x_train, y_train = self.load_data()
         x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],) + x_train.shape[2:])
