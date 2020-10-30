@@ -31,6 +31,8 @@ class power_monitor_GPU:
         self.thread_monitor.join()
         self.nvml.nvmlShutdown()
         # a small hack to remove pre-heat time measurement
+
+    def post_process(self):
         cnt_cut_measurements = min(len(self.lst_power_gpu), 100)
         measurements_trimmed = self.lst_power_gpu[:cnt_cut_measurements]
         self.params["power"]["avg_watt_GPU"] = np.mean(measurements_trimmed)
