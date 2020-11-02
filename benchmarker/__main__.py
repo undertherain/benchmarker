@@ -67,7 +67,9 @@ def main():
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
     if "gflop_measured" in result.keys():
-        result["gflop_per_joule"] = result["gflop_measured"] / result["time_total"]
+        result["gflop_per_joule"] = (
+            result["gflop_measured"] / result["power"]["avg_watt_total"]
+        )
     save_json(result)
     # TODO: don't measure power when measureing flops
 
