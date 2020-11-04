@@ -48,7 +48,7 @@ def main():
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
         if args.flops:
-            result["gflop_measured"] = get_nvprof_counters(command)
+            result["problem"]["gflop_measured"] = get_nvprof_counters(command)
     else:
         if (
             "brand" not in result["platform"]["cpu"]
@@ -59,15 +59,18 @@ def main():
         else:
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops:
-            result["gflop_measured"] = get_counters(command)
+            result["problem"]["gflop_measured"] = get_counters(command)
         elif args.fapp_power:
             total, details = fapp.get_power_total_and_detail(command)
             result["problem"]["power"] = {"total": total, "details": details}
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if "gflop_measured" in result.keys() and result["power"]["joules_total"] != 0:
-        result["gflop_per_joule"] = float(result["gflop_measured"])
+    if (
+        "gflop_measured" in result["problem"].keys()
+        and result["power"]["joules_total"] != 0
+    ):
+        result["gflop_per_joule"] = float(result["problem"]["gflop_measured"])
         result["gflop_per_joule"] /= float(result["power"]["joules_total"])
     save_json(result)
     # TODO: don't measure power when measureing flops
