@@ -66,9 +66,15 @@ def main():
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if "gflop_measured" in result.keys() and result["power"]["joules_total"] != 0:
-        result["gflop_per_joule"] = float(result["gflop_measured"])
-        result["gflop_per_joule"] /= float(result["power"]["joules_total"])
+    if "gflop_measured" in result.keys():
+        if result["power"]["joules_total"] != 0:
+            result["gflop_per_joule"] = float(result["gflop_measured"])
+            result["gflop_per_joule"] /= float(result["power"]["joules_total"])
+        if "gflop_per_second" not in result:
+            result["gflop_per_second"] = float(result["gflop_measured"]) / result["time_total"]
+        else:
+            result["gflop_per_second_measured"] = float(result["gflop_measured"]) / result["time_total"]
+
     save_json(result)
     # TODO: don't measure power when measureing flops
 
