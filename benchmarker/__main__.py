@@ -66,7 +66,7 @@ def main():
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if "gflop_measured" in result.keys():
+    if "gflop_measured" in result["problem"]:
         if result["power"]["joules_total"] != 0:
             result["gflop_per_joule"] = float(result["gflop_measured"])
             result["gflop_per_joule"] /= float(result["power"]["joules_total"])
