@@ -71,7 +71,7 @@ def main():
             result["gflop_per_joule"] = float(result["problem"]["gflop_measured"])
             result["gflop_per_joule"] /= float(result["power"]["joules_total"])
         if "gflop_per_second" not in result:
-            result["gflop_per_second"] = float(result["gflop_measured"]) / result["time_total"]
+            result["gflop_per_second"] = float(result["problem"]["gflop_measured"]) / result["time_total"]
         else:
             result["gflop_per_second_measured"] = float(result["problem"]["gflop_measured"]) / result["time_total"]
     save_json(result)
