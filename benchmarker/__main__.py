@@ -48,7 +48,7 @@ def main():
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
         if args.flops:
-            result["gflop_measured"] = get_nvprof_counters(command)
+            result["problem"]["gflop_measured"] = get_nvprof_counters(command)
     else:
         if (
             "brand" not in result["platform"]["cpu"]
@@ -59,7 +59,7 @@ def main():
         else:
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops:
-            result["gflop_measured"] = get_counters(command)
+            result["problem"]["gflop_measured"] = get_counters(command)
         elif args.fapp_power:
             total, details = fapp.get_power_total_and_detail(command)
             result["problem"]["power"] = {"total": total, "details": details}
@@ -74,7 +74,6 @@ def main():
             result["gflop_per_second"] = float(result["gflop_measured"]) / result["time_total"]
         else:
             result["gflop_per_second_measured"] = float(result["gflop_measured"]) / result["time_total"]
-
     save_json(result)
     # TODO: don't measure power when measureing flops
 
