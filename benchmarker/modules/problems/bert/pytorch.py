@@ -15,8 +15,10 @@ def estimate_gflop_per_sample(len_seq, embed_dim, lin_dim, nb_layers):
 
 def get_kernel(params):
     cnt_samples = params["problem"]["size"][0]
+    len_seq = params["problem"]["size"][1]
+    assert len_seq <= 512, "BERT sequence length must be <= 512 because of saved positional embeddings"
     gflop_per_sample = estimate_gflop_per_sample(
-        len_seq=params["problem"]["size"][1],
+        len_seq=len_seq,
         embed_dim=768,
         lin_dim=3072,
         nb_layers=12,
