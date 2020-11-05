@@ -8,6 +8,7 @@ def estimate_gflop_per_sample(len_seq, embed_dim, lin_dim, nb_layers):
     mid_linear_gflop = 2 * embed_dim * lin_dim / (10 ** 9)
     top_linear_gflop = 2 * embed_dim * lin_dim / (10 ** 9)
     layer_gflop = attention_gflop + mid_linear_gflop + top_linear_gflop
+    # TODO: add layer norm
     return nb_layers * layer_gflop
 
 
