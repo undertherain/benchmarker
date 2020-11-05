@@ -16,7 +16,7 @@ def get_kernel(params):
     cnt_samples = params["problem"]["size"][0]
     gflop_per_sample = estimate_gflop_per_sample(
         len_seq=params["problem"]["size"][1],
-        embed_dim=params["problem"]["size"][2],
+        embed_dim=768,
         lin_dim=3072,
         nb_layers=12,
     )
