@@ -31,7 +31,8 @@ class Benchmark(IGEMM):
                 a = a.to(device)
                 b = b.to(device)
                 c = c.to(device)
-                c = a @ b  # this is preheat
+                if self.params["preheat"]:
+                    c = a @ b  # this is preheat
                 torch.cuda.synchronize()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
