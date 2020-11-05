@@ -1,4 +1,4 @@
-# Code from https://github.com/jiashenC/torchprof
+# Code from https://github.com/awwong1/torchprof
 
 import functools
 import json
@@ -6,33 +6,30 @@ import torch.autograd.profiler as tprofiler
 from collections import namedtuple, defaultdict, OrderedDict
 
 Trace = namedtuple("Trace", ["path", "leaf", "module"])
-Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences"])
+Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences", "param"])
+#Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences"])
 
-
-def walk_modules(module, name="", path=(), depth=-1):
+def walk_modules(module, name="", path=()):
     """Generator. Walks through a PyTorch Module and outputs Trace tuples"""
     if not name:
         name = module.__class__.__name__
     named_children = list(module.named_children())
     path = path + (name,)
-    yield Trace(path, len(named_children) == 0 or (len(path) > depth and depth != -1), module)
-
-    if len(path) <= depth or depth == -1:
-        # recursively walk into all submodules
-        for name, child_module in named_children:
-            yield from walk_modules(child_module, name=name, path=path, depth=depth)
+    yield Trace(path, len(named_children) == 0 , module)
+    # recursively walk into all submodules
+    for name, child_module in named_children:
+        yield from walk_modules(child_module, name=name, path=path)
 
 
 class Profile(object):
     """Layer by layer profiling of Pytorch models, using the Pytorch autograd profiler.
     """
 
-    def __init__(self, model, enabled=True, use_cuda=False, paths=None, depth=-1):
+    def __init__(self, model, enabled=True, use_cuda=False, paths=None):
         self._model = model
         self.enabled = enabled
         self.use_cuda = use_cuda
         self.paths = paths
-        self.depth = depth
 
         self.entered = False
         self.exited = False
@@ -46,7 +43,7 @@ class Profile(object):
             raise RuntimeError("torchprof profiler is not reentrant")
         self.entered = True
         self._forwards = {}  # store the original forward functions
-        self.traces = tuple(map(self._hook_trace, walk_modules(self._model, depth=self.depth)))
+        self.traces = tuple(map(self._hook_trace, walk_modules(self._model)))
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -79,7 +76,9 @@ class Profile(object):
                 with tprofiler.profile(use_cuda=self.use_cuda) as prof:
                     res = _forward(*args, **kwargs)
                 event_list = prof.function_events
+                #print(event_list)
                 event_list.populate_cpu_children()
+                #print(event_list)
                 # each profile call should be contained in its own list
                 self.trace_profile_events[path].append(event_list)
                 return res
@@ -122,13 +121,16 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
     """Construct human readable output of the profiler traces and events.
     """
     tree = OrderedDict()
-
+    #print("Here is trace:", traces)
     for trace in traces:
+        #print("Printing one of traces:", trace)
         [path, leaf, module] = trace
         current_tree = tree
         # unwrap all of the events, in case model is called multiple times
         events = [te for tevents in trace_events[path] for te in tevents]
+        #print(path)
         for depth, name in enumerate(path, 1):
+            #print(depth, name)
             if name not in current_tree:
                 current_tree[name] = OrderedDict()
             if depth == len(path) and (
@@ -142,23 +144,21 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                                 sum([e.self_cpu_time_total for e in events if e.name == event.name]),
                                 sum([e.cpu_time_total for e in events if e.name == event.name]),
                                 sum([e.cuda_time_total for e in events if e.name == event.name]),
-                                len([e for e in events if e.name == event.name])
-                            )
+                                len([e for e in events if e.name == event.name]),
+                                str(module)
+                            )._asdict()
                         }
                 else:
                     current_tree[name][None] = Measure(
                         sum([e.self_cpu_time_total for e in events]),
                         sum([e.cpu_time_total for e in events]),
                         sum([e.cuda_time_total for e in events]),
-                        len(trace_events[path])
-                    )
+                        len(trace_events[path]),
+                        str(module)
+                    )._asdict()
             current_tree = current_tree[name]
-    
-    #Save tree as json
-    profile_str = json.dumps(tree,indent=4)
-    # print("Printing Json")
-    # print(profile_str)
-
+    #print(tree)
+    """
     tree_lines = flatten_tree(tree)
 
     # dt = ('|', '|-- ', '+-- ', ' ') # ascii
@@ -211,4 +211,6 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
         disp += "{:>{}s}".format(cuda_time, max_lens[3]) + " | "
         disp += "{:>{}s}".format(occurrences, max_lens[4]) + "\n"
 
-    return profile_str
+    print(disp)
+    """
+    return tree
