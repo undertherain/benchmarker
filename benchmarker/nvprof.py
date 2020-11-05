@@ -1,5 +1,3 @@
-import subprocess
-
 from benchmarker.util import abstractprocess
 
 
