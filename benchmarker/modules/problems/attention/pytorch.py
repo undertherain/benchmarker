@@ -4,6 +4,7 @@ from . import estimate_attention_gflop_per_sample
 
 class Net(nn.MultiheadAttention):
     def forward(self, data):
+        print(data.shape)
         super().forward(data, data, data)
 
 
