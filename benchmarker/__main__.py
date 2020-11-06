@@ -61,8 +61,8 @@ def main():
         if args.flops:
             result["problem"]["gflop_measured"] = get_counters(command)
         elif args.fapp_power:
-            total, details = fapp.get_power_total_and_detail(command)
-            result["problem"]["power"] = {"total": total, "details": details}
+            avg_watt_total, details = fapp.get_power_total_and_detail(command)
+            result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
