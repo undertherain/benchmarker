@@ -99,7 +99,6 @@ class Benchmark(INeuralNet):
                     #print(prof.display(show_events=False))
                     profile_output_as_dict = prof.display(show_events=False)
                     #print(profile_output_as_dict)
-                    self.params["path_out"] = "./logs/profile/"
                     self.params["profile_data"] = profile_output_as_dict
 
         if self.params["nb_gpus"] > 0:
