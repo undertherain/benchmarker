@@ -24,16 +24,7 @@ def filter_json_from_output(lines):
     str_json = parts[-1].strip()
     return json.loads(str_json)
 
-
-def main():
-    parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--flops", action="store_true")
-    parser.add_argument("--fapp_power", action="store_true")
-    parser.add_argument("--profile_pytorch", action="store_true")
-    args, unknown_args = parser.parse_known_args()
-    print(unknown_args) 
-    command = ["python3", "-m", "benchmarker.benchmarker"]
-    command += unknown_args
+def run_cmd_and_get_output(command):
     proc = abstractprocess.Process("local", command=command)
     proc_output = proc.get_output()
     returncode = proc_output["returncode"]
@@ -44,6 +35,17 @@ def main():
 
     process_out = proc_output["out"]
     result = filter_json_from_output(process_out)
+    return result
+
+def main():
+    parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
+    parser.add_argument("--flops", action="store_true")
+    parser.add_argument("--fapp_power", action="store_true")
+    parser.add_argument("--profile_pytorch", action="store_true")
+    args, unknown_args = parser.parse_known_args()
+    command = ["python3", "-m", "benchmarker.benchmarker"]
+    command += unknown_args
+    result = run_cmd_and_get_output(command)
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
     if result["nb_gpus"] > 0:
@@ -64,25 +66,11 @@ def main():
         elif args.fapp_power:
             total, details = fapp.get_power_total_and_detail(command)
             result["problem"]["power"] = {"total": total, "details": details}
-        elif args.profile_pytorch:
-            print("inside profiling pytorch")
-
-    #Collect profile data when profile_pytorch switch is enabled
+    # Collect profile data when profile_pytorch switch is enabled
     if args.profile_pytorch:
         command += ["--profile_pytorch"]
-        print(command)
-        proc = abstractprocess.Process("local", command=command)
-        proc_output = proc.get_output()
-        returncode = proc_output["returncode"]
-
-        if returncode != 0:
-            process_err = proc_output["err"]
-            sys.exit(process_err)
-
-        process_out = proc_output["out"]
-        profile_result = filter_json_from_output(process_out)
-        #print(profile_result)
-
+        profile_result = run_cmd_and_get_output(command)
+        # print(profile_result)
         result["profile_pytorch"] = True
         result["profile_data"] = profile_result["profile_data"]
         result["path_out"] = "./logs/profile"
