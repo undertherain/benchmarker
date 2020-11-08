@@ -16,7 +16,8 @@ Hopefully this should be fixed when we start importing models from ONNX
 import math
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+# import torch.nn.functional as F
+from benchmarker.modules.problems.bert_custom import estimate_gflop_per_sample
 
 
 class PositionalEncoding(nn.Module):
@@ -66,7 +67,7 @@ class PositionalEncoding(nn.Module):
 class TransformerModel(nn.Module):
     """Container module with an encoder, a recurrent or transformer module, and a decoder."""
 
-    def __init__(self, ntokens, ninp, nhead, nhid, nlayers, dropout=0.5):
+    def __init__(self, ntokens, ninp, nhead, dim_mlp, nlayers, dropout=0.5):
         super(TransformerModel, self).__init__()
         try:
             from torch.nn import TransformerEncoder, TransformerEncoderLayer
@@ -75,7 +76,10 @@ class TransformerModel(nn.Module):
         self.model_type = 'Transformer'
         self.src_mask = None
         self.pos_encoder = PositionalEncoding(ninp, dropout)
-        encoder_layers = TransformerEncoderLayer(ninp, nhead, nhid, dropout)
+        encoder_layers = TransformerEncoderLayer(d_model=ninp,
+                                                 nhead=nhead,
+                                                 dim_feedforward=dim_mlp,
+                                                 dropout=dropout)
         self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
         self.encoder = nn.Embedding(ntokens, ninp)
         self.ninp = ninp
@@ -115,10 +119,21 @@ class TransformerModel(nn.Module):
 
 def get_kernel(params):
     # TODO: use cnt_tokens in data generation as max rand!
+    cnt_samples = params["problem"]["size"][0]
+    len_seq = params["problem"]["size"][1]
+    dim_mlp = params["problem"]["cnt_units"] * 4
+    gflop_per_sample = estimate_gflop_per_sample(
+        len_seq=len_seq,
+        embed_dim=params["problem"]["cnt_units"],
+        lin_dim=dim_mlp,
+        nb_layers=params["problem"]["cnt_layers"],
+    )
+    gflop_estimated = gflop_per_sample * cnt_samples * params["nb_epoch"]
+    params["problem"]["gflop_estimated"] = gflop_estimated
     Net = TransformerModel(ntokens=params["problem"]["cnt_tokens"],
                            ninp=params["problem"]["cnt_units"],
                            nhead=params["problem"]["cnt_heads"],
-                           nhid=params["problem"]["cnt_units"],
+                           dim_mlp=dim_mlp,
                            nlayers=params["problem"]["cnt_layers"],
                            dropout=0.5)
     return Net
