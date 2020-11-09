@@ -76,9 +76,7 @@ class Profile(object):
                 with tprofiler.profile(use_cuda=self.use_cuda) as prof:
                     res = _forward(*args, **kwargs)
                 event_list = prof.function_events
-                #print(event_list)
                 event_list.populate_cpu_children()
-                #print(event_list)
                 # each profile call should be contained in its own list
                 self.trace_profile_events[path].append(event_list)
                 return res
@@ -121,16 +119,13 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
     """Construct human readable output of the profiler traces and events.
     """
     tree = OrderedDict()
-    #print("Here is trace:", traces)
     for trace in traces:
-        #print("Printing one of traces:", trace)
         [path, leaf, module] = trace
         current_tree = tree
         # unwrap all of the events, in case model is called multiple times
         events = [te for tevents in trace_events[path] for te in tevents]
         #print(path)
         for depth, name in enumerate(path, 1):
-            #print(depth, name)
             if name not in current_tree:
                 current_tree[name] = OrderedDict()
             if depth == len(path) and (
@@ -157,60 +152,4 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                         str(module)
                     )._asdict()
             current_tree = current_tree[name]
-    #print(tree)
-    """
-    tree_lines = flatten_tree(tree)
-
-    # dt = ('|', '|-- ', '+-- ', ' ') # ascii
-    dt = ("\u2502", "\u251c\u2500\u2500 ", "\u2514\u2500\u2500 ", " ")  # ascii-ex
-    format_lines = []
-    for idx, tree_line in enumerate(tree_lines):
-        depth, name, measures = tree_line
-        self_cpu_time = ""
-        cpu_time = ""
-        cuda_time = ""
-        occurrences = ""
-        if measures:
-            self_cpu_time = tprofiler.format_time(measures.self_cpu_total)
-            cpu_time = tprofiler.format_time(measures.cpu_total)
-            cuda_time = tprofiler.format_time(measures.cuda_total)
-            occurrences = str(measures.occurrences)
-        pre = ""
-        next_depths = [pl[0] for pl in tree_lines[idx + 1 :]]
-        current = True
-        while depth:
-            if current:
-                if depth in next_depths and next_depths[0] >= depth:
-                    pre = dt[1]
-                else:
-                    pre = dt[2]
-            else:
-                if depth in next_depths:
-                    pre = dt[0] + pre
-                else:
-                    pre = dt[3] + pre
-            depth -= 1
-            current = False
-        format_lines.append([pre + name, self_cpu_time, cpu_time, cuda_time, occurrences])
-
-    # construct the table
-    heading = ("Module", "Self CPU total", "CPU total", "CUDA total", "Occurrences")
-    max_lens = [max(map(len, col)) for col in zip(*([heading] + format_lines))]
-    # create the heading
-    disp = "{:<{}s}".format(heading[0], max_lens[0]) + " | "
-    disp += "{:>{}s}".format(heading[1], max_lens[1]) + " | "
-    disp += "{:>{}s}".format(heading[2], max_lens[2]) + " | "
-    disp += "{:>{}s}".format(heading[3], max_lens[3]) + " | "
-    disp += "{:>{}s}".format(heading[4], max_lens[4]) + "\n"
-    disp += "-|-".join(["-" * mlen for mlen in max_lens]) + "\n"
-    for line in format_lines:
-        label, self_cpu_time, cpu_time, cuda_time, occurrences = line
-        disp += "{:<{}s}".format(label, max_lens[0]) + " | "
-        disp += "{:>{}s}".format(self_cpu_time, max_lens[1]) + " | "
-        disp += "{:>{}s}".format(cpu_time, max_lens[2]) + " | "
-        disp += "{:>{}s}".format(cuda_time, max_lens[3]) + " | "
-        disp += "{:>{}s}".format(occurrences, max_lens[4]) + "\n"
-
-    print(disp)
-    """
     return tree

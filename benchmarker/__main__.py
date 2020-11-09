@@ -70,7 +70,6 @@ def main():
     if args.profile_pytorch:
         command += ["--profile_pytorch"]
         profile_result = run_cmd_and_get_output(command)
-        # print(profile_result)
         result["profile_pytorch"] = True
         result["profile_data"] = profile_result["profile_data"]
         result["path_out"] = "./logs/profile"
