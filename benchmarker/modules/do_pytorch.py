@@ -79,7 +79,6 @@ class Benchmark(INeuralNet):
         # correct = 0
         with torch.no_grad(): 
             for data, target in zip(self.x_train, self.y_train):
-                print(data)
                 if self.params["backend"] == "DNNL":
                     data = data.to_mkldnn()
                 # TODO: add option to keep data on GPU
