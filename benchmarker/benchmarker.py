@@ -32,6 +32,8 @@ def parse_basic_args(argv):
     parser.add_argument("--problem_size", default=None)
     parser.add_argument("--batch_size", default=None)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
+    parser.add_argument("--preheat", action="store_true")
+
     # parser.add_argument('--misc')
     return parser.parse_known_args(argv)
 
@@ -58,6 +60,7 @@ def run(argv):
     # TODO: get a list of support problems for a given framework
 
     # TODO: load problem's metadata from the problem itself
+    params["preheat"] = args.preheat
     params["problem"] = {}
     params["problem"]["name"] = args.problem
     # TODO: move this to the root base benchmark
@@ -82,8 +85,8 @@ def run(argv):
     params["power"]["avg_watt_total"] = 0
     mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
     benchmark = getattr(mod, "Benchmark")(params, unknown_args)
-    benchmark.run()
-    # save_json(params)
+    # TODO: make this optional
+    benchmark.measure_power_and_run()
     print("benchmarkmagic#!%")
     print_json(params)
 

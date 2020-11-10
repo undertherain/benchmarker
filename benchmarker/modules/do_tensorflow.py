@@ -2,9 +2,9 @@
 """TensorFlow support.
 """
 
+import argparse
 import os
 from timeit import default_timer as timer
-import argparse
 
 import tensorflow as tf
 from tensorflow.keras.mixed_precision import experimental as mixed_precision
@@ -28,8 +28,8 @@ class Benchmark(INeuralNet):
         # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
         self.x_train = x_train.reshape((-1,) + x_train.shape[2:])
         self.y_train = y_train.reshape((-1,) + y_train.shape[2:])
-        # preheat
-        self.net.predict(self.x_train, self.params["batch_size"])
+        if self.params["preheat"]:
+            self.net.predict(self.x_train, self.params["batch_size"])
 
     def get_strategy(self):
         gpu_count_same = self.params["nb_gpus"] == len(
@@ -67,7 +67,7 @@ class Benchmark(INeuralNet):
         available. https://www.tensorflow.org/guide/tpu
         """
         if self.params["problem"]["precision"] == "mixed":
-            policy = mixed_precision.Policy('mixed_float16')
+            policy = mixed_precision.Policy("mixed_float16")
             mixed_precision.set_policy(policy)
         with self.get_strategy().scope():
             super().get_kernel(module, remaining_args)
@@ -76,21 +76,24 @@ class Benchmark(INeuralNet):
         super().set_random_seed(seed)
         tf.random.set_seed(seed)
 
-    def run_internal(self):
+    def run(self):
         model = self.net
         nb_epoch = self.params["nb_epoch"]
         if self.params["mode"] == "training":
             start = timer()
-            model.fit(self.x_train,
-                      self.y_train,
-                      batch_size=self.params["batch_size"],
-                      epochs=nb_epoch, verbose=1)
+            model.fit(
+                self.x_train,
+                self.y_train,
+                batch_size=self.params["batch_size"],
+                epochs=nb_epoch,
+                verbose=1,
+            )
         else:
             start = timer()
             for i in range(nb_epoch):
                 model.predict(self.x_train, self.params["batch_size"], verbose=1)
         end = timer()
-        self.params["time_total"] = (end - start)
+        self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         version_backend = tf.__version__
         # TODO: make this a nested dict

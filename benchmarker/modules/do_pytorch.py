@@ -99,7 +99,7 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
 
-    def run_internal(self):
+    def run(self):
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)

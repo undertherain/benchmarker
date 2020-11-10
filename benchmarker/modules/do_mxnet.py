@@ -15,7 +15,7 @@ class Benchmark(INeuralNet):
         # TODO: confirm tensor ordering in mxnet
         # self.params["channels_first"] = True
 
-    def run_internal(self):
+    def run(self):
         params = self.params
         x_train, y_train = self.load_data()
 

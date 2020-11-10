@@ -2,9 +2,10 @@
 import argparse
 import os
 from .ops import detalize_ops_results
+from .i_benchmark import IBenchmark
 
 
-class IGEMM():
+class IGEMM(IBenchmark):
     """Interface for all deep learning modules"""
 
     def __init__(self, params, remaining_args=None):
