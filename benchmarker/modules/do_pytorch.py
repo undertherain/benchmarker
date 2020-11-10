@@ -1,7 +1,6 @@
 import argparse
 from timeit import default_timer as timer
 
-import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
