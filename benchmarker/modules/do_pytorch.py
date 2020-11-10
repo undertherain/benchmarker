@@ -77,7 +77,7 @@ class Benchmark(INeuralNet):
     def inference(self, model, device):
         # test_loss = 0
         # correct = 0
-        with torch.no_grad(): 
+        with torch.no_grad():
             for data, target in zip(self.x_train, self.y_train):
                 if self.params["backend"] == "DNNL":
                     data = data.to_mkldnn()
@@ -91,13 +91,10 @@ class Benchmark(INeuralNet):
 
                 # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                 if self.params["profile_pytorch"]:
-                    profile_cuda = False
-                    if self.device.type == "cuda":
-                        profile_cuda = True
+                    profile_cuda = self.device.type == "cuda"
                     with Profile(model, use_cuda=profile_cuda) as prof:
                         model(data)
                     profile_output_as_dict = prof.display(show_events=False)
-                    # print(profile_output_as_dict)
                     self.params["profile_data"] = profile_output_as_dict
 
         if self.params["nb_gpus"] > 0:
