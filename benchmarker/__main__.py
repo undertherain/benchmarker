@@ -51,7 +51,7 @@ def main():
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
         if args.flops:
-            result["problem"]["gflop_measured"] = get_nvprof_counters(command)
+            result["problem"]["gflop_measured"] = get_nvprof_counters(command, result["problem"]["precision"])
     else:
         if (
             "brand" not in result["platform"]["cpu"]
