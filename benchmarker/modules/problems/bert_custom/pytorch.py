@@ -108,7 +108,9 @@ class TransformerModel(nn.Module):
             self.src_mask = None
 
         src = self.encoder(src) * math.sqrt(self.ninp)
+        print(type(src))
         src = self.pos_encoder(src)
+        src = src.to_mkldnn()
         output = self.transformer_encoder(src, self.src_mask)
         output = output[-1]
         output = self.decoder(output)
