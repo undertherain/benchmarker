@@ -10,12 +10,10 @@ class IBenchmark:
         power_monitor_cpu.start()
         try:
             results = self.run()
-        except Exception as e:
+        finally:
             if self.params["nb_gpus"] > 0:
                 power_monitor_gpu.stop()
-            raise e
         if self.params["nb_gpus"] > 0:
-            power_monitor_gpu.stop()
             power_monitor_gpu.post_process()
         power_monitor_cpu.stop()
         self.post_process()
