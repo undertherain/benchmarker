@@ -62,7 +62,10 @@ def main():
         else:
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops:
-            result["problem"]["gflop_measured"] = get_counters(command)
+            if 'Intel(R)' in result["device"].split(" "):
+                result["problem"]["gflop_measured"] = get_counters(command)
+            else:
+                result["problem"]["gflop_measured"] = "N/A"
         elif args.fapp_power:
             avg_watt_total, details = fapp.get_power_total_and_detail(command)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
@@ -77,7 +80,7 @@ def main():
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if "gflop_measured" in result["problem"]:
+    if not isinstance(result["problem"]["gflop_measured"], str):
         if result["power"]["joules_total"] != 0:
             result["gflop_per_joule"] = float(result["problem"]["gflop_measured"])
             result["gflop_per_joule"] /= float(result["power"]["joules_total"])
