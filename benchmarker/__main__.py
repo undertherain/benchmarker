@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import sys
+import re 
 
 from benchmarker import fapp
 from benchmarker.nvprof import get_nvprof_counters
@@ -36,6 +37,25 @@ def run_cmd_and_get_output(command):
     process_out = proc_output["out"]
     result = filter_json_from_output(process_out)
     return result
+
+def parse_dict(profile_dict):
+    for key,value in profile_dict.items():
+        if isinstance(value, dict):
+            parse_dict(value)
+        else:
+            if key == "param": 
+                # Split strings with multiple delimiters
+                sep_list = re.split(',|\(|\)|\=|\ ', value) 
+                if "Conv2d" in sep_list:
+                    params = {}
+                    params["name"] = sep_list[0]
+                    params["in_channels"] = sep_list[1]
+                    params["out_channels"] = sep_list[3]
+                    for param_name in ["kernel_size", "stride", "padding"]:
+                        if param_name in sep_list:
+                            index = sep_list.index("kernel_size") 
+                            params[param_name] = sep_list[index+2]
+                    profile_dict[key] = params
 
 def main():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
@@ -73,6 +93,7 @@ def main():
         result["profile_pytorch"] = True
         result["profile_data"] = profile_result["profile_data"]
         result["path_out"] = "./logs/profile"
+        parse_dict(result["profile_data"])
          
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
