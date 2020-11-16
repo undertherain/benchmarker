@@ -17,7 +17,6 @@ def get_nvprof_counters(command, precision):
     ]
     proc = abstractprocess.Process("local", command=nvprof_command + command)
     process_err = proc.get_output()["err"]
-    print(process_err)
     gflop_measured = 0.0
     for line in process_err.split("\n"):
         if sep in line:
