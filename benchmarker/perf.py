@@ -6,7 +6,7 @@ perf_counters_multipliers = {'r5302c7': 1,
                              'r5308c7': 4,
                              'r5320c7': 8}
 
-def get_counters(command):
+def get_cpu_flops(command):
     flop_measured = 0
     for counter in perf_counters_multipliers:
         perf_command = ["perf", "stat", "-e", counter]
