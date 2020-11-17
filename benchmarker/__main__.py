@@ -49,7 +49,7 @@ def main():
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
         if args.flops and result["problem"]["precision"] in ["FP16", "FP32"]:
-            result["problem"]["gflop_measured"] = nvprof.get_gpu_flops(command, result["problem"]["precision"])
+            result["problem"]["gflop_measured"] = nvprof.get_gflop(command, result["problem"]["precision"])
     else:
         if (
             "brand" not in result["platform"]["cpu"]
@@ -60,7 +60,7 @@ def main():
         else:
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops and 'Intel' in result["device"]:
-            result["problem"]["gflop_measured"] = perf.get_cpu_flops(command)
+            result["problem"]["gflop_measured"] = perf.get_gflop(command)
         elif args.fapp_power:
             avg_watt_total, details = fapp.get_power_total_and_detail(command)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}

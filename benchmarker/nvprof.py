@@ -1,7 +1,7 @@
 from benchmarker.util import abstractprocess
 
 
-def get_gpu_flops(command, precision):
+def get_gflop(command, precision):
     if precision == "FP16":
         metric = "flop_count_hp"
         sep_str = "Half"
