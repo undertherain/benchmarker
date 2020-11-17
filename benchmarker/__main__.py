@@ -5,9 +5,7 @@ import json
 import os
 import sys
 
-from benchmarker import fapp
-from benchmarker.nvprof import get_nvprof_counters
-from benchmarker.perf import get_counters
+from benchmarker import fapp, nvprof, perf
 # from .benchmarker import run
 from benchmarker.util import abstractprocess
 from benchmarker.util.cute_device import get_cute_device_str
@@ -50,8 +48,8 @@ def main():
     result["platform"] = sysinfo.get_sys_info()
     if result["nb_gpus"] > 0:
         result["device"] = result["platform"]["gpus"][0]["brand"]
-        if args.flops:
-            result["problem"]["gflop_measured"] = get_nvprof_counters(command, result["problem"]["precision"])
+        if args.flops and result["problem"]["precision"] in ["FP16", "FP32"]:
+            result["problem"]["gflop_measured"] = nvprof.get_gpu_flops(command, result["problem"]["precision"])
     else:
         if (
             "brand" not in result["platform"]["cpu"]
@@ -61,11 +59,8 @@ def main():
             result["device"] = "unknown CPU"
         else:
             result["device"] = result["platform"]["cpu"]["brand"]
-        if args.flops:
-            if 'Intel(R)' in result["device"].split(" "):
-                result["problem"]["gflop_measured"] = get_counters(command)
-            else:
-                result["problem"]["gflop_measured"] = "N/A"
+        if args.flops and 'Intel' in result["device"]:
+            result["problem"]["gflop_measured"] = perf.get_cpu_flops(command)
         elif args.fapp_power:
             avg_watt_total, details = fapp.get_power_total_and_detail(command)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
@@ -80,7 +75,7 @@ def main():
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if not isinstance(result["problem"]["gflop_measured"], str):
+    if "gflop_measured" in result["problem"]:
         if result["power"]["joules_total"] != 0:
             result["gflop_per_joule"] = float(result["problem"]["gflop_measured"])
             result["gflop_per_joule"] /= float(result["power"]["joules_total"])
