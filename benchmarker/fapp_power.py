@@ -1,8 +1,6 @@
 import csv
 from pathlib import Path
 
-import pandas as pd
-
 
 def split_csv(pafile):
     with open(pafile) as csvfile:
@@ -18,6 +16,8 @@ def split_csv(pafile):
 
 
 def get_df(csv):
+    import pandas as pd
+
     return pd.DataFrame(csv[1:], columns=csv[0])
 
 
