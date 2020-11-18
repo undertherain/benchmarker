@@ -4,7 +4,6 @@
 
 from timeit import default_timer as timer
 import torch
-import numpy as np
 from .i_gemm import IGEMM
 
 
