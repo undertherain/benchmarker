@@ -1,12 +1,9 @@
-import torch
-
-
 class Net:
-    def __call__(data):
+    def __call__(self, data):
         x, y = data
         result = x @ y
         return result
 
 
 def get_kernel(params):
-    return Net
+    return Net()

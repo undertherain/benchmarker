@@ -26,11 +26,12 @@ class Benchmark(IGEMM):
                 self.b = self.b.to(device)
                 self.c = self.c.to(device)
                 if self.params["preheat"]:
-                    self.c = self.a @ self.b  # this is preheat
+                    self.c = self.net((self.a, self.b))
+  # this is preheat
                 torch.cuda.synchronize()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
-            self.c = self.a @ self.b  # + c
+            self.c = self.net((self.a, self.b))
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
         time_end = timer()
