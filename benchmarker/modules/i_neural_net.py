@@ -34,6 +34,9 @@ class INeuralNet(IBenchmark):
         else:
             params["problem"]["cnt_samples"] = params["problem"]["size"][0]
         assert params["problem"]["cnt_samples"] % params["batch_size"] == 0
+        params["problem"]["cnt_batches_per_epoch"] = (
+            params["problem"]["cnt_samples"] // self.params["batch_size"]
+        )
         if self.params["nb_gpus"] > 0:
             self.params["batch_size"] = (
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]
@@ -61,20 +64,6 @@ class INeuralNet(IBenchmark):
         except ImportError:
             assert remaining_args == [], f"unexpected args: {remaining_args}"
         self.net = module_kernel.get_kernel(self.params)
-
-    def load_data(self):
-        params = self.params
-        params["problem"]["cnt_batches_per_epoch"] = (
-            params["problem"]["cnt_samples"] // self.params["batch_size"]
-        )
-        mod = importlib.import_module(
-            "benchmarker.modules.problems." + params["problem"]["name"] + ".data"
-        )
-        get_data = getattr(mod, "get_data")
-        data = get_data(params)
-        # params["problem"]["bytes_x_train"] = data[0].nbytes
-        # params["problem"]["size_sample"] = data[0][0].shape
-        return data
 
     def set_random_seed(self, seed):
         """Default function to set random seeds which sets numpy and random

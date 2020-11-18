@@ -1,3 +1,4 @@
+import importlib
 from .power_mon import power_monitor_GPU, power_monitor_RAPL
 
 
@@ -18,3 +19,12 @@ class IBenchmark:
         power_monitor_cpu.stop()
         self.post_process()
         return results
+
+    def load_data(self):
+        params = self.params
+        mod = importlib.import_module(
+            "benchmarker.modules.problems." + params["problem"]["name"] + ".data"
+        )
+        get_data = getattr(mod, "get_data")
+        data = get_data(params)
+        return data
