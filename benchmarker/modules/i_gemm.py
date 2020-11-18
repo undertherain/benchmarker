@@ -1,4 +1,4 @@
-"""Module contains the interface for all deep learning modules"""
+"""Module contains the interface for all gemm learning modules"""
 import argparse
 import os
 from .ops import detalize_ops_results
