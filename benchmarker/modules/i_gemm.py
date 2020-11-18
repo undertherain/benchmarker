@@ -20,11 +20,12 @@ class IGEMM(IBenchmark):
         params["nb_epoch"] = args.nb_epoch
         params["path_out"] = os.path.join(params["path_out"],
                                           params["problem"]["precision"])
-        self.a, self.b, self.c = self.load_data()
-        params["problem"]["gflop_estimated"] = params["problem"]["flop_estimated"] / (1000 ** 3)
-        if params["problem"]["name"] != "gemm":
+        self.data = self.load_data()
+        if params["problem"]["name"] not in ["gemm", "batchmatmul"]:
             raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")
 
+
     def post_process(self):
+        self.params["problem"]["gflop_estimated"] = self.params["problem"]["flop_estimated"] / (1000 ** 3)
         detalize_ops_results(self.params)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]

@@ -7,6 +7,14 @@ import torch
 from .i_gemm import IGEMM
 
 
+def data_to_device(data, device):
+    if type(data) == torch.Tensor:
+        data = data.to(device)
+    else:
+        for element in data:
+            data_to_device(element, device)
+
+
 class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
@@ -20,15 +28,16 @@ class Benchmark(IGEMM):
                 device = torch.device("cuda")
                 id_gpu = self.params["gpus"][0]
                 torch.cuda.set_device(id_gpu)
-                self.a = self.a.to(device)
-                self.b = self.b.to(device)
-                self.c = self.c.to(device)
+                data_to_device(self.data, device)
+                #self.a = self.a.to(device)
+                #self.b = self.b.to(device)
+                #self.c = self.c.to(device)
                 if self.params["preheat"]:
-                    self.c = self.net((self.a, self.b))
+                    self.net(self.data)
                 torch.cuda.synchronize()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
-            self.c = self.net((self.a, self.b))
+            self.net(self.data)
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
         time_end = timer()
