@@ -29,9 +29,6 @@ class Benchmark(IGEMM):
                 id_gpu = self.params["gpus"][0]
                 torch.cuda.set_device(id_gpu)
                 data_to_device(self.data, device)
-                #self.a = self.a.to(device)
-                #self.b = self.b.to(device)
-                #self.c = self.c.to(device)
                 if self.params["preheat"]:
                     self.net(self.data)
                 torch.cuda.synchronize()
