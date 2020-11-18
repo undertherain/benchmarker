@@ -72,8 +72,8 @@ class INeuralNet(IBenchmark):
         )
         get_data = getattr(mod, "get_data")
         data = get_data(params)
-        params["problem"]["bytes_x_train"] = data[0].nbytes
-        params["problem"]["size_sample"] = data[0][0].shape
+        # params["problem"]["bytes_x_train"] = data[0].nbytes
+        # params["problem"]["size_sample"] = data[0][0].shape
         return data
 
     def set_random_seed(self, seed):
