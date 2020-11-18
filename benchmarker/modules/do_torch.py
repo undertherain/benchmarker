@@ -11,7 +11,6 @@ from .i_gemm import IGEMM
 class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
-        self.a, self.b, self.c = self.load_data()
         self.get_kernel(params, remaining_args)
 
     def run(self):
