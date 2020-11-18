@@ -21,8 +21,6 @@ class IGEMM(IBenchmark):
         params["path_out"] = os.path.join(params["path_out"],
                                           params["problem"]["precision"])
         self.a, self.b, self.c = self.load_data()
-        if isinstance(params["problem"]["size"], int):
-            params["problem"]["size"] = [params["problem"]["size"]] * 3
         params["problem"]["gflop_estimated"] = params["problem"]["flop_estimated"] / (1000 ** 3)
         if params["problem"]["name"] != "gemm":
             raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")

@@ -3,6 +3,8 @@ import numpy as np
 
 
 def get_data(params):
+    if isinstance(params["problem"]["size"], int):
+        params["problem"]["size"] = [params["problem"]["size"]] * 3
     M, N, K = params["problem"]["size"]
     flop = (2.0 * M * N * K)
     params["problem"]["flop_estimated"] = flop * params["nb_epoch"]
