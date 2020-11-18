@@ -3,10 +3,10 @@ import numpy as np
 
 
 def get_data(params):
-    cnt_matrices = params["problem"]["size"][0]
-    m = params["problem"]["size"][1]
-    n = params["problem"]["size"][2]
-    k = params["problem"]["size"][3]
+    cnt_matrices = params["batch_size"]
+    m = params["problem"]["size"][0]
+    n = params["problem"]["size"][1]
+    k = params["problem"]["size"][2]
     matr_1 = torch.randn(cnt_matrices, m, n)
     matr_2 = torch.randn(cnt_matrices, n, k)
     Y = np.ones(cnt_matrices, dtype=np.int32)

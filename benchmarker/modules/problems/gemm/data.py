@@ -12,6 +12,5 @@ def get_data(params):
         a = torch.tensor(np.random.random((M, N)).astype(dtype))
         b = torch.tensor(np.random.random((N, K)).astype(dtype))
         c = torch.tensor(np.random.random((M, K)).astype(dtype))
-        print("custom torch tensor")
         return a, b, c
     return "dummy data"

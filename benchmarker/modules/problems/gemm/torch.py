@@ -1,4 +1,4 @@
-class Net:
+class Kernel:
     def __call__(self, data):
         x, y = data
         result = x @ y
@@ -6,4 +6,4 @@ class Net:
 
 
 def get_kernel(params):
-    return Net()
+    return Kernel()

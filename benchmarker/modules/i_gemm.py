@@ -23,8 +23,7 @@ class IGEMM(IBenchmark):
         if isinstance(params["problem"]["size"], int):
             params["problem"]["size"] = [params["problem"]["size"]] * 3
         M, N, K = params["problem"]["size"]
-        self.matrix_size = M, N, K
-        params["problem"]["size"] = self.matrix_size
+        # self.matrix_size = M, N, K
         flop = (2.0 * M * N * K)
         params["problem"]["flop_estimated"] = flop * self.params["nb_epoch"]
         params["problem"]["gflop_estimated"] = params["problem"]["flop_estimated"] / (1000 ** 3)
