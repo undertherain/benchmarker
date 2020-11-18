@@ -1,8 +1,8 @@
 class Kernel:
     def __call__(self, data):
-        x, y = data
-        result = x @ y
-        return result
+        x, y, c = data
+        c = x @ y  # + c
+        return c
 
 
 def get_kernel(params):
