@@ -6,7 +6,7 @@ from .i_benchmark import IBenchmark
 
 
 class IGEMM(IBenchmark):
-    """Interface for all deep learning modules"""
+    """Interface for all gemm learning modules"""
 
     def __init__(self, params, remaining_args=None):
         self.params = params
