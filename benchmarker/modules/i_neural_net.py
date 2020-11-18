@@ -1,6 +1,5 @@
 """Module contains the interface for all deep learning modules"""
 import argparse
-import importlib
 import os
 import random
 
