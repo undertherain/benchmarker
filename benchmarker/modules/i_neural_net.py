@@ -45,26 +45,6 @@ class INeuralNet(IBenchmark):
             self.set_random_seed(int(parsed_args.random_seed))
         self.get_kernel(params, remaining_args)
 
-    def get_kernel(self, params, remaining_args):
-        """Default function to set `self.net`.  The derived do_* classes can
-        override this function if there is some framework specific
-        logic involved (e.g. GPU/TPU management etc).
-        """
-        path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
-        path_kernel = (
-            f"benchmarker.modules.problems.{params['problem']['name']}."
-            f"{params['framework']}"
-        )
-        # todo(vatai): combine tflite and tensorflow
-        path_kernel = path_kernel.replace("tflite", "tensorflow")
-        module_kernel = importlib.import_module(path_kernel)
-        try:
-            module_params = importlib.import_module(path_params)
-            module_params.set_extra_params(params, remaining_args)
-        except ImportError:
-            assert remaining_args == [], f"unexpected args: {remaining_args}"
-        self.net = module_kernel.get_kernel(self.params)
-
     def set_random_seed(self, seed):
         """Default function to set random seeds which sets numpy and random
         modules seed.  This function should be overridden in the
