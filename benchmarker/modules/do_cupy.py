@@ -15,7 +15,7 @@ class Benchmark(IGEMM):
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] != 1:
                 raise Exception("1 GPU is needed for CuPy")
-        M, N, K = self.matrix_size
+        M, N, K = self["problem"]["size"]
         types = {"FP16": cupy.float16,
                  "FP32": cupy.float32}
         dtype = types[self.params["problem"]["precision"]]
