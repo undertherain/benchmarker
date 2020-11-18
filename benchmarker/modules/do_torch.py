@@ -11,14 +11,7 @@ from .i_gemm import IGEMM
 class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
-        M, N, K = self.matrix_size
-        types = {"FP16": np.float16,
-                 "FP32": np.float32,
-                 "FP64": np.float64}
-        dtype = types[self.params["problem"]["precision"]]
-        self.a = torch.tensor(np.random.random((M, N)).astype(dtype))
-        self.b = torch.tensor(np.random.random((N, K)).astype(dtype))
-        self.c = torch.tensor(np.random.random((M, K)).astype(dtype))
+        self.a, self.b, self.c = self.load_data()
 
     def run(self):
         if "nb_gpus" in self.params:
