@@ -4,23 +4,23 @@
 
 from timeit import default_timer as timer
 import torch
-import numpy as np
 from .i_gemm import IGEMM
+
+
+def data_to_device(data, device):
+    if type(data) == torch.Tensor:
+        data = data.to(device)
+    else:
+        for element in data:
+            data_to_device(element, device)
 
 
 class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
+        self.get_kernel(params, remaining_args)
 
     def run(self):
-        M, N, K = self.matrix_size
-        types = {"FP16": np.float16,
-                 "FP32": np.float32,
-                 "FP64": np.float64}
-        dtype = types[self.params["problem"]["precision"]]
-        a = torch.tensor(np.random.random((M, N)).astype(dtype))
-        b = torch.tensor(np.random.random((N, K)).astype(dtype))
-        c = torch.tensor(np.random.random((M, K)).astype(dtype))
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] > 1:
                 raise RuntimeError("Only 1 GPU is supported")
@@ -28,15 +28,13 @@ class Benchmark(IGEMM):
                 device = torch.device("cuda")
                 id_gpu = self.params["gpus"][0]
                 torch.cuda.set_device(id_gpu)
-                a = a.to(device)
-                b = b.to(device)
-                c = c.to(device)
+                data_to_device(self.data, device)
                 if self.params["preheat"]:
-                    c = a @ b  # this is preheat
+                    self.net(self.data)
                 torch.cuda.synchronize()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
-            c = a @ b  # + c
+            self.net(self.data)
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
         time_end = timer()
