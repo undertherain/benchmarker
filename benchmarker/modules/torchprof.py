@@ -6,8 +6,7 @@ import torch.autograd.profiler as tprofiler
 from collections import namedtuple, defaultdict, OrderedDict
 
 Trace = namedtuple("Trace", ["path", "leaf", "module"])
-Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences", "param"])
-#Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences"])
+Measure = namedtuple("Measure", ["self_cpu_total", "cpu_total", "cuda_total", "occurrences", "param", "input_shape"])
 
 def walk_modules(module, name="", path=()):
     """Generator. Walks through a PyTorch Module and outputs Trace tuples"""
@@ -73,7 +72,7 @@ class Profile(object):
 
             @functools.wraps(_forward)
             def wrap_forward(*args, **kwargs):
-                with tprofiler.profile(use_cuda=self.use_cuda) as prof:
+                with tprofiler.profile(use_cuda=self.use_cuda,record_shapes=True) as prof:
                     res = _forward(*args, **kwargs)
                 event_list = prof.function_events
                 event_list.populate_cpu_children()
@@ -124,7 +123,6 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
         current_tree = tree
         # unwrap all of the events, in case model is called multiple times
         events = [te for tevents in trace_events[path] for te in tevents]
-        #print(path)
         for depth, name in enumerate(path, 1):
             if name not in current_tree:
                 current_tree[name] = OrderedDict()
@@ -140,7 +138,8 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                                 sum([e.cpu_time_total for e in events if e.name == event.name]),
                                 sum([e.cuda_time_total for e in events if e.name == event.name]),
                                 len([e for e in events if e.name == event.name]),
-                                str(module)
+                                str(module),
+                                event.input_shapes
                             )._asdict()
                         }
                 else:
@@ -149,7 +148,8 @@ def traces_to_display(traces, trace_events, show_events=False, paths=None):
                         sum([e.cpu_time_total for e in events]),
                         sum([e.cuda_time_total for e in events]),
                         len(trace_events[path]),
-                        str(module)
+                        str(module),
+                        [e.input_shapes for e in events][0]
                     )._asdict()
             current_tree = current_tree[name]
     return tree
