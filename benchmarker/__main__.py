@@ -4,7 +4,6 @@ import argparse
 import json
 import os
 import sys
-import re 
 
 from benchmarker import fapp
 from benchmarker.nvprof import get_nvprof_counters
