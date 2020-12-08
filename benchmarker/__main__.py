@@ -42,20 +42,18 @@ def parse_dict(profile_dict):
     for key,value in profile_dict.items():
         if isinstance(value, dict):
             parse_dict(value)
-        else:
-            if key == "param": 
-                # Split strings with multiple delimiters
-                sep_list = re.split(',|\(|\)|\=|\ ', value) 
-                if "Conv2d" in sep_list:
-                    params = {}
-                    params["name"] = sep_list[0]
-                    params["in_channels"] = sep_list[1]
-                    params["out_channels"] = sep_list[3]
-                    for param_name in ["kernel_size", "stride", "padding"]:
-                        if param_name in sep_list:
-                            index = sep_list.index("kernel_size") 
-                            params[param_name] = sep_list[index+2]
-                    profile_dict[key] = params
+        elif key == "param":
+            params = {}
+            if "Linear" in value:
+                params["name"] = "fc"
+            else:
+                params["name"] = value.split('(')[0].lower()
+            params["args"] = value
+            profile_dict[key] = params
+    
+    for key,value in profile_dict.items():
+        if key == "null" and isinstance(value["param"],dict):
+            profile_dict[value["param"]["name"]] = profile_dict.pop(key)
 
 def main():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
