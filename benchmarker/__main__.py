@@ -35,6 +35,23 @@ def run_cmd_and_get_output(command):
     result = filter_json_from_output(process_out)
     return result
 
+def parse_dict(profile_dict):
+    for key,value in profile_dict.items():
+        if isinstance(value, dict):
+            parse_dict(value)
+        elif key == "param":
+            params = {}
+            if "Linear" in value:
+                params["name"] = "fc"
+            else:
+                params["name"] = value.split('(')[0].lower()
+            params["args"] = value
+            profile_dict[key] = params
+    
+    for key,value in profile_dict.items():
+        if key == "null" and isinstance(value["param"],dict):
+            profile_dict[value["param"]["name"]] = profile_dict.pop(key)
+
 def main():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--flops", action="store_true")
@@ -71,6 +88,7 @@ def main():
         result["profile_pytorch"] = True
         result["profile_data"] = profile_result["profile_data"]
         result["path_out"] = "./logs/profile"
+        parse_dict(result["profile_data"])
          
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
