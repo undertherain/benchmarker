@@ -41,17 +41,20 @@ class Benchmark(INeuralNet):
         else:
             assert self.params["problem"]["precision"] == "FP32"
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
+        x_train, y_train = self.load_data()
+        self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
+        # TODO: make of/on-core optional
+        self.x_train = torch.from_numpy(x_train).to(self.device)
+        self.y_train = torch.from_numpy(y_train).to(self.device)
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
+            if self.x_train.dtype == torch.float32:
+                self.x_train = self.x_train.to_mkldnn()
         else:
             if self.params["backend"] == "native":
                 torch.backends.mkldnn.enabled = False
             else:
                 raise RuntimeError("Unknown backend")
-        x_train, y_train = self.load_data()
-        self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
-        self.x_train = torch.from_numpy(x_train).to(self.device)
-        self.y_train = torch.from_numpy(y_train).to(self.device)
 
     def train(self, model, optimizer, epoch):
         model.train()
@@ -74,21 +77,9 @@ class Benchmark(INeuralNet):
         torch.manual_seed(seed)
 
     def inference(self, model, device):
-        # test_loss = 0
-        # correct = 0
         with torch.no_grad():
             for data, target in zip(self.x_train, self.y_train):
-                if self.params["backend"] == "DNNL":
-                    if data.dtype == torch.float32:
-                        data = data.to_mkldnn()
-                # TODO: add option to keep data on GPU
-                # data, target = data.to(device), target.to(device)
-                output = model(data)
-                # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
-                # TODO: get back softmax for ResNet-like models
-                # pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
-                # correct += pred.eq(target.view_as(pred)).sum().item()
-
+                _ = model(data)
                 # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                 if self.params["profile_pytorch"]:
                     profile_cuda = self.device.type == "cuda"
@@ -104,7 +95,6 @@ class Benchmark(INeuralNet):
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
-        # TODO: make of/on-core optional
 
         model.to(self.device)
         # TODO: args for training hyperparameters

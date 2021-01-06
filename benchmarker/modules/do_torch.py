@@ -2,6 +2,7 @@
 """torch support.
 """
 
+import argparse
 from timeit import default_timer as timer
 import torch
 from .i_gemm import IGEMM
@@ -16,9 +17,22 @@ def data_to_device(data, device):
 
 
 class Benchmark(IGEMM):
-    def __init__(self, params, remaining_args=None):
+    def __init__(self, params, extra_args=None):
+        # TODO: reuse this with do_pytorch
+        parser = argparse.ArgumentParser(description="pytorch extra args")
+        parser.add_argument("--backend", default="native")
+        args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.params["backend"] = args.backend
         self.get_kernel(params, remaining_args)
+        if self.params["backend"] == "DNNL":
+            torch.backends.mkldnn.enabled = True
+            self.data = (self.data[0].to_mkldnn(), self.data[1].to_mkldnn())
+        else:
+            if self.params["backend"] == "native":
+                torch.backends.mkldnn.enabled = False
+            else:
+                raise RuntimeError("Unknown backend")
 
     def run(self):
         if "nb_gpus" in self.params:
