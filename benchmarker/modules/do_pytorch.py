@@ -74,21 +74,13 @@ class Benchmark(INeuralNet):
         torch.manual_seed(seed)
 
     def inference(self, model, device):
-        # test_loss = 0
-        # correct = 0
         with torch.no_grad():
             for data, target in zip(self.x_train, self.y_train):
                 if self.params["backend"] == "DNNL":
                     if data.dtype == torch.float32:
                         data = data.to_mkldnn()
-                # TODO: add option to keep data on GPU
                 # data, target = data.to(device), target.to(device)
-                output = model(data)
-                # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
-                # TODO: get back softmax for ResNet-like models
-                # pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
-                # correct += pred.eq(target.view_as(pred)).sum().item()
-
+                _ = model(data)
                 # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                 if self.params["profile_pytorch"]:
                     profile_cuda = self.device.type == "cuda"
