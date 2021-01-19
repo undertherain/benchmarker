@@ -10,10 +10,9 @@ from .i_gemm import IGEMM
 
 def data_to_device(data, device):
     if type(data) == torch.Tensor:
-        data = data.to(device)
+        return data.to(device)
     else:
-        for element in data:
-            data_to_device(element, device)
+        return tuple(data_to_device(element, device) for element in data)
 
 
 class Benchmark(IGEMM):
@@ -24,7 +23,7 @@ class Benchmark(IGEMM):
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
-        self.get_kernel(params, remaining_args)
+        # self.get_kernel(params, remaining_args)
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
             self.data = (self.data[0].to_mkldnn(), self.data[1].to_mkldnn())
@@ -42,7 +41,8 @@ class Benchmark(IGEMM):
                 device = torch.device("cuda")
                 id_gpu = self.params["gpus"][0]
                 torch.cuda.set_device(id_gpu)
-                data_to_device(self.data, device)
+                self.data = data_to_device(self.data, device)
+                # self.net.to(device)
                 if self.params["preheat"]:
                     self.net(self.data)
                 torch.cuda.synchronize()

@@ -8,9 +8,9 @@ class BertTraining(nn.Module):
         self.net = net
 
     def __call__(self, x, t):
-        loss, _logits = self.net(input_ids=x,
-                                 labels=t)
-        return loss
+        ret = self.net(input_ids=x,
+                       labels=t)
+        return ret["loss"]
 
 
 class BertInference(nn.Module):
