@@ -50,7 +50,6 @@ class IBenchmark:
             module_params = importlib.import_module(path_params)
             module_params.set_extra_params(params, remaining_args)
         except ImportError:
-            print("WE ARE IN NO IMPORT EXTRA PARAMS", remaining_args)
             assert remaining_args == [], f"unexpected args: {remaining_args}"
         # TODO: rename into kernel
         self.net = module_kernel.get_kernel(self.params)

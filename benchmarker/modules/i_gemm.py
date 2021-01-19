@@ -9,7 +9,6 @@ class IGEMM(IBenchmark):
     """Interface for all gemm learning modules"""
 
     def __init__(self, params, extra_args=None):
-        print("WE ARE HERE")
         self.params = params
         parser = argparse.ArgumentParser(description="gemm extra args")
         parser.add_argument("--precision", default="FP32")

@@ -48,7 +48,6 @@ class Benchmark(IGEMM):
                 torch.cuda.synchronize()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
-            print("AAAAAAAAAAAAAAA")
             self.net(self.data)
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()

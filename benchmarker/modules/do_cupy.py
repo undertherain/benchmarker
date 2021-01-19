@@ -29,11 +29,9 @@ class Benchmark(IGEMM):
         c = cupy.random.random((M, K)).astype(dtype)
         self.data = (a, b, c)
         time_start = timer()
-        # THHIS SHOULD BE SALF.KERNEL
         for _ in range(self.params["nb_epoch"]):
             # TODO: rename net into kernel at some point
             self.net(self.data)
-            # c = a @ b  # + c
         device.synchronize()
         time_end = timer()
         elapsed_time = (time_end - time_start)
