@@ -33,7 +33,6 @@ class IBenchmark:
         return data
 
     def get_kernel(self, params, remaining_args):
-        print("WE are in ibench get kernel")
         """Default function to set `self.net`.  The derived do_* classes can
         override this function if there is some framework specific
         logic involved (e.g. GPU/TPU management etc).
