@@ -3,6 +3,9 @@ from .power_mon import power_monitor_GPU, power_monitor_RAPL
 
 
 class IBenchmark:
+    def __init__(self, params, remaining_args):
+        self.get_kernel(params, remaining_args)
+
     def measure_power_and_run(self):
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu = power_monitor_GPU(self.params)

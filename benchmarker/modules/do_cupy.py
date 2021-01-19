@@ -7,6 +7,7 @@ import cupy
 from .i_gemm import IGEMM
 
 
+# TODO: this should check if the problem is gemm
 class Benchmark(IGEMM):
     def __init__(self, params, remaining_args=None):
         super().__init__(params, remaining_args)
@@ -21,12 +22,18 @@ class Benchmark(IGEMM):
         dtype = types[self.params["problem"]["precision"]]
         device = cupy.cuda.Device(device=0)
         device.use()
+        # THIS SHOULD GO TO data.py
+        # at least we can get the sized from it
         a = cupy.random.random((M, N)).astype(dtype)
         b = cupy.random.random((N, K)).astype(dtype)
         c = cupy.random.random((M, K)).astype(dtype)
+        self.data = (a, b, c)
         time_start = timer()
+        # THHIS SHOULD BE SALF.KERNEL
         for _ in range(self.params["nb_epoch"]):
-            c = a @ b  # + c
+            # TODO: rename net into kernel at some point
+            self.net(self.data)
+            # c = a @ b  # + c
         device.synchronize()
         time_end = timer()
         elapsed_time = (time_end - time_start)

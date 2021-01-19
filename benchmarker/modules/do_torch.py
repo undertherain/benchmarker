@@ -24,7 +24,7 @@ class Benchmark(IGEMM):
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["backend"] = args.backend
-        self.get_kernel(params, remaining_args)
+        # self.get_kernel(params, remaining_args)
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
             self.data = (self.data[0].to_mkldnn(), self.data[1].to_mkldnn())
@@ -48,6 +48,7 @@ class Benchmark(IGEMM):
                 torch.cuda.synchronize()
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
+            print("AAAAAAAAAAAAAAA")
             self.net(self.data)
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
