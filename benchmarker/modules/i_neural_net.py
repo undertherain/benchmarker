@@ -18,9 +18,11 @@ class INeuralNet(IBenchmark):
         parser.add_argument("--mode", default="training")
         parser.add_argument("--nb_epoch", type=int, default=10)
         parser.add_argument("--random_seed", default=None)
+        parser.add_argument("--batch_size", default=None)
 
         parsed_args, remaining_args = parser.parse_known_args(extra_args)
-
+        params["batch_size"] = int(parsed_args.batch_size)
+        params["batch_size_per_device"] = int(parsed_args.batch_size)
         params["mode"] = parsed_args.mode
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]

@@ -30,7 +30,6 @@ def parse_basic_args(argv):
     parser.add_argument("--path_out", type=str, default="./logs")
     parser.add_argument("--gpus", default="")
     parser.add_argument("--problem_size", default=None)
-    parser.add_argument("--batch_size", default=None)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
     parser.add_argument("--preheat", action="store_true")
 
@@ -66,9 +65,6 @@ def run(argv):
     # TODO: move this to the root base benchmark
     if args.problem_size is not None:
         params["problem"]["size"] = ast.literal_eval(args.problem_size)
-    if args.batch_size is not None:
-        params["batch_size"] = int(args.batch_size)
-        params["batch_size_per_device"] = int(args.batch_size)
     # params["misc"] = args.misc
     os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     if args.gpus:
