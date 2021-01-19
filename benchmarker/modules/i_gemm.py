@@ -24,7 +24,6 @@ class IGEMM(IBenchmark):
         if params["problem"]["name"] not in ["gemm", "batchmatmul"]:
             raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")
 
-
     def post_process(self):
         self.params["problem"]["gflop_estimated"] = self.params["problem"]["flop_estimated"] / (1000 ** 3)
         detalize_ops_results(self.params)
