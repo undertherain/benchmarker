@@ -10,10 +10,9 @@ from .i_gemm import IGEMM
 
 def data_to_device(data, device):
     if type(data) == torch.Tensor:
-        data = data.to(device)
+        return data.to(device)
     else:
-        for element in data:
-            data_to_device(element, device)
+        return tuple(data_to_device(element, device) for element in data)
 
 
 class Benchmark(IGEMM):
@@ -35,6 +34,7 @@ class Benchmark(IGEMM):
                 raise RuntimeError("Unknown backend")
 
     def run(self):
+        print(self.params)
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] > 1:
                 raise RuntimeError("Only 1 GPU is supported")
@@ -42,7 +42,8 @@ class Benchmark(IGEMM):
                 device = torch.device("cuda")
                 id_gpu = self.params["gpus"][0]
                 torch.cuda.set_device(id_gpu)
-                data_to_device(self.data, device)
+                self.data = data_to_device(self.data, device)
+                # self.net.to(device)
                 if self.params["preheat"]:
                     self.net(self.data)
                 torch.cuda.synchronize()
