@@ -44,12 +44,12 @@ class Benchmark(INeuralNet):
         x_train, y_train = self.load_data()
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
-        self.x_train = torch.from_numpy(x_train).to(self.device)
+        self.x_train = [torch.from_numpy(x).to(self.device) for x in x_train]
         self.y_train = torch.from_numpy(y_train).to(self.device)
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
-            if self.x_train.dtype == torch.float32:
-                self.x_train = self.x_train.to_mkldnn()
+            if self.x_train[0].dtype == torch.float32:
+                self.x_train = [x.to_mkldnn() for x in self.x_train]
         else:
             if self.params["backend"] == "native":
                 torch.backends.mkldnn.enabled = False
@@ -78,7 +78,9 @@ class Benchmark(INeuralNet):
 
     def inference(self, model, device):
         with torch.no_grad():
-            for data, target in zip(self.x_train, self.y_train):
+            # for data, target in zip(self.x_train, self.y_train):
+            for i in range(len(self.x_train)):
+                data = self.x_train[i]
                 _ = model(data)
                 # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                 if self.params["profile_pytorch"]:
