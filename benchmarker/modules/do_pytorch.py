@@ -112,6 +112,7 @@ class Benchmark(INeuralNet):
         if self.params["problem"]["precision"] == "FP16":
             model.half()
         if self.params["mode"] == "training":
+            # TODO: try change tensor layout on Fugaku
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
