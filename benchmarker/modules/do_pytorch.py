@@ -7,7 +7,6 @@ import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 from torch.cuda import amp
 from .torchprof import Profile
-
 from .i_neural_net import INeuralNet
 
 
@@ -41,15 +40,24 @@ class Benchmark(INeuralNet):
         else:
             assert self.params["problem"]["precision"] == "FP32"
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
-        x_train, y_train = self.load_data()
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
+        self.setup_data()
+
+    def setup_data(self):
+        x_train, y_train = self.load_data()
         self.x_train = [torch.from_numpy(x).to(self.device) for x in x_train]
-        self.y_train = torch.from_numpy(y_train).to(self.device)
+        self.y_train = [torch.from_numpy(y).to(self.device) for y in y_train]
+        if self.params["problem"]["precision"] == "FP16":
+            if self.x_train[0].dtype == torch.float32:
+                self.x_train = [x.half() for x in self.x_train]
+            if self.y_train.dtype == torch.float32:
+                self.y_train = [y.half() for y in self.y_train]
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
-            if self.x_train[0].dtype == torch.float32:
-                self.x_train = [x.to_mkldnn() for x in self.x_train]
+            # if self.x_train[0].dtype == torch.float32:
+            #     self.x_train = [x.to_mkldnn() for x in self.x_train]
+                # TODO: check if softmax etc now works with DNNL
         else:
             if self.params["backend"] == "native":
                 torch.backends.mkldnn.enabled = False
@@ -102,10 +110,6 @@ class Benchmark(INeuralNet):
         # TODO: args for training hyperparameters
         start = timer()
         if self.params["problem"]["precision"] == "FP16":
-            if self.x_train.dtype == torch.float32:
-                self.x_train = self.x_train.half()
-            if self.y_train.dtype == torch.float32:
-                self.y_train = self.y_train.half()
             model.half()
         if self.params["mode"] == "training":
             model.train()
@@ -119,6 +123,8 @@ class Benchmark(INeuralNet):
             model.eval()
             if self.params["backend"] == "DNNL":
                 model = mkldnn_utils.to_mkldnn(model)
+                if self.x_train[0].dtype == torch.float32:
+                    self.x_train = [x.to_mkldnn() for x in self.x_train]
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, self.device)
         end = timer()
