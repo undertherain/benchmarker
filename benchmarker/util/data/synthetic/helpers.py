@@ -37,7 +37,6 @@ def gen_classification_data(params, num_cls, height, width=None):
 
     shape = (params["problem"]["cnt_batches_per_epoch"], params["batch_size"])
     shape = shape + params["problem"]["size"][1:]
-
     X = np.random.random(shape).astype(np.float32)
     Y = np.random.randint(0, num_cls, shape[:2])
     return X, Y

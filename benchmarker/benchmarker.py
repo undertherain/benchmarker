@@ -53,13 +53,14 @@ def run(argv):
     params["path_out"] = args.path_out
 
     if args.problem is None:
+        # TODO: get a list of support problems for a given framework
         print("choose a problem to run")
         print("problems supported by {}:".format(args.framework))
         raise Exception
-    # TODO: get a list of support problems for a given framework
 
-    # TODO: load problem's metadata  from the problem itself
+    params["env"] = dict(os.environ)
     params["preheat"] = args.preheat
+    # TODO: load problem's metadata  from the problem itself
     params["problem"] = {}
     params["problem"]["name"] = args.problem
     # TODO: move this to the root base benchmark
