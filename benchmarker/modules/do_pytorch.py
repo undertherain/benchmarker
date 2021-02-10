@@ -113,6 +113,10 @@ class Benchmark(INeuralNet):
             model.half()
         if self.params["mode"] == "training":
             # TODO: try change tensor layout on Fugaku
+            if self.params["backend"] == "DNNL":
+                model = mkldnn_utils.to_mkldnn(model)
+                if self.x_train[0].dtype == torch.float32:
+                    self.x_train = [x.to_mkldnn() for x in self.x_train]
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
             if self.params["problem"]["precision"] == "mixed":
