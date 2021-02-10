@@ -57,7 +57,7 @@ def run(argv):
         print("problems supported by {}:".format(args.framework))
         raise Exception
     # TODO: get a list of support problems for a given framework
-
+    params["env"] = dict(os.environ)
     # TODO: load problem's metadata from the problem itself
     params["preheat"] = args.preheat
     params["problem"] = {}
