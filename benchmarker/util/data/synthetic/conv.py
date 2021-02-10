@@ -23,8 +23,8 @@ def get_data(params):
     dim = _get_conv_dim(problem["name"])
     assert len(problem["size"]) == dim + 2
 
-    shape = (problem["cnt_batches_per_epoch"], params["batch_size"])
-    shape = shape + problem["size"][1:]
-    X = np.random.random(shape).astype(np.float32)
+    #shape = (problem["cnt_batches_per_epoch"], params["batch_size"])
+    shape = (params["batch_size"],) + problem["size"][1:]
+    X = [np.random.random(shape).astype(np.float32) for i in range(problem["cnt_batches_per_epoch"])] 
     Y = np.random.random(shape[:2]).astype(np.int64)
     return X, Y

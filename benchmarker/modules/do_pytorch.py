@@ -1,4 +1,5 @@
 import argparse
+import logging
 from timeit import default_timer as timer
 
 import torch
@@ -7,8 +8,10 @@ import torch.optim as optim
 from torch.utils import mkldnn as mkldnn_utils
 from torch.cuda import amp
 from .torchprof import Profile
-
 from .i_neural_net import INeuralNet
+
+
+logger = logging.getLogger(__name__)
 
 
 def progress(epoch, idx, nb, loss, log_interval=10):
@@ -20,19 +23,13 @@ def progress(epoch, idx, nb, loss, log_interval=10):
 
 class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
-        parser = argparse.ArgumentParser(description="pytorch extra args")
-        parser.add_argument("--backend", default="native")
-        parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
-        parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
-        parser.add_argument("--precision", default="FP32")
-        parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
-        parser.set_defaults(cbm=True)
-        args, remaining_args = parser.parse_known_args(extra_args)
+        args, remaining_args = self.parse_args(extra_args)
         super().__init__(params, remaining_args)
         self.params["profile_pytorch"] = args.profile
         self.params["channels_first"] = True
         params["problem"]["precision"] = args.precision
         self.params["backend"] = args.backend
+        self.params["tensor_layout"] = args.tensor_layout
         self.params["cudnn_benchmark"] = args.cbm
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
@@ -41,18 +38,48 @@ class Benchmark(INeuralNet):
         else:
             assert self.params["problem"]["precision"] == "FP32"
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
-        x_train, y_train = self.load_data()
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
-        self.x_train = torch.from_numpy(x_train).to(self.device)
-        self.y_train = torch.from_numpy(y_train).to(self.device)
+        self.setup_data_and_model()
+
+    def parse_args(self, extra_args):
+        parser = argparse.ArgumentParser(description="pytorch extra args")
+        parser.add_argument("--backend", default="native")
+        parser.add_argument("--tensor_layout", default="native")
+        parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
+        parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
+        parser.add_argument("--precision", default="FP32")
+        parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
+        parser.set_defaults(cbm=True)
+        args, remaining_args = parser.parse_known_args(extra_args)
+        return args, remaining_args
+
+    def setup_data_and_model(self):
+        x_train, y_train = self.load_data()
+        self.x_train = [torch.from_numpy(x).to(self.device) for x in x_train]
+        self.y_train = [torch.from_numpy(y).to(self.device) for y in y_train]
+        if self.params["problem"]["precision"] == "FP16":
+            self.net.half()
+            if self.x_train[0].dtype == torch.float32:
+                self.x_train = [x.half() for x in self.x_train]
+            if self.y_train.dtype == torch.float32:
+                self.y_train = [y.half() for y in self.y_train]
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
-            if self.x_train.dtype == torch.float32:
-                self.x_train = self.x_train.to_mkldnn()
+            self.net.eval()  # This is to make it not fail when DNLL does not support train
+            if self.params["tensor_layout"] == "DNNL":
+                self.net = mkldnn_utils.to_mkldnn(self.net)
+                if self.x_train[0].dtype in [torch.float32, torch.float16]:
+                    self.x_train = [x.to_mkldnn() for x in self.x_train]
+                if self.y_train[0].dtype in [torch.float32, torch.float16]:
+                    self.y_train = [y.to_mkldnn() for y in self.y_train]
+                # TODO: check if softmax etc now works with DNNL
+            else:
+                logger.warning("Using DNNL backend without DNNL tensors")
         else:
             if self.params["backend"] == "native":
                 torch.backends.mkldnn.enabled = False
+                assert self.params["tensor_layout"] == "native"
             else:
                 raise RuntimeError("Unknown backend")
 
@@ -78,7 +105,9 @@ class Benchmark(INeuralNet):
 
     def inference(self, model, device):
         with torch.no_grad():
-            for data, target in zip(self.x_train, self.y_train):
+            # for data, target in zip(self.x_train, self.y_train):
+            for i in range(len(self.x_train)):
+                data = self.x_train[i]
                 _ = model(data)
                 # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                 if self.params["profile_pytorch"]:
@@ -99,12 +128,6 @@ class Benchmark(INeuralNet):
         model.to(self.device)
         # TODO: args for training hyperparameters
         start = timer()
-        if self.params["problem"]["precision"] == "FP16":
-            if self.x_train.dtype == torch.float32:
-                self.x_train = self.x_train.half()
-            if self.y_train.dtype == torch.float32:
-                self.y_train = self.y_train.half()
-            model.half()
         if self.params["mode"] == "training":
             model.train()
             optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
@@ -115,8 +138,6 @@ class Benchmark(INeuralNet):
         else:
             assert self.params["problem"]["precision"] in ["FP16", "FP32"]
             model.eval()
-            if self.params["backend"] == "DNNL":
-                model = mkldnn_utils.to_mkldnn(model)
             for epoch in range(1, self.params["nb_epoch"] + 1):
                 self.inference(model, self.device)
         end = timer()
