@@ -40,7 +40,7 @@ class Benchmark(INeuralNet):
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
-        self.setup_data()
+        self.setup_data_and_model()
 
     def parse_args(self, extra_args):
         parser = argparse.ArgumentParser(description="pytorch extra args")
@@ -54,7 +54,7 @@ class Benchmark(INeuralNet):
         args, remaining_args = parser.parse_known_args(extra_args)
         return args, remaining_args
 
-    def setup_data(self):
+    def setup_data_and_model(self):
         x_train, y_train = self.load_data()
         self.x_train = [torch.from_numpy(x).to(self.device) for x in x_train]
         self.y_train = [torch.from_numpy(y).to(self.device) for y in y_train]
@@ -69,9 +69,9 @@ class Benchmark(INeuralNet):
             self.net.eval()  # This is to make it not fail when DNLL does not support train
             if self.params["tensor_layout"] == "DNNL":
                 self.net = mkldnn_utils.to_mkldnn(self.net)
-                if self.x_train[0].dtype == torch.float32:
+                if self.x_train[0].dtype in [torch.float32, torch.float16]:
                     self.x_train = [x.to_mkldnn() for x in self.x_train]
-                if self.y_train[0].dtype == torch.float32:
+                if self.y_train[0].dtype in [torch.float32, torch.float16]:
                     self.y_train = [y.to_mkldnn() for y in self.y_train]
                 # TODO: check if softmax etc now works with DNNL
             else:
