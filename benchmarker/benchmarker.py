@@ -80,7 +80,7 @@ def run(argv):
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
     params["power"]["avg_watt_total"] = 0
-    mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
+    mod = importlib.import_module("benchmarker.frameworks.do_" + params["framework"])
     benchmark = getattr(mod, "Benchmark")(params, unknown_args)
     # TODO: make this optional
     benchmark.measure_power_and_run()
