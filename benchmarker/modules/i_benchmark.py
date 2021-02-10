@@ -26,7 +26,7 @@ class IBenchmark:
     def load_data(self):
         params = self.params
         mod = importlib.import_module(
-            "benchmarker.modules.problems." + params["problem"]["name"] + ".data"
+            "benchmarker.kernels." + params["problem"]["name"] + ".data"
         )
         get_data = getattr(mod, "get_data")
         data = get_data(params)
@@ -39,7 +39,7 @@ class IBenchmark:
         """
         path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
         path_kernel = (
-            f"benchmarker.modules.problems.{params['problem']['name']}."
+            f"benchmarker.kernels.{params['problem']['name']}."
             f"{params['framework']}"
         )
         # todo(vatai): combine tflite and tensorflow

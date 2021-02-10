@@ -58,7 +58,7 @@ def run(argv):
         raise Exception
     # TODO: get a list of support problems for a given framework
 
-    # TODO: load problem's metadata from the problem itself
+    # TODO: load problem's metadata  from the problem itself
     params["preheat"] = args.preheat
     params["problem"] = {}
     params["problem"]["name"] = args.problem

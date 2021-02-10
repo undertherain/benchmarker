@@ -9,7 +9,7 @@ class Benchmark:
     """Interface for all deep learning modules"""
 
     def __init__(self, params, remaining_args=None):
-        path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
+        path_params = f"benchmarker.kernels.{params['problem']['name']}.params"
         try:
             module_params = importlib.import_module(path_params)
             module_params.set_extra_params(params, remaining_args)
@@ -25,7 +25,7 @@ class Benchmark:
         self.params = params
 
     def run(self):
-        bin_path = f"problems/{self.params['problem']['name']}/main"
+        bin_path = f"../kernels/{self.params['problem']['name']}/main"
         cmd_binary = Path(__file__).parent.joinpath(bin_path)
         if not cmd_binary.is_file():
             raise (RuntimeError(f"{cmd_binary} not found, run make manually"))
