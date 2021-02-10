@@ -37,7 +37,7 @@ class IBenchmark:
         override this function if there is some framework specific
         logic involved (e.g. GPU/TPU management etc).
         """
-        path_params = f"benchmarker.modules.problems.{params['problem']['name']}.params"
+        path_params = f"benchmarker.kernels.{params['problem']['name']}.params"
         path_kernel = (
             f"benchmarker.kernels.{params['problem']['name']}."
             f"{params['framework']}"
