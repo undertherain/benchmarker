@@ -53,13 +53,14 @@ def run(argv):
     params["path_out"] = args.path_out
 
     if args.problem is None:
+        # TODO: get a list of support problems for a given framework
         print("choose a problem to run")
         print("problems supported by {}:".format(args.framework))
         raise Exception
-    # TODO: get a list of support problems for a given framework
+
     params["env"] = dict(os.environ)
-    # TODO: load problem's metadata from the problem itself
     params["preheat"] = args.preheat
+    # TODO: load problem's metadata  from the problem itself
     params["problem"] = {}
     params["problem"]["name"] = args.problem
     # TODO: move this to the root base benchmark
@@ -79,7 +80,7 @@ def run(argv):
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
     params["power"]["avg_watt_total"] = 0
-    mod = importlib.import_module("benchmarker.modules.do_" + params["framework"])
+    mod = importlib.import_module("benchmarker.frameworks.do_" + params["framework"])
     benchmark = getattr(mod, "Benchmark")(params, unknown_args)
     # TODO: make this optional
     benchmark.measure_power_and_run()

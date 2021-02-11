@@ -17,7 +17,7 @@ import math
 import torch
 import torch.nn as nn
 # import torch.nn.functional as F
-from benchmarker.modules.problems.bert_custom import estimate_gflop_per_sample
+from benchmarker.kernels.bert_custom import estimate_gflop_per_sample
 
 
 class PositionalEncoding(nn.Module):

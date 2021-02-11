@@ -68,7 +68,7 @@ def run(params):
     # Setup benchmark
     zmq = ZMQ(flags)
 
-    mod = importlib.import_module("problems." + params["problem"]+".zmq")
+    mod = importlib.import_module("benchmarker.kernels." + params["problem"]+".zmq")
     get_model = getattr(mod, 'get_model')
     app = get_model(params)
 
