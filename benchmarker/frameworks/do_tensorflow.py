@@ -30,8 +30,9 @@ class Benchmark(INeuralNet):
         # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
         # print(describe_var(x_train))
         self.x_train = np.vstack(x_train)
-        self.y_train = np.vstack(y_train)
-        # print(self.x_train.shape)
+        self.y_train = np.hstack(y_train)
+        print(describe_var(self.x_train))
+        print(describe_var(self.y_train))
         if self.params["preheat"]:
             self.net.predict(self.x_train, self.params["batch_size"])
 
