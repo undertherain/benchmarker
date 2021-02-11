@@ -35,8 +35,8 @@ def gen_classification_data(params, num_cls, height, width=None):
 
     set_image_size(params, height, width)
 
-    shape = (params["problem"]["cnt_batches_per_epoch"], params["batch_size"])
-    shape = shape + params["problem"]["size"][1:]
-    X = np.random.random(shape).astype(np.float32)
-    Y = np.random.randint(0, num_cls, shape[:2])
+    cnt_batches = params["problem"]["cnt_batches_per_epoch"]
+    shape = (params["batch_size"],) + params["problem"]["size"][1:]
+    X = [np.random.random(shape).astype(np.float32) for i in range(cnt_batches)]
+    Y = [np.random.randint(0, num_cls, shape[:1]) for i in range(cnt_batches)]
     return X, Y
