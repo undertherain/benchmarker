@@ -1,6 +1,6 @@
-""""sinthetic dataset for vgg16"""
+"""sinthetic dataset for vgg16"""
 
-from benchmarker.util.data.cubes import get_cubes
+from benchmarker.data.cubes import get_cubes
 
 
 def get_data(params):

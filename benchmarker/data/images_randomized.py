@@ -1,6 +1,6 @@
 import numpy as np
 
-# TODO: move this to data
+# TODO: this repeats code from .synthetic
 def gen_data(params):
     """generates sinthetic dataset"""
     # input size -> cnt_sequences, len_sequence, cnt_dimensions

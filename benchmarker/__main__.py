@@ -42,7 +42,7 @@ def main():
     parser.add_argument("--fapp_power", action="store_true")
     parser.add_argument("--profile_pytorch", action="store_true")
     args, unknown_args = parser.parse_known_args()
-    command = ["python3", "-m", "benchmarker.benchmarker"]
+    command = [sys.executable, "-m", "benchmarker.benchmarker"]
     command += unknown_args
     result = run_cmd_and_get_output(command)
     # TODO: don't parse path_out in the innder loop

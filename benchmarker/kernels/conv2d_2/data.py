@@ -1,5 +1,5 @@
 import begin
-from benchmarker.util.data.cubes import get_cubes
+from benchmarker.data.cubes import get_cubes
 
 
 def get_data(params):
