@@ -1,6 +1,7 @@
 import numpy as np
 
-from benchmarker.modules.problems.images_randomized import gen_data
+# TODO: move this to data
+from benchmarker.kernels.images_randomized import gen_data
 
 
 def get_data(params):

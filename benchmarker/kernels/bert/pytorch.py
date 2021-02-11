@@ -1,5 +1,5 @@
-from benchmarker.modules.problems.helpers_torch_bert import get_kernel_by_name
-from benchmarker.modules.problems.bert_custom import estimate_gflop_per_sample
+from benchmarker.kernels.helpers_torch_bert import get_kernel_by_name
+from benchmarker.kernels.bert_custom import estimate_gflop_per_sample
 
 
 def get_kernel(params):

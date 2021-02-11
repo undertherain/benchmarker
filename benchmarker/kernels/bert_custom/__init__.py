@@ -1,4 +1,4 @@
-from benchmarker.modules.problems.attention.pytorch import \
+from benchmarker.kernels.attention.pytorch import \
     estimate_attention_gflop_per_sample
 
 
