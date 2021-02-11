@@ -19,7 +19,7 @@ def run(params, data):
 
     y_train = to_categorical(y_train, num_classes=1000)
 
-    mod = importlib.import_module("benchmarker.modules.problems." +
+    mod = importlib.import_module("benchmarker.kernels." +
                                   params["problem"]["name"] + ".keras")
     get_model = getattr(mod, 'get_model')
 

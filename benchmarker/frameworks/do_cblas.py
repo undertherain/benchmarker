@@ -14,7 +14,7 @@ class Benchmark(IGEMM):
                 raise Exception("cblas does not work on GPU")
         # TODO(Alex): this does not work inless the binaries are copied to site_packages
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   "problems/gemm/cblas/main")
+                                   "../problems/gemm/cblas/main")
         if not os.path.isfile(path_binary):
             raise(RuntimeError(f"{path_binary} not found, run make manually"))
         command = [path_binary,

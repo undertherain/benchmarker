@@ -16,12 +16,10 @@ class Benchmark(INeuralNet):
 
     def run(self):
         params = self.params
-        x_train, y_train = self.load_data()
-        x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],) + x_train.shape[2:])
-        y_train = y_train.reshape((y_train.shape[0] * y_train.shape[1],))
+        self.x_train, self.y_train = self.load_data()
         start = timer()
-        for i in range(x_train.shape[0]):
-            frame = x_train[0]
+        for batch in self.x_train:
+            frame = batch[0]
             # print(frame.shape, frame.dtype)
             # exit(0)
             # blob = cv2.dnn.blobFromImage(frame,

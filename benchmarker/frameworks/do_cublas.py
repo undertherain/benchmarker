@@ -13,7 +13,7 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] != 1:
                 raise Exception("cublas requires one GPU")
         path_binary = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   "problems/gemm/cublas/main")
+                                   "../problems/gemm/cublas/main")
         if not os.path.isfile(path_binary):
             raise(RuntimeError(f"{path_binary} not found, run make manually"))
         command = [path_binary,

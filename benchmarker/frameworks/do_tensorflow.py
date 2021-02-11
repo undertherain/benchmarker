@@ -4,6 +4,8 @@
 
 import argparse
 import os
+from protonn.utils import describe_var
+import numpy as np
 from timeit import default_timer as timer
 
 import tensorflow as tf
@@ -26,8 +28,11 @@ class Benchmark(INeuralNet):
         os.environ["KERAS_BACKEND"] = "tensorflow"
         x_train, y_train = self.load_data()
         # Reshape from (nbatch, bs, ...) to (nbatch * bs, ...)
-        self.x_train = x_train.reshape((-1,) + x_train.shape[2:])
-        self.y_train = y_train.reshape((-1,) + y_train.shape[2:])
+        # print(describe_var(x_train))
+        self.x_train = np.vstack(x_train)
+        self.y_train = np.hstack(y_train)
+        print(describe_var(self.x_train))
+        print(describe_var(self.y_train))
         if self.params["preheat"]:
             self.net.predict(self.x_train, self.params["batch_size"])
 
