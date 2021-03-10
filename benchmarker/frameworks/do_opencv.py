@@ -11,8 +11,6 @@ class Benchmark(INeuralNet):
         self.params["channels_first"] = False
         if self.params["mode"] != "inference":
             raise RuntimeError("opencv only supports inference")
-        # if self.params["batch_size"] != 1:
-        #     raise RuntimeError("opencv only supports batch size of 1")
 
     def run(self):
         params = self.params
