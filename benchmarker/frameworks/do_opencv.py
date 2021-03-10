@@ -17,9 +17,6 @@ class Benchmark(INeuralNet):
         self.x_train, self.y_train = self.load_data()
         start = timer()
         for batch in self.x_train:
-            # frame = batch[0]
-            # print(frame.shape, frame.dtype)
-            # exit(0)
             # blob = cv2.dnn.blobFromImage(frame,
             #                              scalefactor=1.0,
             #                              size=(300, 300),
