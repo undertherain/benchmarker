@@ -11,22 +11,22 @@ class Benchmark(INeuralNet):
         self.params["channels_first"] = False
         if self.params["mode"] != "inference":
             raise RuntimeError("opencv only supports inference")
-        if self.params["batch_size"] != 1:
-            raise RuntimeError("opencv only supports batch size of 1")
+        # if self.params["batch_size"] != 1:
+        #     raise RuntimeError("opencv only supports batch size of 1")
 
     def run(self):
         params = self.params
         self.x_train, self.y_train = self.load_data()
         start = timer()
         for batch in self.x_train:
-            frame = batch[0]
+            # frame = batch[0]
             # print(frame.shape, frame.dtype)
             # exit(0)
             # blob = cv2.dnn.blobFromImage(frame,
             #                              scalefactor=1.0,
             #                              size=(300, 300),
             #                              mean=(104.0, 177.0, 123.0))
-            blob = cv2.dnn.blobFromImage(frame)
+            blob = cv2.dnn.blobFromImages(batch)
             self.net.setInput(blob)
             predictions = self.net.forward()
             assert predictions is not None
