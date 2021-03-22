@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) {
     auto stop = high_resolution_clock::now();
     std::chrono::duration<double> seconds = (stop - start); 
     dtime = seconds.count();
-    double gflop = (2.0 * m * n * k) / (1024 * 1024 * 1024);
+    double gflop = (2.0 * m * n * k) / (1000 * 1000 * 1000);
     gflop *= static_cast<double>(options.nb_epoch);
     double gflops = gflop / dtime;
     printf("%f\n", dtime);
