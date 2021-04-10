@@ -46,6 +46,8 @@ class Benchmark(IGEMM):
                 if self.params["preheat"]:
                     self.net(self.data)
                 torch.cuda.synchronize()
+        # preheat
+        self.net(self.data)
         time_start = timer()
         for _ in range(self.params["nb_epoch"]):
             self.net(self.data)
