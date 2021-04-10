@@ -5,7 +5,7 @@ import json
 import os
 import sys
 
-from benchmarker import fapp, nvprof, perf
+from benchmarker.profiling import fapp, nvprof, perf
 # from .benchmarker import run
 from benchmarker.util import abstractprocess
 from benchmarker.util.cute_device import get_cute_device_str
