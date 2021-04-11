@@ -9,7 +9,7 @@ from benchmarker.profiling import fapp, nvprof, perf
 # from .benchmarker import run
 from benchmarker.util import abstractprocess
 from benchmarker.util.cute_device import get_cute_device_str
-
+from benchmarker.results import add_result_details
 from .util import sysinfo
 from .util.io import save_json
 
@@ -76,14 +76,8 @@ def main():
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
     result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if "gflop_measured" in result["problem"]:
-        if result["power"]["joules_total"] != 0:
-            result["gflop_per_joule"] = float(result["problem"]["gflop_measured"])
-            result["gflop_per_joule"] /= float(result["power"]["joules_total"])
-        if "gflop_per_second" not in result:
-            result["gflop_per_second"] = float(result["problem"]["gflop_measured"]) / result["time_total"]
-        else:
-            result["gflop_per_second_measured"] = float(result["problem"]["gflop_measured"]) / result["time_total"]
+    # TODO: call fill_result_details here
+    add_result_details(result)
     save_json(result)
     # TODO: don't measure power when measureing flops
 
