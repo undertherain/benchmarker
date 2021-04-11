@@ -14,8 +14,10 @@ def add_power_details(dic_power, time_total):
             if key_watt in dic_power:
                 dic_power[key_joules] = dic_power[key_watt] * time_total
 
-        dic_power["joules_total"] += dic_power[key_joules]
-        dic_power["avg_watt_total"] += dic_power[key_watt]
+        if key_joules in dic_power:
+            dic_power["joules_total"] += dic_power[key_joules]
+        if key_watt in dic_power:
+           dic_power["avg_watt_total"] += dic_power[key_watt]
 
 
 def add_flops_details(results):
@@ -43,6 +45,7 @@ def add_flops_details(results):
 def add_result_details(result):
     add_power_details(result, result["time_total"])
     add_flops_details(result)
+    print(result)
     if result["power"]["joules_total"] > 0 and "cnt_samples" in result["problem"]:
         result["samples_per_joule"] = result["problem"]["cnt_samples"] * \
             result["nb_epoch"] / result["power"]["joules_total"]
