@@ -65,8 +65,3 @@ class INeuralNet(IBenchmark):
             results["problem"]["cnt_samples"] / results["time_epoch"]
         )
         detalize_ops_results(results)
-        # TODO: make this agnostic to wheter we have cnt_samples or ops or both
-        if results["power"]["joules_total"] > 0:
-            results["samples_per_joule"] = (
-                results["problem"]["cnt_samples"] * results["nb_epoch"] / self.params["power"]["joules_total"]
-            )

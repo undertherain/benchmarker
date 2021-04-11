@@ -43,4 +43,6 @@ def add_flops_details(results):
 def add_result_details(result):
     add_power_details(result, result["time_total"])
     add_flops_details(result)
-    # TODO: add samples per joule
+    if result["power"]["joules_total"] > 0 and "cnt_samples" in result["problem"]:
+        result["samples_per_joule"] = result["problem"]["cnt_samples"] * \
+            result["nb_epoch"] / result["power"]["joules_total"]
