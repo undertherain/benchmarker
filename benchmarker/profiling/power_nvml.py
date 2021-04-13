@@ -33,7 +33,7 @@ class power_monitor_GPU:
 
     def post_process(self):
         cnt_cut_measurements = min(len(self.lst_power_gpu), 100)
-        measurements_trimmed = self.lst_power_gpu[:cnt_cut_measurements]
+        measurements_trimmed = self.lst_power_gpu[cnt_cut_measurements:]
         self.params["power"]["avg_watt_GPU"] = np.mean(measurements_trimmed)
         #self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         #self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
