@@ -34,20 +34,20 @@ def add_flops_details(results):
         gflops = float(problem["gflop_measured"])
     elif "gflop_estimated" in problem:
         gflops = float(problem["gflop_estimated"])
-    # TODO: EMIL VE VERY SMART ABOUT IT
-    if "gflops" in locals():
-        results["gflop_per_second"] = gflops / results["time_total"]
-        if results["power"]["joules_total"] != 0:
-            results["gflop_per_joule"] = gflops / float(power["joules_total"])
+    else:
+        return
+    results["gflop_per_second"] = gflops / results["time_total"]
+    if results["power"]["joules_total"] != 0:
+        results["gflop_per_joule"] = gflops / float(power["joules_total"])
 
-        if "joules_CPU" in results["power"]:
-            results["gflop_per_joule_CPU"] = gflops / power["joules_CPU"]
-            if results["nb_gpus"] == 0:
-                results["gflop_per_joule_device"] = results["gflop_per_joule_CPU"]
+    if "joules_CPU" in results["power"]:
+        results["gflop_per_joule_CPU"] = gflops / power["joules_CPU"]
+        if results["nb_gpus"] == 0:
+            results["gflop_per_joule_device"] = results["gflop_per_joule_CPU"]
 
-        if "joules_GPU" in results["power"]:
-            results["gflop_per_joule_GPU"] = gflops / power["joules_GPU"]
-            results["gflop_per_joule_device"] = results["gflop_per_joule_GPU"]
+    if "joules_GPU" in results["power"]:
+        results["gflop_per_joule_GPU"] = gflops / power["joules_GPU"]
+        results["gflop_per_joule_device"] = results["gflop_per_joule_GPU"]
 
 
 def add_result_details(result):
