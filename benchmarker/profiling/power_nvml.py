@@ -32,8 +32,9 @@ class power_monitor_GPU:
         # a small hack to remove pre-heat time measurement
 
     def post_process(self):
-        cnt_cut_measurements = min(len(self.lst_power_gpu), 100)
-        measurements_trimmed = self.lst_power_gpu[cnt_cut_measurements:]
+        percent_measurement_remove = 0.1
+        cnt_measurements_remove = int(len(self.lst_power_gpu) * percent_measurement_remove)
+        measurements_trimmed = self.lst_power_gpu[cnt_measurements_remove:]
         self.params["power"]["avg_watt_GPU"] = np.mean(measurements_trimmed)
         #self.params["power"]["joules_GPU"] = self.params["power"]["avg_watt_GPU"] * self.params["time_total"]
         #self.params["power"]["joules_total"] += self.params["power"]["joules_GPU"]
