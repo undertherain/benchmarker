@@ -34,7 +34,8 @@ def add_flops_details(results):
         gflops = float(problem["gflop_measured"])
     elif "gflop_estimated" in problem:
         gflops = float(problem["gflop_estimated"])
-    if "glfops" in locals():
+    # TODO: EMIL VE VERY SMART ABOUT IT
+    if "gflops" in locals():
         results["gflop_per_second"] = gflops / results["time_total"]
         if results["power"]["joules_total"] != 0:
             results["gflop_per_joule"] = gflops / float(power["joules_total"])
@@ -52,7 +53,7 @@ def add_flops_details(results):
 def add_result_details(result):
     add_power_details(result["power"], result["time_total"])
     add_flops_details(result)
-    print_json(result)
+    # print_json(result)
     if result["power"]["joules_total"] > 0 and "cnt_samples" in result["problem"]:
         result["samples_per_joule"] = result["problem"]["cnt_samples"] * \
             result["nb_epoch"] / result["power"]["joules_total"]
