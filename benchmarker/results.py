@@ -40,14 +40,14 @@ def add_flops_details(results):
     results.update(details)
 
 
-def calculate_thoughput(metric_name, value, power, time):
+def calculate_thoughput(metric_name, value, power, time, nb_gpus):
     results = {}
     results[f"{metric_name}_per_second"] = value / time
     if power["joules_total"] != 0:
         results[f"{metric_name}_per_joule"] = value / float(power["joules_total"])
     if "joules_CPU" in power:
         results[f"{metric_name}_per_joule_CPU"] = value / power["joules_CPU"]
-        if results["nb_gpus"] == 0:
+        if nb_gpus == 0:
             results[f"{metric_name}_per_joule_device"] = results[f"{metric_name}_per_joule_CPU"]
     if "joules_GPU" in power:
         results[f"{metric_name}_per_joule_GPU"] = value / power["joules_GPU"]
@@ -63,7 +63,8 @@ def add_throughput_details(results):
             "samples",
             results["problem"]["cnt_samples"] * results["nb_epoch"],
             results["power"],
-            results["time_total"])
+            results["time_total"],
+            results["nb_gpus"])
         results.update(details)
 
 
