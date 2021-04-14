@@ -36,24 +36,39 @@ def add_flops_details(results):
         gflops = float(problem["gflop_estimated"])
     else:
         return
-    results["gflop_per_second"] = gflops / results["time_total"]
-    if results["power"]["joules_total"] != 0:
-        results["gflop_per_joule"] = gflops / float(power["joules_total"])
+    details = calculate_thoughput("gflop", gflops, power, results["time_total"])
+    results.update(details)
 
-    if "joules_CPU" in results["power"]:
-        results["gflop_per_joule_CPU"] = gflops / power["joules_CPU"]
+
+def calculate_thoughput(metric_name, value, power, time):
+    results = {}
+    results[f"{metric_name}_per_second"] = value / time
+    if power["joules_total"] != 0:
+        results[f"{metric_name}_per_joule"] = value / float(power["joules_total"])
+    if "joules_CPU" in power:
+        results[f"{metric_name}_per_joule_CPU"] = value / power["joules_CPU"]
         if results["nb_gpus"] == 0:
-            results["gflop_per_joule_device"] = results["gflop_per_joule_CPU"]
+            results[f"{metric_name}_per_joule_device"] = results[f"{metric_name}_per_joule_CPU"]
+    if "joules_GPU" in power:
+        results[f"{metric_name}_per_joule_GPU"] = value / power["joules_GPU"]
+        results[f"{metric_name}_per_joule_device"] = results[f"{metric_name}_per_joule_GPU"]
+    return results
 
-    if "joules_GPU" in results["power"]:
-        results["gflop_per_joule_GPU"] = gflops / power["joules_GPU"]
-        results["gflop_per_joule_device"] = results["gflop_per_joule_GPU"]
+
+def add_throughput_details(results):
+    if results["power"]["joules_total"] > 0 and "cnt_samples" in results["problem"]:
+    #    results["samples_per_joule"] = results["problem"]["cnt_samples"] * \
+    #        results["nb_epoch"] / results["power"]["joules_total"]
+        details = calculate_thoughput(
+            "samples",
+            results["problem"]["cnt_samples"] * results["nb_epoch"],
+            results["power"],
+            results["time_total"])
+        results.update(details)
 
 
 def add_result_details(result):
     add_power_details(result["power"], result["time_total"])
     add_flops_details(result)
+    add_throughput_details(result)
     # print_json(result)
-    if result["power"]["joules_total"] > 0 and "cnt_samples" in result["problem"]:
-        result["samples_per_joule"] = result["problem"]["cnt_samples"] * \
-            result["nb_epoch"] / result["power"]["joules_total"]
