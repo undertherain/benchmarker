@@ -36,7 +36,11 @@ def add_flops_details(results):
         gflops = float(problem["gflop_estimated"])
     else:
         return
-    details = calculate_thoughput("gflop", gflops, power, results["time_total"])
+    details = calculate_thoughput("gflop",
+                                  gflops,
+                                  power,
+                                  results["time_total"],
+                                  results["nb_gpus"])
     results.update(details)
 
 
