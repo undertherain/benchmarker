@@ -1,6 +1,6 @@
 from tempfile import TemporaryDirectory
 
-from benchmarker.fapp_power import get_power, get_total_power
+from benchmarker.profiling.power_fapp import get_power, get_total_power
 from benchmarker.util import abstractprocess
 
 

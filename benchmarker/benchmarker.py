@@ -58,7 +58,7 @@ def run(argv):
         print("problems supported by {}:".format(args.framework))
         raise Exception
 
-    params["env"] = dict(os.environ)
+    # params["env"] = dict(os.environ)
     params["preheat"] = args.preheat
     # TODO: load problem's metadata  from the problem itself
     params["problem"] = {}

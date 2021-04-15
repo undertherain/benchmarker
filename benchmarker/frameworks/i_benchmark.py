@@ -1,5 +1,6 @@
 import importlib
-from .power_mon import power_monitor_GPU, power_monitor_RAPL
+from benchmarker.profiling.power_nvml import power_monitor_GPU
+from benchmarker.profiling.power_RAPL import power_monitor_RAPL
 
 
 class IBenchmark:
@@ -10,6 +11,7 @@ class IBenchmark:
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu = power_monitor_GPU(self.params)
             power_monitor_gpu.start()
+        # TODO: make this optional or auto-detected for x86 CPUs only
         power_monitor_cpu = power_monitor_RAPL(self.params)
         power_monitor_cpu.start()
         try:

@@ -1,7 +1,7 @@
 """Module contains the interface for all gemm learning modules"""
 import argparse
 import os
-from .ops import detalize_ops_results
+from benchmarker.results import add_result_details
 from .i_benchmark import IBenchmark
 
 
@@ -28,5 +28,5 @@ class IGEMM(IBenchmark):
 
     def post_process(self):
         self.params["problem"]["gflop_estimated"] = self.params["problem"]["flop_estimated"] / (1000 ** 3)
-        detalize_ops_results(self.params)
+        add_result_details(self.params)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
