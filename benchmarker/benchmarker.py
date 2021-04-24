@@ -30,7 +30,7 @@ def parse_basic_args(argv):
     parser.add_argument("--path_out", type=str, default="./logs")
     parser.add_argument("--gpus", default="")
     parser.add_argument("--problem_size", default=None)
-    parser.add_argument("--power_rapl", type="store_true", default=False)
+    parser.add_argument("--power_rapl", type=bool, action="store_true", default=False)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
     parser.add_argument("--preheat", action="store_true")
 
