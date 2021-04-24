@@ -30,6 +30,7 @@ def parse_basic_args(argv):
     parser.add_argument("--path_out", type=str, default="./logs")
     parser.add_argument("--gpus", default="")
     parser.add_argument("--problem_size", default=None)
+    parser.add_argument("--power_rapl", type="store_true", default=False)
     parser.add_argument("--power_sampling_ms", type=int, default=100)
     parser.add_argument("--preheat", action="store_true")
 
@@ -83,7 +84,8 @@ def run(argv):
     mod = importlib.import_module("benchmarker.frameworks.do_" + params["framework"])
     benchmark = mod.Benchmark(params, unknown_args)
     # TODO: make this optional
-    benchmark.measure_power_and_run()
+    if args.power_rapl:
+        benchmark.measure_power_and_run()
     print("benchmarkmagic#!%")
     print_json(params)
 
