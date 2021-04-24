@@ -1,4 +1,3 @@
-import pyRAPL
 import logging
 
 
@@ -6,6 +5,8 @@ class power_monitor_RAPL:
     def __init__(self, params):
         self.params = params
         try:
+            import pyRAPL
+
             pyRAPL.setup()
             self.rapl_enabled = True
         except:
@@ -13,7 +14,7 @@ class power_monitor_RAPL:
 
     def start(self):
         if self.rapl_enabled:
-            self.meter_rapl = pyRAPL.Measurement('bar')
+            self.meter_rapl = pyRAPL.Measurement("bar")
             self.meter_rapl.begin()
         else:
             logger = logging.getLogger(__name__)
@@ -22,5 +23,7 @@ class power_monitor_RAPL:
     def stop(self):
         if self.rapl_enabled:
             self.meter_rapl.end()
-            self.params["power"]["joules_CPU"] = sum(self.meter_rapl.result.pkg) / 1000000.0
-            self.params["power"]["joules_RAM"] = sum(self.meter_rapl.result.dram) / 1000000.0
+            joules_CPU = sum(self.meter_rapl.result.pkg) / 1000000.0
+            joules_RAM = sum(self.meter_rapl.result.dram) / 1000000.0
+            self.params["power"]["joules_CPU"] = joules_CPU
+            self.params["power"]["joules_RAM"] = joules_RAM
