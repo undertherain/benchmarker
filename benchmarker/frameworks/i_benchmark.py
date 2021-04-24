@@ -1,6 +1,4 @@
 import importlib
-from benchmarker.profiling.power_nvml import power_monitor_GPU
-from benchmarker.profiling.power_RAPL import power_monitor_RAPL
 
 
 class IBenchmark:
@@ -8,6 +6,9 @@ class IBenchmark:
         self.get_kernel(params, remaining_args)
 
     def measure_power_and_run(self):
+        from benchmarker.profiling.power_nvml import power_monitor_GPU
+        from benchmarker.profiling.power_RAPL import power_monitor_RAPL
+
         if self.params["nb_gpus"] > 0:
             power_monitor_gpu = power_monitor_GPU(self.params)
             power_monitor_gpu.start()
@@ -41,8 +42,7 @@ class IBenchmark:
         """
         path_params = f"benchmarker.kernels.{params['problem']['name']}.params"
         path_kernel = (
-            f"benchmarker.kernels.{params['problem']['name']}."
-            f"{params['framework']}"
+            f"benchmarker.kernels.{params['problem']['name']}." f"{params['framework']}"
         )
         # todo(vatai): combine tflite and tensorflow
         path_kernel = path_kernel.replace("tflite", "tensorflow")
