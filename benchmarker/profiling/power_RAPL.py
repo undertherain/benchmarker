@@ -1,12 +1,12 @@
 import logging
 
+import pyRAPL
+
 
 class power_monitor_RAPL:
     def __init__(self, params):
         self.params = params
         try:
-            import pyRAPL
-
             pyRAPL.setup()
             self.rapl_enabled = True
         except:
