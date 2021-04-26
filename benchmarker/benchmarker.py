@@ -14,15 +14,6 @@ import sys
 from .util.io import print_json
 
 
-def get_modules():
-    path_modules = "benchmarker/modules"
-    return [
-        name
-        for _, name, is_pkg in pkgutil.iter_modules([path_modules])
-        if not is_pkg and name.startswith("do_")
-    ]
-
-
 def parse_basic_args(argv):
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--framework")
@@ -38,19 +29,25 @@ def parse_basic_args(argv):
     return parser.parse_known_args(argv)
 
 
-def run(argv):
-    args, unknown_args = parse_basic_args(argv)
-    params = {}
+def get_framework(args):
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
-        for plugin in get_modules():
-            print("\t", plugin[3:])
-        raise Exception
+        candidates = pkgutil.iter_modules(["benchmarker/frameworks"])
+        for _, name, is_pkg in candidates:
+            if not is_pkg and name.startswith("do_"):
+                print(f"\t{name[3:]}")
+        raise ValueError("No framework")
+    return args.framework
+
+
+def run(argv):
+    args, unknown_args = parse_basic_args(argv)
+    params = {}
 
     # TODO: load frameowork's metadata from backend
     # TODO: make framework details nested
-    params["framework"] = args.framework
+    params["framework"] = get_framework(args)
     params["path_out"] = args.path_out
 
     if args.problem is None:
