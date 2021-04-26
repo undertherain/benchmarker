@@ -43,35 +43,43 @@ def get_framework(args):
     return args.framework
 
 
+def get_problem(args):
+    if args.problem is None:
+        # TODO: get a list of support problems for a given framework
+        # print("choose a kernel/problem to run")
+        # print("problems supported by {}:".format(args.framework))
+        print("Exact listing not implemented!")
+        print("Look into the `benchmarker/kernels` dir!")
+        raise ValueError("No kernel/problem specified")
+
+    # TODO: load problem's metadata  from the problem itself
+    problem = {}
+    problem["name"] = args.problem
+    # TODO: move this to the root base benchmark
+    if args.problem_size is not None:
+        problem["size"] = ast.literal_eval(args.problem_size)
+    return problem
+
+
+def get_gpus(args):
+    if args.gpus:
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
+        return list(map(int, args.gpus.split(",")))
+    else:
+        os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+        return []
+
+
 def run(argv):
     args, unknown_args = parse_basic_args(argv)
     params = {}
-
     params["framework"] = get_framework(args)
     params["path_out"] = args.path_out
-
-    if args.problem is None:
-        # TODO: get a list of support problems for a given framework
-        print("choose a problem to run")
-        print("problems supported by {}:".format(args.framework))
-        raise Exception
-
     # params["env"] = dict(os.environ)
-    params["preheat"] = args.preheat
-    # TODO: load problem's metadata  from the problem itself
-    params["problem"] = {}
-    params["problem"]["name"] = args.problem
-    # TODO: move this to the root base benchmark
-    if args.problem_size is not None:
-        params["problem"]["size"] = ast.literal_eval(args.problem_size)
     # params["misc"] = args.misc
-    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-    if args.gpus:
-        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
-        params["gpus"] = list(map(int, args.gpus.split(",")))
-    else:
-        params["gpus"] = []
-
+    params["preheat"] = args.preheat
+    params["problem"] = get_problem(args)
+    params["gpus"] = get_gpus(args)
     params["nb_gpus"] = len(params["gpus"])
 
     params["power"] = {}
