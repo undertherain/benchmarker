@@ -30,6 +30,8 @@ def parse_basic_args(argv):
 
 
 def get_framework(args):
+    # TODO: load frameowork's metadata from backend
+    # TODO: make framework details nested
     if args.framework is None:
         print("please choose one of the frameworks to evaluate")
         print("available frameworks:")
@@ -37,7 +39,7 @@ def get_framework(args):
         for _, name, is_pkg in candidates:
             if not is_pkg and name.startswith("do_"):
                 print(f"\t{name[3:]}")
-        raise ValueError("No framework")
+        raise ValueError("No framework specified")
     return args.framework
 
 
@@ -45,8 +47,6 @@ def run(argv):
     args, unknown_args = parse_basic_args(argv)
     params = {}
 
-    # TODO: load frameowork's metadata from backend
-    # TODO: make framework details nested
     params["framework"] = get_framework(args)
     params["path_out"] = args.path_out
 
