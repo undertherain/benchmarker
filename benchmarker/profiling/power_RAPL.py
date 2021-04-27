@@ -3,7 +3,7 @@ import logging
 import pyRAPL
 
 
-class power_monitor_RAPL:
+class PowerMonitorRAPL:
     def __init__(self, params):
         self.params = params
         try:

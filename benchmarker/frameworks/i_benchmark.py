@@ -6,14 +6,14 @@ class IBenchmark:
         self.get_kernel(params, remaining_args)
 
     def measure_power_and_run(self):
-        from benchmarker.profiling.power_nvml import power_monitor_GPU
-        from benchmarker.profiling.power_RAPL import power_monitor_RAPL
+        from benchmarker.profiling.power_nvml import PowerMonitorNVML
+        from benchmarker.profiling.power_RAPL import PowerMonitorRAPL
 
         if self.params["nb_gpus"] > 0:
-            power_monitor_gpu = power_monitor_GPU(self.params)
+            power_monitor_gpu = PowerMonitorNVML(self.params)
             power_monitor_gpu.start()
         # TODO: make this optional or auto-detected for x86 CPUs only
-        power_monitor_cpu = power_monitor_RAPL(self.params)
+        power_monitor_cpu = PowerMonitorRAPL(self.params)
         power_monitor_cpu.start()
         try:
             results = self.run()

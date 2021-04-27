@@ -1,11 +1,13 @@
 import threading
 from time import sleep
+
 import numpy as np
 
-class power_monitor_GPU:
 
+class PowerMonitorNVML:
     def __init__(self, params):
         import py3nvml.py3nvml as nvml
+
         self.nvml = nvml
         # from py3nvml.py3nvml import nvmlInit, nvmlShutdown
         # from py3nvml.py3nvml import nvmlDeviceGetHandleByIndex, nvmlDeviceGetPowerUsage
