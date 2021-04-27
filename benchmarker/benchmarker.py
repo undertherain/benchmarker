@@ -16,14 +16,42 @@ from .util.io import print_json
 
 def parse_basic_args(argv):
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--framework")
-    parser.add_argument("--problem")
-    parser.add_argument("--problem_size", default=None)
-    parser.add_argument("--path_out", type=str, default="./logs")
-    parser.add_argument("--gpus", default="")
-    parser.add_argument("--power_rapl", action="store_true", default=False)
-    parser.add_argument("--power_sampling_ms", type=int, default=100)
-    parser.add_argument("--preheat", action="store_true")
+    parser.add_argument("--framework", help="The framework used for benchmarking")
+    parser.add_argument("--problem", help="The name of the kernel/problem")
+    parser.add_argument(
+        "--problem_size",
+        default=None,
+        help="TODO move this to some deeper lever!",
+    )
+    parser.add_argument(
+        "--path_out",
+        type=str,
+        default="./logs",
+        help="Path where the output (i.e. logs) is saved",
+    )
+    parser.add_argument(
+        "--gpus",
+        default="",
+        help="CUDA_VISIBLE_DEVICES is set to this string",
+    )
+    parser.add_argument(
+        "--power_rapl",
+        action="store_true",
+        default=False,
+        help="Estimate CPU power consumption using RAPL",
+    )
+    parser.add_argument(
+        "--power_sampling_ms",
+        type=int,
+        default=100,
+        help="Interval at which the power consumption is sampled",
+    )
+    parser.add_argument(
+        "--preheat",
+        action="store_true",
+        default=False,
+        help="TODO move this deeper [Do a preheat]",
+    )
 
     # parser.add_argument('--misc')
     return parser.parse_known_args(argv)
@@ -91,6 +119,12 @@ def run(argv):
     # TODO: make this optional
     if args.power_rapl:
         benchmark.measure_power_and_run()
+        # benchmark.rapl_pre_run()
+    # benchmark.run()
+    if args.power_rapl:
+        # benchmark.rapl_post_run()
+        pass
+
     print("benchmarkmagic#!%")
     print_json(params)
 
