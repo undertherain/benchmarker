@@ -41,6 +41,12 @@ def parse_basic_args(argv):
         help="Estimate CPU power consumption using RAPL",
     )
     parser.add_argument(
+        "--power_nvml",
+        action="store_true",
+        default=False,
+        help="Estimate GPU power consumption using NVML",
+    )
+    parser.add_argument(
         "--power_sampling_ms",
         type=int,
         default=100,
