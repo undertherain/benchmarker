@@ -6,10 +6,10 @@ This is where all magic is happening
 
 import argparse
 import ast
-import importlib
 import os
 import pkgutil
 import sys
+from importlib import import_module
 
 from .util.io import print_json
 
@@ -86,8 +86,8 @@ def run(argv):
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
     params["power"]["avg_watt_total"] = 0
-    mod = importlib.import_module("benchmarker.frameworks.do_" + params["framework"])
-    benchmark = mod.Benchmark(params, unknown_args)
+    framework_mod = import_module(f"benchmarker.frameworks.do_{params['framework']}")
+    benchmark = framework_mod.Benchmark(params, unknown_args)
     # TODO: make this optional
     if args.power_rapl:
         benchmark.measure_power_and_run()
