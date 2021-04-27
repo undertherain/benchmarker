@@ -9,16 +9,10 @@ class PowerMonitorRAPL:
         try:
             pyRAPL.setup()
             self.rapl_enabled = True
-        except:
-            self.rapl_enabled = False
-
-    def start(self):
-        if self.rapl_enabled:
             self.meter_rapl = pyRAPL.Measurement("bar")
             self.meter_rapl.begin()
-        else:
-            logger = logging.getLogger(__name__)
-            logger.warning("RAPL requested but it is not enabled")
+        except:
+            self.rapl_enabled = False
 
     def stop(self):
         if self.rapl_enabled:
