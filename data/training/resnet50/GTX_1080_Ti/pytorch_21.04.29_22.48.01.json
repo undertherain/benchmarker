@@ -1,0 +1,109 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "cudnn_benchmark": true,
+    "device": "GeForce GTX 1080 Ti",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.6.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/resnet50/GTX_1080_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2200.0,
+            "clock_max": 2200.0,
+            "clock_min": 2200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev1.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 253269909504
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 83.72808614168133,
+        "avg_watt_GPU": 226.00978571428573,
+        "avg_watt_RAM": 16.616223090161,
+        "avg_watt_total": 326.35409494612804,
+        "joules_CPU": 2391.610759,
+        "joules_GPU": 6455.748125412914,
+        "joules_RAM": 474.626135,
+        "joules_total": 9321.985019412914,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "resnet50",
+        "precision": "FP32",
+        "size": [
+            512,
+            3,
+            224,
+            224
+        ]
+    },
+    "profile_pytorch": false,
+    "samples_per_joule": 0.5492392435020723,
+    "samples_per_joule_CPU": 2.140816594311031,
+    "samples_per_joule_GPU": 0.7930916604142639,
+    "samples_per_joule_device": 0.7930916604142639,
+    "samples_per_second": 179.24647622201488,
+    "tensor_layout": "native",
+    "time_batch": 0.17852512738027143,
+    "time_epoch": 2.856402038084343,
+    "time_sample": 0.005578910230633482,
+    "time_total": 28.56402038084343
+}
