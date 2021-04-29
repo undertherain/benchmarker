@@ -1,0 +1,97 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+    "framework": "tensorflow",
+    "framework_full": "TensorFlow-2.4.1",
+    "gpus": [],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs/training/vgg16/Xeon_E5-2650_v3",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2599.8879500000016,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270178271232
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": -106.80448026986542,
+        "avg_watt_RAM": -47.231528482977815,
+        "avg_watt_total": -154.03600875284323,
+        "joules_CPU": -95644.018273,
+        "joules_RAM": -42296.101829,
+        "joules_total": -137940.120102,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "precision": "FP32",
+        "size": [
+            512,
+            224,
+            224,
+            3
+        ]
+    },
+    "samples_per_second": 5.717440032902527,
+    "time_batch": 5.596910473192111,
+    "time_epoch": 89.55056757107377,
+    "time_sample": 0.17490345228725346,
+    "time_total": 895.5056757107377
+}

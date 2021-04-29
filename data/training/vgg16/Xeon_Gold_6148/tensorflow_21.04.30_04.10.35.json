@@ -1,0 +1,116 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "device": "Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz",
+    "framework": "tensorflow",
+    "framework_full": "TensorFlow-2.4.1",
+    "gpus": [],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs/training/vgg16/Xeon_Gold_6148",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz",
+            "cache": {
+                "1": 32768,
+                "2": 1048576,
+                "3": 28835840
+            },
+            "clock": 2899.1048,
+            "clock_max": 3700.0,
+            "clock_min": 1000.0,
+            "logical_cores": 80,
+            "physical_cores": 40
+        },
+        "gpus": [
+            {
+                "brand": "Tesla V100-SXM2-16GB",
+                "clock": 1530000,
+                "compute_capability": 7.0,
+                "cores": null,
+                "memory": 16945512448,
+                "memory_clock": 877000,
+                "multiprocessors": 80,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla V100-SXM2-16GB",
+                "clock": 1530000,
+                "compute_capability": 7.0,
+                "cores": null,
+                "memory": 16945512448,
+                "memory_clock": 877000,
+                "multiprocessors": 80,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla V100-SXM2-16GB",
+                "clock": 1530000,
+                "compute_capability": 7.0,
+                "cores": null,
+                "memory": 16945512448,
+                "memory_clock": 877000,
+                "multiprocessors": 80,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla V100-SXM2-16GB",
+                "clock": 1530000,
+                "compute_capability": 7.0,
+                "cores": null,
+                "memory": 16945512448,
+                "memory_clock": 877000,
+                "multiprocessors": 80,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPE2KE016T7                     ",
+                "size": 3125627568
+            },
+            "/dev/sda": {
+                "model": "M.2 (S42) 3ME4  ",
+                "size": 250069680
+            }
+        },
+        "host": "g0007.abci.local",
+        "os": "Linux-3.10.0-862.el7.x86_64-x86_64-with-centos-7.5.1804-Core",
+        "ram": {
+            "total": 403942887424
+        },
+        "swap": 4301783040
+    },
+    "power": {
+        "avg_watt_CPU": 200.84416544841736,
+        "avg_watt_RAM": -63.24049310587733,
+        "avg_watt_total": 137.60367234254002,
+        "joules_CPU": 133157.358517,
+        "joules_RAM": -41927.715423,
+        "joules_total": 91229.64309399998,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "precision": "FP32",
+        "size": [
+            512,
+            224,
+            224,
+            3
+        ]
+    },
+    "samples_per_joule": 0.05612210928770731,
+    "samples_per_joule_CPU": 0.03845074772451526,
+    "samples_per_joule_device": 0.03845074772451526,
+    "samples_per_second": 7.722608337597901,
+    "time_batch": 4.1436777059127055,
+    "time_epoch": 66.29884329460329,
+    "time_sample": 0.12948992830977205,
+    "time_total": 662.9884329460328
+}
