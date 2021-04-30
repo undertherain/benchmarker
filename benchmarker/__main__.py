@@ -53,6 +53,8 @@ def main():
     args, unknown_args = get_args()
     command = [sys.executable, "-m", "benchmarker"]
     command += unknown_args
+    # TODO(vatai): remove rapl and nvml and any other profiling. Make
+    # a base class (or something) which ignores this)
     result = benchmarker.benchmarker.run(unknown_args)
 
     # TODO: don't parse path_out in the innder loop
