@@ -1,0 +1,113 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "device": "Tesla P100-PCIE-16GB",
+    "framework": "tensorflow",
+    "framework_full": "TensorFlow-2.2.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/vgg16/P100-PCIE",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2499.9582708333346,
+            "clock_max": 2900.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "Tesla P100-PCIE-16GB",
+                "clock": 1328500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla P100-PCIE-16GB",
+                "clock": 1328500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/nvme1n1": {
+                "model": "INTEL SSDPED1D280GA                     ",
+                "size": 547002288
+            },
+            "/dev/nvme2n1": {
+                "model": "INTEL SSDPED1D280GA                     ",
+                "size": 547002288
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev7.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270180454400
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 97.95200216173134,
+        "avg_watt_GPU": 184.2598679775281,
+        "avg_watt_RAM": 16.861979734125594,
+        "avg_watt_total": 299.07384987338503,
+        "joules_CPU": 4020.81008,
+        "joules_GPU": 7563.642581600692,
+        "joules_RAM": 692.163678,
+        "joules_total": 12276.616339600692,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "precision": "FP32",
+        "size": [
+            512,
+            224,
+            224,
+            3
+        ]
+    },
+    "samples_per_joule": 0.41705302653178233,
+    "samples_per_joule_CPU": 1.27337523984719,
+    "samples_per_joule_GPU": 0.6769225204341234,
+    "samples_per_joule_device": 0.6769225204341234,
+    "samples_per_second": 124.72965424620713,
+    "time_batch": 0.25655486815376205,
+    "time_epoch": 4.104877890460193,
+    "time_sample": 0.008017339629805064,
+    "time_total": 41.04877890460193
+}

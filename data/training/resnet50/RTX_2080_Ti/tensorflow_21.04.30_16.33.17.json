@@ -1,0 +1,95 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "device": "GeForce RTX 2080 Ti",
+    "framework": "tensorflow",
+    "framework_full": "TensorFlow-2.2.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/resnet50/RTX_2080_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 1675.8787291666667,
+            "clock_max": 2900.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2080 Ti",
+                "clock": 1635000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 11554717696,
+                "memory_clock": 7000000,
+                "multiprocessors": 68,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev2.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270178746368
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 46.83952149516931,
+        "avg_watt_GPU": 215.9245251798561,
+        "avg_watt_RAM": 11.548726179435175,
+        "avg_watt_total": 274.3127728544606,
+        "joules_CPU": 1472.072403,
+        "joules_GPU": 6786.075615245689,
+        "joules_RAM": 362.953347,
+        "joules_total": 8621.10136524569,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "resnet50",
+        "precision": "FP32",
+        "size": [
+            512,
+            224,
+            224,
+            3
+        ]
+    },
+    "samples_per_joule": 0.5938916367043652,
+    "samples_per_joule_CPU": 3.478089793386338,
+    "samples_per_joule_GPU": 0.7544861404870495,
+    "samples_per_joule_device": 0.7544861404870495,
+    "samples_per_second": 162.91206163944838,
+    "time_batch": 0.1964249895187095,
+    "time_epoch": 3.142799832299352,
+    "time_sample": 0.0061382809224596714,
+    "time_total": 31.427998322993517
+}

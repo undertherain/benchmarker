@@ -1,0 +1,104 @@
+{
+    "backend": "DNNL",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "cudnn_benchmark": true,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.6.0",
+    "gpus": [],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs/training/vgg16/Xeon_E5-2650_v3",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2599.8459250000005,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270178271232
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 201.78816434198424,
+        "avg_watt_RAM": -95.54319343152304,
+        "avg_watt_total": 106.2449709104612,
+        "joules_CPU": 108773.827495,
+        "joules_RAM": -51502.51936,
+        "joules_total": 57271.30813500001,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "precision": "FP32",
+        "size": [
+            512,
+            3,
+            224,
+            224
+        ]
+    },
+    "profile_pytorch": false,
+    "samples_per_joule": 0.08939904057946658,
+    "samples_per_joule_CPU": 0.047070146540861134,
+    "samples_per_joule_device": 0.047070146540861134,
+    "samples_per_second": 9.498198465788567,
+    "tensor_layout": "native",
+    "time_batch": 3.3690599449211733,
+    "time_epoch": 53.90495911873877,
+    "time_sample": 0.10528312327878667,
+    "time_total": 539.0495911873877
+}

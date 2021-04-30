@@ -1,0 +1,113 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "device": "GeForce GTX 980 Ti",
+    "framework": "tensorflow",
+    "framework_full": "TensorFlow-2.2.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/resnet50/GTX_980_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2500.0646250000013,
+            "clock_max": 2900.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/nvme1n1": {
+                "model": "INTEL SSDPED1K375GA                     ",
+                "size": 732585168
+            },
+            "/dev/nvme2n1": {
+                "model": "INTEL SSDPED1K375GA                     ",
+                "size": 732585168
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev5.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 540746194944
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 89.18411407031343,
+        "avg_watt_GPU": 238.04852586206897,
+        "avg_watt_RAM": 29.76785451260284,
+        "avg_watt_total": 357.00049444498524,
+        "joules_CPU": 4697.966062,
+        "joules_GPU": 12539.720860235475,
+        "joules_RAM": 1568.086107,
+        "joules_total": 18805.773029235475,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "resnet50",
+        "precision": "FP32",
+        "size": [
+            512,
+            224,
+            224,
+            3
+        ]
+    },
+    "samples_per_joule": 0.2722568219897391,
+    "samples_per_joule_CPU": 1.089833330515873,
+    "samples_per_joule_GPU": 0.40830254971910557,
+    "samples_per_joule_device": 0.40830254971910557,
+    "samples_per_second": 97.1958200663572,
+    "time_batch": 0.32923226511338727,
+    "time_epoch": 5.267716241814196,
+    "time_sample": 0.010288508284793352,
+    "time_total": 52.67716241814196
+}

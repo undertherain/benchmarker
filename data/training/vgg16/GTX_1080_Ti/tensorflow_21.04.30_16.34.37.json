@@ -1,0 +1,105 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": false,
+    "device": "GeForce GTX 1080 Ti",
+    "framework": "tensorflow",
+    "framework_full": "TensorFlow-2.2.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/vgg16/GTX_1080_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2200.0,
+            "clock_max": 2200.0,
+            "clock_min": 2200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev1.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 253269909504
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 83.61574333933342,
+        "avg_watt_GPU": 231.46623544973542,
+        "avg_watt_RAM": 16.06433194984686,
+        "avg_watt_total": 331.1463107389157,
+        "joules_CPU": 3608.408915,
+        "joules_GPU": 9988.846527725824,
+        "joules_RAM": 693.250772,
+        "joules_total": 14290.506214725825,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "precision": "FP32",
+        "size": [
+            512,
+            224,
+            224,
+            3
+        ]
+    },
+    "samples_per_joule": 0.3582798203974072,
+    "samples_per_joule_CPU": 1.41890792330004,
+    "samples_per_joule_GPU": 0.5125716954193387,
+    "samples_per_joule_device": 0.5125716954193387,
+    "samples_per_second": 118.64304073680272,
+    "time_batch": 0.269716620555846,
+    "time_epoch": 4.315465928893536,
+    "time_sample": 0.008428644392370187,
+    "time_total": 43.15465928893536
+}
