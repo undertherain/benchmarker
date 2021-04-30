@@ -1,7 +1,6 @@
 """CLI entry point module"""
 
 import argparse
-import json
 import os
 import sys
 
@@ -9,7 +8,6 @@ import benchmarker.benchmarker
 from benchmarker.profiling import fapp, nvprof, perf
 from benchmarker.results import add_result_details
 # from .benchmarker import run
-from benchmarker.util import abstractprocess
 from benchmarker.util.cute_device import get_cute_device_str
 
 from .util import sysinfo
