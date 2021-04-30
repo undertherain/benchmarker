@@ -1,0 +1,99 @@
+{
+    "batch_size": 16,
+    "batch_size_per_device": 16,
+    "channels_first": true,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+    "framework": "chainer",
+    "framework_full": "Chainer-7.7.0",
+    "gpus": [],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs/training/resnet50/Xeon_E5-2650_v3",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2600.014200000001,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270178271232
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 154.78148811217127,
+        "avg_watt_RAM": 20.46797790168261,
+        "avg_watt_total": 175.2494660138539,
+        "joules_CPU": 49011.589801,
+        "joules_RAM": 6481.18938,
+        "joules_total": 55492.779181000005,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 2,
+        "cnt_samples": 32,
+        "name": "resnet50",
+        "size": [
+            32,
+            3,
+            224,
+            224
+        ]
+    },
+    "samples_per_joule": 0.005766516017449055,
+    "samples_per_joule_CPU": 0.006529067946975083,
+    "samples_per_joule_device": 0.006529067946975083,
+    "samples_per_second": 1.0105788528182824,
+    "time_batch": 15.832510204799473,
+    "time_epoch": 31.665020409598945,
+    "time_sample": 0.989531887799967,
+    "time_total": 316.65020409598947
+}
