@@ -18,8 +18,8 @@ from .util.io import save_json
 
 def get_args():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--flops", action="store_true")
-    parser.add_argument("--power_fapp", action="store_true")
+    parser.add_argument("--flops", action="store_true", default=False)
+    parser.add_argument("--power_fapp", action="store_true", default=False)
     # removed: see issue #167
     # parser.add_argument("--profile_pytorch", action="store_true")
     return parser.parse_known_args()
