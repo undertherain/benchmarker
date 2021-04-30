@@ -116,13 +116,14 @@ def run(argv):
     params["gpus"] = get_gpus(args)
     params["nb_gpus"] = len(params["gpus"])
 
+    framework_mod = import_module(f"benchmarker.frameworks.do_{params['framework']}")
+    benchmark = framework_mod.Benchmark(params, unknown_args)
+
     params["power"] = {}
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
     params["power"]["avg_watt_total"] = 0
-    framework_mod = import_module(f"benchmarker.frameworks.do_{params['framework']}")
-    benchmark = framework_mod.Benchmark(params, unknown_args)
-    # TODO: make this optional
+
     do_rapl = args.power_rapl  # and isintel
     do_nvml = args.power_nvml  # and params["nb_gpus"] > 0
     if do_rapl:  # and is intel
@@ -142,8 +143,7 @@ def run(argv):
     if do_rapl:
         rapl_monitor.stop()
 
-    print("benchmarkmagic#!%")
-    print_json(params)
+    return params
 
 
 if __name__ == "__main__":
