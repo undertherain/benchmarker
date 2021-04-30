@@ -19,7 +19,7 @@ from .util.io import save_json
 def get_args():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--flops", action="store_true")
-    parser.add_argument("--fapp_power", action="store_true")
+    parser.add_argument("--power_fapp", action="store_true")
     # removed: see issue #167
     # parser.add_argument("--profile_pytorch", action="store_true")
     return parser.parse_known_args()
@@ -75,7 +75,7 @@ def main():
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops and "Intel" in result["device"]:
             result["problem"]["gflop_measured"] = perf.get_gflop(command)
-        elif args.fapp_power:
+        elif args.power_fapp:
             avg_watt_total, details = fapp.get_power_total_and_detail(command)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
 
