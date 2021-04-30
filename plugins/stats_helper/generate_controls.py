@@ -46,7 +46,6 @@ class Plugin(ShortcodePlugin):
         mytemplate = Template(filename=os.path.join(plugin_path, 'controls.tmpl'))
         df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
         df['device'] = df['device'].map(get_cute_device_str)
-        # df["images_per_second"] = df["problem.shape_x_train"].map(lambda x: x[0]) / df["time"]
         keyvals = {
             "device": list(df["device"].unique()),
             "framework": list(df["framework"].unique()),
@@ -55,7 +54,6 @@ class Plugin(ShortcodePlugin):
         output = mytemplate.render(keyvals=keyvals)
         mytemplate = Template(filename=os.path.join(plugin_path, 'data.tmpl'))
         rows = [[i[1]['problem.name'], i[1]['device'], i[1]['framework'], i[1]['samples_per_second']] for i in df.iterrows()]
-        # rows = [[i[1]['problem.name'], i[1]['device'], i[1]['framework'], i[1]['images_per_second']] for i in df.iterrows()]
         output += mytemplate.render(rows=rows)
 
         return output, []
@@ -65,7 +63,6 @@ def main():
     df = read_df_from_dir(os.path.join(plugin_path, "../../data"))
     df['device'] = df['device'].map(get_cute_device_str)
     devices = list(df["device"].unique())
-    # df["images_per_second"] = df["problem.shape_x_train"].map(lambda x: x[0]) / df["time"]
     print(devices)
     #print(df)
 
