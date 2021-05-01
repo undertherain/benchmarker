@@ -39,6 +39,7 @@ def gen_fapp_csv(fapp_dir, csv_file):
 
 
 def get_power_total_and_detail(command):
+    print("COMMAND:", command)
     print("PATH_OUT:", get_path_out(command))
     with TemporaryDirectory() as csv_dir:
         for rep in [1, 8]:
