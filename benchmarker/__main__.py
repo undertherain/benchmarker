@@ -84,7 +84,7 @@ def main():
     #     profile_result = run_cmd_and_get_output(command)
     #     result["profile_pytorch"] = True
     #     result["profile_data"] = profile_result["profile_data"]
-    #     result["path_out"] = "./logs/profile"
+    #     result["path_out"] = os.path.join(result["path_out"], "profile")
 
     cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
     result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
