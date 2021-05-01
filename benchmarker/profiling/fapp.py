@@ -1,7 +1,15 @@
+import argparse
 from tempfile import TemporaryDirectory
 
 from benchmarker.profiling.power_fapp import get_power, get_total_power
 from benchmarker.util import abstractprocess
+
+
+def get_path_out(command):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path_out")
+    args = parser.parse_args(command)
+    return args.path_out
 
 
 def call_fapp(cmd):
@@ -31,6 +39,7 @@ def gen_fapp_csv(fapp_dir, csv_file):
 
 
 def get_power_total_and_detail(command):
+    print("PATH_OUT:", get_path_out(command))
     with TemporaryDirectory() as csv_dir:
         for rep in [1, 8]:
             with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
