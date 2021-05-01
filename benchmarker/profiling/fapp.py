@@ -8,7 +8,7 @@ from benchmarker.util import abstractprocess
 def get_path_out(command):
     parser = argparse.ArgumentParser()
     parser.add_argument("--path_out")
-    args = parser.parse_args(command)
+    args, _ = parser.parse_known_args(command)
     return args.path_out
 
 
