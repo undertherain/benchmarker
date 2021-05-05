@@ -7,11 +7,9 @@ import sys
 import benchmarker.benchmarker
 from benchmarker.profiling import fapp, nvprof, perf
 from benchmarker.results import add_result_details
-# from .benchmarker import run
-from benchmarker.util.cute_device import get_cute_device_str
 
 from .util import sysinfo
-from .util.io import get_time_str, save_json
+from .util.io import get_cute_device_str, get_time_str, save_json
 
 
 def get_args():
