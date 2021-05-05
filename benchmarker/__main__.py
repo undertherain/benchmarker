@@ -9,7 +9,7 @@ from benchmarker.profiling import fapp, nvprof, perf
 from benchmarker.results import add_result_details
 
 from .util import sysinfo
-from .util.io import get_cute_device_str, get_time_str, save_json
+from .util.io import get_time_str, save_json
 
 
 def get_args():
@@ -85,13 +85,9 @@ def main():
     #     result["profile_data"] = profile_result["profile_data"]
     #     result["path_out"] = os.path.join(result["path_out"], "profile")
 
-    cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
-    result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
-    result["path_out"] = os.path.join(result["path_out"], cute_device)
-
     # TODO: call fill_result_details here
     add_result_details(result)
-    print(result)
+
     save_json(result)
     # TODO: don't measure power when measureing flops
 

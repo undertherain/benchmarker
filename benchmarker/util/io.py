@@ -47,12 +47,21 @@ def gen_name_output_file(params):
     return "{}_{}.json".format(params["framework"], params["start_time"])
 
 
+def get_path_out_dir(params):
+    path_out = os.path.join(
+        params["path_out"],
+        params["problem"]["name"],
+        get_cute_device_str(params["device"]).replace(" ", "_"),
+    )
+    if not os.path.isdir(path_out):
+        os.makedirs(path_out)
+    return path_out
+
+
 def save_json(params):
     str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
     print(str_result)
-    path_out = params["path_out"]
-    if not os.path.isdir(path_out):
-        os.makedirs(path_out)
+    path_out = get_path_out_dir(params)
     name_file = gen_name_output_file(params)
     with open(os.path.join(path_out, name_file), "w") as file_out:
         file_out.write(str_result)
