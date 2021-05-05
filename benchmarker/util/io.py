@@ -1,6 +1,6 @@
+import datetime
 import json
 import os
-import datetime
 
 
 def get_time_str():
@@ -13,14 +13,11 @@ def get_time_str():
 
 
 def gen_name_output_file(params):
-    name = "{}_{}.json".format(
-        params["framework"],
-        get_time_str())
-    return name
+    return "{}_{}.json".format(params["framework"], params["start_time"])
 
 
 def save_json(params):
-    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(',', ': '))
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
     print(str_result)
     path_out = params["path_out"]
     if not os.path.isdir(path_out):
@@ -31,5 +28,5 @@ def save_json(params):
 
 
 def print_json(params):
-    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(',', ': '))
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
     print(str_result)
