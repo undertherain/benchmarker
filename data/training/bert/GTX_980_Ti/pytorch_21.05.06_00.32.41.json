@@ -1,0 +1,122 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "cudnn_benchmark": true,
+    "device": "GeForce GTX 980 Ti",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.6.0",
+    "gflop_per_joule": 3.3536087006803106,
+    "gflop_per_joule_CPU": 14.569977033994778,
+    "gflop_per_joule_GPU": 4.795392049691864,
+    "gflop_per_joule_device": 4.795392049691864,
+    "gflop_per_second": 1316.883457055674,
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/bert/GTX_980_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2500.0813958333338,
+            "clock_max": 2900.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 980 Ti",
+                "clock": 1228000,
+                "compute_capability": 5.2,
+                "cores": 2816,
+                "memory": 6379470848,
+                "memory_clock": 3505000,
+                "multiprocessors": 22,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/nvme1n1": {
+                "model": "INTEL SSDPED1K375GA                     ",
+                "size": 732585168
+            },
+            "/dev/nvme2n1": {
+                "model": "INTEL SSDPED1K375GA                     ",
+                "size": 732585168
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev5.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 540746194944
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 90.38335846261883,
+        "avg_watt_GPU": 274.6143471502591,
+        "avg_watt_RAM": 27.678833182042254,
+        "avg_watt_total": 392.6765387949202,
+        "joules_CPU": 1963.248269,
+        "joules_GPU": 5964.993455164534,
+        "joules_RAM": 601.221533,
+        "joules_total": 8529.463257164534,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 4,
+        "cnt_samples": 128,
+        "gflop_estimated": 28604.482191360003,
+        "len_sequence": 128,
+        "name": "bert",
+        "precision": "FP32",
+        "size": [
+            128,
+            128
+        ]
+    },
+    "profile_pytorch": false,
+    "samples_per_joule": 0.15006805954933122,
+    "samples_per_joule_CPU": 0.6519807098324761,
+    "samples_per_joule_GPU": 0.2145853150755374,
+    "samples_per_joule_device": 0.2145853150755374,
+    "samples_per_second": 58.92820620750136,
+    "tensor_layout": "native",
+    "time_batch": 0.5430336685851216,
+    "time_epoch": 2.1721346743404863,
+    "time_sample": 0.01696980214328505,
+    "time_total": 21.721346743404865
+}

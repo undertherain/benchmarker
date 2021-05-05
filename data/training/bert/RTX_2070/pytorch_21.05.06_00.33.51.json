@@ -1,0 +1,114 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "cudnn_benchmark": true,
+    "device": "GeForce RTX 2070",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.6.0",
+    "gflop_per_joule": 5.904604428124016,
+    "gflop_per_joule_CPU": 16.169315533784875,
+    "gflop_per_joule_GPU": 10.245698074326945,
+    "gflop_per_joule_device": 10.245698074326945,
+    "gflop_per_second": 1743.4018230630904,
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/bert/RTX_2070",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2599.551025000001,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270178271232
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 107.82162172668043,
+        "avg_watt_GPU": 170.15939864864865,
+        "avg_watt_RAM": 17.280388629337494,
+        "avg_watt_total": 295.2614090046666,
+        "joules_CPU": 1769.059558,
+        "joules_GPU": 2791.8529302591296,
+        "joules_RAM": 283.524178,
+        "joules_total": 4844.436666259129,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 4,
+        "cnt_samples": 128,
+        "gflop_estimated": 28604.482191360003,
+        "len_sequence": 128,
+        "name": "bert",
+        "precision": "FP32",
+        "size": [
+            128,
+            128
+        ]
+    },
+    "profile_pytorch": false,
+    "samples_per_joule": 0.2642206077158637,
+    "samples_per_joule_CPU": 0.7235482797691088,
+    "samples_per_joule_GPU": 0.4584768725196406,
+    "samples_per_joule_device": 0.4584768725196406,
+    "samples_per_second": 78.0141489222552,
+    "tensor_layout": "native",
+    "time_batch": 0.41018200470134614,
+    "time_epoch": 1.6407280188053845,
+    "time_sample": 0.012818187646917067,
+    "time_total": 16.407280188053846
+}

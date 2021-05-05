@@ -1,0 +1,116 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "cudnn_benchmark": true,
+    "device": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.6.0",
+    "gflop_per_joule": 0.937084838096727,
+    "gflop_per_joule_CPU": 1.0797140114993529,
+    "gflop_per_joule_device": 1.0797140114993529,
+    "gflop_per_second": 161.6451366670844,
+    "gpus": [],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 0,
+    "path_out": "./logs/training/bert/Xeon_E5-2650_v4",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2500.0393750000017,
+            "clock_max": 2900.0,
+            "clock_min": 1200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "Tesla P100-PCIE-16GB",
+                "clock": 1328500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla P100-PCIE-16GB",
+                "clock": 1328500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/nvme1n1": {
+                "model": "INTEL SSDPED1D280GA                     ",
+                "size": 547002288
+            },
+            "/dev/nvme2n1": {
+                "model": "INTEL SSDPED1D280GA                     ",
+                "size": 547002288
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev7.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270180454400
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 149.7110669543083,
+        "avg_watt_RAM": 22.786801003298322,
+        "avg_watt_total": 172.49786795760662,
+        "joules_CPU": 26492.647022,
+        "joules_RAM": 4032.318305,
+        "joules_total": 30524.965327,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 4,
+        "cnt_samples": 128,
+        "gflop_estimated": 28604.482191360003,
+        "len_sequence": 128,
+        "name": "bert",
+        "precision": "FP32",
+        "size": [
+            128,
+            128
+        ]
+    },
+    "profile_pytorch": false,
+    "samples_per_joule": 0.04193288956393382,
+    "samples_per_joule_CPU": 0.04831529287870191,
+    "samples_per_joule_device": 0.04831529287870191,
+    "samples_per_second": 7.233334047080357,
+    "tensor_layout": "native",
+    "time_batch": 4.423962697107345,
+    "time_epoch": 17.69585078842938,
+    "time_sample": 0.13824883428460452,
+    "time_total": 176.9585078842938
+}
