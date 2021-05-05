@@ -11,7 +11,7 @@ from benchmarker.results import add_result_details
 from benchmarker.util.cute_device import get_cute_device_str
 
 from .util import sysinfo
-from .util.io import save_json
+from .util.io import get_time_str, save_json
 
 
 def get_args():
@@ -57,6 +57,7 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
+    result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
         precision = result["problem"]["precision"]
         result["device"] = result["platform"]["gpus"][0]["brand"]
