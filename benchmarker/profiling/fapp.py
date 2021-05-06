@@ -35,7 +35,6 @@ def get_power_total_and_detail(command, params):
     suffix_csv = get_path_out_name(params, "fapp_csv")
     fapp_dir = os.path.join(prefix, suffix_data)
     csv_dir = os.path.join(prefix, suffix_csv)
-    os.makedirs(fapp_dir)
     os.makedirs(csv_dir)
 
     print("COMMAND:", command)
@@ -45,6 +44,7 @@ def get_power_total_and_detail(command, params):
         csv_file = f"{csv_dir}/pa{rep}.csv"
         print("CSV_FILE:", csv_file)
         fapp_dir_num = fapp_dir + str(rep)
+        os.makedirs(fapp_dir_num)
         run_fapp_profiler(fapp_dir_num, rep, command)
         gen_fapp_csv(fapp_dir_num, csv_file)
     power_details = get_power(csv_dir)
