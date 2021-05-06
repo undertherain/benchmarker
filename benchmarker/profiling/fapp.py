@@ -21,17 +21,12 @@ def call_fapp(cmd):
 
 def run_fapp_profiler(fapp_dir, rep, command):
     # fapp -C -d ./prof_${APP}_rep${REP} -Hevent=pa${REP} ./${APP}
-    fapp_measure_cmd = ["fapp", "-C", "-d"]
-    fapp_measure_cmd += [fapp_dir, f"-Hevent=pa{rep}"]
-    cmd = fapp_measure_cmd + command
-    call_fapp(cmd)
+    call_fapp(["fapp", "-C", "-d", fapp_dir, f"-Hevent=pa{rep}"] + command)
 
 
 def gen_fapp_csv(fapp_dir, csv_file):
     # fapp -A -tcsv -o $APP_reps/pa$REP.csv -d ./prof_$APP_rep$REP -Icpupa
-    fapp_gen_csv_cmd = ["fapp", "-A", "-tcsv"]
-    fapp_gen_csv_cmd += ["-o", csv_file] + ["-d", fapp_dir, "-Icpupa"]
-    call_fapp(fapp_gen_csv_cmd)
+    call_fapp(["fapp", "-A", "-tcsv", "-o", csv_file, "-d", fapp_dir, "-Icpupa"])
 
 
 def get_power_total_and_detail(command, params):
@@ -49,8 +44,9 @@ def get_power_total_and_detail(command, params):
     for rep in [1, 8]:
         csv_file = f"{csv_dir}/pa{rep}.csv"
         print("CSV_FILE:", csv_file)
-        run_fapp_profiler(fapp_dir, rep, command)
-        gen_fapp_csv(fapp_dir, csv_file)
+        fap_dir_num = fap_dir + str(rep)
+        run_fapp_profiler(fapp_dir_num, rep, command)
+        gen_fapp_csv(fapp_dir_num, csv_file)
     power_details = get_power(csv_dir)
     power_total = get_total_power(power_details)
 
