@@ -47,6 +47,7 @@ def get_power_total_and_detail(command, params):
     print("CSV_DIR:", csv_dir)
     for rep in [1, 8]:
         csv_file = f"{csv_dir}/pa{rep}.csv"
+        print("CSV_FILE:", csv_file)
         run_fapp_profiler(fapp_dir, rep, command)
         gen_fapp_csv(fapp_dir, csv_file)
     power_details = get_power(csv_dir)
