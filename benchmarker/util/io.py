@@ -43,8 +43,8 @@ def get_time_str():
     return str_time
 
 
-def get_path_out_name(params):
-    return "{}_{}.json".format(params["framework"], params["start_time"])
+def get_path_out_name(params, ext="json"):
+    return f'{params["framework"]}_{params["start_time"]}.{ext}'
 
 
 def get_path_out_dir(params):
