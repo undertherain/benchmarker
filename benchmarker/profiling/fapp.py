@@ -44,10 +44,9 @@ def get_power_total_and_detail(command, params):
     os.makedirs(csv_dir)
 
     for rep in [1, 8]:
-        with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
-            csv_file = f"{csv_dir}/pa{rep}.csv"
-            run_fapp_profiler(fapp_dir, rep, command)
-            gen_fapp_csv(fapp_dir, csv_file)
+        csv_file = f"{csv_dir}/pa{rep}.csv"
+        run_fapp_profiler(fapp_dir, rep, command)
+        gen_fapp_csv(fapp_dir, csv_file)
     power_details = get_power(csv_dir)
     power_total = get_total_power(power_details)
 
