@@ -1,0 +1,104 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce RTX 2070",
+    "framework": "chainer",
+    "framework_full": "Chainer-7.7.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/vgg16/RTX_2070",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v3 @ 2.30GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2600.2670250000015,
+            "clock_max": 3000.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce RTX 2070",
+                "clock": 1620000,
+                "compute_capability": 7.5,
+                "cores": null,
+                "memory": 8370061312,
+                "memory_clock": 7001000,
+                "multiprocessors": 36,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 488397168
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 976773168
+            }
+        },
+        "host": "roma0.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 270178271232
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 106.87120766178558,
+        "avg_watt_GPU": 158.60219899244333,
+        "avg_watt_RAM": 16.087255584726226,
+        "avg_watt_total": 281.56066223895516,
+        "joules_CPU": 9440.85962,
+        "joules_GPU": 14010.706240445843,
+        "joules_RAM": 1421.126653,
+        "joules_total": 24872.692513445843,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "size": [
+            512,
+            3,
+            224,
+            224
+        ]
+    },
+    "samples_per_joule": 0.20584824088635345,
+    "samples_per_joule_CPU": 0.5423234965970186,
+    "samples_per_joule_GPU": 0.36543482620595386,
+    "samples_per_joule_device": 0.36543482620595386,
+    "samples_per_second": 57.95876702468564,
+    "time_batch": 0.5521166450344026,
+    "time_epoch": 8.833866320550442,
+    "time_sample": 0.01725364515732508,
+    "time_total": 88.33866320550442
+}

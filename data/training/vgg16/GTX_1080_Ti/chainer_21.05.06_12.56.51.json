@@ -1,0 +1,104 @@
+{
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "device": "GeForce GTX 1080 Ti",
+    "framework": "chainer",
+    "framework_full": "Chainer-7.7.0",
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/vgg16/GTX_1080_Ti",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 31457280
+            },
+            "clock": 2200.0,
+            "clock_max": 2200.0,
+            "clock_min": 2200.0,
+            "logical_cores": 48,
+            "physical_cores": 12
+        },
+        "gpus": [
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            },
+            {
+                "brand": "GeForce GTX 1080 Ti",
+                "clock": 1582000,
+                "compute_capability": 6.1,
+                "cores": 3584,
+                "memory": 11721506816,
+                "memory_clock": 5505000,
+                "multiprocessors": 28,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/nvme0n1": {
+                "model": "INTEL SSDPEDMW800G4                     ",
+                "size": 1562824368
+            },
+            "/dev/sda": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            },
+            "/dev/sdb": {
+                "model": "Samsung SSD 850 ",
+                "size": 1000215216
+            }
+        },
+        "host": "kiev1.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.18.1.el7.x86_64-x86_64-with-centos-7.8.2003-Core",
+        "ram": {
+            "total": 253269909504
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 84.4141999260315,
+        "avg_watt_GPU": 205.56454603174603,
+        "avg_watt_RAM": 16.15235344233859,
+        "avg_watt_total": 306.1310994001161,
+        "joules_CPU": 5965.585924,
+        "joules_GPU": 14527.330275652663,
+        "joules_RAM": 1141.493403,
+        "joules_total": 21634.40960265266,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 16,
+        "cnt_samples": 512,
+        "name": "vgg16",
+        "size": [
+            512,
+            3,
+            224,
+            224
+        ]
+    },
+    "samples_per_joule": 0.23666002881688167,
+    "samples_per_joule_CPU": 0.8582560146190931,
+    "samples_per_joule_GPU": 0.3524391545348807,
+    "samples_per_joule_device": 0.3524391545348807,
+    "samples_per_second": 72.44899480577514,
+    "time_batch": 0.44169004809227774,
+    "time_epoch": 7.067040769476444,
+    "time_sample": 0.01380281400288368,
+    "time_total": 70.67040769476444
+}
