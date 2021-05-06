@@ -20,7 +20,7 @@ def call_fapp(cmd):
             "Standard output:\n{}\n"
             "Standard output:\n{}\n"
         ).format(
-            cmd,
+            " ".join(cmd),
             retval,
             output["out"],
             output["err"],
