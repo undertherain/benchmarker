@@ -43,13 +43,14 @@ def get_time_str():
     return str_time
 
 
-def gen_name_output_file(params):
+def get_path_out_name(params):
     return "{}_{}.json".format(params["framework"], params["start_time"])
 
 
 def get_path_out_dir(params):
     path_out = os.path.join(
         params["path_out"],
+        params["path_ext"],
         params["problem"]["name"],
         get_cute_device_str(params["device"]).replace(" ", "_"),
     )
@@ -62,7 +63,7 @@ def save_json(params):
     str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
     print(str_result)
     path_out = get_path_out_dir(params)
-    name_file = gen_name_output_file(params)
+    name_file = get_path_out_name(params)
     with open(os.path.join(path_out, name_file), "w") as file_out:
         file_out.write(str_result)
 

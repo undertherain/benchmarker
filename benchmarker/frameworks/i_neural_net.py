@@ -4,8 +4,8 @@ import os
 import random
 
 import numpy
-
 from benchmarker.results import add_result_details
+
 from .i_benchmark import IBenchmark
 
 
@@ -26,7 +26,7 @@ class INeuralNet(IBenchmark):
         params["mode"] = parsed_args.mode
         params["nb_epoch"] = parsed_args.nb_epoch
         assert params["mode"] in ["training", "inference"]
-        params["path_out"] = os.path.join(params["path_out"], params["mode"])
+        params["path_ext"] = params["mode"]
         self.params["batch_size"] = self.params["batch_size_per_device"]
         if isinstance(params["problem"]["size"], int):
             params["problem"]["cnt_samples"] = params["problem"]["size"]
