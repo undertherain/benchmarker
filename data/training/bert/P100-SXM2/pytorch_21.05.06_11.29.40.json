@@ -1,0 +1,130 @@
+{
+    "backend": "native",
+    "batch_size": 32,
+    "batch_size_per_device": 32,
+    "channels_first": true,
+    "cudnn_benchmark": true,
+    "device": "Tesla P100-SXM2-16GB",
+    "framework": "pytorch",
+    "framework_full": "PyTorch-1.6.0",
+    "gflop_per_joule": 6.923415170085316,
+    "gflop_per_joule_CPU": 32.38314729831472,
+    "gflop_per_joule_GPU": 9.306228276466868,
+    "gflop_per_joule_device": 9.306228276466868,
+    "gflop_per_second": 2063.6717547700323,
+    "gpus": [
+        0
+    ],
+    "mode": "training",
+    "nb_epoch": 10,
+    "nb_gpus": 1,
+    "path_out": "./logs/training/bert/P100-SXM2",
+    "platform": {
+        "cpu": {
+            "brand": "Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz",
+            "cache": {
+                "1": 32768,
+                "2": 262144,
+                "3": 26214400
+            },
+            "clock": 2399.911324999999,
+            "clock_max": 3100.0,
+            "clock_min": 1200.0,
+            "logical_cores": 40,
+            "physical_cores": 10
+        },
+        "gpus": [
+            {
+                "brand": "Tesla P100-SXM2-16GB",
+                "clock": 1480500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla P100-SXM2-16GB",
+                "clock": 1480500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla P100-SXM2-16GB",
+                "clock": 1480500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            },
+            {
+                "brand": "Tesla P100-SXM2-16GB",
+                "clock": 1480500,
+                "compute_capability": 6.0,
+                "cores": 3584,
+                "memory": 17071734784,
+                "memory_clock": 715000,
+                "multiprocessors": 56,
+                "warp_size": 32
+            }
+        ],
+        "hdds": {
+            "/dev/sda": {
+                "model": "INTEL SSDSC2BB48",
+                "size": 937703088
+            },
+            "/dev/sdb": {
+                "model": "TOSHIBA MQ01ABD0",
+                "size": 976773168
+            }
+        },
+        "host": "warsaw.m.gsic.titech.ac.jp",
+        "os": "Linux-3.10.0-1062.4.3.el7.x86_64-x86_64-with-centos-7.9.2009-Core",
+        "ram": {
+            "total": 270193483776
+        },
+        "swap": 0
+    },
+    "power": {
+        "avg_watt_CPU": 63.72671982001668,
+        "avg_watt_GPU": 221.75168000000002,
+        "avg_watt_RAM": 12.592957172518224,
+        "avg_watt_total": 298.0713569925349,
+        "joules_CPU": 883.31384,
+        "joules_GPU": 3073.6922995638965,
+        "joules_RAM": 174.55054,
+        "joules_total": 4131.556679563897,
+        "sampling_ms": 100
+    },
+    "preheat": false,
+    "problem": {
+        "cnt_batches_per_epoch": 4,
+        "cnt_samples": 128,
+        "gflop_estimated": 28604.482191360003,
+        "len_sequence": 128,
+        "name": "bert",
+        "precision": "FP32",
+        "size": [
+            128,
+            128
+        ]
+    },
+    "profile_pytorch": false,
+    "samples_per_joule": 0.30981058697108554,
+    "samples_per_joule_CPU": 1.4490885821510506,
+    "samples_per_joule_GPU": 0.4164372602233508,
+    "samples_per_joule_device": 0.4164372602233508,
+    "samples_per_second": 92.34566206912523,
+    "tensor_layout": "native",
+    "time_batch": 0.3465241277500013,
+    "time_epoch": 1.3860965110000052,
+    "time_sample": 0.01082887899218754,
+    "time_total": 13.860965110000052
+}
