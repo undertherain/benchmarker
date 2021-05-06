@@ -8,6 +8,7 @@ from ..util.io import get_path_out_dir, get_path_out_name
 
 
 def call_fapp(cmd):
+    print("CALL_FAPP(): CMD =", cmd)
     proc = abstractprocess.Process("local", command=cmd)
     output = proc.get_output()
     retval = output["returncode"]
