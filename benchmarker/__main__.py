@@ -1,7 +1,6 @@
 """CLI entry point module"""
 
 import argparse
-import os
 import sys
 
 import benchmarker.benchmarker
