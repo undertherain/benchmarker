@@ -12,6 +12,20 @@ def call_fapp(cmd):
     proc = abstractprocess.Process("local", command=cmd)
     output = proc.get_output()
     retval = output["returncode"]
+
+    print(
+        (
+            "CMD: {}\n"
+            "Error occurred with return code: {}\n"
+            "Standard output:\n{}\n"
+            "Standard output:\n{}\n"
+        ).format(
+            cmd,
+            retval,
+            output["out"],
+            output["err"],
+        )
+    )
     assert retval == 0, (
         "Error occurred with return code: {}\n"
         "Standard output:\n{}\n"
