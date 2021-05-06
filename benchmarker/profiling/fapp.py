@@ -1,15 +1,10 @@
-import argparse
+import os
 from tempfile import TemporaryDirectory
 
 from benchmarker.profiling.power_fapp import get_power, get_total_power
 from benchmarker.util import abstractprocess
 
-
-def get_path_out(command):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--path_out")
-    args, _ = parser.parse_known_args(command)
-    return args.path_out
+from ..util.io import get_path_out_dir, get_path_out_name
 
 
 def call_fapp(cmd):
@@ -38,16 +33,22 @@ def gen_fapp_csv(fapp_dir, csv_file):
     call_fapp(fapp_gen_csv_cmd)
 
 
-def get_power_total_and_detail(command):
+def get_power_total_and_detail(command, params):
     print("COMMAND:", command)
-    print("PATH_OUT:", get_path_out(command))
-    with TemporaryDirectory() as csv_dir:
-        for rep in [1, 8]:
-            with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
-                csv_file = f"{csv_dir}/pa{rep}.csv"
-                run_fapp_profiler(fapp_dir, rep, command)
-                gen_fapp_csv(fapp_dir, csv_file)
-        power_details = get_power(csv_dir)
-        power_total = get_total_power(power_details)
+    prefix = get_path_out_dir(params)
+    suffix_data = get_path_out_name(params, "fapp_data")
+    suffix_csv = get_path_out_name(params, "fapp_csv")
+    fapp_dir = os.path.join(prefix, suffix_data)
+    csv_dir = os.path.join(prefix, suffix_csv)
+    os.makedirs(fapp_dir)
+    os.makedirs(csv_dir)
+
+    for rep in [1, 8]:
+        with TemporaryDirectory(suffix=str(rep)) as fapp_dir:
+            csv_file = f"{csv_dir}/pa{rep}.csv"
+            run_fapp_profiler(fapp_dir, rep, command)
+            gen_fapp_csv(fapp_dir, csv_file)
+    power_details = get_power(csv_dir)
+    power_total = get_total_power(power_details)
 
     return power_total, power_details

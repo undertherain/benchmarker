@@ -72,7 +72,7 @@ def main():
         if args.flops and "Intel" in result["device"]:
             result["problem"]["gflop_measured"] = perf.get_gflop(command)
         elif args.power_fapp:
-            avg_watt_total, details = fapp.get_power_total_and_detail(command)
+            avg_watt_total, details = fapp.get_power_total_and_detail(command, result)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
 
     # removed: see issue #167
