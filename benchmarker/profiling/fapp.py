@@ -18,7 +18,7 @@ def call_fapp(cmd):
             "CMD: {}\n"
             "Error occurred with return code: {}\n"
             "Standard output:\n{}\n"
-            "Standard output:\n{}\n"
+            "Standard error:\n{}\n"
         ).format(
             " ".join(cmd),
             retval,
@@ -29,7 +29,7 @@ def call_fapp(cmd):
     assert retval == 0, (
         "Error occurred with return code: {}\n"
         "Standard output:\n{}\n"
-        "Standard output:\n{}\n"
+        "Standard error:\n{}\n"
     ).format(retval, output["out"], output["err"])
 
 
