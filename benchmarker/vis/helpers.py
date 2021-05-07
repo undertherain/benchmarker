@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 import pandas
-from benchmarker.util.io.cute_device import get_cute_device_str
+from benchmarker.util.cute_device import get_cute_device_str
 from pandas.io.json import json_normalize
 
 
