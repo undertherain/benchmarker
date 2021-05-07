@@ -4,3 +4,4 @@ system_query[cpu, hdd, ram, swap]
 # python_papi
 # install system_query[all] for GPU systems
 pyRAPL
+protonn
