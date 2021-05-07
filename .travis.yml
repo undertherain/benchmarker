@@ -1,6 +1,11 @@
 language: python
 
-cache: pip
+cache:
+  pip: true
+  directories:
+    - /home/travis/.cache/huggingface
+    - /home/travis/.cache/torch/hub
+    - /home/travis/.cache/benchmarker/models
 
 sudo: false
 
