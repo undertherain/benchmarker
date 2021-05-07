@@ -1,25 +1,20 @@
 """CLI entry point module"""
 
 import argparse
-import json
-import os
 import sys
 
 import benchmarker.benchmarker
 from benchmarker.profiling import fapp, nvprof, perf
 from benchmarker.results import add_result_details
-# from .benchmarker import run
-from benchmarker.util import abstractprocess
-from benchmarker.util.cute_device import get_cute_device_str
 
 from .util import sysinfo
-from .util.io import save_json
+from .util.io import get_time_str, save_json
 
 
 def get_args():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--flops", action="store_true")
-    parser.add_argument("--fapp_power", action="store_true")
+    parser.add_argument("--flops", action="store_true", default=False)
+    parser.add_argument("--power_fapp", action="store_true", default=False)
     # removed: see issue #167
     # parser.add_argument("--profile_pytorch", action="store_true")
     return parser.parse_known_args()
@@ -59,6 +54,7 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
+    result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
         precision = result["problem"]["precision"]
         result["device"] = result["platform"]["gpus"][0]["brand"]
@@ -75,8 +71,8 @@ def main():
             result["device"] = result["platform"]["cpu"]["brand"]
         if args.flops and "Intel" in result["device"]:
             result["problem"]["gflop_measured"] = perf.get_gflop(command)
-        elif args.fapp_power:
-            avg_watt_total, details = fapp.get_power_total_and_detail(command)
+        elif args.power_fapp:
+            avg_watt_total, details = fapp.get_power_total_and_detail(command, result)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
 
     # removed: see issue #167
@@ -86,15 +82,11 @@ def main():
     #     profile_result = run_cmd_and_get_output(command)
     #     result["profile_pytorch"] = True
     #     result["profile_data"] = profile_result["profile_data"]
-    #     result["path_out"] = "./logs/profile"
-
-    cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
-    result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
-    result["path_out"] = os.path.join(result["path_out"], cute_device)
+    #     result["path_out"] = os.path.join(result["path_out"], "profile")
 
     # TODO: call fill_result_details here
     add_result_details(result)
-    print(result)
+
     save_json(result)
     # TODO: don't measure power when measureing flops
 
