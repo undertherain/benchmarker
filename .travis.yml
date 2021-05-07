@@ -17,8 +17,8 @@ before_install:
 
 install:
   - mkdir -p ~/.cache/benchmarker/models
-  - wget https://github.com/thegopieffect/computer_vision/raw/master/CAFFE_DNN/deploy.prototxt.txt -O ~/.cache/benchmarker/models/res10_300x300_ssd_deploy.prototxt.txt
-  - wget https://github.com/thegopieffect/computer_vision/raw/master/CAFFE_DNN/res10_300x300_ssd_iter_140000.caffemodel -O ~/.cache/benchmarker/models/res10_300x300_ssd_iter_140000.caffemodel
+  - curl https://github.com/php-opencv/php-opencv-examples/tree/master/models/ssd/res10_300x300_ssd_deploy.prototxt -o ~/.cache/benchmarker/models/res10_300x300_ssd_deploy.prototxt
+  - curl https://github.com/gopinath-balu/computer_vision/raw/master/CAFFE_DNN/res10_300x300_ssd_iter_140000.caffemodel -o ~/.cache/benchmarker/models/res10_300x300_ssd_iter_140000.caffemodel
   - pip install -U -r requirements.txt
 
 script:
