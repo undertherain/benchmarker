@@ -13,7 +13,7 @@ class Benchmark(INeuralNet):
     def __init__(self, params, unparsed_args):
         super().__init__(params, unparsed_args)
         # TODO: confirm tensor ordering in mxnet
-        # self.params["channels_first"] = True
+        self.params["channels_first"] = True
 
     def run(self):
         params = self.params
