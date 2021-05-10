@@ -27,6 +27,7 @@ class Net4Train(nn.Module):
         # it?
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
+        outs = outs.to_dense()
         loss = self.criterion(outs, t)
         return loss
 
