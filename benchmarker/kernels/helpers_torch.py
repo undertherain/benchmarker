@@ -27,7 +27,8 @@ class Net4Train(nn.Module):
         # it?
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
-        outs = outs.to_dense()
+        if outs.layout == torch._mkldnn:
+            outs = outs.to_dense()
         loss = self.criterion(outs, t)
         return loss
 
