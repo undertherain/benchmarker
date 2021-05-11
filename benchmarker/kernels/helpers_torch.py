@@ -32,8 +32,8 @@ class Net4Train(nn.Module):
         return loss
 
 
-def Net4Both(params, net, inference, training):
-    if params["mode"] == "inference":
+def Net4Both(mode, net, inference, training):
+    if mode == "inference":
         return inference(net)
     else:
         return training(net)
@@ -52,9 +52,9 @@ class ClassifierTraining(Net4Train):
         super().__init__(net, nn.CrossEntropyLoss())
 
 
-def Classifier(params, net):
+def Classifier(mode, net):
     """Returns an inference or training classifier."""
-    return Net4Both(params, net, ClassifierInference, ClassifierTraining)
+    return Net4Both(mode, net, ClassifierInference, ClassifierTraining)
 
 
 class RecommenderInference(Net4Inference):
@@ -70,9 +70,9 @@ class RecommenderTraining(Net4Train):
         super().__init__(net, nn.BCEWithLogitsLoss())
 
 
-def Recommender(params, net):
+def Recommender(mode, net):
     """Returns an inference or training recommender."""
-    return Net4Both(params, net, RecommenderInference, RecommenderTraining)
+    return Net4Both(mode, net, RecommenderInference, RecommenderTraining)
 
 
 class RegressionTraining(Net4Train):
@@ -80,6 +80,6 @@ class RegressionTraining(Net4Train):
         super().__init__(*net_and_loss)
 
 
-def Regression(params, net, loss=nn.MSELoss()):
+def Regression(mode, net, loss=nn.MSELoss()):
     """Returns an inference or training recommender."""
-    return Net4Both(params, (net, loss), lambda t: t[0], RegressionTraining)
+    return Net4Both(mode, (net, loss), lambda t: t[0], RegressionTraining)
