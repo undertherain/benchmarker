@@ -135,7 +135,7 @@ def run(argv):
 
         nvml_monitor = PowerMonitorNVML(params)
     try:
-        benchmark.measure_power_and_run()
+        benchmark.run()
     finally:
         if do_nvml:
             nvml_monitor.stop()

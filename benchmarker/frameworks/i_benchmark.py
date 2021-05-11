@@ -5,11 +5,6 @@ class IBenchmark:
     def __init__(self, params, remaining_args):
         self.get_kernel(params, remaining_args)
 
-    def measure_power_and_run(self):
-        results = self.run()
-        # self.post_process() # TODO
-        return results
-
     def load_data(self):
         params = self.params
         mod = importlib.import_module(
