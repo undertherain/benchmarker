@@ -27,7 +27,10 @@ class Net4Train(nn.Module):
         # it?
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
-        outs = outs.to_dense()
+        try:
+            outs = outs.to_dense()
+        except Exception:
+            pass
         loss = self.criterion(outs, t)
         return loss
 
