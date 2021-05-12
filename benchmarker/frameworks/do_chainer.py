@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Chainer support.
 """
-
+import argparse
 from timeit import default_timer as timer
 import chainer
 import chainer.links as L
@@ -14,6 +14,10 @@ from .i_neural_net import INeuralNet
 
 class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
+        parser = argparse.ArgumentParser(description="chainer extra args")
+        parser.add_argument("--precision", default="FP32")
+        args, remaining_args = parser.parse_known_args(remaining_args)
+        params["problem"]["precision"] = args.precision
         super().__init__(params, remaining_args)
         self.params["channels_first"] = True
 
