@@ -142,6 +142,7 @@ def run(argv):
 
     if do_rapl:
         rapl_monitor.stop()
+    benchmark.post_process()
 
     return params
 
