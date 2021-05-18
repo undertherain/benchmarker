@@ -38,3 +38,6 @@ class IBenchmark:
             assert remaining_args == [], f"unexpected args: {remaining_args}"
         # TODO: rename into kernel
         self.net = module_kernel.get_kernel(self.params)
+
+    def post_process(self):
+        pass
