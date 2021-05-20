@@ -1,56 +1,65 @@
 """CLI entry point module"""
 
 import argparse
-import json
-import os
 import sys
 
-from benchmarker import fapp, nvprof, perf
-# from .benchmarker import run
-from benchmarker.util import abstractprocess
-from benchmarker.util.cute_device import get_cute_device_str
+import benchmarker.benchmarker
+from benchmarker.profiling import fapp, nvprof, perf
+from benchmarker.results import add_result_details
 
 from .util import sysinfo
-from .util.io import save_json
+from .util.io import get_time_str, save_json
 
 
-def filter_json_from_output(lines):
-    parts = lines.split("benchmarkmagic#!%")
-    # for p in parts:
-    #     print(p)
-    #     print("\n")
-    str_json = parts[-1].strip()
-    return json.loads(str_json)
+def get_args():
+    parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
+    parser.add_argument("--flops", action="store_true", default=False)
+    parser.add_argument("--power_fapp", action="store_true", default=False)
+    # removed: see issue #167
+    # parser.add_argument("--profile_pytorch", action="store_true")
+    return parser.parse_known_args()
 
-def run_cmd_and_get_output(command):
-    proc = abstractprocess.Process("local", command=command)
-    proc_output = proc.get_output()
-    returncode = proc_output["returncode"]
 
-    if returncode != 0:
-        process_err = proc_output["err"]
-        sys.exit(process_err)
+# removed: see issue #167
+# def filter_json_from_output(lines):
+#     parts = lines.split("benchmarkmagic#!%")
+#     # for p in parts:
+#     #     print(p)
+#     #     print("\n")
+#     str_json = parts[-1].strip()
+#     return json.loads(str_json)
 
-    process_out = proc_output["out"]
-    result = filter_json_from_output(process_out)
-    return result
+
+# def run_cmd_and_get_output(command):
+#     proc = abstractprocess.Process("local", command=command)
+#     proc_output = proc.get_output()
+#     returncode = proc_output["returncode"]
+
+#     if returncode != 0:
+#         process_err = proc_output["err"]
+#         sys.exit(process_err)
+
+#     process_out = proc_output["out"]
+#     result = filter_json_from_output(process_out)
+#     return result
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--flops", action="store_true")
-    parser.add_argument("--fapp_power", action="store_true")
-    parser.add_argument("--profile_pytorch", action="store_true")
-    args, unknown_args = parser.parse_known_args()
-    command = [sys.executable, "-m", "benchmarker.benchmarker"]
+    args, unknown_args = get_args()
+    command = [sys.executable, "-m", "benchmarker"]
     command += unknown_args
-    result = run_cmd_and_get_output(command)
+    # TODO(vatai): remove rapl and nvml and any other profiling. Make
+    # a base class (or something) which ignores this)
+    result = benchmarker.benchmarker.run(unknown_args)
+
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
+    result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
+        precision = result["problem"]["precision"]
         result["device"] = result["platform"]["gpus"][0]["brand"]
-        if args.flops and result["problem"]["precision"] in ["FP16", "FP32"]:
-            result["problem"]["gflop_measured"] = nvprof.get_gflop(command, result["problem"]["precision"])
+        if args.flops and precision in ["FP16", "FP32"]:
+            result["problem"]["gflop_measured"] = nvprof.get_gflop(command, precision)
     else:
         if (
             "brand" not in result["platform"]["cpu"]
@@ -60,30 +69,24 @@ def main():
             result["device"] = "unknown CPU"
         else:
             result["device"] = result["platform"]["cpu"]["brand"]
-        if args.flops and 'Intel' in result["device"]:
+        if args.flops and "Intel" in result["device"]:
             result["problem"]["gflop_measured"] = perf.get_gflop(command)
-        elif args.fapp_power:
-            avg_watt_total, details = fapp.get_power_total_and_detail(command)
+        elif args.power_fapp:
+            avg_watt_total, details = fapp.get_power_total_and_detail(command, result)
             result["power"] = {"avg_watt_total": avg_watt_total, "details": details}
-    # Collect profile data when profile_pytorch switch is enabled
-    if args.profile_pytorch:
-        command += ["--profile_pytorch"]
-        profile_result = run_cmd_and_get_output(command)
-        result["profile_pytorch"] = True
-        result["profile_data"] = profile_result["profile_data"]
-        result["path_out"] = "./logs/profile"
 
-    cute_device = get_cute_device_str(result["device"]).replace(" ", "_")
-    result["path_out"] = os.path.join(result["path_out"], result["problem"]["name"])
-    result["path_out"] = os.path.join(result["path_out"], cute_device)
-    if "gflop_measured" in result["problem"]:
-        if result["power"]["joules_total"] != 0:
-            result["gflop_per_joule"] = float(result["problem"]["gflop_measured"])
-            result["gflop_per_joule"] /= float(result["power"]["joules_total"])
-        if "gflop_per_second" not in result:
-            result["gflop_per_second"] = float(result["problem"]["gflop_measured"]) / result["time_total"]
-        else:
-            result["gflop_per_second_measured"] = float(result["problem"]["gflop_measured"]) / result["time_total"]
+    # removed: see issue #167
+    # Collect profile data when profile_pytorch switch is enabled
+    # if args.profile_pytorch:
+    #     command += ["--profile_pytorch"]
+    #     profile_result = run_cmd_and_get_output(command)
+    #     result["profile_pytorch"] = True
+    #     result["profile_data"] = profile_result["profile_data"]
+    #     result["path_out"] = os.path.join(result["path_out"], "profile")
+
+    # TODO: call fill_result_details here
+    add_result_details(result)
+
     save_json(result)
     # TODO: don't measure power when measureing flops
 

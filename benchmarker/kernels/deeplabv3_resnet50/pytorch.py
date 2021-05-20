@@ -8,4 +8,4 @@ def get_kernel(params):
     # TODO: cnt classes as parameter
     params["problem"]["cnt_classes"] = 21
     net = deeplabv3_resnet50(num_classes=params["problem"]["cnt_classes"])
-    return Classifier(params, net)
+    return Classifier(params["mode"], net)

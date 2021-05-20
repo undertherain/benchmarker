@@ -1,6 +1,8 @@
+import datetime
 import json
 import os
-import datetime
+
+from .cute_device import get_cute_device_str
 
 
 def get_time_str():
@@ -12,24 +14,31 @@ def get_time_str():
     return str_time
 
 
-def gen_name_output_file(params):
-    name = "{}_{}.json".format(
-        params["framework"],
-        get_time_str())
-    return name
+def get_path_out_name(params, ext="json"):
+    return f'{params["framework"]}_{params["start_time"]}.{ext}'
+
+
+def get_path_out_dir(params):
+    path_out = os.path.join(
+        params["path_out"],
+        params["path_ext"],
+        params["problem"]["name"],
+        get_cute_device_str(params["device"]).replace(" ", "_"),
+    )
+    if not os.path.isdir(path_out):
+        os.makedirs(path_out)
+    return path_out
 
 
 def save_json(params):
-    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(',', ': '))
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
     print(str_result)
-    path_out = params["path_out"]
-    if not os.path.isdir(path_out):
-        os.makedirs(path_out)
-    name_file = gen_name_output_file(params)
+    path_out = get_path_out_dir(params)
+    name_file = get_path_out_name(params)
     with open(os.path.join(path_out, name_file), "w") as file_out:
         file_out.write(str_result)
 
 
 def print_json(params):
-    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(',', ': '))
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
     print(str_result)

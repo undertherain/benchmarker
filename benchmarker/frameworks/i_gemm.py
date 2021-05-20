@@ -1,7 +1,9 @@
 """Module contains the interface for all gemm learning modules"""
 import argparse
 import os
-from .ops import detalize_ops_results
+
+from benchmarker.results import add_result_details
+
 from .i_benchmark import IBenchmark
 
 
@@ -18,15 +20,18 @@ class IGEMM(IBenchmark):
         args, remaining_args = parser.parse_known_args(extra_args)
         params["problem"]["precision"] = args.precision
         params["nb_epoch"] = args.nb_epoch
-        params["path_out"] = os.path.join(params["path_out"],
-                                          params["problem"]["precision"])
+        params["path_ext"] = params["problem"]["precision"]
         super().__init__(params, remaining_args)
         # TODO: this should also go up
         self.data = self.load_data()
         if params["problem"]["name"] not in ["gemm", "batchmatmul"]:
-            raise Exception(f"only gemm problem is defined for this framework, not {params['problem']['name']}")
+            raise Exception(
+                f"only gemm problem is defined for this framework, "
+                f"{params['problem']['name']} is not!"
+            )
 
     def post_process(self):
-        self.params["problem"]["gflop_estimated"] = self.params["problem"]["flop_estimated"] / (1000 ** 3)
-        detalize_ops_results(self.params)
+        gflop = self.params["problem"]["flop_estimated"] / (1000 ** 3)
+        self.params["problem"]["gflop_estimated"] = gflop
+        add_result_details(self.params)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]

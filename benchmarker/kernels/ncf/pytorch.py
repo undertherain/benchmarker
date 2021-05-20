@@ -86,4 +86,4 @@ def get_kernel(params):
         mlp_layer_sizes=params["problem"]["layers"],
         mlp_layer_regs=[0.0 for i in params["problem"]["layers"]],
     )
-    return Recommender(params, net)
+    return Recommender(params["mode"], net)

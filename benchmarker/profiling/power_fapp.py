@@ -87,7 +87,7 @@ def get_cmg_power(csv_dir, cmg_id, region="all"):
                 mem=float(mem_power))
     # fmt: on
 
-
+# TODO: better call in unambiguosly like get_watt
 def get_power(csv_dir):
 
     # csv_dir = pathlib.Path(csv_dir) # used to postfix _reps here
