@@ -21,28 +21,46 @@ int main(int argc, char * argv[]) {
     const size_t lda=m; // k for row major;
     const size_t ldb=k; //n; 
     const size_t ldc=m; //n;
-    auto start = high_resolution_clock::now(); 
-    for (size_t i=0; i<options.nb_epoch; i++)
+    // ------------ preheat - ------------------
+    if (options.precision == "FP32")
+        cblas_sgemm(CblasColMajor,
+                    CblasNoTrans,
+                    CblasNoTrans,
+                    m,
+                    n,
+                    k,
+                    alpha,
+                    A, lda,
+                    B, ldb,
+                    beta,
+                    C, ldc);
+    else
     {
-        if (options.precision == "FP32")
-            cblas_sgemm(CblasColMajor,
-                        CblasNoTrans,
-                        CblasNoTrans,
-                        m,
-                        n,
-                        k,
-                        alpha,
-                        A, lda,
-                        B, ldb,
-                        beta,
-                        C, ldc);
-        else
-        {
-            // TODO  (Alex): implement FP16
-            // ugly throw here to make sure benchmarker chrashes alright
-            fprintf(stderr, "not implemented yet");
-            throw "madamada";
-        }
+        // TODO  (Alex): implement FP16
+        // ugly throw here to make sure benchmarker chrashes alright
+        fprintf(stderr, "not implemented yet");
+        throw "madamada";
+    }
+    auto start = high_resolution_clock::now(); 
+    if (options.precision == "FP32")
+        for (size_t i=0; i<options.nb_epoch; i++)
+        cblas_sgemm(CblasColMajor,
+                    CblasNoTrans,
+                    CblasNoTrans,
+                    m,
+                    n,
+                    k,
+                    alpha,
+                    A, lda,
+                    B, ldb,
+                    beta,
+                    C, ldc);
+    else
+    {
+        // TODO  (Alex): implement FP16
+        // ugly throw here to make sure benchmarker chrashes alright
+        fprintf(stderr, "not implemented yet");
+        throw "madamada";
     }
     std::cerr << "MNK " << m << " " << n << " " << k << std::endl;
     auto stop = high_resolution_clock::now();

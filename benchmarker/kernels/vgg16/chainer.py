@@ -1,3 +1,4 @@
 import chainercv
 
-Net = chainercv.links.VGG16()
+def get_kernel(params):
+    return chainercv.links.VGG16()

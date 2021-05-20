@@ -26,4 +26,4 @@ class Net(nn.Module):
 
 def get_kernel(params, unparsed_args=None):
     net = Net()
-    return Classifier(params, net)
+    return Classifier(params["mode"], net)

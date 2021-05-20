@@ -5,11 +5,11 @@ from timeit import default_timer as timer
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils import mkldnn as mkldnn_utils
 from torch.cuda import amp
-from .torchprof import Profile
-from .i_neural_net import INeuralNet
+from torch.utils import mkldnn as mkldnn_utils
 
+from .i_neural_net import INeuralNet
+from .torchprof import Profile
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ class Benchmark(INeuralNet):
             self.net.half()
             if self.x_train[0].dtype == torch.float32:
                 self.x_train = [x.half() for x in self.x_train]
-            if self.y_train.dtype == torch.float32:
+            if self.y_train[0].dtype == torch.float32:
                 self.y_train = [y.half() for y in self.y_train]
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True

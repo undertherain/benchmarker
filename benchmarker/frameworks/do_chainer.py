@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Chainer support.
 """
-
+import argparse
 from timeit import default_timer as timer
 import chainer
 import chainer.links as L
@@ -14,6 +14,10 @@ from .i_neural_net import INeuralNet
 
 class Benchmark(INeuralNet):
     def __init__(self, params, remaining_args=None):
+        parser = argparse.ArgumentParser(description="chainer extra args")
+        parser.add_argument("--precision", default="FP32")
+        args, remaining_args = parser.parse_known_args(remaining_args)
+        params["problem"]["precision"] = args.precision
         super().__init__(params, remaining_args)
         self.params["channels_first"] = True
 
@@ -66,13 +70,10 @@ class Benchmark(INeuralNet):
         x_train = x_train.reshape((x_train.shape[0] * x_train.shape[1],) + x_train.shape[2:])
         y_train = y_train.reshape((y_train.shape[0] * y_train.shape[1],))
         train = chainer.datasets.tuple_dataset.TupleDataset(x_train, y_train)
-        # test  = chainer.datasets.tuple_dataset.TupleDataset(X_test,Y_test)
         if params["nb_gpus"] == 0:
             train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
         else:
             train_iter = chainer.iterators.MultiprocessIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=True, n_processes=4)
-            # train_iter = chainer.iterators.SerialIterator(train, batch_size=params["batch_size"], repeat=True, shuffle=False)
-        # test_iter = chainer.iterators.SerialIterator(test, batch_size=batch_size=params["batch_size"], repeat=False, shuffle=False)
         if params["nb_gpus"] == 0:
             updater = training.StandardUpdater(train_iter, optimizer)
         else:
@@ -84,8 +85,6 @@ class Benchmark(INeuralNet):
                 updater = training.ParallelUpdater(train_iter, optimizer, devices=dic_devices)
 
         trainer = training.Trainer(updater, (self.params["nb_epoch"], 'epoch'), out='/tmp/result')
-        # trainer.extend(extensions.Evaluator(test_iter, model, device=id_device))
-        # trainer.extend(extensions.Evaluator(test_iter, model))
         trainer.extend(extensions.LogReport())
         trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy', "elapsed_time"]))
         trainer.run()
@@ -96,14 +95,7 @@ class Benchmark(INeuralNet):
         params = self.params
         x_train, y_train = self.load_data()
 
-        # if len(Y_train.shape) == 1:
-        #     Y_train = Y_train[:, np.newaxis]
-        #     model = Classifier(Net())
-        # else:
         model = L.Classifier(self.net)
-        # r = self.net(x_train[:1])
-        # print(r.shape, r[0][:10])
-        # exit(-1)
         if use_chainer_x:
             x_train = chx.array(x_train)
             y_train = chx.array(y_train)
@@ -116,11 +108,6 @@ class Benchmark(INeuralNet):
             else:
                 model.to_gpu(self.params["gpus"][id_device])
 
-        # print("X_train:", type(X_train), X_train.shape)
-        # print("Y_train:", type(Y_train), Y_train.shape, Y_train[:10])
-        # result = model.predictor(X_train)
-        # print (result.shape)
-        # TODO: pre-heat
         start = timer()
         if params["mode"] == "training":
             self.do_training(model, x_train, y_train)

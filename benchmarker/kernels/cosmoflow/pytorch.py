@@ -59,4 +59,4 @@ def get_kernel(params):
     """Construct the CosmoFlow 3D CNN model"""
 
     net = build_model(params["input_shape"], params["target_size"], params["dropout"])
-    return Regression(params, net)
+    return Regression(params["mode"], net)
