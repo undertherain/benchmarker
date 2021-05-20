@@ -5,7 +5,6 @@
 
 using namespace std::chrono; 
 
-
 int main(int argc, char * argv[]) {
     size_t m, n, k, batch_size;
     float **A, **B, **C;
@@ -55,7 +54,7 @@ int main(int argc, char * argv[]) {
             throw "madamada";
         }
     }
-    
+
     std::cerr << "MNK " << m << " " << n << " " << k << std::endl;
     auto stop = high_resolution_clock::now();
     std::chrono::duration<double> seconds = (stop - start); 
