@@ -15,12 +15,7 @@ int main(int argc, char * argv[]) {
     n = options.cnt_cols_A_rows_B;
     k = options.cnt_cols_B_cols_C;
     batch_size = options.batch_size;
-    A = (float**)malloc(sizeof(float*) * batch_size);
-    B = (float**)malloc(sizeof(float*) * batch_size);
-    C = (float**)malloc(sizeof(float*) * batch_size);
-    for(size_t i=0; i<batch_size; i++){
-        get_matrices<float>(m, k, n, A[i], B[i], C[i]);
-    }
+    get_batched_matrices<float>(m, k, n, A, B, C, batch_size);
     const float alpha = 1;
     const float beta = 0;
     const size_t lda=m; // k for row major;
