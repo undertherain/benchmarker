@@ -1,11 +1,7 @@
 #include <iostream>
 #include <chrono>
-#include <cblas.h>
 #include <cstdint>
 #include <cstdio>
-#include <cctype>
-#include <cmath>
-#include <algorithm>
 #include <string>
 #include "oneapi/dnnl/dnnl.hpp"
 #include "example_utils.hpp"
