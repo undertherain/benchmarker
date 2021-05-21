@@ -1,15 +1,14 @@
 #include <iostream>
 #include <chrono>
-#include <cblas.h>
+//#include <cblas.h>
 #include <cstdint>
 #include <cstdio>
 #include <cctype>
-#include <cmath>
+//#include <cmath>
 #include "oneapi/dnnl/dnnl.hpp"
 #include "../args.hpp"
 
 using namespace std::chrono; 
-
 
 int main(int argc, char * argv[]) {
     size_t m, n, k;
