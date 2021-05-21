@@ -1,10 +1,8 @@
 #include <iostream>
 #include <chrono>
-#include <cblas.h>
 #include <cstdint>
 #include <cstdio>
 #include <cctype>
-#include <cmath>
 #include "oneapi/dnnl/dnnl.hpp"
 #include "../args.hpp"
 
@@ -16,17 +14,11 @@ int main(int argc, char * argv[]) {
     float **A, **B, **C;
     double dtime;
     Options options = parse_args(argc, argv);
-    // parse_args(argc, argv, precision, m, k, n);
     m = options.cnt_rows_A_rows_C;
     n = options.cnt_cols_A_rows_B;
     k = options.cnt_cols_B_cols_C;
     batch_size = options.batch_size;
-    A = (float**)malloc(sizeof(float*) * batch_size);
-    B = (float**)malloc(sizeof(float*) * batch_size);
-    C = (float**)malloc(sizeof(float*) * batch_size);
-    for(size_t i=0; i<batch_size; i++){
-        get_matrices<float>(m, k, n, A[i], B[i], C[i]);
-    }
+    get_batched_matrices<float>(m, k, n, A, B, C, batch_size);
     const float alpha = 1;
     const float beta = 0;
     int64_t M = (int64_t)m;
