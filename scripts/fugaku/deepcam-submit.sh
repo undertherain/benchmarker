@@ -12,4 +12,5 @@ python -m benchmarker \
        --framework=pytorch \
        --problem=deepcam \
        --problem_size=120 \
+       --nb_epoch=3 \
        --batch_size=12
