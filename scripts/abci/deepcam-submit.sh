@@ -15,5 +15,5 @@ python3 -m benchmarker \
         --gpus=0 \
         --framework=pytorch \
         --problem=deepcam \
-        --problem_size=320 \
-        --batch_size=64
+        --problem_size=160 \
+        --batch_size=32
