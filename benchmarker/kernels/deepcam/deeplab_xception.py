@@ -1,3 +1,6 @@
+# from: https://github.com/azrael417/mlperf-deepcam/blob/a68326c13abd33ed082685a17573f62de3055d3a/src/deepCam/architecture/deeplab_xception.py
+
+
 # The MIT License (MIT)
 #
 # Copyright (c) 2018 Pyjcsx
