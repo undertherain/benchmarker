@@ -10,4 +10,10 @@
 source /etc/profile.d/modules.sh
 module load gcc/9.3.0
 module load python/3.8/3.8.7
-python3 -m benchmarker.benchmarker --framework=pytorch --problem=deeplabv3_resnet50 --problem_size=32
+python3 -m benchmarker.benchmarker \
+    --framework=pytorch \
+    --problem=deeplabv3_resnet50 \
+    --problem_size=480 \
+    --batch_size=48 \
+    --gpus=0
+    
