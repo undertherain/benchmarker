@@ -1,0 +1,1 @@
+from benchmarker.data.synthetic.img_224_segmentation import get_data
