@@ -1,10 +1,8 @@
 #include <iostream>
 #include <chrono>
-//#include <cblas.h>
 #include <cstdint>
 #include <cstdio>
 #include <cctype>
-//#include <cmath>
 #include "oneapi/dnnl/dnnl.hpp"
 #include "../args.hpp"
 
@@ -15,7 +13,6 @@ int main(int argc, char * argv[]) {
     float *A, *B, *C;
     double dtime;
     Options options = parse_args(argc, argv);
-    // parse_args(argc, argv, precision, m, k, n);
     m = options.cnt_rows_A_rows_C;
     n = options.cnt_cols_A_rows_B;
     k = options.cnt_cols_B_cols_C;
