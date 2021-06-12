@@ -10,14 +10,14 @@ using namespace std::chrono;
 
 
 int main(int argc, char * argv[]) {
-    size_t m, n, k, batch_size;
+    size_t m, n, k;
+    size_t batch_size = 100;  // todo(bai): a parameter should go here instead a constant
     float **A, **B, **C;
     double dtime;
     Options options = parse_args(argc, argv);
     m = options.cnt_rows_A_rows_C;
     n = options.cnt_cols_A_rows_B;
     k = options.cnt_cols_B_cols_C;
-    batch_size = options.batch_size;
     get_batched_matrices<float>(m, k, n, A, B, C, batch_size);
     const float alpha = 1;
     const float beta = 0;
