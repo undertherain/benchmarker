@@ -14,9 +14,9 @@ struct Options {
 };
 
 Options parse_args(const int argc, char *argv[]) {
-    if (argc != 7)
+    if (argc != 6)
     {
-        std::cerr << "provide precision, m, n, k, batch_size, nb_epoch as command line parameters\n";
+        std::cerr << "provide precision, m, n, k, nb_epoch as command line parameters\n";
         std::cerr << "got " << argc << " parameters\n";
         exit(-1);
     }
@@ -25,8 +25,7 @@ Options parse_args(const int argc, char *argv[]) {
     options.cnt_rows_A_rows_C = atoi(argv[2]);
     options.cnt_cols_A_rows_B = atoi(argv[3]);
     options.cnt_cols_B_cols_C = atoi(argv[4]);
-    options.batch_size = atoi(argv[5]);
-    options.nb_epoch = atoi(argv[6]);
+    options.nb_epoch = atoi(argv[5]);
     return options;
 }
 
