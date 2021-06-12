@@ -12,9 +12,9 @@ using tag = memory::format_tag;
 using dt = memory::data_type;
 
 int main(int argc, char * argv[]) {
-    if (argc != 7)
+    if (argc != 6)
     {
-        std::cerr << "provide precision, m, n, k, batch_size, nb_epoch as command line parameters\n";
+        std::cerr << "provide precision, m, n, k, nb_epoch as command line parameters\n";
         std::cerr << "got " << argc << " parameters\n";
         exit(-1);
     }
@@ -28,9 +28,9 @@ int main(int argc, char * argv[]) {
     // Create dnnl::stream.
     dnnl::stream engine_stream(engine);
     // Tensor dimensions.
-    const memory::dim MB = atoi(argv[5]), // batch size
+    const memory::dim MB = 100, // todo(bai): a parameter should go here instead a constant
             M = atoi(argv[2]), K = atoi(argv[4]), N = atoi(argv[3]);
-    size_t nb_epoch = atoi(argv[6]);
+    size_t nb_epoch = atoi(argv[5]);
 
     // Source (src), weights, bias, and destination (dst) tensors dimensions.
     memory::dims src_dims = {MB, M, K};
