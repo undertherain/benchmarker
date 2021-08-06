@@ -3,7 +3,7 @@ import torch
 
 class Kernel:
     def __call__(self, data):
-        x, y, c = tuple(map(torch.tensor, data))
+        x, y, c = data
         c = x @ y  # + c
         return c
 

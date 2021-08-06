@@ -24,6 +24,7 @@ class Benchmark(IGEMM):
         parser.add_argument("--backend", default="native")
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.data = tuple(map(torch.tensor, self.data))
         self.params["backend"] = args.backend
         # self.get_kernel(params, remaining_args)
         if self.params["backend"] == "DNNL":
