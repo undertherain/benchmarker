@@ -1,6 +1,3 @@
-import torch
-
-
 class Kernel:
     def __call__(self, data):
         x, y, c = data
