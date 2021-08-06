@@ -4,7 +4,9 @@
 
 import argparse
 from timeit import default_timer as timer
+
 import torch
+
 from .i_gemm import IGEMM
 
 
@@ -54,4 +56,4 @@ class Benchmark(IGEMM):
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
         time_end = timer()
-        self.params["time_total"] = (time_end - time_start)
+        self.params["time_total"] = time_end - time_start
