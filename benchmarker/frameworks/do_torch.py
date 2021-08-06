@@ -4,7 +4,9 @@
 
 import argparse
 from timeit import default_timer as timer
+
 import torch
+
 from .i_gemm import IGEMM
 
 
@@ -22,6 +24,7 @@ class Benchmark(IGEMM):
         parser.add_argument("--backend", default="native")
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
+        self.data = tuple(map(torch.tensor, self.data))
         self.params["backend"] = args.backend
         # self.get_kernel(params, remaining_args)
         if self.params["backend"] == "DNNL":
@@ -54,4 +57,4 @@ class Benchmark(IGEMM):
         if self.params["nb_gpus"] == 1:
             torch.cuda.synchronize()
         time_end = timer()
-        self.params["time_total"] = (time_end - time_start)
+        self.params["time_total"] = time_end - time_start
