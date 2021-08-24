@@ -70,6 +70,7 @@ class Benchmark(INeuralNet):
             if self.params["tensor_layout"] == "DNNL":
                 self.net = mkldnn_utils.to_mkldnn(self.net)
                 if self.x_train[0].dtype in [torch.float32, torch.float16]:
+                    print("converting to DNNL:", self.x_train[0])
                     self.x_train = [x.to_mkldnn() for x in self.x_train]
                 if self.y_train[0].dtype in [torch.float32, torch.float16]:
                     self.y_train = [y.to_mkldnn() for y in self.y_train]

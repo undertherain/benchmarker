@@ -11,12 +11,13 @@ source /etc/profile.d/modules.sh
 module load gcc/9.3.0
 module load python/3.8/3.8.7
 # sps: 161
-python3 -m benchmarker \
+MKLDNN_VERBOSE=1 python3 -m benchmarker \
         --framework=pytorch \
         --problem=bert \
         --problem_size=320,128 \
         --batch_size=64 \
         --nb_epoch=5 \
         --mode=training \
-        --gpus=0
+	    --backend=DNNL
+#        --gpus=0
 
