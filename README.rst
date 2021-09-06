@@ -41,9 +41,10 @@ Installation
 Clone, install required packages
 for example by running
 
-``git clone --recursive https://github.com/undertherain/benchmarker.git``
+.. code-block:: bash
 
-``pip3 install [--user] -r requirements.txt``
+   git clone --recursive https://github.com/undertherain/benchmarker.git
+   pip3 install [--user] -r requirements.txt
 
 
 ============
