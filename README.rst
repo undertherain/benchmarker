@@ -59,4 +59,4 @@ Since then to the project contributed (in alphabetical order)
 - `Aleksandr Drozd <https://blackbird.pw/>`_
 - `Artur Podobas <http://podobas.net/>`_
 - Shweta Salaria
-- Emil Vatai
+- `Emil Vatai <http://vatai.github.io/>`_
