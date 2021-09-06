@@ -70,8 +70,8 @@ Contributors
 ============
 
 The original version was developed in 2017 by `Aleksandr Drozd
-<https://blackbird.pw/>`_.  Since then to the project contributed (in
-alphabetical order)
+<https://blackbird.pw/>`_.  Since then the following people (in
+alphabetical order) contributed the project:
 
 - Zhengyang Bai
 - `Kevin Brown <https://kevinabrown.github.io/>`_
