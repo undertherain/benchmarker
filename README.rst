@@ -19,40 +19,53 @@
 Synopsis
 ========
 
-Benchmarker is a modular framework to automate a set of performance benchmarks, mostly for deep learning. 
+Benchmarker is a modular framework to automate a set of performance
+benchmarks, mostly for deep learning.
+
+============
+Installation
+============
+
+Clone Benchmarker, install required packages:
+
+.. code-block:: bash
+
+   git clone --recursive https://github.com/undertherain/benchmarker.git
+   cd benchmarker
+   pip3 install [--user] -r requirements.txt
+
 
 ===
 Run
 ===
 
-python3 -m benchmarker  --mode=training --framework=pytorch --problem=resnet50 --problem_size=32 --batch_size=4
+Run Benchmarker as a python module from the root directory of the
+repo:
+
+.. code-block:: bash
+
+   python3 -m benchmarker \
+       --mode=training \
+       --framework=pytorch \
+       --problem=resnet50 \
+       --problem_size=32 \
+       --batch_size=4
 
 
 ==========
 Motivation
 ==========
 
-various devices, frameworks und underlying software stacks, network architectures etc.
-
-============
-Installation
-============
-
-Clone, install required packages
-for example by running
-
-.. code-block:: bash
-
-   git clone --recursive https://github.com/undertherain/benchmarker.git
-   pip3 install [--user] -r requirements.txt
-
+various devices, frameworks und underlying software stacks, network
+architectures etc.
 
 ============
 Contributors
 ============
 
-The original version was developed in 2017 by `Aleksandr Drozd <https://blackbird.pw/>`_.
-Since then to the project contributed (in alphabetical order)
+The original version was developed in 2017 by `Aleksandr Drozd
+<https://blackbird.pw/>`_.  Since then to the project contributed (in
+alphabetical order)
 
 - Zhengyang Bai
 - `Kevin Brown <https://kevinabrown.github.io/>`_
