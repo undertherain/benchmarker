@@ -56,8 +56,14 @@ repo:
 Motivation
 ==========
 
-various devices, frameworks und underlying software stacks, network
-architectures etc.
+Various devices, frameworks und underlying software stacks, network
+architectures make benchmarking a considerable challege.  To tackle
+this problem we introduce Benchmarker.  It is a framework for
+*performance benchmarking* with emphasis on deep learning.
+
+It is modular, which means it is easy to extend with any new benchmark
+or with any new framework, see these TODO tutorials:
+
 
 ============
 Contributors
