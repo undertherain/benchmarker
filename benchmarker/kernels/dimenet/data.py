@@ -1,11 +1,16 @@
-import torch
+import numpy as np
 
-# from torch_geometric.data import Data
+cnt_atoms = 100
+
+
+def get_molecule():
+    atoms = np.random.randint(low=1, high=100, size=cnt_atoms, dtype=np.int64)
+    positions = np.random.random((cnt_atoms, 3)).astype(np.float32)
+    return {"z": atoms, "pos": positions}
 
 
 def get_data(params):
-    edge_index = torch.tensor([[0, 1, 1, 2], [1, 0, 2, 1]], dtype=torch.long)
-    x = torch.tensor([[-1], [0], [1]], dtype=torch.float)
-    sample = {"x": x, "edge_index": edge_index}
-    # sample  = (x, edge_index)
-    return [sample], [0]
+    cnt_batches = 4
+    X = [get_molecule() for i in range(cnt_batches)]
+    Y = [np.ones((params["batch_size"])) for i in range(cnt_batches)]
+    return X, Y
