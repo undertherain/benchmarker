@@ -6,8 +6,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.cuda import amp
-# from .torchprof import Profile
-from torch.profiler import ProfilerActivity, profile, record_function
 from torch.utils import mkldnn as mkldnn_utils
 
 from .i_neural_net import INeuralNet
@@ -109,19 +107,28 @@ class Benchmark(INeuralNet):
         with torch.no_grad():
             # for data, target in zip(self.x_train, self.y_train):
             if self.params["profile_pytorch"]:
-                with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
-                    with record_function("model_inference"):
+                try:
+                    from torch.profiler import profile
+
+                    with profile(record_shapes=True) as prof:
                         for i in range(len(self.x_train)):
                             data = self.x_train[i]
                             _ = model(data)
-                # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
-                    # profile_cuda = self.device.type == "cuda"
-                            # with Profile(model, use_cuda=profile_cuda) as prof:
-                        # model(data)
-                    # profile_output_as_dict = prof.display(show_events=False)
+                    profile_data = prof.key_averages().table(
+                        sort_by="cpu_time_total",
+                        row_limit=20,
+                    )
+                    print(profile_data)
+                except Exception:
+                    from .torchprof import Profile
 
-                    #self.params["profile_data"] = profile_output_as_dict
-                print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=20))
+                    # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
+                    profile_cuda = self.device.type == "cuda"
+                    with Profile(model, use_cuda=profile_cuda) as prof:
+                        model(data)
+                    profile_data = prof.display(show_events=False)
+
+                self.params["profile_data"] = profile_data
             else:
                 for i in range(len(self.x_train)):
                     data = self.x_train[i]
