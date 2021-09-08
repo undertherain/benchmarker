@@ -2,6 +2,7 @@ import argparse
 import logging
 from timeit import default_timer as timer
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -19,6 +20,28 @@ def progress(epoch, idx, nb, loss, log_interval=10):
         prc = 100.0 * idx / nb
         stat = f"{epoch} [{idx}/{nb} ({prc:.0f}%)]\tLoss: {loss:.6f}"
         print("Train Epoch: " + stat)
+
+
+def set_tensor_device_precision(tensor, device, layout, precision):
+    if isinstance(tensor, (np.ndarray, np.generic)):
+        tensor = torch.from_numpy(tensor)
+    if tensor.dtype == torch.float32:
+        if precision == "FP16":
+            tensor = tensor.half()
+    tensor = tensor.to(device)
+    if tensor.dtype in [torch.float32, torch.float16]:
+        if layout == "DNNL":
+            tensor = tensor.to_mkldnn()
+    return tensor
+
+
+def set_batch_device_precision(batch, device, layout, precision):
+    if isinstance(batch, dict):
+        for key in batch:
+            batch[key] = set_tensor_device_precision(batch[key], device, layout, precision)
+    else:
+        batch = set_tensor_device_precision(batch, device, layout, precision)
+    return batch
 
 
 class Benchmark(INeuralNet):
@@ -56,25 +79,15 @@ class Benchmark(INeuralNet):
 
     def setup_data_and_model(self):
         x_train, y_train = self.load_data()
-        self.x_train = [torch.from_numpy(x).to(self.device) for x in x_train]
-        self.y_train = [torch.from_numpy(y).to(self.device) for y in y_train]
+        self.x_train = [set_batch_device_precision(i, self.device, self.params["tensor_layout"], self.params["problem"]["precision"]) for i in x_train]
+        self.y_train = [set_batch_device_precision(i, self.device, self.params["tensor_layout"], self.params["problem"]["precision"]) for i in y_train]
         if self.params["problem"]["precision"] == "FP16":
             self.net.half()
-            if self.x_train[0].dtype == torch.float32:
-                self.x_train = [x.half() for x in self.x_train]
-            if self.y_train[0].dtype == torch.float32:
-                self.y_train = [y.half() for y in self.y_train]
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
             self.net.eval()  # This is to make it not fail when DNLL does not support train
             if self.params["tensor_layout"] == "DNNL":
                 self.net = mkldnn_utils.to_mkldnn(self.net)
-                if self.x_train[0].dtype in [torch.float32, torch.float16]:
-                    print("converting to DNNL:", self.x_train[0])
-                    self.x_train = [x.to_mkldnn() for x in self.x_train]
-                if self.y_train[0].dtype in [torch.float32, torch.float16]:
-                    self.y_train = [y.to_mkldnn() for y in self.y_train]
-                # TODO: check if softmax etc now works with DNNL
             else:
                 logger.warning("Using DNNL backend without DNNL tensors")
         else:
@@ -90,7 +103,7 @@ class Benchmark(INeuralNet):
             optimizer.zero_grad()
             if self.params["problem"]["precision"] == "mixed":
                 with amp.autocast():
-                    loss = model(data, target)
+                    loss = model(4, target)
             else:
                 loss = model(data, target)
 
