@@ -20,7 +20,6 @@ def get_batch(batch_size, cnt_atoms_in_sample):
 
 def get_data(params):
     # This should be number item in problem size
-    params["problem"]["cnt_atoms_in_sample"] = 4
     cnt_batches = params["problem"]["cnt_batches_per_epoch"]
     X = [get_batch(params["batch_size"], params["problem"]["cnt_atoms_in_sample"]) for i in range(cnt_batches)]
     Y = [np.random.random((params["batch_size"])).astype(np.float32) - 0.5 for i in range(cnt_batches)]
