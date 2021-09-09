@@ -21,7 +21,10 @@ class Net4Train(nn.Module):
         self.criterion = criterion
 
     def __call__(self, x, t):
-        outs = self.net(x)
+        if isinstance(x, dict):
+            outs = self.net(**x)
+        else:
+            outs = self.net(x)
         # TODO(alex): figure this out. there's a reason why backward
         # finction is returned precompiled? is it correct to ignore
         # it?
