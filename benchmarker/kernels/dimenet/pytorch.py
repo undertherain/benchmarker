@@ -5,7 +5,7 @@ from torch_geometric.nn import DimeNet
 def get_kernel(params):
     # TODO: make these parameters
     net = DimeNet(
-        hidden_channels=128,
+        hidden_channels=params["hidden_channels"],
         out_channels=1,
         num_blocks=6,
         num_bilinear=8,
