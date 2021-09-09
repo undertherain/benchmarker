@@ -15,14 +15,6 @@ from .torchprof import Profile
 logger = logging.getLogger(__name__)
 
 
-class DummyContextManager:
-    def __enter__(self):
-        pass
-
-    def __exit__(self, type, value, traceback):
-        pass
-
-
 def progress(epoch, idx, nb, loss, log_interval=10):
     if idx % log_interval == 0:
         prc = 100.0 * idx / nb
