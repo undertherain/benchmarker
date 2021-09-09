@@ -152,6 +152,7 @@ class Benchmark(INeuralNet):
         start = timer()
         if self.params["mode"] == "training":
             model.train()
+            # TODO: log optimizer to metadata / set from params
             # optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.95)
             optimizer = optim.Adam(model.parameters(), lr=0.0001)
             if self.params["problem"]["precision"] == "mixed":
