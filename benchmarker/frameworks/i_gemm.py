@@ -4,10 +4,10 @@ import os
 
 from benchmarker.results import add_result_details
 
-from .i_benchmark import IBenchmark
+from .i_binary import IBinary
 
 
-class IGEMM(IBenchmark):
+class IGEMM(IBinary):
     """Interface for all gemm learning modules"""
 
     def process_params(self, remaining_args):

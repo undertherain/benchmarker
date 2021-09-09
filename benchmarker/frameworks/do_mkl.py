@@ -16,7 +16,13 @@ class Benchmark(IGEMM):
                 raise Exception("cblas does not work on GPU")
         # TODO(Alex): this does not work inless the binaries are copied to site_packages
         dirname = os.path.dirname(os.path.realpath(__file__))
-        path_binary = os.path.join(dirname, "../kernels", self.params["problem"].get("name"), self.params["framework"], "main")
+        path_binary = os.path.join(
+            dirname,
+            "../kernels",
+            self.params["problem"].get("name"),
+            self.params["framework"],
+            "main",
+        )
         if not os.path.isfile(path_binary):
             raise (RuntimeError(f"{path_binary} not found, run make manually"))
         command = [
