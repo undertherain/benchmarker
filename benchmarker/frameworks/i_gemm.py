@@ -38,7 +38,7 @@ class IGEMM(IBinary):
         return ["FP32", "mixed"]
 
     def expect_gpus(self):
-        pass
+        return False
 
     def process_params(self, remaining_args):
         remaining_args = super().process_params(remaining_args)
