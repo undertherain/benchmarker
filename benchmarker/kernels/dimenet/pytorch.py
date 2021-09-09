@@ -10,16 +10,21 @@ class Wrapper(torch.nn.Module):
 
     def __call__(self, x, y):
         res = self.net(**x)
-        loss = torch.nn.functional.mse_loss(res.sum(), y)
+        loss = torch.nn.functional.mse_loss(res, y)
         return loss
 
 
 def get_kernel(params):
     net = DimeNet(
-        hidden_channels=16,
-        out_channels=16,
-        num_blocks=3,
-        num_bilinear=2,
-        num_spherical=4,
-        num_radial=4)
+        hidden_channels=128,
+        out_channels=1,
+        num_blocks=6,
+        num_bilinear=8,
+        num_spherical=7,
+        num_radial=6,
+        cutoff=5.0,
+        envelope_exponent=5,
+        num_before_skip=1,
+        num_after_skip=2,
+        num_output_layers=3)
     return Wrapper(net)

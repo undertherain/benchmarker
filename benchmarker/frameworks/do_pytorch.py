@@ -152,7 +152,8 @@ class Benchmark(INeuralNet):
         start = timer()
         if self.params["mode"] == "training":
             model.train()
-            optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.95)
+            # optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.95)
+            optimizer = optim.Adam(model.parameters(), lr=0.0001)
             if self.params["problem"]["precision"] == "mixed":
                 assert len(self.params["gpus"]) == 1
             for epoch in range(1, self.params["nb_epoch"] + 1):
