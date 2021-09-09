@@ -10,6 +10,36 @@ from .i_binary import IBinary
 class IGEMM(IBinary):
     """Interface for all gemm learning modules"""
 
+    def __init__(self, params, remaining_args=None):
+        super().__init__(params, remaining_args)
+
+        prec_list = self.expected_precisions()
+        precision = self.params["problem"]["precision"]
+        assert precision in prec_list, f"Expected precisions: {prec_list}"
+
+        nb_gpus = self.params["nb_gpus"] if "nb_gpus" in self.params else 0
+        expect_gpus = self.expect_gpus()
+        msg = (
+            f"self.params['framework'] " "requires GPUs"
+            if expect_gpus
+            else "needs GPUs"
+        )
+
+        assert nb_gpus == expect_gpus, msg
+
+        self.data = self.load_data()
+        if params["problem"]["name"] not in ["gemm", "batchmatmul"]:
+            raise Exception(
+                f"only gemm problem is defined for this framework, "
+                f"{params['problem']['name']} is not!"
+            )
+
+    def expected_precisions(self):
+        return ["FP32", "mixed"]
+
+    def expect_gpus(self):
+        pass
+
     def process_params(self, remaining_args):
         remaining_args = super().process_params(remaining_args)
         parser = argparse.ArgumentParser(description="gemm extra args")
@@ -22,16 +52,6 @@ class IGEMM(IBinary):
         self.params["nb_epoch"] = args.nb_epoch
         self.params["path_ext"] = self.params["problem"]["precision"]
         return remaining_args
-
-    def __init__(self, params, remaining_args=None):
-        super().__init__(params, remaining_args)
-        # TODO: this should also go up
-        self.data = self.load_data()
-        if params["problem"]["name"] not in ["gemm", "batchmatmul"]:
-            raise Exception(
-                f"only gemm problem is defined for this framework, "
-                f"{params['problem']['name']} is not!"
-            )
 
     def post_process(self):
         gflop = self.params["problem"]["flop_estimated"] / (1000 ** 3)
