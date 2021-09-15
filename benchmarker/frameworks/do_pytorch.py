@@ -138,7 +138,9 @@ class Benchmark(INeuralNet):
                     # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                     profile_cuda = self.device.type == "cuda"
                     with Profile(model, use_cuda=profile_cuda) as prof:
-                        model(data)
+                        for i in range(len(self.x_train)):
+                            data = self.x_train[i]
+                        _ = model(data)
                     profile_data = prof.display(show_events=False)
 
                 self.params["profile_data"] = profile_data
