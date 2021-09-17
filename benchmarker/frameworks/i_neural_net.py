@@ -28,14 +28,18 @@ class INeuralNet(IBenchmark):
         assert params["mode"] in ["training", "inference"]
         params["path_ext"] = params["mode"]
         self.params["batch_size"] = self.params["batch_size_per_device"]
-        if isinstance(params["problem"]["size"], int):
-            params["problem"]["cnt_samples"] = params["problem"]["size"]
+        problem_size = params["problem"]["size"]
+        if isinstance(problem_size, int):
+            cnt_samples = problem_size
         else:
-            params["problem"]["cnt_samples"] = params["problem"]["size"][0]
-        assert params["problem"]["cnt_samples"] % params["batch_size"] == 0
-        params["problem"]["cnt_batches_per_epoch"] = (
-            params["problem"]["cnt_samples"] // self.params["batch_size"]
-        )
+            cnt_samples = problem_size[0]
+        batch_size = params["batch_size"]
+        assert (
+            cnt_samples % batch_size == 0
+        ), f"cnt_samples={cnt_samples} should be a multiple of batch_size={batch_size}"
+        params["problem"]["cnt_samples"] = cnt_samples
+        params["problem"]["cnt_batches_per_epoch"] = cnt_samples // batch_size
+
         if self.params["nb_gpus"] > 0:
             self.params["batch_size"] = (
                 self.params["batch_size_per_device"] * self.params["nb_gpus"]

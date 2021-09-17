@@ -31,12 +31,23 @@ def get_path_out_dir(params):
 
 
 def save_json(params):
-    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
-    print(str_result)
+    save_profile_data(params)
     path_out = get_path_out_dir(params)
     name_file = get_path_out_name(params)
+    str_result = json.dumps(params, sort_keys=True, indent=4, separators=(",", ": "))
+    print(str_result)
     with open(os.path.join(path_out, name_file), "w") as file_out:
         file_out.write(str_result)
+
+
+def save_profile_data(params):
+    if "profile_data" in params:
+        path_out = get_path_out_dir(params)
+        name_profile = get_path_out_name(params, ext="profile")
+        profile_data = params["profile_data"]
+        with open(os.path.join(path_out, name_profile), "w") as file_out:
+            file_out.write(profile_data)
+        del params["profile_data"]
 
 
 def print_json(params):

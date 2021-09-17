@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 from timeit import default_timer as timer
 
@@ -10,7 +11,6 @@ from torch.cuda import amp
 from torch.utils import mkldnn as mkldnn_utils
 
 from .i_neural_net import INeuralNet
-from .torchprof import Profile
 
 logger = logging.getLogger(__name__)
 
@@ -120,19 +120,38 @@ class Benchmark(INeuralNet):
     def inference(self, model, device):
         with torch.no_grad():
             # for data, target in zip(self.x_train, self.y_train):
-            for i in range(len(self.x_train)):
-                data = self.x_train[i]
-                _ = model(data)
-                # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
-                if self.params["profile_pytorch"]:
+            if self.params["profile_pytorch"]:
+                try:
+                    from torch.profiler import profile
+
+                    with profile(record_shapes=True) as prof:
+                        self.inner_loop(model)
+                    profile_data = prof.key_averages().table(
+                        sort_by="cpu_time_total",
+                        row_limit=20,
+                    )
+                    print(profile_data)
+                except Exception:
+                    from .torchprof import Profile
+
+                    # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                     profile_cuda = self.device.type == "cuda"
                     with Profile(model, use_cuda=profile_cuda) as prof:
-                        model(data)
-                    profile_output_as_dict = prof.display(show_events=False)
-                    self.params["profile_data"] = profile_output_as_dict
+                        self.inner_loop(model)
+                    data = prof.display(show_events=False)
+                    profile_data = json.dumps(data, indent=4, separators=(",", ": "))
+
+                self.params["profile_data"] = profile_data
+            else:
+                self.inner_loop(model)
 
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
+
+    def inner_loop(self, model):
+        for i in range(len(self.x_train)):
+            data = self.x_train[i]
+            _ = model(data)
 
     def run(self):
         model = self.net
