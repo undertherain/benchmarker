@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 from timeit import default_timer as timer
 
@@ -137,7 +138,8 @@ class Benchmark(INeuralNet):
                     profile_cuda = self.device.type == "cuda"
                     with Profile(model, use_cuda=profile_cuda) as prof:
                         self.inner_loop(model)
-                    profile_data = prof.display(show_events=False)
+                    data = prof.display(show_events=False)
+                    profile_data = json.dumps(data, indent=4, separators=(",", ": "))
 
                 self.params["profile_data"] = profile_data
             else:
