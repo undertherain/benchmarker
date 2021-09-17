@@ -124,9 +124,7 @@ class Benchmark(INeuralNet):
                     from torch.profiler import profile
 
                     with profile(record_shapes=True) as prof:
-                        for i in range(len(self.x_train)):
-                            data = self.x_train[i]
-                            _ = model(data)
+                        self.inner_loop(model)
                     profile_data = prof.key_averages().table(
                         sort_by="cpu_time_total",
                         row_limit=20,
@@ -138,19 +136,20 @@ class Benchmark(INeuralNet):
                     # Profile using torchprof (TODO:profile_per_batch for all batches and epochs)
                     profile_cuda = self.device.type == "cuda"
                     with Profile(model, use_cuda=profile_cuda) as prof:
-                        for i in range(len(self.x_train)):
-                            data = self.x_train[i]
-                        _ = model(data)
+                        self.inner_loop(model)
                     profile_data = prof.display(show_events=False)
 
                 self.params["profile_data"] = profile_data
             else:
-                for i in range(len(self.x_train)):
-                    data = self.x_train[i]
-                    _ = model(data)
+                self.inner_loop(model)
 
         if self.params["nb_gpus"] > 0:
             torch.cuda.synchronize()
+
+    def inner_loop(self, model):
+        for i in range(len(self.x_train)):
+            data = self.x_train[i]
+            _ = model(data)
 
     def run(self):
         model = self.net
