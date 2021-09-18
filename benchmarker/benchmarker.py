@@ -148,4 +148,5 @@ def run(argv):
 
 
 if __name__ == "__main__":
-    run(sys.argv[1:])
+    res = run(sys.argv[1:])
+    print_json(res)
