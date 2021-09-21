@@ -54,6 +54,10 @@ class Benchmark(INeuralNet):
         self.params["backend"] = args.backend
         self.params["tensor_layout"] = args.tensor_layout
         self.params["cudnn_benchmark"] = args.cbm
+        if self.params["profile_pytorch"]:
+            assert (
+                self.params["mode"] == "inference"
+            ), "--profile_pytorch works only with --mode=inference"
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
