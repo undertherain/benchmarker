@@ -37,8 +37,8 @@ def set_tensor_device_precision(tensor, device, layout, precision):
 
 def set_batch_device_precision(batch, device, layout, precision):
     if isinstance(batch, dict):
-        for key in batch:
-            batch[key] = set_tensor_device_precision(batch[key], device, layout, precision)
+        for key, value in batch.items():
+            batch[key] = set_tensor_device_precision(value, device, layout, precision)
     else:
         batch = set_tensor_device_precision(batch, device, layout, precision)
     return batch
@@ -54,6 +54,10 @@ class Benchmark(INeuralNet):
         self.params["backend"] = args.backend
         self.params["tensor_layout"] = args.tensor_layout
         self.params["cudnn_benchmark"] = args.cbm
+        if self.params["profile_pytorch"]:
+            assert (
+                self.params["mode"] == "inference"
+            ), "--profile_pytorch works only with --mode=inference"
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
@@ -79,8 +83,13 @@ class Benchmark(INeuralNet):
 
     def setup_data_and_model(self):
         x_train, y_train = self.load_data()
-        self.x_train = [set_batch_device_precision(i, self.device, self.params["tensor_layout"], self.params["problem"]["precision"]) for i in x_train]
-        self.y_train = [set_batch_device_precision(i, self.device, self.params["tensor_layout"], self.params["problem"]["precision"]) for i in y_train]
+        args = [
+            self.device,
+            self.params["tensor_layout"],
+            self.params["problem"]["precision"],
+        ]
+        self.x_train = [set_batch_device_precision(i, *args) for i in x_train]
+        self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
         if self.params["problem"]["precision"] == "FP16":
             self.net.half()
         if self.params["backend"] == "DNNL":
