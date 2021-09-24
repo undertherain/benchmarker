@@ -169,7 +169,6 @@ class Benchmark(INeuralNet):
 
         model.to(self.device)
         # TODO: args for training hyperparameters
-        start = timer()
         if self.params["mode"] == "training":
             model.train()
             # TODO: log optimizer to metadata / set from params
@@ -177,13 +176,21 @@ class Benchmark(INeuralNet):
             optimizer = optim.Adam(model.parameters(), lr=0.0001)
             if self.params["problem"]["precision"] == "mixed":
                 assert len(self.params["gpus"]) == 1
-            for epoch in range(1, self.params["nb_epoch"] + 1):
-                self.train(model, optimizer, epoch)
+            if self.params["preheat"]:
+                self.train(model, optimizer, 1)
         else:
             assert self.params["problem"]["precision"] in ["FP16", "FP32"]
             model.eval()
-            for epoch in range(1, self.params["nb_epoch"] + 1):
+            if self.params["preheat"]:
                 self.inference(model, self.device)
+
+        start = timer()
+        for epoch in range(1, self.params["nb_epoch"] + 1):
+            if self.params["mode"] == "training":
+                self.train(model, optimizer, epoch)
+            else:
+                self.inference(model, self.device)
+
         end = timer()
         self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
