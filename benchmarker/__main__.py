@@ -53,8 +53,14 @@ def main():
     result = benchmarker.benchmarker.run(unknown_args)
 
     # TODO: don't parse path_out in the innder loop
-    print(result)
     result["platform"] = sysinfo.get_sys_info()
+    if len(result["gpus"]) != result["nb_gpus"] and result["framework"] == "pytorch":
+        print(result)
+        import torch.cuda
+
+        nb_gpus = storch.cuda.device_count()
+        print("NB_GPUS", nb_gpus)
+
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
         precision = result["problem"]["precision"]
