@@ -4,8 +4,10 @@ from pathlib import Path
 
 from benchmarker.util.abstractprocess import Process
 
+from .i_binary import IBinary
 
-class Benchmark:
+
+class Benchmark(IBinary):
     """Interface for all deep learning modules"""
 
     def __init__(self, params, remaining_args=None):
@@ -58,6 +60,9 @@ class Benchmark:
         )
         elapsed_time = float(result["out"].strip())
         samples = float(batch_size * nb_epoch)
+        precision = "FP32"
+        self.params["problem"]["precision"] = precision
+        self.params["path_ext"] = precision
         self.params["samples_per_second"] = samples / elapsed_time
         self.params["time_total"] = elapsed_time
         self.params["time_epoch"] = elapsed_time / float(nb_epoch)
