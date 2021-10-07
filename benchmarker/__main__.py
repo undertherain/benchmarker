@@ -54,7 +54,10 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
-    if len(result["gpus"]) != result["nb_gpus"] and result["framework"] == "pytorch":
+    if (
+        len(result["platform"]["gpus"]) != result["nb_gpus"]
+        and result["framework"] == "pytorch"
+    ):
         print(result)
         import torch.cuda
 
