@@ -3,12 +3,17 @@ import importlib
 
 class IBenchmark:
     def __init__(self, params, remaining_args):
+        self.params = params
+        remaining_args = self.process_params(remaining_args)
         self.get_kernel(params, remaining_args)
 
     def measure_power_and_run(self):
         results = self.run()
         # self.post_process() # TODO
         return results
+
+    def process_params(self, remaining_args):
+        return remaining_args
 
     def load_data(self):
         params = self.params
