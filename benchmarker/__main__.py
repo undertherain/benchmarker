@@ -61,7 +61,7 @@ def main():
         print(result)
         import torch.cuda
 
-        nb_gpus = storch.cuda.device_count()
+        nb_gpus = torch.cuda.device_count()
         print("NB_GPUS", nb_gpus)
 
     result["start_time"] = get_time_str()
