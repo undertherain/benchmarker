@@ -22,7 +22,7 @@ def fixup_for_amd_gpus(result):
         for i in range(nb_gpus):
             device_name = torch.cuda.get_device_name(i)
             assert device_name == "Device 738c"
-            gpu = {"brand": "AMD", "name": "Mi100"}
+            gpu = {"brand": "AMD Mi100"}
             gpus.append(gpu)
 
         result["platform"]["gpus"] = gpus
