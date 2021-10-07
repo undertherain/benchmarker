@@ -54,15 +54,23 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
-    if (
-        len(result["platform"]["gpus"]) != result["nb_gpus"]
-        and result["framework"] == "pytorch"
-    ):
-        print(result)
+
+    ## start
+    same_gpu_count = len(result["platform"]["gpus"]) == result["nb_gpus"]
+    using_pytorch = result["framework"] == "pytorch"
+    if using_pytorch and not same_gpu_count:
         import torch.cuda
 
         nb_gpus = torch.cuda.device_count()
-        print("NB_GPUS", nb_gpus)
+        gpus = []
+        for i in range(nb_gpus):
+            gpu = {"brand": "AMD", "name": torch.cuda.get_device_name(i)}
+            gpus.append(gpu)
+
+        print("RESULT GPUS", result["platform"]["gpus"])
+        print("GPUS", gpus)
+        result["platform"]["gpus"] = gpus
+    ## end
 
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
