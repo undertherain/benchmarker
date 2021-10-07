@@ -53,6 +53,7 @@ def main():
     result = benchmarker.benchmarker.run(unknown_args)
 
     # TODO: don't parse path_out in the innder loop
+    print(result)
     result["platform"] = sysinfo.get_sys_info()
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
