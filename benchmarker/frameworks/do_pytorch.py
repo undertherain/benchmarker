@@ -23,6 +23,8 @@ def progress(epoch, idx, nb, loss, log_interval=10):
 
 
 def set_tensor_device_precision(tensor, device, layout, precision):
+    # if isinstance(tensor, dict):
+    #     return {k: set_tensor_device_precision(v) for k, v in tensor.items()}
     if isinstance(tensor, (np.ndarray, np.generic)):
         tensor = torch.from_numpy(tensor)
     if tensor.dtype == torch.float32:
@@ -35,12 +37,14 @@ def set_tensor_device_precision(tensor, device, layout, precision):
     return tensor
 
 
-def set_batch_device_precision(batch, device, layout, precision):
-    if isinstance(batch, dict):
-        for key, value in batch.items():
-            batch[key] = set_tensor_device_precision(value, device, layout, precision)
+def set_batch_device_precision(data, device, layout, precision):
+    if isinstance(data, list):
+        return [set_batch_device_precision(i, device, layout, precision) for i in data]
+    if isinstance(data, dict):
+        for key, value in data.items():
+            return {k: set_tensor_device_precision(v, device, layout, precision) for k, v in data.items()}
     else:
-        batch = set_tensor_device_precision(batch, device, layout, precision)
+        batch = set_tensor_device_precision(data, device, layout, precision)
     return batch
 
 
@@ -82,14 +86,15 @@ class Benchmark(INeuralNet):
         return args, remaining_args
 
     def setup_data_and_model(self):
-        x_train, y_train = self.load_data()
+        batches = self.load_data()
+
         args = [
             self.device,
             self.params["tensor_layout"],
             self.params["problem"]["precision"],
         ]
-        self.x_train = [set_batch_device_precision(i, *args) for i in x_train]
-        self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
+        self.batches = set_batch_device_precision(batches, *args)
+        # self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
         if self.params["problem"]["precision"] == "FP16":
             self.net.half()
         if self.params["backend"] == "DNNL":
@@ -108,17 +113,20 @@ class Benchmark(INeuralNet):
 
     def train(self, model, optimizer, epoch):
         model.train()
-        for batch_idx, (data, target) in enumerate(zip(self.x_train, self.y_train)):
+        for batch_idx, batch in enumerate(self.batches):
             optimizer.zero_grad()
+            # print("batch")
+            # print(batch)
             if self.params["problem"]["precision"] == "mixed":
                 with amp.autocast():
-                    loss = model(data, target)
+                    loss = model(* batch)
             else:
-                loss = model(data, target)
+                loss = model(** batch)
 
-            loss.mean().backward()
+            loss.backward()
+            # loss.mean().backward()
             optimizer.step()
-            progress(epoch, batch_idx, len(self.x_train), loss.mean().item())
+            # progress(epoch, batch_idx, len(self.x_train), loss.item())
         if self.device.type == "cuda":
             torch.cuda.synchronize()
 
