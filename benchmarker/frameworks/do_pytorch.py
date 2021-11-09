@@ -126,7 +126,7 @@ class Benchmark(INeuralNet):
             loss.backward()
             # loss.mean().backward()
             optimizer.step()
-            # progress(epoch, batch_idx, len(self.x_train), loss.item())
+            progress(epoch, batch_idx, len(self.batches), loss.item())
         if self.device.type == "cuda":
             torch.cuda.synchronize()
 
