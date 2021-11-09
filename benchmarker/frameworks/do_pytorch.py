@@ -119,7 +119,7 @@ class Benchmark(INeuralNet):
             # print(batch)
             if self.params["problem"]["precision"] == "mixed":
                 with amp.autocast():
-                    loss = model(* batch)
+                    loss = model(** batch)
             else:
                 loss = model(** batch)
 
