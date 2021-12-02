@@ -181,7 +181,7 @@ class Benchmark(INeuralNet):
             model.train()
             # TODO: log optimizer to metadata / set from params
             # optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.95)
-            optimizer = optim.Adam(model.parameters(), lr=0.0001)
+            optimizer = optim.AdamW(model.parameters(), lr=0.0001)
             if self.params["problem"]["precision"] == "mixed":
                 assert len(self.params["gpus"]) == 1
             if self.params["preheat"]:
