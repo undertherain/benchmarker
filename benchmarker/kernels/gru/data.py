@@ -1,4 +1,4 @@
-import numpy as np
+# import numpy as np
 
 from benchmarker.data.images_randomized import gen_data
 

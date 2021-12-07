@@ -40,6 +40,8 @@ def set_tensor_device_precision(tensor, device, layout, precision):
 def set_batch_device_precision(data, device, layout, precision):
     if isinstance(data, list):
         return [set_batch_device_precision(i, device, layout, precision) for i in data]
+    if isinstance(data, tuple):
+        return (set_batch_device_precision(i, device, layout, precision) for i in data)
     if isinstance(data, dict):
         for key, value in data.items():
             return {k: set_tensor_device_precision(v, device, layout, precision) for k, v in data.items()}
@@ -166,9 +168,8 @@ class Benchmark(INeuralNet):
             torch.cuda.synchronize()
 
     def inner_loop(self, model):
-        for i in range(len(self.x_train)):
-            data = self.x_train[i]
-            _ = model(data)
+        for batch in self.batches:
+            _ = model(batch[0])
 
     def run(self):
         model = self.net
