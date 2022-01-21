@@ -107,7 +107,7 @@ def main():
     add_result_details(result)
 
     save_json(result)
-    # TODO: don't measure power when measureing flops
+    # TODO: don't measure power when measuring flops
 
 
 if __name__ == "__main__":
