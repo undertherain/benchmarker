@@ -76,7 +76,10 @@ def main():
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
         precision = result["problem"]["precision"]
-        result["device"] = result["platform"]["gpus"][0]["brand"]
+        try:
+            result["device"] = result["platform"]["gpus"][0]["brand"]
+        except:
+            result["device"] = "UKNOWN"
         if args.flops and precision in ["FP16", "FP32"]:
             result["problem"]["gflop_measured"] = nvprof.get_gflop(command, precision)
     else:
