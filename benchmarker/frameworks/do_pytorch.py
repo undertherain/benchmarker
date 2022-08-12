@@ -1,4 +1,5 @@
 import argparse
+import contextlib
 import json
 import logging
 from timeit import default_timer as timer
@@ -89,7 +90,7 @@ class Benchmark(INeuralNet):
 
     def setup_data_and_model(self):
         batches = self.load_data()
-
+        # print("loaded", batches)
         args = [
             self.device,
             self.params["tensor_layout"],
@@ -114,15 +115,13 @@ class Benchmark(INeuralNet):
                 raise RuntimeError("Unknown backend")
 
     def train(self, model, optimizer, epoch):
-        model.train()
-        for batch_idx, batch in enumerate(self.batches):
-            optimizer.zero_grad()
-            # print("batch")
-            # print(batch)
-            if self.params["problem"]["precision"] == "mixed":
-                with amp.autocast():
-                    loss = model(** batch)
-            else:
+        with amp.autocast() if self.params["problem"]["precision"] == "mixed" else contextlib.suppress():
+            model.train()
+            for batch_idx, batch in enumerate(self.batches):
+                optimizer.zero_grad()
+                # print("batch")
+                # print(self.batches)
+                # print(batch.shape)
                 loss = model(** batch)
 
             loss.backward()

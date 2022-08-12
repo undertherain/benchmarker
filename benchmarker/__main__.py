@@ -21,9 +21,9 @@ def fixup_for_amd_gpus(result):
         gpus = []
         for i in range(nb_gpus):
             device_name = torch.cuda.get_device_name(i)
-            assert device_name == "Device 738c"
-            gpu = {"brand": "AMD Mi100"}
-            gpus.append(gpu)
+            # assert device_name == "Device 738c"
+            # gpu = {"brand": "AMD Mi100"}
+            gpus.append(device_name)
 
         result["platform"]["gpus"] = gpus
 
@@ -71,7 +71,7 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
-    fixup_for_amd_gpus(result)
+    # fixup_for_amd_gpus(result)
 
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
