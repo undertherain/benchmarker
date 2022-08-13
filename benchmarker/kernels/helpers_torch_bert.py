@@ -18,8 +18,8 @@ class BertInference(nn.Module):
         super().__init__()
         self.net = net
 
-    def __call__(self, x):
-        logits = self.net(input_ids=x)
+    def __call__(self, input_ids):
+        logits = self.net(input_ids=input_ids)
         return logits
 
 

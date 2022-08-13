@@ -10,7 +10,9 @@ def get_data(params):
     shape = (params["batch_size"],
              params["problem"]["len_sequence"],
              )
+    # TODO: this should be within vocab size
     X = np.random.random(shape).astype(np.int64)
+    # TODO: return ints in cnt_labels range
     Y = np.ones(params["batch_size"], dtype=np.int64)
     res = [{"input_ids": X, "labels": Y} for i in range(cnt_batches)]
     return res
