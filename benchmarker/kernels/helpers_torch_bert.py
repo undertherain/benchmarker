@@ -1,5 +1,5 @@
 import torch.nn as nn
-from transformers import AutoModelForSequenceClassification, AutoConfig
+from transformers import AutoConfig, AutoModelForSequenceClassification
 
 
 class BertTraining(nn.Module):
@@ -7,9 +7,9 @@ class BertTraining(nn.Module):
         super().__init__()
         self.net = net
 
-    def __call__(self, x, t):
-        ret = self.net(input_ids=x,
-                       labels=t)
+    def __call__(self, input_ids, labels):
+        ret = self.net(input_ids=input_ids,
+                       labels=labels)
         return ret["loss"]
 
 
