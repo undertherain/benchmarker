@@ -168,7 +168,7 @@ class Benchmark(INeuralNet):
 
     def inner_loop(self, model):
         for batch in self.batches:
-            _ = model(batch[0])
+            _ = model(**batch)
 
     def run(self):
         model = self.net
