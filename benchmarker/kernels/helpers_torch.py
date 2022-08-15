@@ -58,7 +58,7 @@ class Regression(BaseWrapper):
 
 class Recommender(BaseWrapper):
     def __init__(self, mode, net):
-        super().__init__(self, mode, net, nn.BCEWithLogitsLoss())
+        super().__init__(mode, net, nn.BCEWithLogitsLoss())
 
     def call_inference(self, x, labels):
         outs = self.net(x)
