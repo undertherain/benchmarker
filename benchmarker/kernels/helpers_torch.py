@@ -10,7 +10,7 @@ class Net4Inference(nn.Module):
         super().__init__()
         self.net = net
 
-    def __call__(self, x):
+    def __call__(self, x, labels):
         return self.net(x)
 
 
@@ -44,7 +44,7 @@ def Net4Both(mode, net, inference, training):
 
 
 class ClassifierInference(Net4Inference):
-    def __call__(self, x):
+    def __call__(self, x, labels):
         outs = self.net(x)
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
