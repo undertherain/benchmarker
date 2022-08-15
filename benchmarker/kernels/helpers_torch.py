@@ -62,7 +62,7 @@ def Classifier(mode, net):
 
 
 class RecommenderInference(Net4Inference):
-    def __call__(self, x):
+    def __call__(self, x, labels):
         outs = self.net(x)
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
