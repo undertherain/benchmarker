@@ -5,22 +5,26 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class Net4Inference(nn.Module):
-    def __init__(self, net):
+class BaseWrapper(nn.Module):
+    def __init__(self, mode, net, criterion):
         super().__init__()
-        self.net = net
-
-    def __call__(self, x, labels):
-        return self.net(x)
-
-
-class Net4Train(nn.Module):
-    def __init__(self, net, criterion):
-        super().__init__()
+        self.mode = mode
         self.net = net
         self.criterion = criterion
 
-    def __call__(self, x, labels):
+    def __call__(self, **kwargs):
+        if self.mode == "inference":
+            return self.call_inference(**kwargs)
+        else:
+            return self.call_training(**kwargs)
+
+    def call_inference(self, x, labels):
+        outs = self.net(x)
+        if isinstance(outs, OrderedDict):
+            outs = outs["out"]
+        return outs
+
+    def call_training(self, x, labels):
         if isinstance(x, dict):
             outs = self.net(**x)
         else:
@@ -36,54 +40,28 @@ class Net4Train(nn.Module):
         return loss
 
 
-def Net4Both(mode, net, inference, training):
-    if mode == "inference":
-        return inference(net)
-    else:
-        return training(net)
+class Classifier(BaseWrapper):
+    def __init__(self, mode, net):
+        super().__init__(mode,  net, nn.CrossEntropyLoss())
 
-
-class ClassifierInference(Net4Inference):
-    def __call__(self, x, labels):
+    def call_infererance(self, x, labels):
         outs = self.net(x)
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
         return F.softmax(outs, dim=-1)
 
 
-class ClassifierTraining(Net4Train):
-    def __init__(self, net):
-        super().__init__(net, nn.CrossEntropyLoss())
+class Regression(BaseWrapper):
+    def __init__(self, mode, net):
+        super.__init__(mode, net, loss=nn.MSELoss())
 
 
-def Classifier(mode, net):
-    """Returns an inference or training classifier."""
-    return Net4Both(mode, net, ClassifierInference, ClassifierTraining)
+class Recommender(BaseWrapper):
+    def __init__(self, mode, net):
+        super().__init__(self, mode, net, nn.BCEWithLogitsLoss())
 
-
-class RecommenderInference(Net4Inference):
-    def __call__(self, x, labels):
+    def call_inference(self, x, labels):
         outs = self.net(x)
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
         return torch.sigmoid(outs)
-
-
-class RecommenderTraining(Net4Train):
-    def __init__(self, net):
-        super().__init__(net, nn.BCEWithLogitsLoss())
-
-
-def Recommender(mode, net):
-    """Returns an inference or training recommender."""
-    return Net4Both(mode, net, RecommenderInference, RecommenderTraining)
-
-
-class RegressionTraining(Net4Train):
-    def __init__(self, net_and_loss):
-        super().__init__(*net_and_loss)
-
-
-def Regression(mode, net, loss=nn.MSELoss()):
-    """Returns an inference or training recommender."""
-    return Net4Both(mode, (net, loss), lambda t: t[0], RegressionTraining)
