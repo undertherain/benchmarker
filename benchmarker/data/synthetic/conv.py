@@ -25,6 +25,7 @@ def get_data(params):
 
     #shape = (problem["cnt_batches_per_epoch"], params["batch_size"])
     shape = (params["batch_size"],) + problem["size"][1:]
-    X = [np.random.random(shape).astype(np.float32) for i in range(problem["cnt_batches_per_epoch"])] 
+    X = np.random.random(shape).astype(np.float32)
     Y = np.random.random(shape[:2]).astype(np.int64)
-    return {"x":X, "labels":Y}
+    return [{"x": X, "labels": Y}
+        for i in range(problem["cnt_batches_per_epoch"])]
