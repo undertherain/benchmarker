@@ -15,4 +15,4 @@ def get_kernel(params):
                     groups=1,
                     bias=True,
                     padding_mode='zeros')
-    return InferenceOnly(net)
+    return InferenceOnly(params["mode"], net)
