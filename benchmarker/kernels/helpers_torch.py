@@ -53,7 +53,7 @@ class Classifier(BaseWrapper):
 
 class Regression(BaseWrapper):
     def __init__(self, mode, net):
-        super().__init__(mode, net, loss=nn.MSELoss())
+        super().__init__(mode, net, nn.MSELoss())
 
 
 class Recommender(BaseWrapper):
