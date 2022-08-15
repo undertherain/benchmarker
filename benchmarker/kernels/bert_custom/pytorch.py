@@ -14,6 +14,7 @@ Hopefully this should be fixed when we start importing models from ONNX
 """
 
 import math
+
 import torch
 import torch.nn as nn
 # import torch.nn.functional as F
@@ -98,18 +99,18 @@ class TransformerModel(nn.Module):
         self.decoder.bias.data.zero_()
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
-    def forward(self, src, has_mask=True):
+    def forward(self, input_ids, labels, has_mask=True):
         if has_mask:
-            device = src.device
-            if self.src_mask is None or self.src_mask.size(0) != len(src):
-                mask = self._generate_square_subsequent_mask(len(src)).to(device)
+            device = input_ids.device
+            if self.src_mask is None or self.src_mask.size(0) != len(input_ids):
+                mask = self._generate_square_subsequent_mask(len(input_ids)).to(device)
                 self.src_mask = mask
         else:
             self.src_mask = None
 
-        src = self.encoder(src) * math.sqrt(self.ninp)
-        src = self.pos_encoder(src)
-        output = self.transformer_encoder(src, self.src_mask)
+        input_ids = self.encoder(input_ids) * math.sqrt(self.ninp)
+        input_ids = self.pos_encoder(input_ids)
+        output = self.transformer_encoder(input_ids, self.src_mask)
         output = output[-1]
         output = self.decoder(output)
         # TODO: return softmax or cross_entropy depending on the mode
