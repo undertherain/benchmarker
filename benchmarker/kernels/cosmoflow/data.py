@@ -10,10 +10,8 @@ def get_data(params):
         shape = shape[-1:] + shape[:-1]
         # params["input_shape"] = shape # should this be updated?
 
-    shape = (cnt_batches, batch_size) + shape
-    X = np.random.random(shape).astype(np.float32)
-
-    shape = (cnt_batches, batch_size, params["target_size"])
-    Y = np.random.random(shape).astype(np.float32)
-
-    return X, Y
+    shape = (batch_size,) + shape
+    data = [{"x": np.random.random(shape).astype(np.float32),
+             "labels": np.random.random((batch_size, params["target_size"])).astype(np.float32)}
+            for i in range(cnt_batches)]
+    return data
