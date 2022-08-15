@@ -42,7 +42,7 @@ class BaseWrapper(nn.Module):
 
 class Classifier(BaseWrapper):
     def __init__(self, mode, net):
-        super().__init__(mode,  net, nn.CrossEntropyLoss())
+        super().__init__(mode, net, nn.CrossEntropyLoss())
 
     def call_infererance(self, x, labels):
         outs = self.net(x)
@@ -53,7 +53,7 @@ class Classifier(BaseWrapper):
 
 class Regression(BaseWrapper):
     def __init__(self, mode, net):
-        super.__init__(mode, net, loss=nn.MSELoss())
+        super().__init__(mode, net, loss=nn.MSELoss())
 
 
 class Recommender(BaseWrapper):
