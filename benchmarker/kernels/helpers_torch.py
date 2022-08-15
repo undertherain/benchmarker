@@ -40,11 +40,19 @@ class BaseWrapper(nn.Module):
         return loss
 
 
+class InferenceOnly(BaseWrapper):
+    def __init__(self, mode, net):
+        super().__init__(mode, net, None)
+
+    def call_training(self, x, labels):
+        raise RuntimeError("traing not supported for this kernel")
+
+
 class Classifier(BaseWrapper):
     def __init__(self, mode, net):
         super().__init__(mode, net, nn.CrossEntropyLoss())
 
-    def call_infererance(self, x, labels):
+    def call_inference(self, x, labels):
         outs = self.net(x)
         if isinstance(outs, OrderedDict):
             outs = outs["out"]
