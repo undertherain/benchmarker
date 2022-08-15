@@ -20,7 +20,7 @@ class Net4Train(nn.Module):
         self.net = net
         self.criterion = criterion
 
-    def __call__(self, x, t):
+    def __call__(self, x, labels):
         if isinstance(x, dict):
             outs = self.net(**x)
         else:
@@ -32,7 +32,7 @@ class Net4Train(nn.Module):
             outs = outs["out"]
         if outs.layout == torch._mkldnn:
             outs = outs.to_dense()
-        loss = self.criterion(outs, t)
+        loss = self.criterion(outs, labels)
         return loss
 
 
