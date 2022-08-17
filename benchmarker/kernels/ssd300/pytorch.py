@@ -1,6 +1,15 @@
 import torch
 
 
+class Wrapper(torch.nn.Module):
+    def __init__(self, net):
+        super().__init__()
+        self.net = net
+
+    def __call__(self, x, labels):
+        return self.net(x)
+
+
 def get_kernel(params):
     URL = (
         "https://api.ngc.nvidia.com/"
@@ -15,4 +24,4 @@ def get_kernel(params):
         URL, map_location=lambda storage, loc: storage
     )
     ssd_cpu.load_state_dict(ckpt["model"])
-    return ssd_cpu
+    return Wrapper(ssd_cpu)

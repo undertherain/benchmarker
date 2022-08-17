@@ -1,5 +1,8 @@
-import torch.nn as nn
 import math
+
+import torch.nn as nn
+from benchmarker.kernels.helpers_torch import InferenceOnly
+
 # TODO: the CLI interface becoming too clumsy
 # TODO: migrade to json configs
 
@@ -21,7 +24,7 @@ def get_kernel(params):
     out_height = 1 + math.floor((input_height - filter_height + 2 * padding_height)/vertical_stride)
     params["problem"]["gflop_estimated"] = (2 * out_width * out_height * num_channels * cnt_samples * cnt_filters * filter_width * filter_height * params["nb_epoch"]) / (10 ** 9)
 
-    Net = nn.Conv2d(in_channels=num_channels,
+    net = nn.Conv2d(in_channels=num_channels,
                     out_channels=cnt_filters,
                     kernel_size=filter_width,
                     stride=horizontal_stride,
@@ -30,4 +33,4 @@ def get_kernel(params):
                     groups=1,
                     bias=True,
                     padding_mode='zeros')
-    return Net
+    return InferenceOnly(params["mode"], net)

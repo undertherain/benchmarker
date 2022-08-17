@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # TODO: this repeats code from .synthetic
 def gen_data(params):
     """generates sinthetic dataset"""
@@ -13,6 +14,6 @@ def gen_data(params):
         params["batch_size"],
         params["problem"]["size"][2],
     )
-    X = [np.random.random(shape).astype(np.float32) for i in range(cnt_batches)]
-    Y = [np.ones((params["batch_size"])) for i in range(cnt_batches)]
-    return X, Y
+    data = [{"x": np.random.random(shape).astype(np.float32),
+             "labels": np.ones((params["batch_size"]))} for i in range(cnt_batches)]
+    return data

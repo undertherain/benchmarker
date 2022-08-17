@@ -21,9 +21,9 @@ def fixup_for_amd_gpus(result):
         gpus = []
         for i in range(nb_gpus):
             device_name = torch.cuda.get_device_name(i)
-            assert device_name == "Device 738c"
-            gpu = {"brand": "AMD Mi100"}
-            gpus.append(gpu)
+            # assert device_name == "Device 738c"
+            # gpu = {"brand": "AMD Mi100"}
+            gpus.append(device_name)
 
         result["platform"]["gpus"] = gpus
 
@@ -71,12 +71,15 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
-    fixup_for_amd_gpus(result)
+    # fixup_for_amd_gpus(result)
 
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:
         precision = result["problem"]["precision"]
-        result["device"] = result["platform"]["gpus"][0]["brand"]
+        try:
+            result["device"] = result["platform"]["gpus"][0]["brand"]
+        except:
+            result["device"] = "UKNOWN"
         if args.flops and precision in ["FP16", "FP32"]:
             result["problem"]["gflop_measured"] = nvprof.get_gflop(command, precision)
     else:
@@ -107,7 +110,7 @@ def main():
     add_result_details(result)
 
     save_json(result)
-    # TODO: don't measure power when measureing flops
+    # TODO: don't measure power when measuring flops
 
 
 if __name__ == "__main__":

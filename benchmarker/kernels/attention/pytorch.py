@@ -3,8 +3,8 @@ from . import estimate_attention_gflop_per_sample
 
 
 class Net(nn.MultiheadAttention):
-    def forward(self, data):
-        super().forward(data, data, data)
+    def forward(self, x, labels):
+        super().forward(x, x, x)
 
 
 def get_kernel(params):
