@@ -37,7 +37,7 @@ class Benchmark(IGEMM):
                 raise RuntimeError("Unknown backend")
 
     def run(self):
-        torch.set_flush_denormal(False)
+        # TODO: use proper logger
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] > 1:
                 raise RuntimeError("Only 1 GPU is supported")
@@ -50,6 +50,12 @@ class Benchmark(IGEMM):
                 if self.params["preheat"]:
                     self.net(self.data)
                 torch.cuda.synchronize()
+            else:
+                if torch.set_flush_denormal(True):
+                    print("Set flush denormal")
+                else:
+                    print("Could not set flush denormal")
+
         # preheat
         self.net(self.data)
         time_start = timer()
