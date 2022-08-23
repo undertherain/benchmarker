@@ -11,7 +11,7 @@ from .i_gemm import IGEMM
 
 
 def data_to_device(data, device):
-    if type(data) == torch.Tensor:
+    if isinstance(data, torch.Tensor):
         return data.to(device)
     else:
         return tuple(data_to_device(element, device) for element in data)
@@ -22,10 +22,22 @@ class Benchmark(IGEMM):
         # TODO: reuse this with do_pytorch
         parser = argparse.ArgumentParser(description="pytorch extra args")
         parser.add_argument("--backend", default="native")
+        parser.add_argument("--enable_TF32", dest="enable_TF32", action="store_true")
+        parser.set_defaults(enable_TF32=False)
+
         args, remaining_args = parser.parse_known_args(extra_args)
         super().__init__(params, remaining_args)
-        self.data = tuple(map(torch.tensor, self.data))
+        # self.data = tuple(map(torch.tensor, self.data))
+        # TODO: why we don't just update params from all args?
         self.params["backend"] = args.backend
+        self.params["enable_TF32"] = args.enable_TF32
+        if self.params["enable_TF32"]:
+            assert self.params["nb_gpus"] == 1
+            torch.backends.cuda.matmul.allow_tf32 = True
+            torch.backends.cudnn.allow_tf32 = True
+        else:
+            torch.backends.cuda.matmul.allow_tf32 = False
+            torch.backends.cudnn.allow_tf32 = False
         # self.get_kernel(params, remaining_args)
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
