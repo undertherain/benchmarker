@@ -37,6 +37,7 @@ class Benchmark(IGEMM):
                 raise RuntimeError("Unknown backend")
 
     def run(self):
+        torch.set_flush_denormal(False)
         if "nb_gpus" in self.params:
             if self.params["nb_gpus"] > 1:
                 raise RuntimeError("Only 1 GPU is supported")
