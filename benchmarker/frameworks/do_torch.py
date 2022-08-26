@@ -23,6 +23,7 @@ class Benchmark(IGEMM):
         parser = argparse.ArgumentParser(description="pytorch extra args")
         parser.add_argument("--backend", default="native")
         parser.add_argument("--enable_TF32", dest="enable_TF32", action="store_true")
+        parser.add_argument("--flush_denormal", dest="flush_denormal", action="store_true")
         parser.set_defaults(enable_TF32=False)
 
         args, remaining_args = parser.parse_known_args(extra_args)
@@ -31,6 +32,7 @@ class Benchmark(IGEMM):
         # TODO: why we don't just update params from all args?
         self.params["backend"] = args.backend
         self.params["enable_TF32"] = args.enable_TF32
+        self.params["flush_denormal"] = args.flush_denormal
         if self.params["enable_TF32"]:
             assert self.params["nb_gpus"] == 1
             torch.backends.cuda.matmul.allow_tf32 = True
@@ -54,6 +56,7 @@ class Benchmark(IGEMM):
             if self.params["nb_gpus"] > 1:
                 raise RuntimeError("Only 1 GPU is supported")
             if self.params["nb_gpus"] == 1:
+                assert not self.params["flush_denormal"]
                 device = torch.device("cuda")
                 id_gpu = self.params["gpus"][0]
                 torch.cuda.set_device(id_gpu)
@@ -63,10 +66,11 @@ class Benchmark(IGEMM):
                     self.net(self.data)
                 torch.cuda.synchronize()
             else:
-                if torch.set_flush_denormal(True):
-                    print("Set flush denormal")
-                else:
-                    print("Could not set flush denormal")
+                if self.params["flush_denormal"]:
+                    if torch.set_flush_denormal(True):
+                        print("Set flush denormal")
+                    else:
+                        raise RuntimeError("Could not set flush denormal")
 
         # preheat
         self.net(self.data)
