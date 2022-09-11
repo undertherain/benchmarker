@@ -13,6 +13,7 @@ def wrap_bmm(input, mat2, *args, out=None):
     # assert not args
     # TODO: call original
     # print("CALLING PATCHED BMM")
+    print("BMM", input.shape, mat2.shape)
     return orig_bmm(input, mat2)
 
 
@@ -26,6 +27,7 @@ def wrap_matmul(input, other, *args, out=None):
     # other.cuda()
     # return orig_matmul(input, other).cpu()
     # raise RuntimeError("oi")
+    print("matmul", input.shape, other.shape)
     shape = input.shape[: -2] + (input.shape[-2],) + (other.shape[-1],)
     return torch.ones(shape)
     # if shape not in cache:
@@ -36,6 +38,7 @@ def wrap_matmul(input, other, *args, out=None):
 
 
 def wrap_linear(input, weight, bias=...):
+    print("linear", input.shape, weight.shape)
     return torch.ones((input.shape[0], input.shape[1], weight.shape[0]))
     i = input.cuda()
     w = weight.cuda()
