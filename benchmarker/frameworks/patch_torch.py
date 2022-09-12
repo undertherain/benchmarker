@@ -28,8 +28,9 @@ def wrap_matmul(input, other, *args, out=None):
     # return orig_matmul(input, other).cpu()
     # raise RuntimeError("oi")
     print("matmul", input.shape, other.shape)
-    shape = input.shape[: -2] + (input.shape[-2],) + (other.shape[-1],)
-    return torch.ones(shape)
+    return orig_matmul(input, other, *args)
+    #shape = input.shape[: -2] + (input.shape[-2],) + (other.shape[-1],)
+    #return torch.ones(shape)
     # if shape not in cache:
     #     cache[shape] = torch.ones(shape)
     # print(input.shape, other.shape, shape)
@@ -39,6 +40,7 @@ def wrap_matmul(input, other, *args, out=None):
 
 def wrap_linear(input, weight, bias=...):
     print("linear", input.shape, weight.shape)
+    return orig_linear(input, weight, bias)
     return torch.ones((input.shape[0], input.shape[1], weight.shape[0]))
     i = input.cuda()
     w = weight.cuda()
