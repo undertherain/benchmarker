@@ -1,4 +1,5 @@
-import numpy as np
+# import numpy as np
+import torch
 
 
 def get_data(params):
@@ -9,10 +10,10 @@ def get_data(params):
     params["problem"]["flop_estimated"] = flop * params["nb_epoch"]
     if params["framework"] == "torch":
         M, N, K = params["problem"]["size"]
-        types = {"FP16": np.float16, "FP32": np.float32, "FP64": np.float64}
+        types = {"FP16": torch.float16, "FP32": torch.float32, "FP64": torch.float64}
         dtype = types[params["problem"]["precision"]]
-        a = np.random.random((M, N)).astype(dtype)
-        b = np.random.random((N, K)).astype(dtype)
-        c = np.random.random((M, K)).astype(dtype)
+        a = torch.rand((M, N), dtype=dtype)
+        b = torch.rand((N, K), dtype=dtype)
+        c = torch.rand((M, K), dtype=dtype)
         return a, b, c
     return ["dummy data"] * 3

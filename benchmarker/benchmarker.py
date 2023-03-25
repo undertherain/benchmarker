@@ -100,7 +100,7 @@ def get_gpus(args):
         os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
         return list(map(int, args.gpus.split(",")))
     else:
-        os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+        # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
         return []
 
 

@@ -4,6 +4,7 @@ import json
 import logging
 from timeit import default_timer as timer
 
+import benchmarker.frameworks.patch_torch as patch_torch
 import numpy as np
 import torch
 import torch.nn as nn
@@ -171,6 +172,7 @@ class Benchmark(INeuralNet):
             _ = model(**batch)
 
     def run(self):
+        patch_torch.patch_bmm()
         model = self.net
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)

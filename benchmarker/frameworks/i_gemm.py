@@ -1,6 +1,5 @@
 """Module contains the interface for all gemm learning modules"""
 import argparse
-import os
 
 from benchmarker.results import add_result_details
 
@@ -17,15 +16,15 @@ class IGEMM(IBinary):
         precision = self.params["problem"]["precision"]
         assert precision in prec_list, f"Expected precisions: {prec_list}"
 
-        nb_gpus = self.params["nb_gpus"] if "nb_gpus" in self.params else 0
-        expect_gpus = self.expect_gpus()
+        cnt_gpus_requested = self.params["nb_gpus"] if "nb_gpus" in self.params else 0
+        need_gpus = self.need_gpus()
         msg = (
-            f"self.params['framework'] " "requires GPUs"
-            if expect_gpus
-            else "needs GPUs"
+            f"{self.params['framework']} requires GPUs"
+            if 'framework' in self.params
+            else "GPUs required"
         )
 
-        assert nb_gpus == expect_gpus, msg
+        assert not need_gpus or cnt_gpus_requested > 0, msg
 
         self.data = self.load_data()
         if params["problem"]["name"] not in ["gemm", "batchmatmul"]:
@@ -35,9 +34,9 @@ class IGEMM(IBinary):
             )
 
     def expected_precisions(self):
-        return ["FP32", "mixed"]
+        return ["FP32", "FP16", "mixed"]
 
-    def expect_gpus(self):
+    def need_gpus(self):
         return False
 
     def process_params(self, remaining_args):
