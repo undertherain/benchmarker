@@ -1,5 +1,6 @@
 import torch.nn as nn
-from transformers import AutoConfig, AutoModelForSequenceClassification
+from transformers import (AutoConfig, AutoModelForMaskedLM,
+                          AutoModelForSequenceClassification)
 
 
 class BertTraining(nn.Module):
@@ -23,9 +24,12 @@ class BertInference(nn.Module):
         return logits
 
 
-def get_kernel_by_name(params, name_model):
+def get_kernel_by_name(params, name_model, flavour="cls"):
     config = AutoConfig.from_pretrained(name_model, num_labels=3)
-    net = AutoModelForSequenceClassification.from_pretrained(name_model, config=config)
+    if flavour == "cls":
+        net = AutoModelForSequenceClassification.from_config(config)
+    else:
+        net = AutoModelForMaskedLM.from_config(config)
     if params["mode"] == "inference":
         return BertInference(net)
     else:
