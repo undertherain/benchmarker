@@ -9,6 +9,6 @@ python3 -m benchmarker \
     --gpus=0 \
     --preheat \
     --mode=inference \
-    --precision=FP32 \
+    --precision=FP16 \
 
 #    --flops \
