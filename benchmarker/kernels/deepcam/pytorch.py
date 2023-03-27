@@ -1,5 +1,3 @@
-import torch.nn as nn
-
 from ..helpers_torch import Classifier
 from .deeplab_xception import DeepLabv3_plus
 

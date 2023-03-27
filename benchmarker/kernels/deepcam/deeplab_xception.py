@@ -260,7 +260,7 @@ class Xception(nn.Module):
         state_dict = self.state_dict()
 
         for k, v in pretrain_dict.items():
-            print(k)
+            # print(k)
             if k in state_dict:
                 if 'pointwise' in k:
                     v = v.unsqueeze(-1).unsqueeze(-1)
