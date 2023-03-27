@@ -69,9 +69,9 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-            assert self.params["problem"]["precision"] in {"FP32", "FP16", "mixed"}
+            assert self.params["problem"]["precision"] in {"FP32", "TF32", "FP16", "AMP"}
         else:
-            assert self.params["problem"]["precision"] == "FP32"
+            assert self.params["problem"]["precision"] in {"FP32", "TF16"}
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
@@ -99,6 +99,12 @@ class Benchmark(INeuralNet):
         ]
         self.batches = set_batch_device_precision(batches, *args)
         # self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
+        if self.params["problem"]["precision"] == "TF32":
+            torch.backends.cuda.matmul.allow_tf32 = True
+            torch.backends.cudnn.allow_tf32 = True
+        else:
+            torch.backends.cuda.matmul.allow_tf32 = False
+            torch.backends.cudnn.allow_tf32 = False
         if self.params["problem"]["precision"] == "FP16":
             self.net.half()
         if self.params["backend"] == "DNNL":
@@ -189,7 +195,7 @@ class Benchmark(INeuralNet):
             if self.params["preheat"]:
                 self.train(model, optimizer, 1)
         else:
-            assert self.params["problem"]["precision"] in ["FP16", "FP32"]
+            # assert self.params["problem"]["precision"] in ["FP16", "FP32"]
             model.eval()
             if self.params["preheat"]:
                 self.inference(model, self.device)
