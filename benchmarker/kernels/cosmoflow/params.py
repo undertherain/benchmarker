@@ -14,4 +14,7 @@ def set_extra_params(params, unparsed_args):
     params["target_size"] = args.target_size
     params["dropout"] = args.dropout
 
+    print(params)
+    #exit(0)
+
     assert unparsed == []

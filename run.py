@@ -9,24 +9,9 @@ the --problem_size is automatically generated (see
 """
 
 import argparse
-import multiprocessing
 import subprocess
 
 prob_size_multiplier = 4
-
-fast_batches = set()
-fast_batches.update(range(1, 10))
-fast_batches.add(multiprocessing.cpu_count())
-fast_batches.add(multiprocessing.cpu_count() // 2)
-fast_batches.update([16, 32, 64, 128, 256])
-fast_batches = sorted(list(fast_batches))
-
-slow_batches = list(fast_batches)
-slow_batches += list(range(10, 32, 2))
-slow_batches += list(range(32, 64, 4))
-slow_batches += list(range(64, 128, 8))
-slow_batches += list(range(128, 256, 16))
-slow_batches = sorted(list(set(slow_batches)))
 
 
 def run(params, argv=["benchmarker"]):
@@ -66,17 +51,23 @@ def run_batch_size(batch_size, argv):
     run(params, ["benchmarker"] + argv)
 
 
+def main():
+    # do only torch for now
+    kernels = ["conv1", "conv2", "conv2"]
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("--batch_size")
+    # args, unknown_args = parser.parse_known_args()
+
+    # assert args.batch_size is not None, "--batch_size required"
+
+    # if args.batch_size.isnumeric():
+    #     run_batch_size(args.batch_size, unknown_args)
+    # else:
+    #     has_prob_size = any(map(lambda t: t.startswith("--problem_size"), unknown_args))
+    #     assert not has_prob_size, "--problem_size should NOT be specified"
+    #     for batch_size in eval("{}_batches".format(args.batch_size)):
+    #         run_batch_size(batch_size, unknown_args)
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--batch_size")
-    args, unknown_args = parser.parse_known_args()
-
-    assert args.batch_size is not None, "--batch_size required"
-
-    if args.batch_size.isnumeric():
-        run_batch_size(args.batch_size, unknown_args)
-    else:
-        has_prob_size = any(map(lambda t: t.startswith("--problem_size"), unknown_args))
-        assert not has_prob_size, "--problem_size should NOT be specified"
-        for batch_size in eval("{}_batches".format(args.batch_size)):
-            run_batch_size(batch_size, unknown_args)
+    main()
