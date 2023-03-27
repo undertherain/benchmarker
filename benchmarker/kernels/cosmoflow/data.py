@@ -6,8 +6,8 @@ def get_data(params):
     batch_size = params["batch_size"]
 
     shape = params["input_shape"]
-    if params["channels_first"]:
-        shape = shape[-1:] + shape[:-1]
+#    if params["channels_first"]:
+#        shape = shape[-1:] + shape[:-1]
         # params["input_shape"] = shape # should this be updated?
 
     shape = (batch_size,) + shape
