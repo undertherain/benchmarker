@@ -52,6 +52,15 @@ def set_batch_device_precision(data, device, layout, precision):
     return batch
 
 
+class WrapperOneInpput(nn.Module):
+    def __init__(self, net):
+        super().__init__()
+        self.net = net
+
+    def forward(self, x):
+        return self.net(**x)
+
+
 class Benchmark(INeuralNet):
     def __init__(self, params, extra_args=None):
         args, remaining_args = self.parse_args(extra_args)
@@ -176,6 +185,12 @@ class Benchmark(INeuralNet):
         for batch in self.batches:
             _ = model(**batch)
 
+    def get_batch_inference_flops(self):
+        from fvcore.nn import FlopCountAnalysis
+        model = WrapperOneInpput(self.net)
+        flops = FlopCountAnalysis(model, self.batches[0])
+        return flops.total()
+
     def run(self):
         # TODO: make it an option
         # patch_torch.patch_bmm()
@@ -206,8 +221,9 @@ class Benchmark(INeuralNet):
                 self.train(model, optimizer, epoch)
             else:
                 self.inference(model, self.device)
-
         end = timer()
+        flops = self.get_batch_inference_flops()
+        self.params["problem"]["gflop_estimated"] = flops * self.params["nb_epoch"] * self.params["problem"]["cnt_batches_per_epoch"] / 1000**3
         self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
