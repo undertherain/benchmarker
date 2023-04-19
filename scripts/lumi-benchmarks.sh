@@ -10,12 +10,7 @@
 # --cpus-per-task=32
 module load cray-python
 
-bash bert.sh
-bash cosmoflow.sh
-bash deepcam.sh
-bash lstm.sh
-
-BASE_ARGS=(-m benchmarker --framework=pytorch)
+BASE_ARGS=(-m benchmarker.benchmarker --framework=pytorch)
 BERT_ARGS=(
     --problem=roberta_large_mlm
     --problem_size=512,256
@@ -60,7 +55,13 @@ LSTM_ARGS=(
     --flops
 )
 
-python3 ${BASE_ARGS[@]} ${BERT_ARGS[@]} --precision=FP32
-python3 ${BASE_ARGS[@]} ${COSMOFLOW_ARGS[@]} --precision=FP32
-python3 ${BASE_ARGS[@]} ${DEEPCAM_ARGS[@]} --precision=FP32
-python3 ${BASE_ARGS[@]} ${LSTM_ARGS[@]} --precision=FP32
+for p in FP16 FP32 TF32; do
+    echo ">>>> 1/4 BERT ($p) <<<<"
+    python3 ${BASE_ARGS[@]} ${BERT_ARGS[@]} --precision=$p
+    # echo ">>>> 2/4 COSMOFLOW ($p) <<<<"
+    # python3 ${BASE_ARGS[@]} ${COSMOFLOW_ARGS[@]} --precision=$p
+    echo ">>>> 3/4 DEEPCAM ($p) <<<<"
+    python3 ${BASE_ARGS[@]} ${DEEPCAM_ARGS[@]} --precision=$p
+    echo ">>>> 4/4 LSTM ($p) <<<<"
+    python3 ${BASE_ARGS[@]} ${LSTM_ARGS[@]} --precision=$p
+done
