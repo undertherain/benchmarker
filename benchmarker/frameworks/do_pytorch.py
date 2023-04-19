@@ -222,8 +222,11 @@ class Benchmark(INeuralNet):
             else:
                 self.inference(model, self.device)
         end = timer()
-        flops = self.get_batch_inference_flops()
-        self.params["problem"]["gflop_estimated"] = flops * self.params["nb_epoch"] * self.params["problem"]["cnt_batches_per_epoch"] / 1000**3
+
+        # TODO: make this a paramter
+        # if self.params["flops"]:
+        #    flops = self.get_batch_inference_flops()
+        #    self.params["problem"]["gflop_estimated"] = flops * self.params["nb_epoch"] * self.params["problem"]["cnt_batches_per_epoch"] / 1000**3
         self.params["time_total"] = end - start
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
         self.params["framework_full"] = "PyTorch-" + torch.__version__
