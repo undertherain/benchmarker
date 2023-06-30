@@ -6,7 +6,6 @@ python3 -m benchmarker \
     --batch_size=64 \
     --mode=inference \
     --cnt_layers=8 \
-    --gpus=0 \
     --preheat \
     --nb_epoch=4 \
     --precision=FP32 \
