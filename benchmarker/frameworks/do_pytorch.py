@@ -52,7 +52,7 @@ def set_batch_device_precision(data, device, layout, precision):
     return batch
 
 
-class WrapperOneInpput(nn.Module):
+class WrapperOneInput(nn.Module):
     def __init__(self, net):
         super().__init__()
         self.net = net
