@@ -196,7 +196,12 @@ class Benchmark(INeuralNet):
     def run(self):
         # TODO: make it an option
         # patch_torch.patch_bmm()
-        model = self.net
+        if self.params["compile"]:
+            model = torch.compile(self.net)
+            print("compiling done")
+        else:
+            model = self.net
+
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
 
