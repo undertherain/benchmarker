@@ -71,6 +71,7 @@ class Benchmark(INeuralNet):
         self.params["backend"] = args.backend
         self.params["tensor_layout"] = args.tensor_layout
         self.params["cudnn_benchmark"] = args.cbm
+        self.params["compile"] = args.compile
         if self.params["profile_pytorch"]:
             assert (
                 self.params["mode"] == "inference"
@@ -94,6 +95,7 @@ class Benchmark(INeuralNet):
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
         parser.add_argument("--precision", default="FP32")
         parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
+        parser.add_argument("--compile", dest="compile", action="store_true")
         parser.set_defaults(cbm=True)
         args, remaining_args = parser.parse_known_args(extra_args)
         return args, remaining_args
@@ -194,7 +196,12 @@ class Benchmark(INeuralNet):
     def run(self):
         # TODO: make it an option
         # patch_torch.patch_bmm()
-        model = self.net
+        if self.params["compile"]:
+            model = torch.compile(self.net)
+            print("compiling done")
+        else:
+            model = self.net
+
         if len(self.params["gpus"]) > 1:
             model = nn.DataParallel(model)
 
