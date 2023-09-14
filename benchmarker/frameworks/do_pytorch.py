@@ -80,7 +80,7 @@ class Benchmark(INeuralNet):
                 raise RuntimeError("only native backend is supported for GPUs")
             assert self.params["problem"]["precision"] in {"FP32", "TF32", "FP16", "AMP"}
         else:
-            assert self.params["problem"]["precision"] in {"FP32", "TF16"}
+            assert self.params["problem"]["precision"] in {"FP32", "FP16"}
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional

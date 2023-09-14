@@ -3,6 +3,8 @@
 
 This is where all magic is happening
 """
+import requests
+requests.packages.urllib3.util.connection.HAS_IPV6 = False
 
 import argparse
 import ast
