@@ -10,8 +10,9 @@ python3 -m benchmarker.benchmarker \
     --batch_size=6 \
     --nb_epoch=3 \
     --preheat \
-    --mode=inference \
+    --mode=training \
     --precision=FP32 \
-#    --compile
+    --gpus=0 \
+    --compile
 
 
