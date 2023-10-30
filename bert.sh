@@ -1,14 +1,18 @@
 # CPU:
-
-python3 -m benchmarker \
+#LD_PRELOAD=libtcmalloc.so \
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+python3 -m benchmarker.benchmarker \
     --framework=pytorch \
+    --backend=native \
+    --tensor_layout=native \
     --problem=roberta_large_mlm \
-    --problem_size=32,256 \
-    --batch_size=32 \
-    --nb_epoch=1 \
-    --gpus=0 \
+    --problem_size=60,256 \
+    --batch_size=6 \
+    --nb_epoch=3 \
     --preheat \
-    --mode=inference \
-    --precision=FP16 \
+    --mode=training \
+    --precision=FP32 \
+    --gpus=0 \
+    --compile
 
-#    --flops \
+

@@ -8,7 +8,7 @@ class BertTraining(nn.Module):
         super().__init__()
         self.net = net
 
-    def __call__(self, input_ids, labels):
+    def forward(self, input_ids, labels):
         ret = self.net(input_ids=input_ids,
                        labels=labels)
         return ret["loss"]
@@ -19,7 +19,7 @@ class BertInference(nn.Module):
         super().__init__()
         self.net = net
 
-    def __call__(self, input_ids, labels):
+    def forward(self, input_ids, labels):
         logits = self.net(input_ids=input_ids)
         return logits
 
