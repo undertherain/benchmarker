@@ -7,15 +7,15 @@ the --problem_size is automatically generated (see
 --framework etc) are passed to benchmarker.
 
 """
-
-import argparse
+# import argparse
 import subprocess
 
 prob_size_multiplier = 4
 
 
-def run(params, argv=["benchmarker"]):
-    command = ["python3", "-m"] + argv
+def run(params):
+
+    command = ["python3", "-m", "benchmarker", "--preheat"]
     for key, val in params.items():
         command.append(f"--{key}={val}")
     # print(command)
@@ -26,6 +26,17 @@ def run(params, argv=["benchmarker"]):
     if proc.returncode != 0:
         print(out)
         print(err)
+
+
+bert_args = {
+    "problem": "roberta-large-mlm",
+    "problem_size": (1, 256),
+}
+
+deepcam_args = {
+    "problem": "deepcam",
+    "problem_size": (1, 3, 512, 512),
+}
 
 
 def run_on_all_backends(params):
@@ -52,8 +63,9 @@ def run_batch_size(batch_size, argv):
 
 
 def main():
+    kernels = [bert_args, deepcam_args]
     # do only torch for now
-    kernels = ["conv1", "conv2", "conv2"]
+    # kernels = ["conv1", "conv2", "conv2"]
     # parser = argparse.ArgumentParser()
     # parser.add_argument("--batch_size")
     # args, unknown_args = parser.parse_known_args()
