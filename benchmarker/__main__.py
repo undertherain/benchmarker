@@ -11,23 +11,6 @@ from .util import sysinfo
 from .util.io import get_time_str, save_json
 
 
-def fixup_for_amd_gpus(result):
-    same_gpu_count = len(result["platform"]["gpus"]) == result["nb_gpus"]
-    using_pytorch = result["framework"] == "pytorch"
-    if using_pytorch and not same_gpu_count:
-        import torch.cuda
-
-        nb_gpus = torch.cuda.device_count()
-        gpus = []
-        for i in range(nb_gpus):
-            device_name = torch.cuda.get_device_name(i)
-            # assert device_name == "Device 738c"
-            # gpu = {"brand": "AMD Mi100"}
-            gpus.append({"brand": device_name})
-
-        result["platform"]["gpus"] = gpus
-
-
 def get_args():
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--flops", action="store_true", default=False)

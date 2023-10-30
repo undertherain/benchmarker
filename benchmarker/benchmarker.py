@@ -4,6 +4,7 @@
 This is where all magic is happening
 """
 import requests
+
 requests.packages.urllib3.util.connection.HAS_IPV6 = False
 
 import argparse
@@ -128,6 +129,7 @@ def run(argv):
 
     do_rapl = args.power_rapl  # and isintel
     do_nvml = args.power_nvml  # and params["nb_gpus"] > 0
+    # TODO: do a loop over all supported "plugins" one by one
     if do_rapl:  # and is intel
         from benchmarker.profiling.power_RAPL import PowerMonitorRAPL
 
