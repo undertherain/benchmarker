@@ -54,7 +54,7 @@ def main():
 
     # TODO: don't parse path_out in the innder loop
     result["platform"] = sysinfo.get_sys_info()
-    fixup_for_amd_gpus(result)
+    sysinfo.fixup_for_amd_gpus(result)
 
     result["start_time"] = get_time_str()
     if result["nb_gpus"] > 0:

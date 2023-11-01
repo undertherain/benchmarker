@@ -12,6 +12,6 @@ python3 -m benchmarker.benchmarker \
     --preheat \
     --mode=training \
     --precision=FP32 \
-    --gpus=0 \
+#   --gpus=0 \
 
 
