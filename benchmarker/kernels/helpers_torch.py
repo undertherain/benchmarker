@@ -38,8 +38,6 @@ class BaseWrapper(nn.Module):
         # we should tay in same layout as much as possible
         if outs.layout == torch._mkldnn:
             outs = outs.to_dense()
-        print("OUTS")
-        print(outs.shape)
         loss = self.criterion(outs, labels)
         return loss
 
