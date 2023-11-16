@@ -3,13 +3,13 @@
 python3 -m benchmarker.benchmarker \
     --framework=pytorch \
     --problem=cosmoflow \
-    --problem_size=128 \
+    --problem_size=256 \
     --input_shape=4,256,256,256 \
-    --batch_size=32 \
-    --nb_epoch=2 \
+    --batch_size=8 \
+    --nb_epoch=10 \
     --gpus=0 \
     --preheat \
     --mode=inference \
-    --precision=FP16
-
+    --precision=TF32 \
+    --power_nvml
 #    --flops \

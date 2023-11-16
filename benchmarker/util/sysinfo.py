@@ -8,7 +8,7 @@ from benchmarker.util import abstractprocess, get_script_dir
 
 def fixup_for_amd_gpus(result):
     if "gpus" not in result["platform"]:
-        result["gpus"] = []
+        result["platform"]["gpus"] = []
     same_gpu_count = len(result["platform"]["gpus"]) == result["nb_gpus"]
     using_pytorch = result["framework"] == "pytorch"
     if using_pytorch and not same_gpu_count:
