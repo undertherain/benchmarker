@@ -9,7 +9,9 @@ python3 -m benchmarker \
     --preheat \
     --nb_epoch=4 \
     --precision=FP32 \
-    --flops
+    --gpus=0 \
+    --power_nvml \
+    
 
 #    --profile
 #    --profile_pytorch
