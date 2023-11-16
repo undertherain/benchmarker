@@ -10,7 +10,7 @@ class scale_1p2(nn.Module):
 
 
 def build_model(input_shape, target_size, dropout=0):
-    shape = np.array(input_shape[1:], dtype=np.int)
+    shape = np.array(input_shape[1:], dtype=np.int32)
     conv_args = {
         "in_channels": input_shape[0],
         "out_channels": 16,
