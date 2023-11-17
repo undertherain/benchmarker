@@ -2,9 +2,6 @@ import numpy as np
 
 
 def get_data(params):
-    # if isinstance(params["problem"]["size"], int):
-    #     params["problem"]["size"] = (params["problem"]["size"], 128)
-    # assert params["problem"]["size"][0] % params["batch_size"] == 0
     params["problem"]["len_sequence"] = params["problem"]["sample_shape"]
     cnt_batches = params["problem"]["cnt_batches_per_epoch"]
     shape = (params["batch_size"],
