@@ -15,7 +15,7 @@ def set_image_size(params, height, width):
     print("IMAGE SIZE SHOULD BE SET EXPLICITLY, BUT CHANNELS ROLLED IF REQUIRED")
 
 
-def gen_classification_data(params, num_cls, height, width=None, name_key="x"):
+def gen_classification_data(params, num_cls, name_key="x"):
     """Make classification data based on `params["size"]`.
     `param["size"]` has shape (N, H, W, ...) where N is the number of
     samples, and (H, W, ...) is the shape of a single sample. This
@@ -30,10 +30,10 @@ def gen_classification_data(params, num_cls, height, width=None, name_key="x"):
 
     """
 
-    if width is None:
-        width = height
+    # if width is None:
+    #     width = height
 
-    set_image_size(params, height, width)
+    # set_image_size(params, height, width)
 
     cnt_batches = params["problem"]["cnt_batches_per_epoch"]
     shape = (params["batch_size"],) + params["problem"]["sample_shape"]
