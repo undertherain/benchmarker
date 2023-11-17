@@ -17,7 +17,8 @@ class MiscTests(unittest.TestCase):
             args = [
                 "--framework=pytorch",
                 "--problem=conv1d",
-                "--problem_size=4,4,4",
+                "--cnt_samples_per_epoch=4",
+                "--sample_shape=4,4",
                 "--batch_size=4",
                 "--mode=depeche",
             ]

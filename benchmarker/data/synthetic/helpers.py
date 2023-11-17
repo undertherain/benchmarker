@@ -11,6 +11,7 @@ def set_image_size(params, height, width):
     #         shape = (height, width, 3)
 
     # params["problem"]["size"] = (params["problem"]["size"],) + shape
+    raise RuntimeError("set image method should not be used")
     print("IMAGE SIZE SHOULD BE SET EXPLICITLY, BUT CHANNELS ROLLED IF REQUIRED")
 
 

@@ -11,7 +11,7 @@ class PytorchNcfTest(unittest.TestCase):
         self.args = [
             "--problem=ncf",
             "--framework=pytorch",
-            "--problem_size=2",
+            "--cnt_samples_per_epoch=2",
             "--nb_epoch=1",
             "--batch_size=2",
         ]

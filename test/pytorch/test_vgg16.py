@@ -11,7 +11,8 @@ class PytorchVgg16Test(unittest.TestCase):
         self.args = [
             "--problem=vgg16",
             "--framework=pytorch",
-            "--problem_size=4",
+            "--cnt_samples_per_epoch=4",
+            "--sample_shape=3,224,224",
             "--batch_size=2",
             "--nb_epoch=1",
         ]

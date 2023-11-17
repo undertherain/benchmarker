@@ -13,7 +13,8 @@ class PytorchSsd300Tests(unittest.TestCase):
         self.args = [
             "--problem=ssd300",
             "--framework=pytorch",
-            "--problem_size=4",
+            "--cnt_samples_per_epoch=4",
+            "--sample_shape=4",
             "--batch_size=2",
             "--nb_epoch=1",
             "--mode=inference",

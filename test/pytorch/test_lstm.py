@@ -11,7 +11,8 @@ class PytorchLstmTest(unittest.TestCase):
         args = [
             "--framework=pytorch",
             "--problem=lstm",
-            "--problem_size=4,4,4",
+            "--cnt_samples_per_epoch=4",
+            "--sample_shape=4,4",
             "--batch_size=4",
             "--nb_epoch=1",
             "--mode=inference",

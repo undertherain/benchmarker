@@ -56,7 +56,7 @@ def parse_basic_args(argv):
         "--preheat",
         action="store_true",
         default=False,
-        help="TODO move this deeper [Do a preheat]",
+        help="Do a preheat",
     )
 
     # parser.add_argument('--misc')
