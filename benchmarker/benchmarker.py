@@ -21,11 +21,8 @@ def parse_basic_args(argv):
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--framework", help="The framework used for benchmarking")
     parser.add_argument("--problem", help="The name of the kernel/problem")
-    parser.add_argument(
-        "--problem_size",
-        default=None,
-        help="TODO move this to some deeper lever!",
-    )
+    parser.add_argument("--cnt_samples_per_epoch", default=1, help="number of samples in epoch", type=int)
+    parser.add_argument("--sample_shape", help="shape of a single sample")
     parser.add_argument(
         "--path_out",
         type=str,
@@ -92,9 +89,12 @@ def get_problem(args):
     # TODO: load problem's metadata  from the problem itself
     problem = {}
     problem["name"] = args.problem
+    problem["cnt_samples_per_epoch"] = args.cnt_samples_per_epoch
+    problem["sample_shape"] = ast.literal_eval(args.sample_shape)
     # TODO: move this to the root base benchmark
-    if args.problem_size is not None:
-        problem["size"] = ast.literal_eval(args.problem_size)
+    # TODO: split it into count samples and sample shape
+    # if args.problem_size is not None:
+    #     problem["size"] = ast.literal_eval(args.problem_size)
     return problem
 
 
