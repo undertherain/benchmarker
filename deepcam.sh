@@ -2,7 +2,8 @@ python3 -m benchmarker \
     --framework=pytorch \
     --backend=native \
     --problem=deepcam \
-    --problem_size=640,3,512,512 \
+    --cnt_samples_per_epoch=64 \
+    --sample_shape=3,512,512 \
     --batch_size=32 \
     --mode=inference \
     --preheat \
