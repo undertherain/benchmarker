@@ -16,7 +16,7 @@ class Wrapper(torch.nn.Module):
 
 def get_kernel(params):
     # cnt_samples = params["problem"]["size"][0]
-    len_seq = params["problem"]["size"][1]
+    len_seq = params["problem"]["sample_shape"]
     assert len_seq <= 512, "BERT sequence length must be <= 512 because of saved positional embeddings"
     # TODO: get inner linear size from HF config object
     # gflop_per_sample = estimate_gflop_per_sample(
