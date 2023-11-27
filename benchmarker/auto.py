@@ -22,7 +22,7 @@ def get_batch_sizes():
     return sorted(list(batch_sizes))
 
 
-def run_single_instance(params):
+def run_all_batches(params):
     defaults = dict()
     defaults["framework"] = "pytorch"
     defaults["nb_epoch"] = "10"
@@ -46,27 +46,6 @@ def run_single_instance(params):
         if "out of memory" in err:
             break
 
-def run_benchmark(config):
-    print(config)
-    params_space = []
-    precisions = [{"precision": i} for i in ["FP32", "FP16", "TF32"]]
-    modes = [{"mode": i} for i in ["inference", "training"]]
-    params_space.append(precisions)
-    params_space.append(modes)
-    for i in product(* params_space):
-        params_flat = {k: v for d in i for k, v in d.items()}
-        config.update(params_flat)
-        print(config)
-        run_single_instance(config)
-    #--power_nvml
-    #     --batch_size=64
-    #--nb_epoch=10
-    #--preheat
-    #--mode=training
-    #--precision=TF32
-    #--gpus=0
-
-
 def main():
     print("auto run")
     '''
@@ -76,14 +55,21 @@ def main():
     '''
     path_benchmarks = Path.cwd() / "scripts" / "benchmarks"
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    # TODO: why wouldn't kernels themselvs have right defaults for auto benchmark? then we don't need those scripts
     parser.add_argument("--kernel", type=str)
     args = parser.parse_args()
-    for path_config_benchmark in path_benchmarks.iterdir():
-        with open(path_config_benchmark) as f:
-            config_benchmark = yaml.load(f)
-            run_benchmark(config_benchmark)
-     # READ general config girst, i.e. which devices to use?
+    params_space = []
+    precisions = [{"precision": i} for i in ["FP32", "FP16", "TF32"]]
+    modes = [{"mode": i} for i in ["inference", "training"]]
+    # TODO: why wouldn't kernels themselvs have right defaults for auto benchmark? then we don't need those scripts
+    kernels = [{"problem":"roberta_large_mlm", "sample_shape": 256},
+               {"problem":"deepcam", "sample:shape": "3,512,512"}]
+    params_space.append(precisions)
+    params_space.append(modes)
+    params_space.append(kernels)
+    for i in product(* params_space):
+        config = {k: v for d in i for k, v in d.items()}
+        print(config)
+        run_all_batches(config)
 
     
 if __name__ == "__main__":
