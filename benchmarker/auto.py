@@ -1,10 +1,7 @@
 import argparse
 import subprocess
-import sys
 from itertools import product
 from pathlib import Path
-
-import yaml
 
 
 def get_batch_sizes():
