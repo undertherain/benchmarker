@@ -20,6 +20,12 @@ def get_batch_sizes():
 
 
 def run_all_batches(params):
+    '''
+        batches are not mixed into the cartesian product with all other params
+        in order to do early stopping when out of memory - then it doesn't make sense to run on larger batches
+    '''
+    # TODO: in case memory error text changes, we can just look for non-zero exist status
+    # however we should check if batch_size > 1 because some models fail with BS 1 on batch_norm
     defaults = dict()
     defaults["framework"] = "pytorch"
     defaults["nb_epoch"] = "10"
