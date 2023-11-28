@@ -49,6 +49,10 @@ def run_all_batches(params):
         if "out of memory" in err:
             break
 
+def list_to_list_of_dicts(key, values):
+    return [{key: i} for i in values]
+
+
 def main():
     print("auto run")
     '''
@@ -58,17 +62,19 @@ def main():
     '''
     path_benchmarks = Path.cwd() / "scripts" / "benchmarks"
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
-    parser.add_argument("--kernel", type=str)
+    parser.add_argument("--kernels", type=str)
     args = parser.parse_args()
     params_space = []
     precisions = [{"precision": i} for i in ["FP32", "FP16", "TF32"]]
     modes = [{"mode": i} for i in ["inference", "training"]]
     # TODO: why wouldn't kernels themselvs have right defaults for auto benchmark? then we don't need those scripts
-    kernels = [{"problem":"roberta_large_mlm", "sample_shape": 256},
-               {"problem":"deepcam", "sample:shape": "3,512,512"}]
+    if args.kernels:
+        kernels = args.kernels.split(",")
+    else:
+        kernels = ["roberta_large_mlm", "deepcam", "cosmoflow"]
+    params_space.append(list_to_list_of_dicts("problem", kernels))
     params_space.append(precisions)
     params_space.append(modes)
-    params_space.append(kernels)
     for i in product(* params_space):
         config = {k: v for d in i for k, v in d.items()}
         print(config)

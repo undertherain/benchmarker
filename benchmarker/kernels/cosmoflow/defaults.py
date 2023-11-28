@@ -1,0 +1,1 @@
+defaults={"sample_shape": (4,256,256,256) }
