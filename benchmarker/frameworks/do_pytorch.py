@@ -4,13 +4,14 @@ import json
 import logging
 from timeit import default_timer as timer
 
-import benchmarker.frameworks.patch_torch as patch_torch
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.cuda import amp
 from torch.utils import mkldnn as mkldnn_utils
+
+import benchmarker.frameworks.patch_torch as patch_torch
 
 from .i_neural_net import INeuralNet
 
@@ -101,6 +102,8 @@ class Benchmark(INeuralNet):
         return args, remaining_args
 
     def setup_data_and_model(self):
+        # TODO: this should be in parent init
+        self.load_defaults()
         batches = self.load_data()
         # print("loaded", batches)
         args = [

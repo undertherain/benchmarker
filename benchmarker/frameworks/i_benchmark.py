@@ -1,4 +1,5 @@
 import importlib
+import logging
 
 
 class IBenchmark:
@@ -6,6 +7,13 @@ class IBenchmark:
         self.params = params
         remaining_args = self.process_params(remaining_args)
         self.get_kernel(params, remaining_args)
+
+    def load_defaults(self):
+        module_defaults = importlib.import_module("benchmarker.kernels." + self.params["problem"]["name"] + ".defaults")
+        for k,v in module_defaults.defaults.items():
+            if k not in self.params["problem"]:
+                logging.warn(f"setting {k} to default value {v}")                                               
+                self.params["problem"][k] = v
 
     def measure_power_and_run(self):
         results = self.run()

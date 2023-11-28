@@ -90,7 +90,8 @@ def get_problem(args):
     problem = {}
     problem["name"] = args.problem
     problem["cnt_samples_per_epoch"] = args.cnt_samples_per_epoch
-    problem["sample_shape"] = tuple(map(int, args.sample_shape.split(',')))
+    if args.sample_shape:
+        problem["sample_shape"] = tuple(map(int, args.sample_shape.split(',')))
     # ast.literal_eval(args.sample_shape)
     # TODO: move this to the root base benchmark
     # TODO: split it into count samples and sample shape
@@ -122,7 +123,8 @@ def run(argv):
 
     framework_mod = import_module(f"benchmarker.frameworks.do_{params['framework']}")
     benchmark = framework_mod.Benchmark(params, unknown_args)
-
+    # TODO: this should be inside correct __init__chain
+    benchmark.load_defaults()
     params["power"] = {}
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
