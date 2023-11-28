@@ -14,5 +14,3 @@ python3 -m benchmarker \
     --precision=TF32 \
     --gpus=0 \
     --power_nvml
-     
-

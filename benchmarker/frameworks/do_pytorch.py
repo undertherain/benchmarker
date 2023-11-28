@@ -103,7 +103,6 @@ class Benchmark(INeuralNet):
 
     def setup_data_and_model(self):
         # TODO: this should be in parent init
-        self.load_defaults()
         batches = self.load_data()
         # print("loaded", batches)
         args = [

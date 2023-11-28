@@ -5,6 +5,7 @@ import argparse
 import random
 
 import numpy
+
 from benchmarker.results import add_result_details
 
 from .i_benchmark import IBenchmark
@@ -48,6 +49,7 @@ class INeuralNet(IBenchmark):
             )
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
+        self.load_defaults()
         self.get_kernel(params, remaining_args)
 
     def set_random_seed(self, seed):

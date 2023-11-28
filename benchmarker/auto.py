@@ -24,8 +24,6 @@ def run_all_batches(params):
         batches are not mixed into the cartesian product with all other params
         in order to do early stopping when out of memory - then it doesn't make sense to run on larger batches
     '''
-    # TODO: in case memory error text changes, we can just look for non-zero exist status
-    # however we should check if batch_size > 1 because some models fail with BS 1 on batch_norm
     defaults = dict()
     defaults["framework"] = "pytorch"
     defaults["nb_epoch"] = "10"
@@ -35,7 +33,7 @@ def run_all_batches(params):
     for batch_size in get_batch_sizes():
         params["batch_size"] = str(batch_size)
         params["cnt_samples"] = str(batch_size * 10)
-        command = ["python3", "-m", "benchmarker", "--preheat"]
+        command = ["python3", "-m", "benchmarker", "--preheat", "--power_nvml"]
         for key, val in params.items():
             command.append(f"--{key}={val}")
         print(command)
@@ -48,6 +46,9 @@ def run_all_batches(params):
             print(err)
         if "out of memory" in err:
             break
+        if proc.returncode != 0:
+            if batch_size > 1:
+                break
 
 def list_to_list_of_dicts(key, values):
     return [{key: i} for i in values]
@@ -66,7 +67,7 @@ def main():
     args = parser.parse_args()
     params_space = []
     precisions = [{"precision": i} for i in ["FP32", "FP16", "TF32"]]
-    modes = [{"mode": i} for i in ["inference", "training"]]
+    modes = [{"mode": i} for i in ["training", "inference"]]
     # TODO: why wouldn't kernels themselvs have right defaults for auto benchmark? then we don't need those scripts
     if args.kernels:
         kernels = args.kernels.split(",")
