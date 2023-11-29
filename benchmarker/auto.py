@@ -78,7 +78,7 @@ def main():
     params_space.append(list_to_list_of_dicts("problem", kernels))
     params_space.append(precisions)
     params_space.append(modes)
-    if args.kernels:
+    if args.batches:
         batches = map(int, args.batches.split(","))
     else:
         batches = get_batch_sizes()
