@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 def get_batch_sizes():
+    # TODO: ideally just use multiples of core count
     batch_sizes = set()
     for s in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]:
        batch_sizes.add(s)
@@ -19,7 +20,7 @@ def get_batch_sizes():
     return sorted(list(batch_sizes))
 
 
-def run_all_batches(params):
+def run_all_batches(params, batches):
     '''
         batches are not mixed into the cartesian product with all other params
         in order to do early stopping when out of memory - then it doesn't make sense to run on larger batches
@@ -30,7 +31,7 @@ def run_all_batches(params):
     # TODO: let's focus on GPUS for now
     defaults["gpus"] = "0"
     params.update(defaults)
-    for batch_size in get_batch_sizes():
+    for batch_size in batches:
         params["batch_size"] = str(batch_size)
         params["cnt_samples"] = str(batch_size * 10)
         command = ["python3", "-m", "benchmarker", "--preheat", "--power_nvml"]
@@ -64,6 +65,7 @@ def main():
     path_benchmarks = Path.cwd() / "scripts" / "benchmarks"
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--kernels", type=str)
+    parser.add_argument("--batches", type=str)
     args = parser.parse_args()
     params_space = []
     precisions = [{"precision": i} for i in ["FP32", "FP16", "TF32"]]
@@ -76,10 +78,14 @@ def main():
     params_space.append(list_to_list_of_dicts("problem", kernels))
     params_space.append(precisions)
     params_space.append(modes)
+    if args.kernels:
+        batches = map(int, args.batches.split(","))
+    else:
+        batches = get_batch_sizes()
     for i in product(* params_space):
         config = {k: v for d in i for k, v in d.items()}
         print(config)
-        run_all_batches(config)
+        run_all_batches(config, batches)
 
     
 if __name__ == "__main__":
