@@ -17,7 +17,7 @@ def get_batch_sizes():
         batch_sizes.add(s)
     for s in [48 * i for i in range(1, 11)]:
         batch_sizes.add(s)
-    return sorted(list(batch_sizes))
+    return list(sorted(list(batch_sizes))))
 
 
 def run_all_batches(params, batches):
@@ -79,11 +79,12 @@ def main():
     params_space.append(precisions)
     params_space.append(modes)
     if args.batches:
-        batches = map(int, args.batches.split(","))
+        batches = list(map(int, args.batches.split(",")))
     else:
         batches = get_batch_sizes()
     for i in product(* params_space):
         config = {k: v for d in i for k, v in d.items()}
+        print("running follow config:")
         print(config)
         run_all_batches(config, batches)
 
