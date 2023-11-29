@@ -17,7 +17,7 @@ def get_batch_sizes():
         batch_sizes.add(s)
     for s in [48 * i for i in range(1, 11)]:
         batch_sizes.add(s)
-    return list(sorted(list(batch_sizes))))
+    return list(sorted(list(batch_sizes)))
 
 
 def run_all_batches(params, batches):
