@@ -20,7 +20,7 @@ class IGEMM(IBinary):
         need_gpus = self.need_gpus()
         msg = (
             f"{self.params['framework']} requires GPUs"
-            if 'framework' in self.params
+            if "framework" in self.params
             else "GPUs required"
         )
 
@@ -34,7 +34,7 @@ class IGEMM(IBinary):
             )
 
     def expected_precisions(self):
-        return ["FP32", "FP16", "mixed"]
+        return ["FP64", "FP32", "FP16", "mixed"]
 
     def need_gpus(self):
         return False
@@ -53,7 +53,7 @@ class IGEMM(IBinary):
         return remaining_args
 
     def post_process(self):
-        gflop = self.params["problem"]["flop_estimated"] / (1000 ** 3)
+        gflop = self.params["problem"]["flop_estimated"] / (1000**3)
         self.params["problem"]["gflop_estimated"] = gflop
         add_result_details(self.params)
         self.params["time_epoch"] = self.params["time_total"] / self.params["nb_epoch"]
