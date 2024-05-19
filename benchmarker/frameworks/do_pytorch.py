@@ -4,14 +4,13 @@ import json
 import logging
 from timeit import default_timer as timer
 
+import benchmarker.frameworks.patch_torch as patch_torch
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.cuda import amp
 from torch.utils import mkldnn as mkldnn_utils
-
-import benchmarker.frameworks.patch_torch as patch_torch
 
 from .i_neural_net import INeuralNet
 
@@ -114,6 +113,7 @@ class Benchmark(INeuralNet):
         if self.params["problem"]["precision"] == "TF32":
             torch.backends.cuda.matmul.allow_tf32 = True
             torch.backends.cudnn.allow_tf32 = True
+            torch.set_float32_matmul_precision("high")
         else:
             torch.backends.cuda.matmul.allow_tf32 = False
             torch.backends.cudnn.allow_tf32 = False
