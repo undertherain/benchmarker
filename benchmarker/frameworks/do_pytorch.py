@@ -15,6 +15,31 @@ from torch.utils import mkldnn as mkldnn_utils
 from .i_neural_net import INeuralNet
 
 logger = logging.getLogger(__name__)
+from enum import Enum
+
+
+class MyEnum(Enum):
+    @classmethod
+    def _missing_(cls, value):
+        value = value.lower()
+        for member in cls:
+            if member.value.lower() == value:
+                return member
+        return None
+
+    def __str__(self):
+        return self.value
+
+class Numerics(MyEnum):
+    fp16 = 'fp16'
+    fp32 = 'fp32'
+    fp64 = 'fp64'
+    bf16 = 'bf16'
+
+class Precision(MyEnum):
+    fp16 = 'medium'
+    fp32 = 'high'
+    fp64 = 'highest'
 
 
 def progress(epoch, idx, nb, loss, log_interval=10):
@@ -67,7 +92,8 @@ class Benchmark(INeuralNet):
         super().__init__(params, remaining_args)
         self.params["profile_pytorch"] = args.profile
         self.params["channels_first"] = True
-        params["problem"]["precision"] = args.precision
+        self.params["problem"]["numerics"] = args.numerics.value
+        self.params["problem"]["precision"] = args.precision.value
         self.params["backend"] = args.backend
         self.params["tensor_layout"] = args.tensor_layout
         self.params["cudnn_benchmark"] = args.cbm
@@ -79,9 +105,7 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-            assert self.params["problem"]["precision"] in {"FP32", "TF32", "FP16", "AMP"}
-        else:
-            assert self.params["problem"]["precision"] in {"FP32", "FP16"}
+        # assert self.params["problem"]["numerics"] in {"FP16", "FP32", "FP64"}
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
@@ -93,7 +117,8 @@ class Benchmark(INeuralNet):
         parser.add_argument("--tensor_layout", default="native")
         parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
-        parser.add_argument("--precision", default="FP32")
+        parser.add_argument("--numerics", type=Numerics, choices=list(Numerics))
+        parser.add_argument("--precision", type=Precision, choices=list(Precision))
         parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
         parser.add_argument("--compile", dest="compile", action="store_true")
         parser.set_defaults(cbm=True)
@@ -110,15 +135,19 @@ class Benchmark(INeuralNet):
         ]
         self.batches = set_batch_device_precision(batches, *args)
         # self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
-        if self.params["problem"]["precision"] == "TF32":
-            torch.set_float32_matmul_precision("high")
-            torch.backends.cuda.matmul.allow_tf32 = True
-            torch.backends.cudnn.allow_tf32 = True
-        else:
-            torch.backends.cuda.matmul.allow_tf32 = False
-            torch.backends.cudnn.allow_tf32 = False
-        if self.params["problem"]["precision"] == "FP16":
+        if self.params["problem"]["numerics"] == "fp32":
+            torch.set_float32_matmul_precision(self.params["problem"]["precision"])
+            # torch.backends.cuda.matmul.allow_tf32 = True
+            # torch.backends.cudnn.allow_tf32 = True
+        #else:
+            #torch.backends.cuda.matmul.allow_tf32 = False
+            #torch.backends.cudnn.allow_tf32 = False
+        elif self.params["problem"]["numerics"] == "fp16":
             self.net.half()
+        elif self.params["problem"]["numerics"] == "bf16":
+            self.net.bfloat16()
+        else:
+            raise ValueError("Unknown numerics " +  self.params["problem"]["numerics"])
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
             self.net.eval()  # This is to make it not fail when DNLL does not support train
