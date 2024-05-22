@@ -57,6 +57,8 @@ def set_tensor_device_precision(tensor, device, layout, precision):
     if tensor.dtype == torch.float32:
         if precision == "FP16":
             tensor = tensor.half()
+        if precision == "BF16":
+            tensor = tensor.bfloat16()
     tensor = tensor.to(device)
     if tensor.dtype in [torch.float32, torch.float16]:
         if layout == "DNNL":
