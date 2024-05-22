@@ -111,9 +111,9 @@ class Benchmark(INeuralNet):
         self.batches = set_batch_device_precision(batches, *args)
         # self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
         if self.params["problem"]["precision"] == "TF32":
+            torch.set_float32_matmul_precision("high")
             torch.backends.cuda.matmul.allow_tf32 = True
             torch.backends.cudnn.allow_tf32 = True
-            torch.set_float32_matmul_precision("high")
         else:
             torch.backends.cuda.matmul.allow_tf32 = False
             torch.backends.cudnn.allow_tf32 = False
