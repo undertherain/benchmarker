@@ -37,9 +37,9 @@ class Numerics(MyEnum):
     bf16 = 'bf16'
 
 class Precision(MyEnum):
-    fp16 = 'medium'
-    fp32 = 'high'
-    fp64 = 'highest'
+    medium = 'medium'
+    high = 'high'
+    highest = 'highest'
 
 
 def progress(epoch, idx, nb, loss, log_interval=10):
@@ -49,15 +49,15 @@ def progress(epoch, idx, nb, loss, log_interval=10):
         print("Train Epoch: " + stat)
 
 
-def set_tensor_device_precision(tensor, device, layout, precision):
+def set_tensor_device_precision(tensor, device, layout, numerics):
     # if isinstance(tensor, dict):
     #     return {k: set_tensor_device_precision(v) for k, v in tensor.items()}
     if isinstance(tensor, (np.ndarray, np.generic)):
         tensor = torch.from_numpy(tensor)
     if tensor.dtype == torch.float32:
-        if precision == "FP16":
+        if numerics == "fp16":
             tensor = tensor.half()
-        if precision == "BF16":
+        if numerics == "bf16":
             tensor = tensor.bfloat16()
     tensor = tensor.to(device)
     if tensor.dtype in [torch.float32, torch.float16]:
@@ -66,16 +66,16 @@ def set_tensor_device_precision(tensor, device, layout, precision):
     return tensor
 
 
-def set_batch_device_precision(data, device, layout, precision):
+def set_batch_device_precision(data, device, layout, numerics):
     if isinstance(data, list):
-        return [set_batch_device_precision(i, device, layout, precision) for i in data]
+        return [set_batch_device_precision(i, device, layout, numerics) for i in data]
     if isinstance(data, tuple):
-        return (set_batch_device_precision(i, device, layout, precision) for i in data)
+        return (set_batch_device_precision(i, device, layout, numerics) for i in data)
     if isinstance(data, dict):
         for key, value in data.items():
-            return {k: set_tensor_device_precision(v, device, layout, precision) for k, v in data.items()}
+            return {k: set_tensor_device_precision(v, device, layout, numerics) for k, v in data.items()}
     else:
-        batch = set_tensor_device_precision(data, device, layout, precision)
+        batch = set_tensor_device_precision(data, device, layout, numerics)
     return batch
 
 
@@ -133,7 +133,7 @@ class Benchmark(INeuralNet):
         args = [
             self.device,
             self.params["tensor_layout"],
-            self.params["problem"]["precision"],
+            self.params["problem"]["numerics"],
         ]
         self.batches = set_batch_device_precision(batches, *args)
         # self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
@@ -165,13 +165,15 @@ class Benchmark(INeuralNet):
                 raise RuntimeError("Unknown backend")
 
     def train(self, model, optimizer, epoch):
-        with amp.autocast() if self.params["problem"]["precision"] == "mixed" else contextlib.suppress():
+        with amp.autocast() if self.params["problem"]["numerics"] == "mixed" else contextlib.suppress():
             model.train()
             for batch_idx, batch in enumerate(self.batches):
                 optimizer.zero_grad()
                 # print("batch")
                 # print(self.batches)
                 # print(batch.shape)
+                # print(batch)
+                # return
                 loss = model(** batch)
                 loss.backward()
                 # loss.mean().backward()
@@ -217,6 +219,9 @@ class Benchmark(INeuralNet):
 
     def inner_loop(self, model):
         for batch in self.batches:
+            print(batch["x"].dtype)
+            print(batch["labels"].dtype)
+            # return
             _ = model(**batch)
 
     def get_batch_inference_flops(self):
@@ -244,7 +249,7 @@ class Benchmark(INeuralNet):
             # TODO: log optimizer to metadata / set from params
             # optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.95)
             optimizer = optim.AdamW(model.parameters(), lr=0.0001)
-            if self.params["problem"]["precision"] == "mixed":
+            if self.params["problem"]["numerics"] == "mixed":
                 assert len(self.params["gpus"]) == 1
             if self.params["preheat"]:
                 self.train(model, optimizer, 1)

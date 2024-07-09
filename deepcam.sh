@@ -4,10 +4,10 @@ python3 -m benchmarker \
     --problem=deepcam \
     --cnt_samples_per_epoch=64 \
     --sample_shape=3,512,512 \
-    --batch_size=32 \
+    --batch_size=8 \
     --mode=inference \
     --preheat \
     --nb_epoch=10 \
-    --precision=FP16 \
+    --numerics=FP16 \
+    --precision=medium \
     --gpus=0 \
-    --power_nvml
