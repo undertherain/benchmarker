@@ -16,4 +16,4 @@ def set_extra_params(params, unparsed_args):
     print(params)
     #exit(0)
 
-    assert unparsed == []
+    assert unparsed == [], "expected nothing, got" + str(unparsed_args)
