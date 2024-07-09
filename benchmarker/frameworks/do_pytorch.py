@@ -219,8 +219,8 @@ class Benchmark(INeuralNet):
 
     def inner_loop(self, model):
         for batch in self.batches:
-            print(batch["x"].dtype)
-            print(batch["labels"].dtype)
+            # print(batch["x"].dtype)
+            # print(batch["labels"].dtype)
             # return
             _ = model(**batch)
 
