@@ -14,11 +14,9 @@ prob_size_multiplier = 4
 
 
 def run(params):
-
     command = ["python3", "-m", "benchmarker", "--preheat"]
     for key, val in params.items():
         command.append(f"--{key}={val}")
-    # print(command)
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     proc.wait()
     out = proc.stdout.read().decode()

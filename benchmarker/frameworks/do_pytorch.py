@@ -15,6 +15,31 @@ from torch.utils import mkldnn as mkldnn_utils
 from .i_neural_net import INeuralNet
 
 logger = logging.getLogger(__name__)
+from enum import Enum
+
+
+class MyEnum(Enum):
+    @classmethod
+    def _missing_(cls, value):
+        value = value.lower()
+        for member in cls:
+            if member.value.lower() == value:
+                return member
+        return None
+
+    def __str__(self):
+        return self.value
+
+class Numerics(MyEnum):
+    fp16 = 'fp16'
+    fp32 = 'fp32'
+    fp64 = 'fp64'
+    bf16 = 'bf16'
+
+class Precision(MyEnum):
+    medium = 'medium'
+    high = 'high'
+    highest = 'highest'
 
 
 def progress(epoch, idx, nb, loss, log_interval=10):
@@ -24,14 +49,16 @@ def progress(epoch, idx, nb, loss, log_interval=10):
         print("Train Epoch: " + stat)
 
 
-def set_tensor_device_precision(tensor, device, layout, precision):
+def set_tensor_device_precision(tensor, device, layout, numerics):
     # if isinstance(tensor, dict):
     #     return {k: set_tensor_device_precision(v) for k, v in tensor.items()}
     if isinstance(tensor, (np.ndarray, np.generic)):
         tensor = torch.from_numpy(tensor)
     if tensor.dtype == torch.float32:
-        if precision == "FP16":
+        if numerics == "fp16":
             tensor = tensor.half()
+        if numerics == "bf16":
+            tensor = tensor.bfloat16()
     tensor = tensor.to(device)
     if tensor.dtype in [torch.float32, torch.float16]:
         if layout == "DNNL":
@@ -39,16 +66,16 @@ def set_tensor_device_precision(tensor, device, layout, precision):
     return tensor
 
 
-def set_batch_device_precision(data, device, layout, precision):
+def set_batch_device_precision(data, device, layout, numerics):
     if isinstance(data, list):
-        return [set_batch_device_precision(i, device, layout, precision) for i in data]
+        return [set_batch_device_precision(i, device, layout, numerics) for i in data]
     if isinstance(data, tuple):
-        return (set_batch_device_precision(i, device, layout, precision) for i in data)
+        return (set_batch_device_precision(i, device, layout, numerics) for i in data)
     if isinstance(data, dict):
         for key, value in data.items():
-            return {k: set_tensor_device_precision(v, device, layout, precision) for k, v in data.items()}
+            return {k: set_tensor_device_precision(v, device, layout, numerics) for k, v in data.items()}
     else:
-        batch = set_tensor_device_precision(data, device, layout, precision)
+        batch = set_tensor_device_precision(data, device, layout, numerics)
     return batch
 
 
@@ -67,7 +94,8 @@ class Benchmark(INeuralNet):
         super().__init__(params, remaining_args)
         self.params["profile_pytorch"] = args.profile
         self.params["channels_first"] = True
-        params["problem"]["precision"] = args.precision
+        self.params["problem"]["numerics"] = args.numerics.value
+        self.params["problem"]["precision"] = args.precision.value
         self.params["backend"] = args.backend
         self.params["tensor_layout"] = args.tensor_layout
         self.params["cudnn_benchmark"] = args.cbm
@@ -79,9 +107,7 @@ class Benchmark(INeuralNet):
         if self.params["nb_gpus"] > 0:
             if self.params["backend"] != "native":
                 raise RuntimeError("only native backend is supported for GPUs")
-            assert self.params["problem"]["precision"] in {"FP32", "TF32", "FP16", "AMP"}
-        else:
-            assert self.params["problem"]["precision"] in {"FP32", "FP16"}
+        # assert self.params["problem"]["numerics"] in {"FP16", "FP32", "FP64"}
         torch.backends.cudnn.benchmark = self.params["cudnn_benchmark"]
         self.device = torch.device("cuda" if self.params["gpus"] else "cpu")
         # TODO: make of/on-core optional
@@ -93,7 +119,8 @@ class Benchmark(INeuralNet):
         parser.add_argument("--tensor_layout", default="native")
         parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
-        parser.add_argument("--precision", default="FP32")
+        parser.add_argument("--numerics", type=Numerics, choices=list(Numerics))
+        parser.add_argument("--precision", type=Precision, choices=list(Precision))
         parser.add_argument("--profile_pytorch", dest="profile", action="store_true")
         parser.add_argument("--compile", dest="compile", action="store_true")
         parser.set_defaults(cbm=True)
@@ -106,18 +133,23 @@ class Benchmark(INeuralNet):
         args = [
             self.device,
             self.params["tensor_layout"],
-            self.params["problem"]["precision"],
+            self.params["problem"]["numerics"],
         ]
         self.batches = set_batch_device_precision(batches, *args)
         # self.y_train = [set_batch_device_precision(i, *args) for i in y_train]
-        if self.params["problem"]["precision"] == "TF32":
-            torch.backends.cuda.matmul.allow_tf32 = True
-            torch.backends.cudnn.allow_tf32 = True
-        else:
-            torch.backends.cuda.matmul.allow_tf32 = False
-            torch.backends.cudnn.allow_tf32 = False
-        if self.params["problem"]["precision"] == "FP16":
+        if self.params["problem"]["numerics"] == "fp32":
+            torch.set_float32_matmul_precision(self.params["problem"]["precision"])
+            # torch.backends.cuda.matmul.allow_tf32 = True
+            # torch.backends.cudnn.allow_tf32 = True
+        #else:
+            #torch.backends.cuda.matmul.allow_tf32 = False
+            #torch.backends.cudnn.allow_tf32 = False
+        elif self.params["problem"]["numerics"] == "fp16":
             self.net.half()
+        elif self.params["problem"]["numerics"] == "bf16":
+            self.net.bfloat16()
+        else:
+            raise ValueError("Unknown numerics " +  self.params["problem"]["numerics"])
         if self.params["backend"] == "DNNL":
             torch.backends.mkldnn.enabled = True
             self.net.eval()  # This is to make it not fail when DNLL does not support train
@@ -133,13 +165,15 @@ class Benchmark(INeuralNet):
                 raise RuntimeError("Unknown backend")
 
     def train(self, model, optimizer, epoch):
-        with amp.autocast() if self.params["problem"]["precision"] == "mixed" else contextlib.suppress():
+        with amp.autocast() if self.params["problem"]["numerics"] == "mixed" else contextlib.suppress():
             model.train()
             for batch_idx, batch in enumerate(self.batches):
                 optimizer.zero_grad()
                 # print("batch")
                 # print(self.batches)
                 # print(batch.shape)
+                # print(batch)
+                # return
                 loss = model(** batch)
                 loss.backward()
                 # loss.mean().backward()
@@ -185,6 +219,9 @@ class Benchmark(INeuralNet):
 
     def inner_loop(self, model):
         for batch in self.batches:
+            # print(batch["x"].dtype)
+            # print(batch["labels"].dtype)
+            # return
             _ = model(**batch)
 
     def get_batch_inference_flops(self):
@@ -212,7 +249,7 @@ class Benchmark(INeuralNet):
             # TODO: log optimizer to metadata / set from params
             # optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.95)
             optimizer = optim.AdamW(model.parameters(), lr=0.0001)
-            if self.params["problem"]["precision"] == "mixed":
+            if self.params["problem"]["numerics"] == "mixed":
                 assert len(self.params["gpus"]) == 1
             if self.params["preheat"]:
                 self.train(model, optimizer, 1)

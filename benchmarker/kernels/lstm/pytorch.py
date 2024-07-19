@@ -4,7 +4,7 @@ import torch.nn as nn
 class Net(nn.Module):
     def __init__(self, params):
         super().__init__()
-        self.net = nn.LSTM(input_size=params["problem"]["size"][2],
+        self.net = nn.LSTM(input_size=params["problem"]["sample_shape"][1],
                            hidden_size=params["problem"]["cnt_units"],
                            num_layers=params["problem"]["cnt_layers"],
                            bias=True,

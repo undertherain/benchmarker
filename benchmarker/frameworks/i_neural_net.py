@@ -1,9 +1,11 @@
 """Module contains the interface for all deep learning modules"""
 import argparse
+
 # import os
 import random
 
 import numpy
+
 from benchmarker.results import add_result_details
 
 from .i_benchmark import IBenchmark
@@ -28,11 +30,12 @@ class INeuralNet(IBenchmark):
         assert params["mode"] in ["training", "inference"]
         params["path_ext"] = params["mode"]
         self.params["batch_size"] = self.params["batch_size_per_device"]
-        problem_size = params["problem"]["size"]
-        if isinstance(problem_size, int):
-            cnt_samples = problem_size
-        else:
-            cnt_samples = problem_size[0]
+        # problem_size = params["problem"]["size"]
+        # if isinstance(problem_size, int):
+        #     cnt_samples = problem_size
+        # else:
+        #     cnt_samples = problem_size[0]
+        cnt_samples = params["problem"]["cnt_samples_per_epoch"]
         batch_size = params["batch_size"]
         assert (
             cnt_samples % batch_size == 0
@@ -46,6 +49,7 @@ class INeuralNet(IBenchmark):
             )
         if parsed_args.random_seed is not None:
             self.set_random_seed(int(parsed_args.random_seed))
+        self.load_defaults()
         self.get_kernel(params, remaining_args)
 
     def set_random_seed(self, seed):

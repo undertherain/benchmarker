@@ -4,6 +4,7 @@
 This is where all magic is happening
 """
 import requests
+
 requests.packages.urllib3.util.connection.HAS_IPV6 = False
 
 import argparse
@@ -20,11 +21,8 @@ def parse_basic_args(argv):
     parser = argparse.ArgumentParser(description="Benchmark me up, Scotty!")
     parser.add_argument("--framework", help="The framework used for benchmarking")
     parser.add_argument("--problem", help="The name of the kernel/problem")
-    parser.add_argument(
-        "--problem_size",
-        default=None,
-        help="TODO move this to some deeper lever!",
-    )
+    parser.add_argument("--cnt_samples_per_epoch", default=1, help="number of samples in epoch", type=int)
+    parser.add_argument("--sample_shape", help="shape of a single sample")
     parser.add_argument(
         "--path_out",
         type=str,
@@ -58,7 +56,7 @@ def parse_basic_args(argv):
         "--preheat",
         action="store_true",
         default=False,
-        help="TODO move this deeper [Do a preheat]",
+        help="Do a preheat",
     )
 
     # parser.add_argument('--misc')
@@ -91,9 +89,14 @@ def get_problem(args):
     # TODO: load problem's metadata  from the problem itself
     problem = {}
     problem["name"] = args.problem
+    problem["cnt_samples_per_epoch"] = args.cnt_samples_per_epoch
+    if args.sample_shape:
+        problem["sample_shape"] = tuple(map(int, args.sample_shape.split(',')))
+    # ast.literal_eval(args.sample_shape)
     # TODO: move this to the root base benchmark
-    if args.problem_size is not None:
-        problem["size"] = ast.literal_eval(args.problem_size)
+    # TODO: split it into count samples and sample shape
+    # if args.problem_size is not None:
+    #     problem["size"] = ast.literal_eval(args.problem_size)
     return problem
 
 
@@ -120,7 +123,8 @@ def run(argv):
 
     framework_mod = import_module(f"benchmarker.frameworks.do_{params['framework']}")
     benchmark = framework_mod.Benchmark(params, unknown_args)
-
+    # TODO: this should be inside correct __init__chain
+    benchmark.load_defaults()
     params["power"] = {}
     params["power"]["sampling_ms"] = args.power_sampling_ms
     params["power"]["joules_total"] = 0
@@ -128,6 +132,7 @@ def run(argv):
 
     do_rapl = args.power_rapl  # and isintel
     do_nvml = args.power_nvml  # and params["nb_gpus"] > 0
+    # TODO: do a loop over all supported "plugins" one by one
     if do_rapl:  # and is intel
         from benchmarker.profiling.power_RAPL import PowerMonitorRAPL
 

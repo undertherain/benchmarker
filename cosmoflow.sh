@@ -1,15 +1,16 @@
 # CPU:
+args="
+    -m benchmarker.benchmarker\
+    --framework=pytorch\
+    --problem=cosmoflow\
+    --sample_shape=4,256,256,256\
+    --cnt_samples=8\
+    --batch_size=1\
+    --nb_epoch=10\
+    --gpus=0\
+    --preheat\
+    --mode=training"
 
-python3 -m benchmarker.benchmarker \
-    --framework=pytorch \
-    --problem=cosmoflow \
-    --problem_size=128 \
-    --input_shape=4,256,256,256 \
-    --batch_size=32 \
-    --nb_epoch=2 \
-    --gpus=0 \
-    --preheat \
-    --mode=inference \
-    --precision=FP16
-
-#    --flops \
+python3 $args \
+    --numerics=FP32 \
+    --precision=highest

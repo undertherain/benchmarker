@@ -6,13 +6,12 @@ def gen_data(params):
     """generates sinthetic dataset"""
     # input size -> cnt_sequences, len_sequence, cnt_dimensions
     # transform into (seq_len, batch, cnt_dimentions) x cnt_batches
-    assert params["problem"]["size"][0] % params["batch_size"] == 0
-    params["problem"]["len_sequence"] = params["problem"]["size"][1]
-    cnt_batches = params["problem"]["size"][0] // params["batch_size"]
+    params["problem"]["len_sequence"] = params["problem"]["sample_shape"][0]
+    cnt_batches = params["problem"]["cnt_batches_per_epoch"]
     shape = (
         params["problem"]["len_sequence"],
         params["batch_size"],
-        params["problem"]["size"][2],
+        params["problem"]["sample_shape"][1],
     )
     data = [{"x": np.random.random(shape).astype(np.float32),
              "labels": np.ones((params["batch_size"]))} for i in range(cnt_batches)]

@@ -1,7 +1,8 @@
 python3 -m benchmarker \
     --framework=pytorch \
     --problem=lstm \
-    --problem_size=256,1024,768 \
+    --cnt_samples_per_epoch=256 \
+    --sample_shape=1024,768 \
     --bidirectional=True \
     --batch_size=64 \
     --mode=inference \
@@ -9,7 +10,9 @@ python3 -m benchmarker \
     --preheat \
     --nb_epoch=4 \
     --precision=FP32 \
-    --flops
+    --gpus=0 \
+    --power_nvml \
+    
 
 #    --profile
 #    --profile_pytorch
