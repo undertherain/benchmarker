@@ -9,7 +9,7 @@ args="
     --nb_epoch=10\
     --gpus=0\
     --preheat\
-    --mode=inference"
+    --mode=training"
 
 python3 $args \
     --numerics=FP32 \
