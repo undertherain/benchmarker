@@ -34,7 +34,7 @@ class IGEMM(IBinary):
             )
 
     def expected_precisions(self):
-        return ["FP64", "FP32", "FP16", "mixed"]
+        return ["FP64", "FP32", "FP16", "mixed", "INT8"]
 
     def need_gpus(self):
         return False
