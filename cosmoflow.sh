@@ -12,5 +12,5 @@ args="
     --mode=training"
 
 python3 $args \
-    --numerics=FP32 \
+    --numerics=<Specify BF16 or FP16> \
     --precision=highest
