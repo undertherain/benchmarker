@@ -6,8 +6,9 @@ def get_data(params):
     #     params["problem"]["size"] = (params["problem"]["size"], 128)
     # assert params["problem"]["size"][0] % params["batch_size"] == 0
     # params["problem"]["len_sequence"] = params["problem"]["size"][1]
-    # cnt_batches = params["problem"]["size"][0] // params["batch_size"]
+    cnt_batches = params["problem"]["cnt_samples"] // params["batch_size"]
     shape = (params["batch_size"],
+             params["problem"]["cnt_heads"],
              params["problem"]["sequence_length"],
              params["problem"]["embedding_size"],
              )
@@ -17,5 +18,9 @@ def get_data(params):
     # Y = np.ones(params["batch_size"], dtype=np.int64)
     # res = [{"input_ids": X, "labels": Y} for i in range(cnt_batches)]
     # return res
-    kv = torch.rand(shape)
-    return [{"kv":kv}]
+    k = torch.rand(shape)
+    q = torch.rand((params["batch_size"],
+                    params["problem"]["cnt_heads"],
+                    1,
+                    params["problem"]["embedding_size"],))
+    return [{"k": k, "q": q} for i in range(cnt_batches)]
