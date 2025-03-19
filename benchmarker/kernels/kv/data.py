@@ -1,4 +1,4 @@
-import numpy as np
+import torch
 
 
 def get_data(params):
@@ -7,13 +7,15 @@ def get_data(params):
     # assert params["problem"]["size"][0] % params["batch_size"] == 0
     # params["problem"]["len_sequence"] = params["problem"]["size"][1]
     # cnt_batches = params["problem"]["size"][0] // params["batch_size"]
-    # shape = (params["batch_size"],
-    #          params["problem"]["len_sequence"],
-    #          )
+    shape = (params["batch_size"],
+             params["problem"]["sequence_length"],
+             params["problem"]["embedding_size"],
+             )
     # # TODO: this should be within vocab size
     # X = np.random.random(shape).astype(np.int64)
     # # TODO: return ints in cnt_labels range
     # Y = np.ones(params["batch_size"], dtype=np.int64)
     # res = [{"input_ids": X, "labels": Y} for i in range(cnt_batches)]
     # return res
-    return [1]
+    kv = torch.rand(shape)
+    return [{"kv":kv}]
