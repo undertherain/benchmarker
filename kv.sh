@@ -11,7 +11,7 @@ python3 -m benchmarker.benchmarker \
     --batch_size=32 \
     --preheat \
     --mode=inference \
-    --gpus=0 \
+#    --gpus=0 \
 #    --batch_size=1536 \
 #    --enable_TF32
 

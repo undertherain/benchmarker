@@ -19,8 +19,9 @@ def get_data(params):
     # res = [{"input_ids": X, "labels": Y} for i in range(cnt_batches)]
     # return res
     k = torch.rand(shape)
+    v = torch.rand(shape)
     q = torch.rand((params["batch_size"],
                     params["problem"]["cnt_heads"],
                     1,
                     params["problem"]["embedding_size"],))
-    return [{"k": k, "q": q} for i in range(cnt_batches)]
+    return [{"k": k, "q": q, "v": v} for i in range(cnt_batches)]

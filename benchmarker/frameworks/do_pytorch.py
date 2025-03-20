@@ -116,6 +116,7 @@ class Benchmark(INeuralNet):
     def parse_args(self, extra_args):
         parser = argparse.ArgumentParser(description="pytorch extra args")
         parser.add_argument("--backend", default="native")
+        parser.add_argument("--on_core", dest="on_core", action="store_true")
         parser.add_argument("--tensor_layout", default="native")
         parser.add_argument("--cudnn_benchmark", dest="cbm", action="store_true")
         parser.add_argument("--no_cudnn_benchmark", dest="cbm", action="store_false")
@@ -267,7 +268,7 @@ class Benchmark(INeuralNet):
                 self.inference(model, self.device)
         end = timer()
 
-        # TODO: make this a paramter
+        # TODO: make this a parameter
         # if self.params["flops"]:
         #    flops = self.get_batch_inference_flops()
         #    self.params["problem"]["gflop_estimated"] = flops * self.params["nb_epoch"] * self.params["problem"]["cnt_batches_per_epoch"] / 1000**3
