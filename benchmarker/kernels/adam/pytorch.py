@@ -4,7 +4,8 @@ from torch.optim import AdamW
 
 class Optim:
     def __init__(self, model_size):
-        self.params = torch.rand((model_size,))
+        data = torch.rand((model_size,))
+        self.params = torch.nn.parameter.Parameter(data, requires_grad=True)
         self.params.grad = torch.rand((model_size,))
         self.optim =AdamW([self.params], lr=0.00001)
 
