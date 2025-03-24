@@ -13,10 +13,10 @@ class IBenchmark:
             module_defaults = importlib.import_module("benchmarker.kernels." + self.params["problem"]["name"] + ".defaults")
             for k,v in module_defaults.defaults.items():
                 if k not in self.params["problem"]:
-                    logging.warn(f"setting {k} to default value {v}")                                               
+                    logging.warning(f"setting {k} to default value {v}")                                               
                     self.params["problem"][k] = v
         except:
-            logging.warn("no defaults for this kernel")
+            logging.warning("no defaults for this kernel")
 
     def measure_power_and_run(self):
         results = self.run()
